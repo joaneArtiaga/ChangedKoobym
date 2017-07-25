@@ -1,9 +1,11 @@
-package com.example.joane14.myapplication;
+package com.example.joane14.myapplication.Activities;
 
 import android.app.Activity;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 import android.util.Log;
+
+import com.example.joane14.myapplication.Model.FbUSer;
 
 /**
  * Created by Joane14 on 23/07/2017.
@@ -12,9 +14,17 @@ import android.util.Log;
 public class PrefUtil {
 
     private Activity activity;
+    private static PrefUtil instance;
 
-    public PrefUtil(){
+    private PrefUtil(){
 
+    }
+
+    public static PrefUtil getPrefUtilInstance(Activity activity){
+        if(instance == null){
+            instance = new PrefUtil(activity);
+        }
+        return instance;
     }
 
     public PrefUtil(Activity activity){
@@ -40,17 +50,25 @@ public class PrefUtil {
         editor.apply();
     }
 
-    public void saveFacebookUserInfo(String firstName, String lastName, String email, String gender, String profileUrl){
+    public void saveFacebookUserInfo(String name, String email, String gender, String userId){
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(activity);
         SharedPreferences.Editor editor = prefs.edit();
-        editor.putString("fb_first_name", firstName);
-        editor.putString("fb_last_name", lastName);
+        editor.putString("fb_name", name);
         editor.putString("fb_email", email);
         editor.putString("fb_gender", gender);
-        editor.putString("fb_profileURL", profileUrl);
+        editor.putString("fb_userId", userId);
         editor.apply();
-        Log.d("Koobym", "First Name:"+firstName+"\nLast Name:"+lastName+"\nEmail:"+email+"\nGender:"+gender+"\nProfile Url:"+profileUrl);
+    }
 
+
+    public FbUSer getLoggedInFacebookUserDetails(){
+        FbUSer flag = new FbUSer();
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(activity);
+        flag.setName(prefs.getString("fb_name",null));
+        flag.setEmail(prefs.getString("fb_email",null));
+        flag.setGender(prefs.getString("fb_gender", null));
+        flag.setUserId(prefs.getString("fb_userId", null));
+        return flag;
     }
 
 

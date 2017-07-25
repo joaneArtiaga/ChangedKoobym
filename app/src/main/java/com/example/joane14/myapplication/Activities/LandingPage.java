@@ -1,4 +1,4 @@
-package com.example.joane14.myapplication;
+package com.example.joane14.myapplication.Activities;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -14,8 +14,13 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.TextView;
 
+import com.example.joane14.myapplication.R;
 import com.facebook.login.LoginManager;
+import com.facebook.login.widget.ProfilePictureView;
+
+import org.w3c.dom.Text;
 
 public class LandingPage extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -39,19 +44,33 @@ public class LandingPage extends AppCompatActivity
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
+
+        NavigationView navigationView1 = (NavigationView) findViewById(R.id.nav_view);
+        View hView = navigationView.getHeaderView(0);
+        TextView mName = (TextView) hView.findViewById(R.id.tvName);
+        TextView mEmail = (TextView) hView.findViewById(R.id.tvEmail);
+
+
         Intent intent = getIntent();
-        mBundle = intent.getExtras();
+        mBundle = intent.getBundleExtra("ProfileBundle");
         if(null!=intent){
-            Log.d("Inside", "null!=intent");
-//            name = mBundle.getString("name");
-//            email = mBundle.getString("email");
-//            gender = mBundle.getString("gender");
-//            userId = mBundle.getString("userId");
-//            Log.d("Name", name);
-//            Log.d("Email", email);
-//            Log.d("Gender", gender);
-//            Log.d("UserId", userId);
+            Log.d("Inside", mBundle.toString());
+            name = mBundle.getString("name").toString();
+            email = mBundle.getString("email").toString();
+            gender = mBundle.getString("gender").toString();
+            userId = mBundle.getString("userId").toString();
+            Log.d("LandingName", name);
+            Log.d("LandingEmail", email);
+            Log.d("LandingGender", gender);
+            Log.d("LandingUserId", userId);
+
+            mName.setText(name);
+            mEmail.setText(email);
+
+            ProfilePictureView mProfPic = (ProfilePictureView) hView.findViewById(R.id.profPic);
+            mProfPic.setProfileId(userId);
         }
+
 
     }
 

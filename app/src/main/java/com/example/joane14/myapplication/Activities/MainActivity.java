@@ -1,4 +1,4 @@
-package com.example.joane14.myapplication;
+package com.example.joane14.myapplication.Activities;
 
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
@@ -9,6 +9,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
+import com.example.joane14.myapplication.Model.FbUSer;
+import com.example.joane14.myapplication.R;
 import com.facebook.AccessToken;
 import com.facebook.AccessTokenTracker;
 import com.facebook.CallbackManager;
@@ -39,6 +41,8 @@ public class MainActivity extends AppCompatActivity {
     Bundle mbundle;
 
 
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -47,10 +51,20 @@ public class MainActivity extends AppCompatActivity {
         FacebookSdk.sdkInitialize(this.getApplicationContext());
         callbackManager = CallbackManager.Factory.create();
 
+
         mbundle = new Bundle();
         if (isLoggedIn()) {
             Log.d("Logged in", "True");
+
+            FbUSer userFB;
+            PrefUtil prefUtil = PrefUtil.getPrefUtilInstance(this);
+            userFB = prefUtil.getLoggedInFacebookUserDetails();
+            mbundle.putString("email", userFB.getEmail());
+            mbundle.putString("name", userFB.getName());
+            mbundle.putString("userId", userFB.getUserId());
+            mbundle.putString("gender", userFB.getGender());
             Intent intent = new Intent(MainActivity.this, LandingPage.class);
+            intent.putExtra("ProfileBundle", mbundle);
             startActivity(intent);
 //            getUserData();
         } else {
@@ -64,8 +78,6 @@ public class MainActivity extends AppCompatActivity {
                     @Override
                     public void onSuccess(LoginResult loginResult) {
                         Toast.makeText(MainActivity.this, "Log in success", Toast.LENGTH_SHORT).show();
-//                        getUserData();
-
 
                         GraphRequest request = GraphRequest.newMeRequest(
                                 loginResult.getAccessToken(),
@@ -75,12 +87,19 @@ public class MainActivity extends AppCompatActivity {
                                         Log.d("User Data", response.toString());
                                         Log.d("User json object", user.toString());
                                         try {
-                                            email = user.getString("email");
-                                            name = user.getString("name");
-                                            userId = user.getString("id");
-                                            gender = user.getString("gender");
+                                            Log.d("User id", user.getString("id").toString());
+                                        } catch (JSONException e) {
+                                            e.printStackTrace();
+                                        }
 
-                                            Log.d("name", email);
+                                        try {
+                                            Log.d("inside try ctch","");
+                                            email = user.getString("email").toString();
+                                            name = user.getString("name").toString();
+                                            userId = user.getString("id").toString();
+                                            gender = user.getString("gender").toString();
+
+                                            Log.d("name", name);
                                             Log.d("gender", gender);
                                             Log.d("email", email);
                                             Log.d("userId", userId);
@@ -89,63 +108,22 @@ public class MainActivity extends AppCompatActivity {
                                             mbundle.putString("name", name);
                                             mbundle.putString("userId", userId);
                                             mbundle.putString("gender", gender);
-                                            Log.d("inside try ctch","");
+
+                                            PrefUtil.getPrefUtilInstance(MainActivity.this)
+                                                    .saveFacebookUserInfo(name, email, gender, userId);
+
+                                            Intent intent = new Intent(MainActivity.this, LandingPage.class);
+                                            intent.putExtra("ProfileBundle", mbundle);
+                                            startActivity(intent);
                                         } catch (JSONException e) {
                                             e.printStackTrace();
                                         }
-                                        AccessToken accessToken;
-
-                                        final Profile profile = Profile.getCurrentProfile();
-
-                                        if ((user != null) && (profile != null)) {
-
-                                            accessToken = AccessToken.getCurrentAccessToken();
-
-                                            if (accessToken.getDeclinedPermissions().isEmpty()) {
-                                                try {
-                                                    String email = user.get("email").toString();
-                                                } catch (JSONException e) {
-                                                    e.printStackTrace();
-                                                }
-                                            }else{
-                                                Log.d("denied permissions", accessToken.getDeclinedPermissions().toString());
-                                            }
-
-
-                                        }
-/*
-
-                                        try {
-                                            new GraphRequest(
-                                                    AccessToken.getCurrentAccessToken(),
-                                                    "/" + object.getString("id"),
-                                                    null,
-                                                    HttpMethod.GET,
-                                                    new GraphRequest.Callback() {
-                                                        public void onCompleted(GraphResponse response) {
-                                                            Log.d("user data new", response.toString());
-                                                        }
-                                                    }
-                                            ).executeAsync();
-                                        } catch (JSONException e) {
-                                            e.printStackTrace();
-                                        }
-*/
                                     }
                                 });
-
                         Bundle parameters = new Bundle();
                         parameters.putString("fields", "id, name, email, gender, birthday");
                         request.setParameters(parameters);
                         request.executeAsync();
-
-                        Intent intent = new Intent(MainActivity.this, LandingPage.class);
-                        intent.putExtras(mbundle);
-//                        startActivity(intent);
-//                        Log.d("name", mbundle.getString("name"));
-//                        Log.d("gender", mbundle.getString("gender"));
-//                        Log.d("email", mbundle.getString("email"));
-//                        Log.d("userId", mbundle.getString("userId"));
                     }
 
                     @Override
