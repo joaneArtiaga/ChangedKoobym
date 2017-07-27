@@ -7,9 +7,21 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 import android.widget.Toast;
 
+import com.android.volley.AuthFailureError;
+import com.android.volley.NetworkResponse;
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.VolleyLog;
+import com.android.volley.toolbox.HttpHeaderParser;
+import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
 import com.example.joane14.myapplication.Model.FbUSer;
+import com.example.joane14.myapplication.Model.User;
 import com.example.joane14.myapplication.R;
 import com.facebook.AccessToken;
 import com.facebook.AccessTokenTracker;
@@ -25,11 +37,15 @@ import com.facebook.appevents.AppEventsLogger;
 import com.facebook.login.LoginManager;
 import com.facebook.login.LoginResult;
 import com.facebook.login.widget.LoginButton;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.UnsupportedEncodingException;
 import java.util.Arrays;
+import java.util.Date;
 
 
 public class MainActivity extends AppCompatActivity {
@@ -39,9 +55,64 @@ public class MainActivity extends AppCompatActivity {
     AccessTokenTracker accessTokenTracker;
     private static String userId, email, name, pictureFile, gender;
     Bundle mbundle;
+    TextView mBtnRegister;
 
 
+    private void register() {
+        RequestQueue requestQueue = Volley.newRequestQueue(this);
+        String URL = "http://192.168.1.4:8080/Mexaco/user/add";
+        User user = new User();
+        user.setUserFname("bababa");
+        user.setUserLname("babasdas");
+        user.setAddress("asdfasdf");
+        user.setEmail("asdfasd");
+        user.setUsername("baldo");
+        user.setPassword("baldo");
+        user.setBirthdate(new Date());
+        user.setImageFilename("basdfasdf");
+        user.setPhoneNumber("basdfasdfasd");
+        final Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd").registerTypeAdapter(Date.class, GsonDateDeserializer.getInstance()).create();
+        final String mRequestBody = gson.toJson(user);
+        Log.d("LOG_VOLLEY", mRequestBody);
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, URL, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                Log.i("LOG_VOLLEY", response);
+                User user = gson.fromJson(response, User.class);
+                Log.i("LOG_VOLLEY", user.getEmail());
+                Log.i("LOG_VOLLEY", user.getUserFname());
+                Log.i("LOG_VOLLEY", user.getUserLname());
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.e("LOG_VOLLEY", error.toString());
+            }
+        }) {
+            @Override
+            public String getBodyContentType() {
+                return "application/json; charset=utf-8";
+            }
 
+            @Override
+            public byte[] getBody() throws AuthFailureError {
+                try {
+                    return mRequestBody == null ? null : mRequestBody.getBytes("utf-8");
+                } catch (UnsupportedEncodingException uee) {
+                    VolleyLog.wtf("Unsupported Encoding while trying to get the bytes of %s using %s", mRequestBody, "utf-8");
+                    return null;
+                }
+            }
+        };
+
+        requestQueue.add(stringRequest);
+
+    }
+
+    public void registerUser(){
+        Intent intent = new Intent(MainActivity.this, SignUp.class);
+        startActivity(intent);
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,7 +122,14 @@ public class MainActivity extends AppCompatActivity {
         FacebookSdk.sdkInitialize(this.getApplicationContext());
         callbackManager = CallbackManager.Factory.create();
 
-
+        register();
+        mBtnRegister = (TextView) findViewById(R.id.btnRegister);
+        mBtnRegister.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                registerUser();
+            }
+        });
         mbundle = new Bundle();
         if (isLoggedIn()) {
             Log.d("Logged in", "True");
@@ -70,7 +148,6 @@ public class MainActivity extends AppCompatActivity {
         } else {
             Log.d("Logged in", "False");
         }
-
 
 
         LoginManager.getInstance().registerCallback(callbackManager,
@@ -93,7 +170,7 @@ public class MainActivity extends AppCompatActivity {
                                         }
 
                                         try {
-                                            Log.d("inside try ctch","");
+                                            Log.d("inside try ctch", "");
                                             email = user.getString("email").toString();
                                             name = user.getString("name").toString();
                                             userId = user.getString("id").toString();
@@ -143,7 +220,7 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    public void login(View view){
+    public void login(View view) {
         LoginManager.getInstance().logInWithReadPermissions(MainActivity.this, Arrays.asList("public_profile, email"));
     }
 
@@ -177,4 +254,5 @@ public class MainActivity extends AppCompatActivity {
         request.executeAsync();
 
     }
+
 }

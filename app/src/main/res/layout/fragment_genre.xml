@@ -14,12 +14,12 @@
         android:textSize="20sp"
         android:textColor="#FFFFFF"
         android:layout_below="@+id/btnNext"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true" />
+        android:foregroundGravity="center_horizontal"/>
+
     <LinearLayout
         android:id="@+id/linear2"
         android:layout_width="193dp"
-        android:layout_height="350dp"
+        android:layout_height="400dp"
         android:layout_alignParentBottom="true"
         android:layout_alignParentLeft="true"
         android:layout_gravity="bottom"
@@ -27,34 +27,37 @@
         android:orientation="vertical">
 
         <TextView
+            android:clickable="true"
             android:id="@+id/genre_sciFi"
             android:layout_width="90dp"
             android:layout_height="30dp"
             android:layout_gravity="center_horizontal"
             android:layout_marginTop="8dp"
-            android:background="@drawable/rectangle_genre"
+            android:background="@drawable/label_bg"
             android:gravity="center"
             android:text="Sci-Fi"
             android:textColor="@color/colorDark" />
 
         <TextView
+            android:clickable="true"
             android:id="@+id/genre_adventure"
             android:layout_width="90dp"
             android:layout_height="30dp"
             android:layout_gravity="center_horizontal"
             android:layout_marginTop="8dp"
-            android:background="@drawable/rectangle_genre"
+            android:background="@drawable/label_bg"
             android:gravity="center"
             android:text="Adventure"
             android:textColor="@color/colorDark" />
 
         <TextView
+            android:clickable="true"
             android:id="@+id/genre_romance"
             android:layout_width="90dp"
             android:layout_height="30dp"
             android:layout_gravity="center_horizontal"
             android:layout_marginTop="8dp"
-            android:background="@drawable/rectangle_genre"
+            android:background="@drawable/label_bg"
             android:gravity="center"
             android:text="Romance"
             android:textColor="@color/colorDark" />
@@ -62,21 +65,23 @@
         <TextView
             android:id="@+id/genre_horror"
             android:layout_width="90dp"
+            android:clickable="true"
             android:layout_height="30dp"
             android:layout_gravity="center_horizontal"
             android:layout_marginTop="8dp"
-            android:background="@drawable/rectangle_genre"
+            android:background="@drawable/label_bg"
             android:gravity="center"
             android:text="Horror"
             android:textColor="@color/colorDark" />
 
         <TextView
             android:id="@+id/genre_health"
+            android:clickable="true"
             android:layout_width="90dp"
             android:layout_height="30dp"
             android:layout_gravity="center_horizontal"
             android:layout_marginTop="8dp"
-            android:background="@drawable/rectangle_genre"
+            android:background="@drawable/label_bg"
             android:gravity="center"
             android:text="Health"
             android:textColor="@color/colorDark" />
@@ -85,20 +90,22 @@
             android:id="@+id/genre_travel"
             android:layout_width="90dp"
             android:layout_height="30dp"
+            android:clickable="true"
             android:layout_gravity="center_horizontal"
             android:layout_marginTop="8dp"
-            android:background="@drawable/rectangle_genre"
+            android:background="@drawable/label_bg"
             android:gravity="center"
             android:text="Travel"
             android:textColor="@color/colorDark" />
 
         <TextView
+            android:clickable="true"
             android:id="@+id/genre_religion"
             android:layout_width="90dp"
             android:layout_height="30dp"
             android:layout_gravity="center_horizontal"
             android:layout_marginTop="8dp"
-            android:background="@drawable/rectangle_genre"
+            android:background="@drawable/label_bg"
             android:gravity="center"
             android:text="Religion"
             android:textColor="@color/colorDark" />
@@ -107,29 +114,21 @@
             android:id="@+id/genre_cook"
             android:layout_width="90dp"
             android:layout_height="30dp"
+            android:clickable="true"
             android:layout_gravity="center_horizontal"
             android:layout_marginTop="8dp"
-            android:background="@drawable/rectangle_genre"
+            android:background="@drawable/label_bg"
             android:gravity="center"
             android:text="Cook"
             android:textColor="@color/colorDark" />
     </LinearLayout>
 
-    <ImageButton
-        android:id="@+id/btnNext"
-        android:layout_width="50dp"
-        android:layout_height="50dp"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentRight="true"
-        android:layout_weight="1"
-        android:layout_marginTop="5dp"
-        android:layout_marginRight="5dp"
-        app:srcCompat="@drawable/next" />
+
 
     <LinearLayout
         android:id="@+id/linear1"
         android:layout_width="192dp"
-        android:layout_height="350dp"
+        android:layout_height="400dp"
         android:layout_alignParentBottom="true"
         android:layout_alignParentRight="true"
         android:background="@color/colorDark"
@@ -141,7 +140,7 @@
             android:layout_height="30dp"
             android:layout_gravity="center_horizontal"
             android:layout_marginTop="8dp"
-            android:background="@drawable/rectangle_genre"
+            android:background="@drawable/label_bg"
             android:gravity="center"
             android:text="Drama"
             android:textColor="@color/colorDark" />
@@ -152,7 +151,7 @@
             android:layout_height="30dp"
             android:layout_gravity="center_horizontal"
             android:layout_marginTop="8dp"
-            android:background="@drawable/rectangle_genre"
+            android:background="@drawable/label_bg"
             android:gravity="center"
             android:text="Action"
             android:textColor="@color/colorDark" />
@@ -163,7 +162,7 @@
             android:layout_height="30dp"
             android:layout_gravity="center_horizontal"
             android:layout_marginTop="8dp"
-            android:background="@drawable/rectangle_genre"
+            android:background="@drawable/label_bg"
             android:gravity="center"
             android:text="Mystery"
             android:textColor="@color/colorDark" />
@@ -174,7 +173,7 @@
             android:layout_height="30dp"
             android:layout_gravity="center_horizontal"
             android:layout_marginTop="8dp"
-            android:background="@drawable/rectangle_genre"
+            android:background="@drawable/label_bg"
             android:gravity="center"
             android:text="Self-Help"
             android:textColor="@color/colorDark" />
@@ -185,7 +184,7 @@
             android:layout_height="30dp"
             android:layout_gravity="center_horizontal"
             android:layout_marginTop="8dp"
-            android:background="@drawable/rectangle_genre"
+            android:background="@drawable/label_bg"
             android:gravity="center"
             android:text="Guide"
             android:textColor="@color/colorDark" />
@@ -196,7 +195,7 @@
             android:layout_height="30dp"
             android:layout_gravity="center_horizontal"
             android:layout_marginTop="8dp"
-            android:background="@drawable/rectangle_genre"
+            android:background="@drawable/label_bg"
             android:gravity="center"
             android:text="Children"
             android:textColor="@color/colorDark" />
@@ -207,7 +206,7 @@
             android:layout_height="30dp"
             android:layout_gravity="center_horizontal"
             android:layout_marginTop="8dp"
-            android:background="@drawable/rectangle_genre"
+            android:background="@drawable/label_bg"
             android:gravity="center"
             android:text="Comics"
             android:textColor="@color/colorDark" />
@@ -218,11 +217,22 @@
             android:layout_height="30dp"
             android:layout_gravity="center_horizontal"
             android:layout_marginTop="8dp"
-            android:background="@drawable/rectangle_genre"
+            android:background="@drawable/label_bg"
             android:gravity="center"
             android:text="Biography"
             android:textColor="@color/colorDark" />
 
     </LinearLayout>
+
+    <ImageView
+        android:clickable="true"
+        android:layout_marginTop="5dp"
+        android:layout_marginRight="5dp"
+        android:id="@+id/btnNext"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentTop="true"
+        app:srcCompat="@drawable/next" />
 
 </RelativeLayout>
