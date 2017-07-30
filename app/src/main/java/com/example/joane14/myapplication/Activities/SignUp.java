@@ -19,6 +19,7 @@ import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.example.joane14.myapplication.Fragments.AddProfile;
 import com.example.joane14.myapplication.Fragments.Genre;
+import com.example.joane14.myapplication.Model.GenreModel;
 import com.example.joane14.myapplication.Model.User;
 import com.example.joane14.myapplication.R;
 import com.google.gson.Gson;
@@ -29,9 +30,9 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-public class SignUp extends AppCompatActivity implements Genre.OnFragmentInteractionListener, AddProfile.OnFragmentInteractionListener{
+public class SignUp extends AppCompatActivity implements Genre.OnFragmentInteractionListener, AddProfile.OnFragmentInteractionListener {
 
-    private List<String> genres;
+    private List<GenreModel> genres;
     private FragmentManager fragmentManager;
     private User userModel;
 
@@ -41,21 +42,21 @@ public class SignUp extends AppCompatActivity implements Genre.OnFragmentInterac
         setContentView(R.layout.activity_sign_up);
 
 
-        if(savedInstanceState == null) {
+        if (savedInstanceState == null) {
             fragmentManager = getSupportFragmentManager();
             Genre genreModel = new Genre();
             changeFragment(genreModel);
         }
     }
 
-    private void changeFragment(Fragment fragment){
+    private void changeFragment(Fragment fragment) {
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
         fragmentTransaction.replace(R.id.fragment_container, fragment, fragment.getTag());
         fragmentTransaction.commit();
     }
 
     @Override
-    public void onGenreSelected(List<String> genres) {
+    public void onGenreSelected(List<GenreModel> genres) {
         this.genres = genres;
         AddProfile addProfileFrag = new AddProfile();
         changeFragment(addProfileFrag);
@@ -65,13 +66,17 @@ public class SignUp extends AppCompatActivity implements Genre.OnFragmentInterac
     public void onUserSelected(User user) {
         user.setGenreArray(this.genres);
         this.userModel = user;
-        Log.d("Add Profile", "First Name:"+userModel.getUserFname());
-        Log.d("Add Profile", "Last Name:"+userModel.getUserLname());
-        Log.d("Add Profile", "User Name:"+userModel.getUsername());
-        Log.d("Add Profile", "Address:"+userModel.getAddress());
-        Log.d("Add Profile", "Email:"+userModel.getEmail());
-        Log.d("Add Profile", "Contact Number:"+userModel.getPhoneNumber());
-        Log.d("Add Profile", "Password:"+userModel.getPassword());
+        Log.d("Add Profile", "First Name:" + userModel.getUserFname());
+        Log.d("Add Profile", "Last Name:" + userModel.getUserLname());
+        Log.d("Add Profile", "User Name:" + userModel.getUsername());
+        Log.d("Add Profile", "Address:" + userModel.getAddress());
+        Log.d("Add Profile", "Email:" + userModel.getEmail());
+        Log.d("Add Profile", "Contact Number:" + userModel.getPhoneNumber());
+        Log.d("Add Profile", "Password:" + userModel.getPassword());
+
+
+        Log.d("On User selected", "inside");
+
 
         register();
     }
@@ -79,6 +84,7 @@ public class SignUp extends AppCompatActivity implements Genre.OnFragmentInterac
     private void register() {
         RequestQueue requestQueue = Volley.newRequestQueue(this);
         String URL = "http://192.168.1.4:8080/Mexaco/user/add";
+
         User user = new User();
         user.setUserFname(userModel.getUserFname());
         user.setUserLname(userModel.getUserLname());
@@ -89,6 +95,7 @@ public class SignUp extends AppCompatActivity implements Genre.OnFragmentInterac
         user.setBirthdate(userModel.getBirthdate());
         user.setImageFilename("basdfasdf");
         user.setPhoneNumber(userModel.getPhoneNumber());
+        user.setGenreArray(genres);
         final Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd").registerTypeAdapter(Date.class, GsonDateDeserializer.getInstance()).create();
         final String mRequestBody = gson.toJson(user);
         Log.d("LOG_VOLLEY", mRequestBody);

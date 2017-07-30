@@ -1,5 +1,8 @@
 package com.example.joane14.myapplication.Model;
 
+import com.google.gson.annotations.SerializedName;
+
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -8,9 +11,10 @@ import java.util.List;
  * Created by Joane14 on 26/07/2017.
  */
 
-public class User {
+public class User implements Serializable{
 
-    private List<String> genreArray;
+    @SerializedName("genres")
+    private List<GenreModel> genreArray;
     private Integer userId;
     private String userFname;
     private String userLname;
@@ -22,11 +26,11 @@ public class User {
     private String email;
     private String imageFilename;
 
-    public void setGenreArray(List<String> genreArray) {
+    public void setGenreArray(List<GenreModel> genreArray) {
         this.genreArray = genreArray;
     }
 
-    public List<String> getGenreArray() {
+    public List<GenreModel> getGenreArray() {
         return genreArray;
     }
 
@@ -108,5 +112,22 @@ public class User {
 
     public void setImageFilename(String imageFilename) {
         this.imageFilename = imageFilename;
+    }
+
+    @Override
+    public String toString() {
+        return "User{" +
+                "genreArray=" + genreArray +
+                ", userId=" + userId +
+                ", userFname='" + userFname + '\'' +
+                ", userLname='" + userLname + '\'' +
+                ", username='" + username + '\'' +
+                ", password='" + password + '\'' +
+                ", phoneNumber='" + phoneNumber + '\'' +
+                ", address='" + address + '\'' +
+                ", birthdate=" + birthdate +
+                ", email='" + email + '\'' +
+                ", imageFilename='" + imageFilename + '\'' +
+                '}';
     }
 }

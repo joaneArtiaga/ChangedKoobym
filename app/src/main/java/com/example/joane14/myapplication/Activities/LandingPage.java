@@ -1,6 +1,7 @@
 package com.example.joane14.myapplication.Activities;
 
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -16,6 +17,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.TextView;
 
+import com.example.joane14.myapplication.Model.User;
 import com.example.joane14.myapplication.R;
 import com.facebook.login.LoginManager;
 import com.facebook.login.widget.ProfilePictureView;
@@ -25,7 +27,8 @@ import org.w3c.dom.Text;
 public class LandingPage extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
     private String name, userId, email, gender, pictureFile;
-    Bundle mBundle;
+    Bundle mBundle, mBundleLogin;
+    User userModel;
 
 
     @Override
@@ -34,6 +37,8 @@ public class LandingPage extends AppCompatActivity
         setContentView(R.layout.activity_landing_page);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
+        userModel = new User();
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -50,10 +55,14 @@ public class LandingPage extends AppCompatActivity
         TextView mName = (TextView) hView.findViewById(R.id.tvName);
         TextView mEmail = (TextView) hView.findViewById(R.id.tvEmail);
 
+        Log.d("Inside", "landing page");
+
 
         Intent intent = getIntent();
-        mBundle = intent.getBundleExtra("ProfileBundle");
-        if(null!=intent){
+
+        if(null!=intent.getBundleExtra("ProfileBundle")){
+            mBundle = intent.getBundleExtra("ProfileBundle");
+
             Log.d("Inside", mBundle.toString());
             name = mBundle.getString("name").toString();
             email = mBundle.getString("email").toString();
@@ -70,6 +79,17 @@ public class LandingPage extends AppCompatActivity
             ProfilePictureView mProfPic = (ProfilePictureView) hView.findViewById(R.id.profPic);
             mProfPic.setProfileId(userId);
         }
+        else if(null!=intent.getBundleExtra("user")){
+            Log.d("User Login", "inside");
+
+
+            mBundleLogin = intent.getBundleExtra("user");
+            userModel = (User) mBundleLogin.getSerializable("userModel");
+
+            Log.d("User Login", userModel.getUserFname());
+            mName.setText(userModel.getUserFname()+" "+ userModel.getUserLname());
+            mEmail.setText(userModel.getEmail());
+        }
 
 
     }
@@ -80,7 +100,10 @@ public class LandingPage extends AppCompatActivity
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
         } else {
-            super.onBackPressed();
+            Log.d("Inside","On back pressed");
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+                    finishAffinity();
+                }
         }
     }
 
