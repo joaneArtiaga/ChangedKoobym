@@ -96,6 +96,8 @@
                 android:background="@drawable/rounded_edittext"
                 android:gravity="center"
                 android:hint="Birth Date (YYYY-MM-DD)"
+                android:clickable="true"
+                android:editable="false"
                 android:inputType="datetime"
                 android:textSize="15sp" />
 
