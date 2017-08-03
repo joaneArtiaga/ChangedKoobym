@@ -15,20 +15,24 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.example.joane14.myapplication.Fragments.Constants;
 import com.example.joane14.myapplication.Model.User;
 import com.example.joane14.myapplication.R;
 import com.facebook.login.LoginManager;
 import com.facebook.login.widget.ProfilePictureView;
+import com.squareup.picasso.Picasso;
 
 import org.w3c.dom.Text;
 
 public class LandingPage extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
-    private String name, userId, email, gender, pictureFile;
-    Bundle mBundle, mBundleLogin;
+    private String name, userId, email, gender;
+    Bundle mBundle, mBundleLogin, bundlePass;
     User userModel;
+    ImageView profileImg;
 
 
     @Override
@@ -57,6 +61,9 @@ public class LandingPage extends AppCompatActivity
 
         Log.d("Inside", "landing page");
 
+        profileImg = (ImageView) hView.findViewById(R.id.profPic);
+
+        bundlePass = new Bundle();
 
         Intent intent = getIntent();
 
@@ -68,6 +75,8 @@ public class LandingPage extends AppCompatActivity
             email = mBundle.getString("email").toString();
             gender = mBundle.getString("gender").toString();
             userId = mBundle.getString("userId").toString();
+
+
             Log.d("LandingName", name);
             Log.d("LandingEmail", email);
             Log.d("LandingGender", gender);
@@ -76,21 +85,24 @@ public class LandingPage extends AppCompatActivity
             mName.setText(name);
             mEmail.setText(email);
 
-            ProfilePictureView mProfPic = (ProfilePictureView) hView.findViewById(R.id.profPic);
-            mProfPic.setProfileId(userId);
+//            ProfilePictureView mProfPic = (ProfilePictureView) hView.findViewById(R.id.profPic);
+//            mProfPic.setProfileId(userId);
         }
         else if(null!=intent.getBundleExtra("user")){
             Log.d("User Login", "inside");
 
 
             mBundleLogin = intent.getBundleExtra("user");
-            userModel = (User) mBundleLogin.getSerializable("userModel");
+            this.userModel = (User) mBundleLogin.getSerializable("userModel");
+
+            Log.d("User filename", userModel.getImageFilename());
+            Log.d("User Id", String.valueOf(userModel.getUserId()));
 
             Log.d("User Login", userModel.getUserFname());
             mName.setText(userModel.getUserFname()+" "+ userModel.getUserLname());
             mEmail.setText(userModel.getEmail());
+            Picasso.with(LandingPage.this).load(String.format(Constants.IMAGE_URL, userModel.getImageFilename())).fit().into(profileImg);
         }
-
 
     }
 
@@ -111,12 +123,19 @@ public class LandingPage extends AppCompatActivity
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
         // Handle navigation view item clicks here.
+        Log.d("onNavigationItem", "inside");
+
         int id = item.getItemId();
 
         if (id == R.id.home) {
-            // Handle the camera action
         } else if (id == R.id.profile) {
-
+            Intent intent = new Intent(LandingPage.this, ProfileActivity.class);
+//            User user = userModel;
+            Log.d("User Id", String.valueOf(userModel.getUserId()));
+            Log.d("User name", userModel.getUserFname()+" "+userModel.getUserLname());
+            bundlePass.putSerializable("userModelPass", userModel);
+            intent.putExtra("user",bundlePass);
+            startActivity(intent);
         } else if (id == R.id.rent) {
 
         } else if (id == R.id.myBook) {

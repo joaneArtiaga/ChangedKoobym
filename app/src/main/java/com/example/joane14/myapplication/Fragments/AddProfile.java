@@ -76,10 +76,12 @@ public class AddProfile extends Fragment {
     private OnFragmentInteractionListener mListener;
 
     EditText mFirstName, mLastName, mUsername, mAddress, mEmail, mContactNumber, mPassword, mConfirmPassword, mBirthdate;
-    Button mSubmit;
+    Button mNextAdd;
     User userModel;
     ImageView slctImage;
     Calendar myCalendar;
+    String filename;
+
 
     DatePickerDialog.OnDateSetListener date;
 
@@ -126,8 +128,11 @@ public class AddProfile extends Fragment {
 
         };
 
+//        String filename = "123-1501684832903Screenshot_20170802-014107.jpg";
+
         slctImage = (ImageView) view.findViewById(R.id.displayPic);
-        mSubmit = (Button) view.findViewById(R.id.btnSubmit);
+//        Picasso.with(getContext()).load(String.format(Constants.IMAGE_URL, filename)).fit().into(slctImage);
+        mNextAdd = (Button) view.findViewById(R.id.btnNextAdd);
 
         mFirstName = (EditText) view.findViewById(R.id.firstName);
         mLastName = (EditText) view.findViewById(R.id.lastName);
@@ -154,7 +159,7 @@ public class AddProfile extends Fragment {
                 openImageChooser();
             }
         });
-        mSubmit.setOnClickListener(new View.OnClickListener() {
+        mNextAdd.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
 
@@ -203,6 +208,8 @@ public class AddProfile extends Fragment {
                     Log.d("Add Profile", "Contact Number:" + mContactNumber.getText().toString());
                     Log.d("Add Profile", "Password:" + mPassword.getText().toString());
 
+
+
                     userModel.setUserFname(mFirstName.getText().toString());
                     userModel.setUserLname(mLastName.getText().toString());
                     userModel.setUsername(mUsername.getText().toString());
@@ -241,16 +248,18 @@ public class AddProfile extends Fragment {
     }
 
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        Log.d("onActivityResult", "inside");
         if (requestCode == 1 && resultCode == RESULT_OK && data != null) {
             ArrayList<Image> images = (ArrayList<Image>) ImagePicker.getImages(data);
             for (Image image : images) {
                 Picasso.with(getContext()).load(new File(image.getPath())).fit().into(slctImage);
                 final String path = image.getPath();
+                uploadFile(path);
             }
         }
     }
 
-    String uploadUrl = "http://192.168.1.4/Mexaco/upload/basdfasdf";
+    String uploadUrl = "http://192.168.1.4:8080/Koobym/image/upload";
 
     private void uploadFile(final String path) {
 
@@ -260,6 +269,8 @@ public class AddProfile extends Fragment {
             public void onResponse(NetworkResponse response) {
                 String resultResponse = new String(response.data);
                 // parse success output
+                Log.d("RESULT OF UOPLOAD", resultResponse);
+                userModel.setImageFilename(resultResponse);
             }
         }, new Response.ErrorListener() {
             @Override
@@ -277,9 +288,10 @@ public class AddProfile extends Fragment {
             @Override
             protected Map<String, DataPart> getByteData() {
                 Map<String, DataPart> params = new HashMap<>();
-
                 try {
-                    params.put("file", new DataPart("123.jpg", FileUtils.readFileToByteArray(new File(path)), "image/jpeg"));
+                    File file = new File(path);
+                    Log.d("FILE NAME = ", file.getName());
+                    params.put("file", new DataPart(file.getName(), FileUtils.readFileToByteArray(new File(path)), "image/jpeg"));
                 } catch (IOException e) {
                     e.printStackTrace();
                 }

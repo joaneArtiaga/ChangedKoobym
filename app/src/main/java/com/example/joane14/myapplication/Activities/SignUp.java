@@ -1,5 +1,6 @@
 package com.example.joane14.myapplication.Activities;
 
+import android.content.Intent;
 import android.net.Uri;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -35,6 +36,7 @@ public class SignUp extends AppCompatActivity implements Genre.OnFragmentInterac
     private List<GenreModel> genres;
     private FragmentManager fragmentManager;
     private User userModel;
+    Bundle mBundle;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -64,6 +66,7 @@ public class SignUp extends AppCompatActivity implements Genre.OnFragmentInterac
 
     @Override
     public void onUserSelected(User user) {
+        mBundle = new Bundle();
         user.setGenreArray(this.genres);
         this.userModel = user;
         Log.d("Add Profile", "First Name:" + userModel.getUserFname());
@@ -77,13 +80,13 @@ public class SignUp extends AppCompatActivity implements Genre.OnFragmentInterac
 
         Log.d("On User selected", "inside");
 
-
         register();
+
     }
 
     private void register() {
         RequestQueue requestQueue = Volley.newRequestQueue(this);
-        String URL = "http://192.168.1.4:8080/Mexaco/user/add";
+        String URL = "http://192.168.1.4:8080/Koobym/user/add";
 
         User user = new User();
         user.setUserFname(userModel.getUserFname());
@@ -93,7 +96,7 @@ public class SignUp extends AppCompatActivity implements Genre.OnFragmentInterac
         user.setUsername(userModel.getUsername());
         user.setPassword(userModel.getPassword());
         user.setBirthdate(userModel.getBirthdate());
-        user.setImageFilename("basdfasdf");
+        user.setImageFilename(userModel.getImageFilename());
         user.setPhoneNumber(userModel.getPhoneNumber());
         user.setGenreArray(genres);
         final Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd").registerTypeAdapter(Date.class, GsonDateDeserializer.getInstance()).create();
@@ -131,6 +134,5 @@ public class SignUp extends AppCompatActivity implements Genre.OnFragmentInterac
         };
 
         requestQueue.add(stringRequest);
-
     }
 }
