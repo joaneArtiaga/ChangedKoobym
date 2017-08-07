@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginTop="15dp"
+    android:layout_marginBottom="5dp">
+
+
+    <ImageView
+        android:id="@+id/ivBookPic"
+        android:layout_width="100dp"
+        android:layout_height="120dp"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        app:srcCompat="@mipmap/ic_launcher" />
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_alignParentTop="true"
+        android:layout_toRightOf="@+id/ivBookPic"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginRight="10dp"
+        android:layout_alignBottom="@+id/ivBookPic"
+        android:gravity="center_vertical">
+
+        <TextView
+            android:id="@+id/tvTitleBook"
+            android:text="Book Title"
+            android:layout_gravity="center_horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textStyle="bold"
+            android:textSize="15sp"/>
+
+        <TextView
+            android:id="@+id/tvAuthorBook"
+            android:text="Book Author"
+            android:layout_marginTop="5dp"
+            android:layout_marginLeft="15dp"
+            android:textStyle="italic|bold"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="12sp"/>
+
+        <TextView
+            android:id="@+id/tvDescriptionBook"
+            android:textStyle="italic"
+            android:layout_marginLeft="15dp"
+            android:text="Book Description"
+            android:layout_width="match_parent"
+            android:textSize="12sp"
+            android:layout_height="wrap_content" />
+    </LinearLayout>
+</RelativeLayout>

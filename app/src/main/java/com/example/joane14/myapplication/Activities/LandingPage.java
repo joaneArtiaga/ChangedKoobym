@@ -131,8 +131,8 @@ public class LandingPage extends AppCompatActivity
         } else if (id == R.id.profile) {
             Intent intent = new Intent(LandingPage.this, ProfileActivity.class);
 //            User user = userModel;
-            Log.d("User Id", String.valueOf(userModel.getUserId()));
-            Log.d("User name", userModel.getUserFname()+" "+userModel.getUserLname());
+//            Log.d("User Id", String.valueOf(userModel.getUserId()));
+//            Log.d("User name", userModel.getUserFname()+" "+userModel.getUserLname());
             bundlePass.putSerializable("userModelPass", userModel);
             intent.putExtra("user",bundlePass);
             startActivity(intent);

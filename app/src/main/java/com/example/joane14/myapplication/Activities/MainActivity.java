@@ -70,7 +70,7 @@ public class MainActivity extends AppCompatActivity {
 
     private void register() {
         RequestQueue requestQueue = Volley.newRequestQueue(this);
-        String URL = "http://192.168.1.4:8080/Mexaco/user/add";
+        String URL = "http://192.168.1.134:8080/Mexaco/user/add";
         User user = new User();
         user.setUserFname("bababa");
         user.setUserLname("babasdas");
@@ -242,13 +242,12 @@ public class MainActivity extends AppCompatActivity {
                 });
 
 
-        searchBook("Lord of the rings");
     }
 
 
     public void login(View view) {
         RequestQueue requestQueue = Volley.newRequestQueue(this);
-        String URL = "http://192.168.1.4:8080/Koobym/user/login";
+        String URL = "http://192.168.1.134:8080/Koobym/user/login";
         User user = new User();
         user.setUsername(mUsername);
         user.setPassword(mPassword);
@@ -337,43 +336,5 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    private static final String GOOGLE_API_SEARCH_URL = "https://www.googleapis.com/books/v1/volumes?q=intitle:%s";
 
-    public void searchBook(String booktitle) {
-        String query = booktitle;
-        try {
-            query = URLEncoder.encode(booktitle, "utf-8");
-        } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
-        }
-        RequestQueue requestQueue = Volley.newRequestQueue(this);
-        String URL = String.format(GOOGLE_API_SEARCH_URL, query);
-
-        Log.d("BOOK URL", URL);
-
-        StringRequest stringRequest = new StringRequest(Request.Method.GET, URL, new Response.Listener<String>() {
-            @Override
-            public void onResponse(String response) {
-                Log.d("SEARCH BOOK RES", response);
-                try {
-                    JSONObject obj = new JSONObject(response);
-                    JSONArray items = obj.getJSONArray("items");
-                    for(int init = 0; init< items.length(); init++){
-                        JSONObject arrayObject = items.getJSONObject(init);
-                        Log.d("Title",arrayObject.getJSONObject("volumeInfo").getString("title"));
-                    }
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-            }
-        }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                Log.e("GOOGLE BOOK", error.toString());
-            }
-        });
-
-        requestQueue.add(stringRequest);
-
-    }
 }

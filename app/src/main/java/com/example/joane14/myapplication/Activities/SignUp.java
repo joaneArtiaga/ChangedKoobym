@@ -86,7 +86,7 @@ public class SignUp extends AppCompatActivity implements Genre.OnFragmentInterac
 
     private void register() {
         RequestQueue requestQueue = Volley.newRequestQueue(this);
-        String URL = "http://192.168.1.4:8080/Koobym/user/add";
+        String URL = "http://192.168.1.134:8080/Koobym/user/add";
 
         User user = new User();
         user.setUserFname(userModel.getUserFname());
@@ -110,6 +110,11 @@ public class SignUp extends AppCompatActivity implements Genre.OnFragmentInterac
                 Log.i("LOG_VOLLEY", user.getEmail());
                 Log.i("LOG_VOLLEY", user.getUserFname());
                 Log.i("LOG_VOLLEY", user.getUserLname());
+                Intent intent = new Intent(SignUp.this, LandingPage.class);
+                Bundle b = new Bundle();
+                b.putSerializable("userModel", user);
+                intent.putExtra("user",b);
+                startActivity(intent);
             }
         }, new Response.ErrorListener() {
             @Override

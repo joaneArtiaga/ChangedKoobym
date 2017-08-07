@@ -1,10 +1,12 @@
 package com.example.joane14.myapplication.Model;
 
+import java.io.Serializable;
+
 /**
  * Created by Joane14 on 30/07/2017.
  */
 
-public class GenreModel {
+public class GenreModel implements Serializable{
     String genreName;
     long genreId;
     boolean isSelected;

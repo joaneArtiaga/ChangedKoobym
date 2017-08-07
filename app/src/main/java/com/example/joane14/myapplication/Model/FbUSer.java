@@ -1,10 +1,12 @@
 package com.example.joane14.myapplication.Model;
 
+import java.io.Serializable;
+
 /**
  * Created by Joane14 on 25/07/2017.
  */
 
-public class FbUSer {
+public class FbUSer implements Serializable{
     public String email, name, userId, gender;
 
     public FbUSer(){
