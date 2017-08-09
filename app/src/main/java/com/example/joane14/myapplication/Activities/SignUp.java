@@ -112,6 +112,7 @@ public class SignUp extends AppCompatActivity implements Genre.OnFragmentInterac
                 Log.i("LOG_VOLLEY", user.getUserLname());
                 Intent intent = new Intent(SignUp.this, LandingPage.class);
                 Bundle b = new Bundle();
+                b.putBoolean("fromRegister", true);
                 b.putSerializable("userModel", user);
                 intent.putExtra("user",b);
                 startActivity(intent);

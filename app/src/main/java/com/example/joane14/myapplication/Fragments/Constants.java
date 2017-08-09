@@ -10,4 +10,5 @@ public class Constants {
     public static final String WEB_SERVICE_URL = "http:/192.168.1.134/Mexaco";
 
     public static final String IMAGE_URL = "http://192.168.1.134/Koobym/image/%s";
+
 }

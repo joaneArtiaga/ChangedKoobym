@@ -12,6 +12,8 @@ public class BookOwnerModel implements Serializable{
 
     String dateBought, statusDescription;
 
+    int noRenters;
+
     @SerializedName("book")
     Book bookObj;
 
@@ -27,6 +29,14 @@ public class BookOwnerModel implements Serializable{
         this.statusDescription = statusDescription;
         this.bookObj = bookObj;
         this.userObj = userObj;
+    }
+
+    public int getNoRenters() {
+        return noRenters;
+    }
+
+    public void setNoRenters(int noRenters) {
+        this.noRenters = noRenters;
     }
 
     public void setDateBought(String dateBought) {

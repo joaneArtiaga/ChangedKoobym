@@ -213,13 +213,11 @@ public class ShowBooksFrag extends Fragment {
 
                 final EditText statDescription = new EditText(getContext());
                 statDescription.setHint("Book State Description");
-                statDescription.setHeight(70);
                 layout.addView(statDescription);
 
                 final EditText etBought = new EditText(getContext());
                 layout.addView(etBought);
                 etBought.setHint("Date Bought (YYYY-MM-DD)");
-                layout.setGravity(View.TEXT_ALIGNMENT_CENTER);
                 alert.setView(layout);
 
                 alert.setTitle("You chose "+bookList.get(position).getBookTitle());
@@ -249,7 +247,7 @@ public class ShowBooksFrag extends Fragment {
                     }
                 });
 
-                alert.show().getWindow().setLayout(1000, 1500);
+                alert.show();
             }
         });
     }

@@ -153,7 +153,10 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 registerUser();
+//                Intent intent = new Intent(MainActivity.this, LocationChooser.class);
+//                startActivity(intent);
             }
+
         });
         mbundle = new Bundle();
         if (isLoggedIn()) {
@@ -274,7 +277,9 @@ public class MainActivity extends AppCompatActivity {
                     Log.d("Response", response);
                     Bundle b = new Bundle();
                     b.putSerializable("userModel", user);
+                    b.putBoolean("fromRegister", false);
                     intent.putExtra("user",b);
+//                    intent.putExtra("recommned", b);
                     startActivity(intent);
                 }
 

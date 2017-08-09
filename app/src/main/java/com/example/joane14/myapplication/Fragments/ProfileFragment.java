@@ -56,13 +56,26 @@ public class ProfileFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_profile, container, false);
         Log.d("inside", "onCreateview profFrag");
 
+        this.userObj = (User) getArguments().getSerializable("userDetails");
+        Log.d("onCreateView profFrag", userObj.toString());
+
         TextView mName = (TextView) view.findViewById(R.id.tvName);
-        TextView mEmail = (TextView) view.findViewById(R.id.tvEmail);
+        TextView mEmail = (TextView) view.findViewById(R.id.tvEmailProfile);
+        TextView mAddress = (TextView) view.findViewById(R.id.tvAddress);
+        TextView mBirthDate = (TextView) view.findViewById(R.id.tvBirthDate);
+        TextView mPhone = (TextView) view.findViewById(R.id.tvPhoneNumber);
+
+
+
+        mEmail.setText(userObj.getEmail());
+        mPhone.setText(userObj.getPhoneNumber());
+        mBirthDate.setText(userObj.getBirthdate().toString());
+        mAddress.setText(userObj.getAddress());
         ImageView profileImg = (ImageView) view.findViewById(R.id.profileDisplayPic);
         mBtnAdd = (FloatingActionButton) view.findViewById(R.id.btnAdd);
 
         mName.setText(userObj.getUserFname()+" "+ userObj.getUserLname());
-//        mEmail.setText(userObj.getEmail());
+//        mEmail.setText();
         Picasso.with(getContext()).load(String.format(Constants.IMAGE_URL, userObj.getImageFilename())).fit().into(profileImg);
 
 

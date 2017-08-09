@@ -1,10 +1,14 @@
 package com.example.joane14.myapplication.Activities;
 
+import android.app.AlertDialog;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
 import android.view.View;
 import android.support.design.widget.NavigationView;
@@ -18,21 +22,40 @@ import android.view.MenuItem;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.android.volley.AuthFailureError;
+import com.android.volley.Request;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.VolleyLog;
+import com.android.volley.toolbox.StringRequest;
 import com.example.joane14.myapplication.Fragments.Constants;
+import com.example.joane14.myapplication.Fragments.MostRentedBookFrag;
+import com.example.joane14.myapplication.Fragments.PreferencesFrag;
+import com.example.joane14.myapplication.Fragments.VolleyUtil;
+import com.example.joane14.myapplication.Model.RentalDetail;
 import com.example.joane14.myapplication.Model.User;
 import com.example.joane14.myapplication.R;
 import com.facebook.login.LoginManager;
 import com.facebook.login.widget.ProfilePictureView;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.squareup.picasso.Picasso;
 
 import org.w3c.dom.Text;
 
+import java.io.UnsupportedEncodingException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Date;
+import java.util.List;
+
 public class LandingPage extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener {
+        implements NavigationView.OnNavigationItemSelectedListener, MostRentedBookFrag.OnFragmentInteractionListener, PreferencesFrag.OnFragmentInteractionListener{
     private String name, userId, email, gender;
     Bundle mBundle, mBundleLogin, bundlePass;
     User userModel;
     ImageView profileImg;
+    FragmentManager fragmentManager;
 
 
     @Override
@@ -102,9 +125,58 @@ public class LandingPage extends AppCompatActivity
             mName.setText(userModel.getUserFname()+" "+ userModel.getUserLname());
             mEmail.setText(userModel.getEmail());
             Picasso.with(LandingPage.this).load(String.format(Constants.IMAGE_URL, userModel.getImageFilename())).fit().into(profileImg);
+
+
+            if(mBundleLogin.getBoolean("fromRegister")==true){
+                Log.d("inside", "TRUEfromRegister");
+                fragmentManager = getSupportFragmentManager();
+                MostRentedBookFrag mrbf = MostRentedBookFrag.newInstance();
+                FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+                fragmentTransaction.replace(R.id.fragment_landing_container, MostRentedBookFrag.newInstance(), mrbf.getTag());
+                fragmentTransaction.commit();
+            }else{
+                bundlePass.putSerializable("userModelPass", userModel);
+                Log.d("userModelPass1st", userModel.toString());
+                fragmentManager = getSupportFragmentManager();
+                PreferencesFrag prefFrag = PreferencesFrag.newInstance(bundlePass);
+                FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+                fragmentTransaction.replace(R.id.fragment_landing_container, prefFrag, prefFrag.getTag());
+                fragmentTransaction.commit();
+
+            }
         }
+//
+//        if(null!=intent.getBundleExtra("fromRegister")){
+//            Log.d("User from Register","inside");
+//
+//            mBundle = intent.getBundleExtra("fromRegister");
+//            if(mBundle.getBoolean("fromRegister")==true){
+//                Log.d("inside", "TRUEfromRegister");
+//                fragmentManager = getSupportFragmentManager();
+//                MostRentedBookFrag mrbf = MostRentedBookFrag.newInstance();
+//                FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+//                fragmentTransaction.replace(R.id.fragment_landing_container, MostRentedBookFrag.newInstance(), mrbf.getTag());
+//                fragmentTransaction.commit();
+//            }else{
+//                bundlePass.putSerializable("userModelPass", userModel);
+//                fragmentManager = getSupportFragmentManager();
+//                PreferencesFrag pref = PreferencesFrag.newInstance();
+//                pref.setArguments(bundlePass);
+//                FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+//                fragmentTransaction.replace(R.id.fragment_landing_container, PreferencesFrag.newInstance(), pref.getTag());
+//                fragmentTransaction.commit();
+//
+//            }
+//
+//        }
 
     }
+
+
+
+
+
+
 
     @Override
     public void onBackPressed() {
@@ -156,5 +228,15 @@ public class LandingPage extends AppCompatActivity
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
+    }
+
+    @Override
+    public void onFragmentInteraction(Uri uri) {
+
+    }
+
+    @Override
+    public void onMostRentedListener(Uri uri) {
+
     }
 }
