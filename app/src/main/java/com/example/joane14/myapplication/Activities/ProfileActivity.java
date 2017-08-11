@@ -116,7 +116,6 @@ public class ProfileActivity extends AppCompatActivity implements NavigationView
 
     }
 
-    private static final String GOOGLE_API_SEARCH_URL = "https://www.googleapis.com/books/v1/volumes?q=intitle:%s";
 
     public void searchBook(String booktitle) {
         String query = booktitle;
@@ -126,7 +125,7 @@ public class ProfileActivity extends AppCompatActivity implements NavigationView
             e.printStackTrace();
         }
         RequestQueue requestQueue = Volley.newRequestQueue(this);
-        String URL = String.format(GOOGLE_API_SEARCH_URL, query);
+        String URL = String.format(Constants.GOOGLE_API_SEARCH_URL, query);
 
         Log.d("BOOK URL", URL);
 

@@ -19,6 +19,7 @@ import com.android.volley.VolleyLog;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.example.joane14.myapplication.Fragments.AddProfile;
+import com.example.joane14.myapplication.Fragments.Constants;
 import com.example.joane14.myapplication.Fragments.Genre;
 import com.example.joane14.myapplication.Model.GenreModel;
 import com.example.joane14.myapplication.Model.User;
@@ -86,7 +87,8 @@ public class SignUp extends AppCompatActivity implements Genre.OnFragmentInterac
 
     private void register() {
         RequestQueue requestQueue = Volley.newRequestQueue(this);
-        String URL = "http://192.168.1.134:8080/Koobym/user/add";
+//        String URL = "http://192.168.1.134:8080/Koobym/user/add";
+        String URL = Constants.WEB_SERVICE_URL+"user/add";
 
         User user = new User();
         user.setUserFname(userModel.getUserFname());
