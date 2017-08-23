@@ -154,9 +154,9 @@ public class MainActivity extends AppCompatActivity {
         mBtnRegister.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                registerUser();
-//                Intent intent = new Intent(MainActivity.this, LocationChooser.class);
-//                startActivity(intent);
+//                registerUser();
+                Intent intent = new Intent(MainActivity.this, LocationChooserActivity.class);
+                startActivity(intent);
             }
 
         });
