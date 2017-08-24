@@ -7,8 +7,6 @@
         android:glEsVersion="0x00020000"
         android:required="true" />
 
-    <uses-sdk
-        android:minSdkVersion="15"/>
 
     <uses-library android:name="com.google.android.maps"/>
 
