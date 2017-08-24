@@ -103,6 +103,8 @@ public class SignUp extends AppCompatActivity implements Genre.OnFragmentInterac
         user.setGenreArray(genres);
         final Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd").registerTypeAdapter(Date.class, GsonDateDeserializer.getInstance()).create();
         final String mRequestBody = gson.toJson(user);
+
+
         Log.d("LOG_VOLLEY", mRequestBody);
         StringRequest stringRequest = new StringRequest(Request.Method.POST, URL, new Response.Listener<String>() {
             @Override
