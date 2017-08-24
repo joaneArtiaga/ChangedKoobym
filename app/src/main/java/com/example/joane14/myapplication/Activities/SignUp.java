@@ -1,14 +1,12 @@
 package com.example.joane14.myapplication.Activities;
 
 import android.content.Intent;
-import android.net.Uri;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
-import android.widget.TextView;
 
 import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
@@ -28,7 +26,6 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
 import java.io.UnsupportedEncodingException;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -47,8 +44,9 @@ public class SignUp extends AppCompatActivity implements Genre.OnFragmentInterac
 
         if (savedInstanceState == null) {
             fragmentManager = getSupportFragmentManager();
-            Genre genreModel = new Genre();
-            changeFragment(genreModel);
+//            Genre genreModel = new Genre();
+//            LocationChooser locChoose = new LocationChooser();
+//            changeFragment(locChoose);
         }
     }
 
@@ -143,4 +141,5 @@ public class SignUp extends AppCompatActivity implements Genre.OnFragmentInterac
 
         requestQueue.add(stringRequest);
     }
+
 }

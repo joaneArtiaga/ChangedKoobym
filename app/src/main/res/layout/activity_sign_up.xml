@@ -8,4 +8,11 @@
     android:id="@+id/fragment_container"
     tools:context="com.example.joane14.myapplication.Activities.SignUp">
 
+    <fragment
+        android:id="@+id/map"
+        android:name="com.example.joane14.myapplication.Fragments.LocationChooser"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
+
+
 </LinearLayout>

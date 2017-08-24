@@ -155,7 +155,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
 //                registerUser();
-                Intent intent = new Intent(MainActivity.this, LocationChooserActivity.class);
+                Intent intent = new Intent(MainActivity.this, LocationChooser.class);
                 startActivity(intent);
             }
 
