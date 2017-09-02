@@ -86,9 +86,26 @@ public class LocationChooser extends FragmentActivity implements
             @Override
             public void onClick(View v) {
                 Log.d("Next Button", "Triggered");
-                Intent intent = new Intent(LocationChooser.this, SignUp.class);
-                intent.putExtra("Genre", "genreChooser");
-                startActivity(intent);
+                if(cntMarker==5){
+                    AlertDialog.Builder builder1 = new AlertDialog.Builder(LocationChooser.this);
+                    builder1.setMessage("Only 5 locations are available. You cannot choose more than 5 or less than 5.");
+                    builder1.setCancelable(true);
+
+                    builder1.setPositiveButton(
+                            "Okay",
+                            new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int id) {
+                                    dialog.cancel();
+                                }
+                            });
+
+                    AlertDialog alert11 = builder1.create();
+                    alert11.show();
+                }else{
+                    Intent intent = new Intent(LocationChooser.this, SignUp.class);
+                    intent.putExtra("Genre", "genreChooser");
+                    startActivity(intent);
+                }
             }
         });
 

@@ -51,8 +51,7 @@
 
             </LinearLayout>
 
-            <ImageButton
-                android:src=""
+            <Button
                 android:id="@+id/btnChange"
                 android:layout_marginRight="10dp"
                 android:text="Change"
