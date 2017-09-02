@@ -1,20 +1,22 @@
 package com.example.joane14.myapplication.Fragments;
 
+import android.app.DatePickerDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
-import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import com.android.volley.NetworkResponse;
 import com.android.volley.Request;
@@ -43,6 +45,7 @@ import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
 import static android.app.Activity.RESULT_OK;
+import static com.facebook.FacebookSdk.getApplicationContext;
 
 public class AddProfile extends Fragment {
 
@@ -53,7 +56,9 @@ public class AddProfile extends Fragment {
     User userModel;
     ImageView slctImage;
     String filename;
-
+    private DatePicker datePicker;
+    private Calendar calendar;
+    DatePickerDialog.OnDateSetListener date;
 
     public AddProfile() {
 
@@ -75,7 +80,9 @@ public class AddProfile extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_add_profile, container, false);
+        final View view = inflater.inflate(R.layout.fragment_add_profile, container, false);
+
+        calendar = Calendar.getInstance();
 
         Log.d("Inside", "onCreateView");
 
@@ -95,13 +102,31 @@ public class AddProfile extends Fragment {
         mContactNumber = (EditText) view.findViewById(R.id.contactNumber);
         mPassword = (EditText) view.findViewById(R.id.password);
         mConfirmPassword = (EditText) view.findViewById(R.id.confirmPassword);
-        mBirthdate = (EditText) view.findViewById(R.id.birthDate);
+        this.mBirthdate = (EditText) view.findViewById(R.id.birthDate);
+
+
+        date = new DatePickerDialog.OnDateSetListener() {
+
+            @Override
+            public void onDateSet(DatePicker view, int year, int monthOfYear,
+                                  int dayOfMonth) {
+                // TODO Auto-generated method stub
+                calendar.set(Calendar.YEAR, year);
+                calendar.set(Calendar.MONTH, monthOfYear);
+                calendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
+                updateLabel();
+            }
+
+        };
 
         mBirthdate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                DialogFragment newFragment = new SelectDateFragment();
-                newFragment.show(getFragmentManager(), "DatePicker");
+
+                new DatePickerDialog(getContext(), date, calendar
+                        .get(Calendar.YEAR), calendar.get(Calendar.MONTH),
+                        calendar.get(Calendar.DAY_OF_MONTH)).show();
+
             }
         });
 
@@ -188,13 +213,12 @@ public class AddProfile extends Fragment {
 
 
 
-//
-//    private void updateLabel() {
-//        String myFormat = "YYYY-MM-DD"; //In which you need put here
-//        SimpleDateFormat sdf = new SimpleDateFormat(myFormat, Locale.US);
-//
-//        mBirthdate.setText(sdf.format(myCalendar.getTime()));
-//    }
+
+    private void updateLabel() {
+        String myFormat = "yyy-MM-dd"; //In which you need put here
+        SimpleDateFormat sdf = new SimpleDateFormat(myFormat, Locale.US);
+        mBirthdate.setText(sdf.format(calendar.getTime()));
+    }
 
     private void openImageChooser() {
         ImagePicker.create(this)

@@ -15,6 +15,7 @@ import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.Toast;
 
 import com.example.joane14.myapplication.Adapters.LocationAdapter;
@@ -79,14 +80,13 @@ public class LocationChooser extends FragmentActivity implements
         locationObj = new LocationModel();
 //        createMapView();
 
-
         mNext = (Button) findViewById(R.id.btnNext);
 
         mNext.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Log.d("Next Button", "Triggered");
-                if(cntMarker==5){
+                if(LocationChooser.this.cntMarker<5){
                     AlertDialog.Builder builder1 = new AlertDialog.Builder(LocationChooser.this);
                     builder1.setMessage("Only 5 locations are available. You cannot choose more than 5 or less than 5.");
                     builder1.setCancelable(true);
@@ -102,6 +102,7 @@ public class LocationChooser extends FragmentActivity implements
                     AlertDialog alert11 = builder1.create();
                     alert11.show();
                 }else{
+
                     Intent intent = new Intent(LocationChooser.this, SignUp.class);
                     intent.putExtra("Genre", "genreChooser");
                     startActivity(intent);
@@ -167,17 +168,12 @@ public class LocationChooser extends FragmentActivity implements
         googleMap = mMap;
 
 
-
-        LatLng sydney = new LatLng(-34, 151);
-        googleMap.addMarker(new MarkerOptions().position(sydney).title("Marker in Sydney"));
-        googleMap.moveCamera(CameraUpdateFactory.newLatLng(sydney));
-
         googleMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
             @Override
             public void onMapClick(LatLng latLng) {
                 double latLat, latLong;
 
-                if(cntMarker==5){
+                if(LocationChooser.this.cntMarker==5){
                     AlertDialog.Builder builder1 = new AlertDialog.Builder(LocationChooser.this);
                     builder1.setMessage("Only 5 locations are available. You cannot choose more than 5 or less than 5.");
                     builder1.setCancelable(true);
@@ -193,7 +189,7 @@ public class LocationChooser extends FragmentActivity implements
                     AlertDialog alert11 = builder1.create();
                     alert11.show();
                 }else{
-                    cntMarker++;
+                    LocationChooser.this.cntMarker++;
 
                     MarkerOptions marker = new MarkerOptions().position(
                             latLng)
@@ -204,7 +200,7 @@ public class LocationChooser extends FragmentActivity implements
 
                     latLat = latLng.latitude;
                     latLong = latLng.longitude;
-
+                    locationObj = new LocationModel();
                     locationObj.setLatitude(latLat);
                     locationObj.setLongitude(latLong);
                     locationObj.setLocationName("Temporary name");

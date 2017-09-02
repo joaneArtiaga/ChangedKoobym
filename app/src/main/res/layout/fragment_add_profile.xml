@@ -21,7 +21,7 @@
     <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_above="@+id/btnSubmit"
+        android:layout_above="@+id/btnNextAdd"
         android:fillViewport="true">
 
         <LinearLayout
@@ -109,7 +109,7 @@
                 android:gravity="center"
                 android:hint="Birth Date (YYYY-MM-DD)"
                 android:clickable="true"
-                android:editable="false"
+                android:focusable="false"
                 android:inputType="datetime"
                 android:textSize="15sp" />
 

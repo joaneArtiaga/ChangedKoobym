@@ -7,6 +7,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.TextView;
 
 import com.example.joane14.myapplication.Model.LocationModel;
@@ -30,14 +31,14 @@ public class LocationAdapter extends RecyclerView.Adapter<LocationAdapter.Locati
             .OnClickListener {
         TextView title;
         TextView mLatitude, mLongitude;
-        Button mChange;
+        ImageButton mChange;
 
         public LocationObjHolder(View itemView) {
             super(itemView);
             title = (TextView) itemView.findViewById(R.id.locationName);
             mLatitude = (TextView) itemView.findViewById(R.id.latitude);
             mLongitude = (TextView) itemView.findViewById(R.id.longitude);
-            mChange = (Button) itemView.findViewById(R.id.btnChange);
+            mChange = (ImageButton) itemView.findViewById(R.id.btnChange);
             Log.i("Data object hlder", "Adding Listener");
             itemView.setOnClickListener(this);
         }
@@ -63,6 +64,7 @@ public class LocationAdapter extends RecyclerView.Adapter<LocationAdapter.Locati
                 .inflate(R.layout.location_cardview, parent, false);
 
         LocationObjHolder locationObjHolder = new LocationObjHolder(view);
+
 
         return locationObjHolder;
     }
