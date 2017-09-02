@@ -1,6 +1,7 @@
 package com.example.joane14.myapplication.Adapters;
 
 import android.content.Context;
+import android.os.Build;
 import android.support.v4.content.ContextCompat;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -57,9 +58,13 @@ public class GenreAdapter extends BaseAdapter {
         genreName.setText(genreModel.getGenreName());
 
         if (genreModel.isSelected()) {
-            genreName.setBackground(ContextCompat.getDrawable(context, R.drawable.button_selected));
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+                genreName.setBackground(ContextCompat.getDrawable(context, R.drawable.button_selected));
+            }
         } else if (!genreModel.isSelected()) {
-            genreName.setBackground(ContextCompat.getDrawable(context, R.drawable.button_normal));
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+                genreName.setBackground(ContextCompat.getDrawable(context, R.drawable.button_normal));
+            }
         }
 
         return view;

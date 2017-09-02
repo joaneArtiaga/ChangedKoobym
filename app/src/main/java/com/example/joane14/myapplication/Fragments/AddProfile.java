@@ -1,18 +1,11 @@
 package com.example.joane14.myapplication.Fragments;
 
-import android.app.Activity;
-import android.app.AlertDialog;
-import android.app.DatePickerDialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
-import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.util.Log;
@@ -20,10 +13,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.Toast;
 
 import com.android.volley.NetworkResponse;
 import com.android.volley.Request;
@@ -33,43 +24,25 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.Volley;
 import com.esafirm.imagepicker.features.ImagePicker;
 import com.esafirm.imagepicker.model.Image;
+import com.example.joane14.myapplication.Class.SelectDateFragment;
 import com.example.joane14.myapplication.Model.User;
 import com.example.joane14.myapplication.R;
 import com.squareup.picasso.Picasso;
 
 import org.apache.commons.io.FileUtils;
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import java.io.BufferedReader;
-import java.io.ByteArrayOutputStream;
-import java.io.DataOutputStream;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
-import java.net.ProtocolException;
-import java.net.URL;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.Locale;
 import java.util.Map;
-
-import okhttp3.MediaType;
-import okhttp3.MultipartBody;
-import okhttp3.OkHttpClient;
-import okhttp3.RequestBody;
-
 import static android.app.Activity.RESULT_OK;
-import static android.content.ContentValues.TAG;
-import static com.facebook.FacebookSdk.getApplicationContext;
 
 public class AddProfile extends Fragment {
 
@@ -79,11 +52,7 @@ public class AddProfile extends Fragment {
     Button mNextAdd;
     User userModel;
     ImageView slctImage;
-    Calendar myCalendar;
     String filename;
-
-
-    DatePickerDialog.OnDateSetListener date;
 
 
     public AddProfile() {
@@ -112,22 +81,6 @@ public class AddProfile extends Fragment {
 
         userModel = new User();
 
-        myCalendar = Calendar.getInstance();
-
-        date = new DatePickerDialog.OnDateSetListener() {
-
-            @Override
-            public void onDateSet(DatePicker view, int year, int monthOfYear,
-                                  int dayOfMonth) {
-                // TODO Auto-generated method stub
-                myCalendar.set(Calendar.YEAR, year);
-                myCalendar.set(Calendar.MONTH, monthOfYear);
-                myCalendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
-                updateLabel();
-            }
-
-        };
-
 //        String filename = "123-1501684832903Screenshot_20170802-014107.jpg";
 
         slctImage = (ImageView) view.findViewById(R.id.displayPic);
@@ -147,9 +100,8 @@ public class AddProfile extends Fragment {
         mBirthdate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                new DatePickerDialog(getContext(), date, myCalendar
-                        .get(Calendar.YEAR), myCalendar.get(Calendar.MONTH),
-                        myCalendar.get(Calendar.DAY_OF_MONTH)).show();
+                DialogFragment newFragment = new SelectDateFragment();
+                newFragment.show(getFragmentManager(), "DatePicker");
             }
         });
 
@@ -234,12 +186,15 @@ public class AddProfile extends Fragment {
         return view;
     }
 
-    private void updateLabel() {
-        String myFormat = "YYYY-MM-DD"; //In which you need put here
-        SimpleDateFormat sdf = new SimpleDateFormat(myFormat, Locale.US);
 
-        mBirthdate.setText(sdf.format(myCalendar.getTime()));
-    }
+
+//
+//    private void updateLabel() {
+//        String myFormat = "YYYY-MM-DD"; //In which you need put here
+//        SimpleDateFormat sdf = new SimpleDateFormat(myFormat, Locale.US);
+//
+//        mBirthdate.setText(sdf.format(myCalendar.getTime()));
+//    }
 
     private void openImageChooser() {
         ImagePicker.create(this)

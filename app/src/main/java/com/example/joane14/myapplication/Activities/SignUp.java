@@ -41,13 +41,12 @@ public class SignUp extends AppCompatActivity implements Genre.OnFragmentInterac
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sign_up);
 
-
-        if (savedInstanceState == null) {
+        if(getIntent().getExtras().getString("Genre")!=null){
             fragmentManager = getSupportFragmentManager();
-//            Genre genreModel = new Genre();
-//            LocationChooser locChoose = new LocationChooser();
-//            changeFragment(locChoose);
+            Genre genreModel = new Genre();
+            changeFragment(genreModel);
         }
+
     }
 
     private void changeFragment(Fragment fragment) {
