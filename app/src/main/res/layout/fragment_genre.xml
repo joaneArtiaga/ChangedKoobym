@@ -7,26 +7,18 @@
     tools:context="com.example.joane14.myapplication.Fragments.Genre">
 
     <TextView
-        android:id="@+id/textView_genreTitle"
+        android:id="@+id/chose"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/btnNext"
         android:foregroundGravity="center_horizontal"
         android:gravity="center_horizontal"
         android:text="Choose Favorite Genre:"
         android:textColor="#FFFFFF"
-        android:textSize="20sp" />
+        android:textSize="20sp"
+        android:layout_below="@+id/btnNext"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
 
-    <GridView
-        android:id="@+id/gridView_genres"
-        android:layout_width="match_parent"
-        android:layout_marginRight="20dp"
-        android:layout_marginLeft="20dp"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/textView_genreTitle"
-        android:horizontalSpacing="50dp"
-        android:numColumns="2"
-        android:verticalSpacing="15dp" />
     <!--
 
         <LinearLayout
@@ -248,5 +240,16 @@
         android:layout_marginTop="5dp"
         android:clickable="true"
         app:srcCompat="@drawable/next" />
+
+    <GridView
+        android:id="@+id/gridView_genres"
+        android:layout_width="match_parent"
+        android:layout_height="410dp"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        android:horizontalSpacing="50dp"
+        android:numColumns="2"
+        android:verticalSpacing="15dp" />
 
 </RelativeLayout>

@@ -1,11 +1,13 @@
 package com.example.joane14.myapplication.Fragments;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -25,6 +27,7 @@ import com.android.volley.VolleyLog;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.example.joane14.myapplication.Activities.GsonDateDeserializer;
+import com.example.joane14.myapplication.Activities.LocationChooser;
 import com.example.joane14.myapplication.Adapters.GenreAdapter;
 import com.example.joane14.myapplication.Model.GenreModel;
 import com.example.joane14.myapplication.Model.User;
@@ -46,6 +49,7 @@ public class Genre extends Fragment implements AdapterView.OnItemClickListener{
     TextView mScifi, mAction, mAdventure, mRomace, mHorror, mHealth, mTravel, mReligion, mCook, mDrama, mMystery, mSelfHelp, mGuide, mChildren, mComics, mBiography;
     private GenreAdapter genreAdapter;
     private GridView mGridViewGenres;
+    private int genreCnt;
     private OnFragmentInteractionListener mListener;
 
     public Genre() {
@@ -73,17 +77,37 @@ public class Genre extends Fragment implements AdapterView.OnItemClickListener{
 
         mBtnNext = (ImageView) view.findViewById(R.id.btnNext);
 
+        genreCnt=0;
 
         mBtnNext.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                List<GenreModel> selectedGenres = new ArrayList<GenreModel>();
-                for(GenreModel mod : genreArray){
-                    if(mod.isSelected()){
-                        selectedGenres.add(mod);
+                if(genreCnt==0){
+                    Log.d("genreArray empty", Integer.toString(genreCnt));
+                    AlertDialog.Builder builder1 = new AlertDialog.Builder(getContext());
+                    builder1.setMessage("You must select one or more genre to be able to go the next stage.");
+                    builder1.setCancelable(true);
+
+                    builder1.setPositiveButton(
+                            "Okay",
+                            new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int id) {
+                                    dialog.cancel();
+                                }
+                            });
+
+                    AlertDialog alert11 = builder1.create();
+                    alert11.show();
+                }else{
+                    Log.d("genreArray not empty", Integer.toString(genreCnt));
+                    List<GenreModel> selectedGenres = new ArrayList<GenreModel>();
+                    for(GenreModel mod : genreArray){
+                        if(mod.isSelected()){
+                            selectedGenres.add(mod);
+                        }
                     }
+                    mListener.onGenreSelected(selectedGenres);
                 }
-                mListener.onGenreSelected(selectedGenres);
             }
         });
 
@@ -99,7 +123,7 @@ public class Genre extends Fragment implements AdapterView.OnItemClickListener{
 
     public void getGenres() {
         RequestQueue requestQueue = Volley.newRequestQueue(getContext());
-//        String URL = "http://192.168.1.134:8080/Mexaco/genre/all";
+//        String URL = "http://192.168.42.39:8080/Koobym/genre/all";
         String URL = Constants.WEB_SERVICE_URL+"genre/all";
         final Gson gson = new Gson();
         StringRequest stringRequest = new StringRequest(Request.Method.GET, URL, new Response.Listener<String>() {
@@ -141,8 +165,10 @@ public class Genre extends Fragment implements AdapterView.OnItemClickListener{
         GenreModel model = genreArray.get(i);
         if(model.isSelected()){
             model.setSelected(false);
+            this.genreCnt--;
         }else{
             model.setSelected(true);
+            this.genreCnt++;
         }
         genreAdapter.notifyDataSetChanged();
     }

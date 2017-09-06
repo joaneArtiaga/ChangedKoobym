@@ -5,6 +5,8 @@ import android.app.Activity;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.location.Address;
+import android.location.Geocoder;
 import android.location.Location;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentActivity;
@@ -34,7 +36,10 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
+import java.util.Locale;
 
 import static com.facebook.GraphRequest.TAG;
 
@@ -142,6 +147,42 @@ public class LocationChooser extends FragmentActivity implements
 
     }
 
+    public String getCompleteAddress(double latitude, double longitude){
+
+        Log.d("inside", "getCompleteAddress");
+
+        String address="", city="", state="", country = "", postalCode ="", knownName = "";
+        String addressComplete="";
+
+
+        Geocoder geocoder = new Geocoder(this, Locale.getDefault());
+        List<Address> addresses;
+
+
+        try {
+            addresses = geocoder.getFromLocation(latitude, longitude, 1);
+
+            if (addresses != null && addresses.size() > 0) {
+                address = addresses.get(0).getAddressLine(0);
+//                city = addresses.get(0).getLocality();
+//                state = addresses.get(0).getAdminArea();
+//                country = addresses.get(0).getCountryName();
+//                postalCode = addresses.get(0).getPostalCode();
+
+                Log.d("Location address", address);
+                addressComplete = address;
+//                Log.d("Location city", city);
+//                Log.d("Location state", state);
+//                Log.d("Location country", country);
+//                Log.d("Location postal code", postalCode);
+            }
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        return addressComplete;
+    }
 
     @Override
     protected void onResume() {
@@ -203,7 +244,9 @@ public class LocationChooser extends FragmentActivity implements
                     locationObj = new LocationModel();
                     locationObj.setLatitude(latLat);
                     locationObj.setLongitude(latLong);
-                    locationObj.setLocationName("Temporary name");
+                    Log.d("get Address", getCompleteAddress(latLat, latLong));
+//                    locationObj.setLocationName(getCompleteAddress(latLat, latLong));
+                    locationObj.setLocationName(getCompleteAddress(latLat, latLong));
                     locationList.add(locationObj);
 
                     Log.d("Latlng",latLng.toString());
