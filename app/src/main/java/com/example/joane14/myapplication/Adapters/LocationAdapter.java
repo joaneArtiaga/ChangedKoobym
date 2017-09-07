@@ -10,6 +10,8 @@ import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
+import com.example.joane14.myapplication.Activities.LocationChooser;
+import com.example.joane14.myapplication.Fragments.MostRentedBookFrag;
 import com.example.joane14.myapplication.Model.LocationModel;
 import com.example.joane14.myapplication.R;
 
@@ -24,6 +26,7 @@ public class LocationAdapter extends RecyclerView.Adapter<LocationAdapter.Locati
 
     private List<LocationModel> mLocationList;
     private static MyClickListener myClickListener;
+    private onDeleteListener deleteListener;
 
 
     public static class LocationObjHolder extends RecyclerView.ViewHolder
@@ -31,14 +34,14 @@ public class LocationAdapter extends RecyclerView.Adapter<LocationAdapter.Locati
             .OnClickListener {
         TextView title;
         TextView mLatitude, mLongitude;
-        ImageButton mChange;
+        Button mChange;
 
         public LocationObjHolder(View itemView) {
             super(itemView);
             title = (TextView) itemView.findViewById(R.id.locationName);
             mLatitude = (TextView) itemView.findViewById(R.id.latitude);
             mLongitude = (TextView) itemView.findViewById(R.id.longitude);
-            mChange = (ImageButton) itemView.findViewById(R.id.btnChange);
+            mChange = (Button) itemView.findViewById(R.id.btnChange);
             Log.i("Data object hlder", "Adding Listener");
             itemView.setOnClickListener(this);
         }
@@ -53,8 +56,9 @@ public class LocationAdapter extends RecyclerView.Adapter<LocationAdapter.Locati
         this.myClickListener = myClickListener;
     }
 
-    public LocationAdapter(List<LocationModel> myDataset) {
+    public LocationAdapter(List<LocationModel> myDataset, onDeleteListener deleteListener) {
         mLocationList = myDataset;
+        this.deleteListener = deleteListener;
     }
 
     @Override
@@ -70,10 +74,38 @@ public class LocationAdapter extends RecyclerView.Adapter<LocationAdapter.Locati
     }
 
     @Override
-    public void onBindViewHolder(LocationObjHolder holder, int position) {
-        holder.title.setText(mLocationList.get(position).getLocationName());
-        holder.mLongitude.setText(Float.toString((float) mLocationList.get(position).getLongitude()));
-        holder.mLatitude.setText(Float.toString((float) mLocationList.get(position).getLatitude()));
+    public void onBindViewHolder(LocationObjHolder holder, final int position) {
+        final LocationModel locModel = mLocationList.get(position);
+        holder.title.setText(locModel.getLocationName());
+        holder.mLongitude.setText(Float.toString((float) locModel.getLongitude()));
+        holder.mLatitude.setText(Float.toString((float) locModel.getLatitude()));
+
+        holder.mChange.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Log.d("inside", "onClickChange");
+                deleteItem(locModel);
+                Log.d("position cardview", Integer.toString(position));
+                Log.d("getPositionItem", Integer.toString(getPositionOfItem(locModel)));
+                deleteListener.onDeleteClick(getPositionOfItem(locModel));
+            }
+        });
+    }
+
+    private int getPositionOfItem(LocationModel locationModel){
+        int flag = 0;
+        for(int init = 0; init< mLocationList.size(); init++){
+            if(locationModel == mLocationList.get(init)){
+                flag = init;
+                break;
+            }
+        }
+        return flag;
+    }
+
+    private void deleteItem(LocationModel locModel){
+        mLocationList.remove(locModel);
+        notifyDataSetChanged();
     }
 
     public void addItem(LocationModel dataObj, int index) {
@@ -93,6 +125,10 @@ public class LocationAdapter extends RecyclerView.Adapter<LocationAdapter.Locati
 
     public interface MyClickListener {
         public void onItemClick(int position, View v);
+    }
+
+    public interface onDeleteListener{
+        void onDeleteClick(int position);
     }
 }
 

@@ -49,13 +49,15 @@ public class LocationChooser extends FragmentActivity implements
         GoogleApiClient.ConnectionCallbacks,
         GoogleMap.OnMapLongClickListener,
         GoogleApiClient.OnConnectionFailedListener,
-        GoogleMap.OnMarkerClickListener{
+        GoogleMap.OnMarkerClickListener,
+        LocationAdapter.onDeleteListener{
 
     GoogleMap googleMap;
-    private int cntMarker;
+    List<Marker> mMarker;
     private double longitude;
     private double latitude;
     private GoogleApiClient googleApiClient;
+    private Marker thisMarker;
     Button mNext;
     RecyclerView mRecycler;
     RecyclerView.Adapter recyclerAdapter;
@@ -69,7 +71,7 @@ public class LocationChooser extends FragmentActivity implements
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_location_chooser);
 
-        cntMarker=0;
+
         googleApiClient = new GoogleApiClient.Builder(this)
                 .addConnectionCallbacks(this)
                 .addOnConnectionFailedListener(this)
@@ -80,10 +82,10 @@ public class LocationChooser extends FragmentActivity implements
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
 
+        mMarker = new ArrayList<Marker>();
         locationList = new ArrayList<LocationModel>();
 
         locationObj = new LocationModel();
-//        createMapView();
 
         mNext = (Button) findViewById(R.id.btnNext);
 
@@ -91,7 +93,7 @@ public class LocationChooser extends FragmentActivity implements
             @Override
             public void onClick(View v) {
                 Log.d("Next Button", "Triggered");
-                if(LocationChooser.this.cntMarker<5){
+                if(recyclerAdapter.getItemCount()<5){
                     AlertDialog.Builder builder1 = new AlertDialog.Builder(LocationChooser.this);
                     builder1.setMessage("Only 5 locations are available. You cannot choose more than 5 or less than 5.");
                     builder1.setCancelable(true);
@@ -120,32 +122,11 @@ public class LocationChooser extends FragmentActivity implements
         mRecycler.setHasFixedSize(true);
         recyclerLayout = new LinearLayoutManager(this);
         mRecycler.setLayoutManager(recyclerLayout);
-        recyclerAdapter = new LocationAdapter(locationList);
+        recyclerAdapter = new LocationAdapter(locationList, this);
         mRecycler.setAdapter(recyclerAdapter);
 
     }
 
-    private void createMapView() {
-        try {
-            if (null == googleMap) {
-                googleMap = ((MapFragment) getFragmentManager().findFragmentById(
-                        R.id.map)).getMap();
-
-                if(null != googleMap) {
-                    Toast.makeText(getApplicationContext(),
-                            "Mapa carregado!", Toast.LENGTH_SHORT).show();
-                }
-
-                if (null == googleMap) {
-                    Toast.makeText(getApplicationContext(),
-                            "Erro ao criar mapa", Toast.LENGTH_SHORT).show();
-                }
-            }
-        } catch (NullPointerException exception) {
-            Log.e("mapApp", exception.toString());
-        }
-
-    }
 
     public String getCompleteAddress(double latitude, double longitude){
 
@@ -214,7 +195,7 @@ public class LocationChooser extends FragmentActivity implements
             public void onMapClick(LatLng latLng) {
                 double latLat, latLong;
 
-                if(LocationChooser.this.cntMarker==5){
+                if(recyclerAdapter.getItemCount()==5){
                     AlertDialog.Builder builder1 = new AlertDialog.Builder(LocationChooser.this);
                     builder1.setMessage("Only 5 locations are available. You cannot choose more than 5 or less than 5.");
                     builder1.setCancelable(true);
@@ -230,29 +211,33 @@ public class LocationChooser extends FragmentActivity implements
                     AlertDialog alert11 = builder1.create();
                     alert11.show();
                 }else{
-                    LocationChooser.this.cntMarker++;
-
-                    MarkerOptions marker = new MarkerOptions().position(
-                            latLng)
-                            .title("Hello Maps ");
-                    marker.icon(BitmapDescriptorFactory
-                            .defaultMarker(BitmapDescriptorFactory.HUE_AZURE));
-                    googleMap.addMarker(marker);
 
                     latLat = latLng.latitude;
                     latLong = latLng.longitude;
+
+                    MarkerOptions marker = new MarkerOptions().position(
+                            latLng)
+                            .title(getCompleteAddress(latLat, latLong));
+                    marker.icon(BitmapDescriptorFactory
+                            .defaultMarker(BitmapDescriptorFactory.HUE_AZURE));
+
+                    thisMarker = googleMap.addMarker(marker);
+                    mMarker.add(thisMarker);
+                    int position = mMarker.indexOf(thisMarker);
+
+                    Log.d("position Marker", Integer.toString(position));
+
+
                     locationObj = new LocationModel();
                     locationObj.setLatitude(latLat);
                     locationObj.setLongitude(latLong);
                     Log.d("get Address", getCompleteAddress(latLat, latLong));
-//                    locationObj.setLocationName(getCompleteAddress(latLat, latLong));
                     locationObj.setLocationName(getCompleteAddress(latLat, latLong));
                     locationList.add(locationObj);
 
                     Log.d("Latlng",latLng.toString());
 
 
-                    Log.d("Count Marker", Integer.toString(cntMarker));
                     recyclerAdapter.notifyDataSetChanged();
                 }
 
@@ -328,7 +313,12 @@ public class LocationChooser extends FragmentActivity implements
 
     @Override
     public boolean onMarkerClick(Marker marker) {
-        Log.d("Count Marker", Integer.toString(cntMarker));
         return false;
+    }
+
+    @Override
+    public void onDeleteClick(int position) {
+        mMarker.get(position).remove();
+        mMarker.remove(position);
     }
 }
