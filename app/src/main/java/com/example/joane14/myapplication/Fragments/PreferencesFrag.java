@@ -77,8 +77,8 @@ public class PreferencesFrag extends Fragment {
 
 
     private void getSuggested(int userId){
-//        String URL = "http://192.168.1.134:8080/Koobym/rentalDetail/suggested/%d";
-        String URL = Constants.WEB_SERVICE_URL+"rentalDetail/suggested/%d";
+        String URL = "http://192.168.1.2:8080/Koobym/rentalDetail/suggested/%d";
+//        String URL = Constants.WEB_SERVICE_URL+"rentalDetail/suggested/%d";
         URL = String.format(URL, userId);
         StringRequest stringRequest = new StringRequest(Request.Method.GET, URL, new Response.Listener<String>() {
             @Override

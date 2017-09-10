@@ -59,8 +59,8 @@ public class MostRentedBookFrag extends Fragment {
 
 
     private void getMostRented(){
-//        String URL = "http://192.168.1.134:8080/Koobym/rentalDetail/mostRented";
-        String URL = Constants.WEB_SERVICE_URL+"rentalDetail/mostRented";
+        String URL = "http://192.168.1.2:8080/Koobym/rentalDetail/mostRented";
+//        String URL = Constants.WEB_SERVICE_URL+"rentalDetail/mostRented";
         StringRequest stringRequest = new StringRequest(Request.Method.GET, URL, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
