@@ -2,6 +2,8 @@ package com.example.joane14.myapplication.Activities;
 
 import android.Manifest;
 import android.app.Activity;
+import android.app.Dialog;
+import android.app.TimePickerDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -15,13 +17,24 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.view.Gravity;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.Window;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageButton;
+import android.widget.LinearLayout;
+import android.widget.ListView;
+import android.widget.TimePicker;
 import android.widget.Toast;
 
 import com.example.joane14.myapplication.Adapters.LocationAdapter;
+import com.example.joane14.myapplication.Model.DayTimeModel;
+import com.example.joane14.myapplication.Model.GenreModel;
 import com.example.joane14.myapplication.Model.LocationModel;
+import com.example.joane14.myapplication.Model.MeetUpLocObj;
 import com.example.joane14.myapplication.R;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -38,6 +51,7 @@ import com.google.android.gms.maps.model.MarkerOptions;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 import java.util.Locale;
 
@@ -64,6 +78,11 @@ public class LocationChooser extends FragmentActivity implements
     RecyclerView.LayoutManager recyclerLayout;
     ArrayList<LocationModel> locationList = new ArrayList<LocationModel>();
     LocationModel locationObj;
+    AlertDialog alertDialog1;
+    final List timeSelected = new ArrayList<String>();;
+    final CharSequence[] values = {"Monday","Tuesday","Wednesday","Thursday","Friday","Saturday","Sunday"};
+    private int mHour, mMinute;
+    Bundle bundle;
 
 
     @Override
@@ -72,6 +91,11 @@ public class LocationChooser extends FragmentActivity implements
         setContentView(R.layout.activity_location_chooser);
 
 
+        final Dialog[] dialog = {new Dialog(this)};
+
+        final ArrayList itemsSelected = new ArrayList();
+
+        bundle = new Bundle();
         googleApiClient = new GoogleApiClient.Builder(this)
                 .addConnectionCallbacks(this)
                 .addOnConnectionFailedListener(this)
@@ -109,10 +133,50 @@ public class LocationChooser extends FragmentActivity implements
                     AlertDialog alert11 = builder1.create();
                     alert11.show();
                 }else{
+//                    CreateAlertDialogWithRadioButtonGroup();
+//
+                    AlertDialog.Builder builder = new AlertDialog.Builder(LocationChooser.this);
+                    builder.setTitle("Choose available Day for Meet Up");
 
-                    Intent intent = new Intent(LocationChooser.this, SignUp.class);
-                    intent.putExtra("Genre", "genreChooser");
-                    startActivity(intent);
+                    builder.setMultiChoiceItems(values, null,
+                            new DialogInterface.OnMultiChoiceClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int selectedItemId,
+                                                    boolean isSelected) {
+                                    Log.d("selectedItemId", Integer.toString(selectedItemId));
+
+                                    if (isSelected) {
+                                        itemsSelected.add(values[selectedItemId]);
+                                    } else if (itemsSelected.contains(values[selectedItemId])) {
+                                        Log.d("selectedItemId", Integer.toString(selectedItemId));
+                                        itemsSelected.remove(values[selectedItemId]);
+                                    }
+                                }
+                            })
+                            .setPositiveButton("Done!", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int id) {
+                                    for(int init=0; init<itemsSelected.size(); init++){
+                                        Log.d("list checked", values[init].toString());
+                                    }
+                                    MeetUpLocObj meetUpLocObj = new MeetUpLocObj();
+                                    meetUpLocObj.setLocationModelList(locationList);
+                                    Intent intent = new Intent(LocationChooser.this, SignUp.class);
+                                    intent.putExtra("AddTime", "AddTimeFrag");
+                                    intent.putStringArrayListExtra("listDay", itemsSelected);
+                                    bundle.putSerializable("locationObj", meetUpLocObj);
+                                    intent.putExtras(bundle);
+                                    startActivity(intent);
+                                }
+                            })
+                            .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int id) {
+                                }
+                            });
+                    dialog[0] = builder.create();
+                    dialog[0].show();
+
                 }
             }
         });
@@ -125,6 +189,31 @@ public class LocationChooser extends FragmentActivity implements
         recyclerAdapter = new LocationAdapter(locationList, this);
         mRecycler.setAdapter(recyclerAdapter);
 
+    }
+
+    public void CreateTimePicker(){
+        final Calendar c = Calendar.getInstance();
+        mHour = c.get(Calendar.HOUR_OF_DAY);
+        mMinute = c.get(Calendar.MINUTE);
+
+        TimePickerDialog timePickerDialog = new TimePickerDialog(this,
+                new TimePickerDialog.OnTimeSetListener() {
+
+                    @Override
+                    public void onTimeSet(TimePicker view, int hourOfDay,
+                                          int minute) {
+                        String timeGiven = "";
+                        timeGiven = hourOfDay + ":" + minute;
+
+
+
+                        timeSelected.add(timeGiven);
+                        Log.d("time Selected", timeSelected.toString());
+
+
+                    }
+                }, mHour, mMinute, false);
+        timePickerDialog.show();
     }
 
 
@@ -321,4 +410,5 @@ public class LocationChooser extends FragmentActivity implements
         mMarker.get(position).remove();
         mMarker.remove(position);
     }
+
 }

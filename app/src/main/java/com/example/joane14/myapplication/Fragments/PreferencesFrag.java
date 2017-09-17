@@ -77,7 +77,7 @@ public class PreferencesFrag extends Fragment {
 
 
     private void getSuggested(int userId){
-        String URL = "http://192.168.1.2:8080/Koobym/rentalDetail/suggested/%d";
+        String URL = "http://172.16.16.141:8080/Koobym/rentalDetail/suggested/%d";
 //        String URL = Constants.WEB_SERVICE_URL+"rentalDetail/suggested/%d";
         URL = String.format(URL, userId);
         StringRequest stringRequest = new StringRequest(Request.Method.GET, URL, new Response.Listener<String>() {
@@ -87,6 +87,7 @@ public class PreferencesFrag extends Fragment {
                 Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd").registerTypeAdapter(Date.class, GsonDateDeserializer.getInstance()).create();
                 suggested.clear();
                 suggested.addAll(Arrays.asList(gson.fromJson(response, RentalDetail[].class)));
+
             }
         }, new Response.ErrorListener() {
             @Override

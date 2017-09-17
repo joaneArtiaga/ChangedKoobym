@@ -29,6 +29,7 @@ import com.example.joane14.myapplication.Fragments.Constants;
 import com.example.joane14.myapplication.Model.FbUSer;
 import com.example.joane14.myapplication.Model.User;
 import com.example.joane14.myapplication.R;
+import com.example.joane14.myapplication.Utilities.SPUtility;
 import com.facebook.AccessToken;
 import com.facebook.AccessTokenTracker;
 import com.facebook.CallbackManager;
@@ -69,57 +70,6 @@ public class MainActivity extends AppCompatActivity {
     TextView mBtnRegister;
 
 
-    private void register() {
-        RequestQueue requestQueue = Volley.newRequestQueue(this);
-//        String URL = "http://192.168.1.134:8080/Mexaco/user/add";
-        String URL = Constants.WEB_SERVICE_URL+"user/add";
-        User user = new User();
-        user.setUserFname("bababa");
-        user.setUserLname("babasdas");
-        user.setAddress("asdfasdf");
-        user.setEmail("asdfasd");
-        user.setUsername("baldo");
-        user.setPassword("baldo");
-        user.setBirthdate(new Date());
-        user.setImageFilename("basdfasdf");
-        user.setPhoneNumber("basdfasdfasd");
-        final Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd").registerTypeAdapter(Date.class, GsonDateDeserializer.getInstance()).create();
-        final String mRequestBody = gson.toJson(user);
-        Log.d("LOG_VOLLEY", mRequestBody);
-        StringRequest stringRequest = new StringRequest(Request.Method.POST, URL, new Response.Listener<String>() {
-            @Override
-            public void onResponse(String response) {
-                Log.i("LOG_VOLLEY", response);
-                User user = gson.fromJson(response, User.class);
-                Log.i("LOG_VOLLEY", user.getEmail());
-                Log.i("LOG_VOLLEY", user.getUserFname());
-                Log.i("LOG_VOLLEY", user.getUserLname());
-            }
-        }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                Log.e("LOG_VOLLEY", error.toString());
-            }
-        }) {
-            @Override
-            public String getBodyContentType() {
-                return "application/json; charset=utf-8";
-            }
-
-            @Override
-            public byte[] getBody() throws AuthFailureError {
-                try {
-                    return mRequestBody == null ? null : mRequestBody.getBytes("utf-8");
-                } catch (UnsupportedEncodingException uee) {
-                    VolleyLog.wtf("Unsupported Encoding while trying to get the bytes of %s using %s", mRequestBody, "utf-8");
-                    return null;
-                }
-            }
-        };
-
-        requestQueue.add(stringRequest);
-
-    }
 
     public void registerUser(){
         Intent intent = new Intent(MainActivity.this, SignUp.class);
@@ -130,6 +80,24 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        if(SPUtility.getSPUtil(this).contains("USER_OBJECT")){
+            Log.d("inside", "contain SPUtility");
+            User spUser = new User();
+            spUser = (User) SPUtility.getSPUtil(MainActivity.this).getObject("USER_OBJECT", User.class);
+            Intent intent = new Intent(MainActivity.this, LandingPage.class);
+            Bundle b = new Bundle();
+            b.putSerializable("userModel", spUser);
+            b.putBoolean("fromRegister", false);
+            intent.putExtra("user",b);
+//                    intent.putExtra("recommned", b);
+            SPUtility.getSPUtil(MainActivity.this).putObject("USER_OBJECT ", spUser);
+            startActivity(intent);
+            Toast.makeText(MainActivity.this, "Contain", Toast.LENGTH_SHORT).show();
+        }else{
+            Log.d("inside", "empty SPUtility");
+            Toast.makeText(MainActivity.this, "Empty", Toast.LENGTH_SHORT).show();
+        }
 
         username = (EditText) findViewById(R.id.etUsername);
         pass = (EditText) findViewById(R.id.etPassword);
@@ -201,6 +169,7 @@ public class MainActivity extends AppCompatActivity {
 
                                         try {
                                             Log.d("inside try ctch", "");
+
                                             email = user.getString("email").toString();
                                             name = user.getString("name").toString();
                                             userId = user.getString("id").toString();
@@ -218,6 +187,8 @@ public class MainActivity extends AppCompatActivity {
 
                                             PrefUtil.getPrefUtilInstance(MainActivity.this)
                                                     .saveFacebookUserInfo(name, email, gender, userId);
+
+                                            SPUtility.getSPUtil(MainActivity.this).putObject("USER_OBJECT", user);
 
                                             Intent intent = new Intent(MainActivity.this, LandingPage.class);
                                             intent.putExtra("ProfileBundle", mbundle);
@@ -252,8 +223,8 @@ public class MainActivity extends AppCompatActivity {
 
     public void login(View view) {
         RequestQueue requestQueue = Volley.newRequestQueue(this);
-//        String URL = "http://192.168.1.134:8080/Koobym/user/login";
-        String URL = Constants.WEB_SERVICE_URL +"user/login";
+        String URL = "http://172.16.16.141:8080/Koobym/user/login";
+//        String URL = Constants.WEB_SERVICE_URL +"user/login";
         User user = new User();
         user.setUsername(mUsername);
         user.setPassword(mPassword);
@@ -283,6 +254,7 @@ public class MainActivity extends AppCompatActivity {
                     b.putBoolean("fromRegister", false);
                     intent.putExtra("user",b);
 //                    intent.putExtra("recommned", b);
+                    SPUtility.getSPUtil(MainActivity.this).putObject("USER_OBJECT", user);
                     startActivity(intent);
                 }
 

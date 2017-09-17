@@ -32,6 +32,7 @@ import com.example.joane14.myapplication.Adapters.GenreAdapter;
 import com.example.joane14.myapplication.Model.GenreModel;
 import com.example.joane14.myapplication.Model.User;
 import com.example.joane14.myapplication.R;
+import com.example.joane14.myapplication.Utilities.SPUtility;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
@@ -110,6 +111,7 @@ public class Genre extends Fragment implements AdapterView.OnItemClickListener{
                 }
             }
         });
+//        User user = (User) SPUtility.getSPUtil(getContext()).getObject("USER_OBJECT", User.class);
 
         mGridViewGenres = (GridView) view.findViewById(R.id.gridView_genres);
         genreAdapter = new GenreAdapter(getContext(), genreArray);
@@ -123,7 +125,7 @@ public class Genre extends Fragment implements AdapterView.OnItemClickListener{
 
     public void getGenres() {
         RequestQueue requestQueue = Volley.newRequestQueue(getContext());
-        String URL = "http://192.168.1.2:8080/Koobym/genre/all";
+        String URL = "http://172.16.16.141:8080/Koobym/genre/all";
 //        String URL = Constants.WEB_SERVICE_URL+"genre/all";
         final Gson gson = new Gson();
         StringRequest stringRequest = new StringRequest(Request.Method.GET, URL, new Response.Listener<String>() {

@@ -15,6 +15,7 @@ public class User implements Serializable{
 
     @SerializedName("genres")
     private List<GenreModel> genreArray;
+    private List<LocationModel> locationArray;
     private Integer userId;
     private String userFname;
     private String userLname;
@@ -26,6 +27,16 @@ public class User implements Serializable{
     private String email;
     private String imageFilename;
 
+
+    public void setLocationArray(List<LocationModel> locationArray) {
+        this.locationArray = locationArray;
+    }
+
+    public List<LocationModel> getLocationArray() {
+        return locationArray;
+    }
+
+
     public void setGenreArray(List<GenreModel> genreArray) {
         this.genreArray = genreArray;
     }
@@ -33,6 +44,8 @@ public class User implements Serializable{
     public List<GenreModel> getGenreArray() {
         return genreArray;
     }
+
+
 
     public int getUserId() {
         return userId;

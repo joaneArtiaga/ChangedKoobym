@@ -1,6 +1,7 @@
 package com.example.joane14.myapplication.Activities;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
@@ -17,9 +18,12 @@ import com.android.volley.VolleyLog;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.example.joane14.myapplication.Fragments.AddProfile;
+import com.example.joane14.myapplication.Fragments.AddTimeFrag;
 import com.example.joane14.myapplication.Fragments.Constants;
 import com.example.joane14.myapplication.Fragments.Genre;
 import com.example.joane14.myapplication.Model.GenreModel;
+import com.example.joane14.myapplication.Model.LocationModel;
+import com.example.joane14.myapplication.Model.MeetUpLocObj;
 import com.example.joane14.myapplication.Model.User;
 import com.example.joane14.myapplication.R;
 import com.google.gson.Gson;
@@ -29,9 +33,13 @@ import java.io.UnsupportedEncodingException;
 import java.util.Date;
 import java.util.List;
 
-public class SignUp extends AppCompatActivity implements Genre.OnFragmentInteractionListener, AddProfile.OnFragmentInteractionListener {
+public class SignUp extends AppCompatActivity implements
+        Genre.OnFragmentInteractionListener,
+        AddProfile.OnFragmentInteractionListener,
+        AddTimeFrag.OnAddTimeInteractionListener{
 
     private List<GenreModel> genres;
+    private List<LocationModel> locations;
     private FragmentManager fragmentManager;
     private User userModel;
     Bundle mBundle;
@@ -46,6 +54,28 @@ public class SignUp extends AppCompatActivity implements Genre.OnFragmentInterac
             Genre genreModel = new Genre();
             changeFragment(genreModel);
         }
+
+        if(getIntent().getExtras().getString("AddTime")!=null){
+            fragmentManager = getSupportFragmentManager();
+            AddTimeFrag addTimeModel = new AddTimeFrag();
+            changeFragment(addTimeModel);
+            MeetUpLocObj meetUpLocObj = new MeetUpLocObj();
+            mBundle = getIntent().getExtras();
+            meetUpLocObj = (MeetUpLocObj) mBundle.getSerializable("locationObj");
+            if(meetUpLocObj!=null){
+                Log.d("MeetUpLocObj", "is not null");
+            }else{
+                Log.d("MeetUpLocObj", "is null");
+            }
+            if(getIntent().getExtras().getStringArrayList("listDay")!=null){
+                Log.d("listDay", "is not null");
+                Log.d("listDay", getIntent().getExtras().getStringArrayList("listDay").toString());
+            }else{
+                Log.d("listDay", "is null");
+            }
+        }
+
+
 
     }
 
@@ -84,8 +114,8 @@ public class SignUp extends AppCompatActivity implements Genre.OnFragmentInterac
 
     private void register() {
         RequestQueue requestQueue = Volley.newRequestQueue(this);
-//        String URL = "http://192.168.1.134:8080/Koobym/user/add";
-        String URL = Constants.WEB_SERVICE_URL+"user/add";
+        String URL = "http://172.16.16.141:8080/Koobym/user/add";
+//        String URL = Constants.WEB_SERVICE_URL+"user/add";
 
         User user = new User();
         user.setUserFname(userModel.getUserFname());
@@ -111,6 +141,7 @@ public class SignUp extends AppCompatActivity implements Genre.OnFragmentInterac
                 Log.i("LOG_VOLLEY", user.getEmail());
                 Log.i("LOG_VOLLEY", user.getUserFname());
                 Log.i("LOG_VOLLEY", user.getUserLname());
+                user.setGenreArray(genres);
                 Intent intent = new Intent(SignUp.this, LandingPage.class);
                 Bundle b = new Bundle();
                 b.putBoolean("fromRegister", true);
@@ -143,4 +174,8 @@ public class SignUp extends AppCompatActivity implements Genre.OnFragmentInterac
         requestQueue.add(stringRequest);
     }
 
+    @Override
+    public void onAddTimeClickListener(Uri uri) {
+
+    }
 }

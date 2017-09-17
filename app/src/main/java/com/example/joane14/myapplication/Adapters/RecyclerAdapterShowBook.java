@@ -99,6 +99,12 @@ public class RecyclerAdapterShowBook extends RecyclerView.Adapter<RecyclerAdapte
             author = "No Author";
         }
 
+        if(author.isEmpty()){
+            Log.d("author", "empty");
+        }else{
+            Log.d("author", "not empty");
+        }
+
         holder.mBookAuthor.setText(author);
 
     }

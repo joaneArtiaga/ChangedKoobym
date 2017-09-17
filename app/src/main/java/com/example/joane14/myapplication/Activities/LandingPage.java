@@ -32,9 +32,11 @@ import com.example.joane14.myapplication.Fragments.Constants;
 import com.example.joane14.myapplication.Fragments.MostRentedBookFrag;
 import com.example.joane14.myapplication.Fragments.PreferencesFrag;
 import com.example.joane14.myapplication.Fragments.VolleyUtil;
+import com.example.joane14.myapplication.Model.LocationModel;
 import com.example.joane14.myapplication.Model.RentalDetail;
 import com.example.joane14.myapplication.Model.User;
 import com.example.joane14.myapplication.R;
+import com.example.joane14.myapplication.Utilities.SPUtility;
 import com.facebook.login.LoginManager;
 import com.facebook.login.widget.ProfilePictureView;
 import com.google.gson.Gson;
@@ -50,7 +52,9 @@ import java.util.Date;
 import java.util.List;
 
 public class LandingPage extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener, MostRentedBookFrag.OnFragmentInteractionListener, PreferencesFrag.OnFragmentInteractionListener{
+        implements NavigationView.OnNavigationItemSelectedListener,
+        MostRentedBookFrag.OnFragmentInteractionListener,
+        PreferencesFrag.OnFragmentInteractionListener{
     private String name, userId, email, gender;
     Bundle mBundle, mBundleLogin, bundlePass;
     User userModel;
@@ -116,6 +120,37 @@ public class LandingPage extends AppCompatActivity
 
 
             mBundleLogin = intent.getBundleExtra("user");
+            this.userModel = (User) mBundleLogin.getSerializable("userModel");
+
+            Log.d("User filename", userModel.getImageFilename());
+            Log.d("User Id", String.valueOf(userModel.getUserId()));
+
+            Log.d("User Login", userModel.getUserFname());
+            mName.setText(userModel.getUserFname()+" "+ userModel.getUserLname());
+            mEmail.setText(userModel.getEmail());
+            Picasso.with(LandingPage.this).load(String.format(Constants.IMAGE_URL, userModel.getImageFilename())).fit().into(profileImg);
+
+
+            if(mBundleLogin.getBoolean("fromRegister")==true){
+                Log.d("inside", "TRUEfromRegister");
+                fragmentManager = getSupportFragmentManager();
+                MostRentedBookFrag mrbf = MostRentedBookFrag.newInstance();
+                FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+                fragmentTransaction.replace(R.id.fragment_landing_container, MostRentedBookFrag.newInstance(), mrbf.getTag());
+                fragmentTransaction.commit();
+            }else{
+                bundlePass.putSerializable("userModelPass", userModel);
+                Log.d("userModelPass1st", userModel.toString());
+                fragmentManager = getSupportFragmentManager();
+                PreferencesFrag prefFrag = PreferencesFrag.newInstance(bundlePass);
+                FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+                fragmentTransaction.replace(R.id.fragment_landing_container, prefFrag, prefFrag.getTag());
+                fragmentTransaction.commit();
+
+            }
+        }
+        else if(null!=intent.getBundleExtra("SPBundle")){
+            mBundleLogin = intent.getBundleExtra("SPBundle");
             this.userModel = (User) mBundleLogin.getSerializable("userModel");
 
             Log.d("User filename", userModel.getImageFilename());
@@ -219,6 +254,7 @@ public class LandingPage extends AppCompatActivity
         } else if (id == R.id.request) {
 
         } else if (id == R.id.signOut) {
+            SPUtility.getSPUtil(LandingPage.this).clear();
             LoginManager.getInstance().logOut();
             Intent intent = new Intent(LandingPage.this, MainActivity.class);
             startActivity(intent);
@@ -239,4 +275,5 @@ public class LandingPage extends AppCompatActivity
     public void onMostRentedListener(Uri uri) {
 
     }
+
 }
