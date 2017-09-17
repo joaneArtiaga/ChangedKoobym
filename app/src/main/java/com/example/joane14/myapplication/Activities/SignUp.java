@@ -56,9 +56,6 @@ public class SignUp extends AppCompatActivity implements
         }
 
         if(getIntent().getExtras().getString("AddTime")!=null){
-            fragmentManager = getSupportFragmentManager();
-            AddTimeFrag addTimeModel = new AddTimeFrag();
-            changeFragment(addTimeModel);
             MeetUpLocObj meetUpLocObj = new MeetUpLocObj();
             mBundle = getIntent().getExtras();
             meetUpLocObj = (MeetUpLocObj) mBundle.getSerializable("locationObj");
@@ -73,6 +70,12 @@ public class SignUp extends AppCompatActivity implements
             }else{
                 Log.d("listDay", "is null");
             }
+
+            mBundle.putStringArrayList("listDay", getIntent().getExtras().getStringArrayList("listDay"));
+            fragmentManager = getSupportFragmentManager();
+            AddTimeFrag addTimeModel = new AddTimeFrag();
+            addTimeModel.setArguments(mBundle);
+            changeFragment(addTimeModel);
         }
 
 
