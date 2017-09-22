@@ -238,7 +238,7 @@ public class AddProfile extends Fragment {
         }
     }
 
-    String uploadUrl = "http://172.16.16.141:8080/Koobym/image/upload";
+    String uploadUrl = "http://192.168.1.2:8080/Koobym/image/upload";
 //    String uploadUrl = Constants.WEB_SERVICE_URL+"image/upload";
 
     private void uploadFile(final String path) {

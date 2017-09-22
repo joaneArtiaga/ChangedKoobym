@@ -59,7 +59,7 @@ public class MostRentedBookFrag extends Fragment {
 
 
     private void getMostRented(){
-        String URL = "http://172.16.16.141:8080/Koobym/rentalDetail/mostRented";
+        String URL = "http://192.168.1.2:8080/Koobym/rentalDetail/mostRented";
 //        String URL = Constants.WEB_SERVICE_URL+"rentalDetail/mostRented";
         StringRequest stringRequest = new StringRequest(Request.Method.GET, URL, new Response.Listener<String>() {
             @Override
@@ -100,12 +100,6 @@ public class MostRentedBookFrag extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-        ((LandingPageAdapter) mAdapter).setOnItemClickListener(new LandingPageAdapter.MyClickListener() {
-            @Override
-            public void onItemClick(int position, View v) {
-                Log.i(LOG_TAG, " Clicked on Item " + position);
-            }
-        });
     }
 
 

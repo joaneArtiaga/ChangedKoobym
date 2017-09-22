@@ -13,4 +13,7 @@ public class Constants {
 
     public static final String GOOGLE_API_SEARCH_URL = "https://www.googleapis.com/books/v1/volumes?q=intitle:%s";
 
+    public static final String ISBN_SEARCH_URL = "http://isbndb.com/api/v2/json/IX7LA6KI/books?q=%s";
+
+
 }

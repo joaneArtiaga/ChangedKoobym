@@ -1,6 +1,9 @@
 package com.example.joane14.myapplication.Adapters;
 
 import android.app.Activity;
+import android.content.Context;
+import android.content.Intent;
+import android.os.Bundle;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -9,7 +12,10 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.example.joane14.myapplication.Activities.LandingPage;
+import com.example.joane14.myapplication.Activities.ViewBookActivity;
 import com.example.joane14.myapplication.Fragments.Constants;
+import com.example.joane14.myapplication.Model.BookOwnerModel;
 import com.example.joane14.myapplication.Model.RentalDetail;
 import com.example.joane14.myapplication.R;
 import com.squareup.picasso.Picasso;
@@ -22,23 +28,22 @@ import java.util.List;
 
 public class LandingPageAdapter extends RecyclerView.Adapter<LandingPageAdapter.BookHolder>{
 
-    private List<RentalDetail> bookList;
-    private Activity context;
+    public List<RentalDetail> bookList;
+    public Activity context;
 
-    private static MyClickListener myClickListener;
 
     @Override
     public LandingPageAdapter.BookHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.cardview_item_landing_page, parent, false);
 
-        BookHolder dataObjectHolder = new BookHolder(view);
+        this.context = (Activity) parent.getContext();
+        Log.d("LandingPAgeAdapter","inside");
+        BookHolder dataObjectHolder = new BookHolder(this.context, view);
         return dataObjectHolder;
     }
 
-    public void setOnItemClickListener(MyClickListener myClickListener) {
-        this.myClickListener = myClickListener;
-    }
+
 
     public LandingPageAdapter(List<RentalDetail> myDataset) {
         bookList = myDataset;
@@ -62,11 +67,15 @@ public class LandingPageAdapter extends RecyclerView.Adapter<LandingPageAdapter.
                     }
                 }
             }
+            Log.d("authorName if", "inside");
+            Log.d("authorName if", author);
+            holder.mBookAuthor.setText(author);
         }else{
             author = "No Author";
+            Log.d("authorName else", "inside");
+            Log.d("authorName else", author);
+            holder.mBookAuthor.setText(author);
         }
-
-        holder.mBookAuthor.setText(author);
 
         Picasso.with(context).load(String.format(Constants.IMAGE_URL, bookList.get(position).getBookOwner().getBookObj().getBookFilename())).fit().into(holder.mBookFilename);
 
@@ -76,30 +85,64 @@ public class LandingPageAdapter extends RecyclerView.Adapter<LandingPageAdapter.
     public int getItemCount() {
         return bookList.size();
     }
-    public static class BookHolder extends RecyclerView.ViewHolder
-            implements View
-            .OnClickListener {
+    public class BookHolder extends RecyclerView.ViewHolder {
         TextView mBookTitle, mBookPrice, mBookAuthor;
         ImageView mBookFilename;
+        RentalDetail rentalDetailObj;
+        Context context;
 
-        public BookHolder(View itemView) {
+        public BookHolder(final Context context, View itemView) {
             super(itemView);
 
+            this.context = context;
             mBookTitle = (TextView) itemView.findViewById(R.id.lpBookTitle);
             mBookAuthor = (TextView) itemView.findViewById(R.id.lpAuthor);
             mBookPrice = (TextView) itemView.findViewById(R.id.lpBookPrice);
             mBookFilename = (ImageView) itemView.findViewById(R.id.displayBookPic);
-            itemView.setOnClickListener(this);
+//            itemView.setOnClickListener(this);
+
+
+            itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    rentalDetailObj = new RentalDetail();
+                    Bundle bundle = new Bundle();
+                    int position = getAdapterPosition();
+                    Log.d("AdapterPosition", "inside "+Integer.toString(position));
+                    Intent intent = new Intent(LandingPageAdapter.this.context, ViewBookActivity.class);
+                    rentalDetailObj = LandingPageAdapter.this.bookList.get(position);
+                    if(rentalDetailObj==null){
+                        Log.d("rentalDetailAdapter", "is null");
+                    }else{
+                        Log.d("rentalDetailAdapter", "is not null");
+                    }
+                    intent.putExtra("ViewBook", "fromAdapter");
+                    bundle.putSerializable("View", rentalDetailObj);
+                    intent.putExtras(bundle);
+                    context.startActivity(intent);
+                }
+            });
         }
 
-        @Override
-        public void onClick(View v) {
-            myClickListener.onItemClick(getAdapterPosition(), v);
-        }
+//        @Override
+//        public void onClick(View v) {
+//            int position = getAdapterPosition();
+//
+//
+//            Log.d("AdapterPosition", "inside "+Integer.toString(position));
+//
+//        }
     }
 
-    public interface MyClickListener {
-        public void onItemClick(int position, View v);
+    public String getDetails(int position){
+        String result = "";
+
+        result = bookList.get(position).getBookOwner().toString();
+
+
+
+        return result;
+
     }
 
 }

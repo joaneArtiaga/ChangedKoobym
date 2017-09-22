@@ -1,10 +1,12 @@
 package com.example.joane14.myapplication.Model;
 
+import java.io.Serializable;
+
 /**
  * Created by Joane14 on 08/08/2017.
  */
 
-public class RentalDetail {
+public class RentalDetail implements Serializable{
     private int rental_detailId;
 
     private int daysForRent;

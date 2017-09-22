@@ -57,11 +57,11 @@ public class PreferencesFrag extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_most_rented_book, container, false);
-        Log.d("userModelPass", "inside");
+        Log.d("preFrag", "inside");
 
         userObj = new User();
         this.userObj = (User) getArguments().getSerializable("userModelPass");
-        Log.d("userModelPass", userObj.toString());
+        Log.d("userModelPass PreFrag", userObj.toString());
         suggested = new ArrayList<RentalDetail>();
 
         mRecyclerView = (RecyclerView) view.findViewById(R.id.my_recycler_view_rentedBooks);
@@ -77,7 +77,7 @@ public class PreferencesFrag extends Fragment {
 
 
     private void getSuggested(int userId){
-        String URL = "http://172.16.16.141:8080/Koobym/rentalDetail/suggested/%d";
+        String URL = "http://192.168.1.2:8080/Koobym/rentalDetail/suggested/%d";
 //        String URL = Constants.WEB_SERVICE_URL+"rentalDetail/suggested/%d";
         URL = String.format(URL, userId);
         StringRequest stringRequest = new StringRequest(Request.Method.GET, URL, new Response.Listener<String>() {

@@ -21,6 +21,7 @@ import com.example.joane14.myapplication.Fragments.AddProfile;
 import com.example.joane14.myapplication.Fragments.AddTimeFrag;
 import com.example.joane14.myapplication.Fragments.Constants;
 import com.example.joane14.myapplication.Fragments.Genre;
+import com.example.joane14.myapplication.Model.DayTimeModel;
 import com.example.joane14.myapplication.Model.GenreModel;
 import com.example.joane14.myapplication.Model.LocationModel;
 import com.example.joane14.myapplication.Model.MeetUpLocObj;
@@ -40,6 +41,7 @@ public class SignUp extends AppCompatActivity implements
 
     private List<GenreModel> genres;
     private List<LocationModel> locations;
+    private List<DayTimeModel> dayTimeList;
     private FragmentManager fragmentManager;
     private User userModel;
     Bundle mBundle;
@@ -61,6 +63,7 @@ public class SignUp extends AppCompatActivity implements
             meetUpLocObj = (MeetUpLocObj) mBundle.getSerializable("locationObj");
             if(meetUpLocObj!=null){
                 Log.d("MeetUpLocObj", "is not null");
+                this.locations = meetUpLocObj.getLocationModelList();
             }else{
                 Log.d("MeetUpLocObj", "is null");
             }
@@ -117,7 +120,7 @@ public class SignUp extends AppCompatActivity implements
 
     private void register() {
         RequestQueue requestQueue = Volley.newRequestQueue(this);
-        String URL = "http://172.16.16.141:8080/Koobym/user/add";
+        String URL = "http://192.168.1.2:8080/Koobym/user/add";
 //        String URL = Constants.WEB_SERVICE_URL+"user/add";
 
         User user = new User();
@@ -178,7 +181,10 @@ public class SignUp extends AppCompatActivity implements
     }
 
     @Override
-    public void onAddTimeClickListener(Uri uri) {
-
+    public void onAddTimeClickListener(List<DayTimeModel> listDayTimeModel) {
+        Log.d("addTimeClickListerner", "inside");
+        this.dayTimeList = listDayTimeModel;
+        Genre genreModel = new Genre();
+        changeFragment(genreModel);
     }
 }
