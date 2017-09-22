@@ -44,11 +44,12 @@
 
             <EditText
                 android:id="@+id/firstName"
-                android:layout_width="250dp"
+                android:layout_width="200dp"
                 android:layout_height="25dp"
                 android:layout_gravity="center"
                 android:layout_marginTop="10dp"
                 android:background="@drawable/rounded_edittext"
+                android:backgroundTint="#f0aaa0"
                 android:gravity="center"
                 android:hint="First Name"
                 android:inputType="text"
@@ -57,11 +58,12 @@
 
             <EditText
                 android:id="@+id/lastName"
-                android:layout_width="250dp"
+                android:layout_width="200dp"
                 android:layout_height="25dp"
                 android:layout_gravity="center"
                 android:layout_marginTop="10dp"
                 android:background="@drawable/rounded_edittext"
+                android:backgroundTint="#f0aaa0"
                 android:gravity="center"
                 android:hint="Last Name"
                 android:inputType="text"
@@ -69,35 +71,38 @@
 
             <EditText
                 android:id="@+id/username"
-                android:layout_width="250dp"
+                android:layout_width="200dp"
                 android:layout_height="25dp"
                 android:layout_gravity="center"
                 android:layout_marginTop="10dp"
-                android:inputType="text"
                 android:background="@drawable/rounded_edittext"
+                android:backgroundTint="#f0aaa0"
                 android:gravity="center"
                 android:hint="Username"
+                android:inputType="text"
                 android:textSize="15sp" />
 
             <EditText
                 android:id="@+id/address"
-                android:layout_width="250dp"
+                android:layout_width="200dp"
                 android:layout_height="25dp"
                 android:layout_gravity="center"
                 android:layout_marginTop="10dp"
                 android:background="@drawable/rounded_edittext"
+                android:backgroundTint="#f0aaa0"
                 android:gravity="center"
-                android:inputType="text"
                 android:hint="Address"
+                android:inputType="text"
                 android:textSize="15sp" />
 
             <EditText
                 android:id="@+id/email"
-                android:layout_width="250dp"
+                android:layout_width="200dp"
                 android:layout_height="25dp"
                 android:layout_gravity="center"
                 android:layout_marginTop="10dp"
                 android:background="@drawable/rounded_edittext"
+                android:backgroundTint="#f0aaa0"
                 android:gravity="center"
                 android:hint="Email"
                 android:inputType="textEmailAddress"
@@ -105,25 +110,27 @@
 
             <EditText
                 android:id="@+id/birthDate"
-                android:layout_width="250dp"
+                android:layout_width="200dp"
                 android:layout_height="25dp"
                 android:layout_gravity="center"
                 android:layout_marginTop="10dp"
                 android:background="@drawable/rounded_edittext"
-                android:gravity="center"
-                android:hint="Birth Date (YYYY-MM-DD)"
+                android:backgroundTint="#f0aaa0"
                 android:clickable="true"
                 android:focusable="false"
+                android:gravity="center"
+                android:hint="Birth Date (YYYY-MM-DD)"
                 android:inputType="datetime"
                 android:textSize="15sp" />
 
             <EditText
                 android:id="@+id/contactNumber"
-                android:layout_width="250dp"
+                android:layout_width="200dp"
                 android:layout_height="25dp"
                 android:layout_gravity="center"
                 android:layout_marginTop="10dp"
                 android:background="@drawable/rounded_edittext"
+                android:backgroundTint="#f0aaa0"
                 android:gravity="center"
                 android:hint="Contact number"
                 android:inputType="phone"
@@ -131,11 +138,12 @@
 
             <EditText
                 android:id="@+id/password"
-                android:layout_width="250dp"
+                android:layout_width="200dp"
                 android:layout_height="25dp"
                 android:layout_gravity="center"
                 android:layout_marginTop="10dp"
                 android:background="@drawable/rounded_edittext"
+                android:backgroundTint="#f0aaa0"
                 android:gravity="center"
                 android:hint="Password"
                 android:inputType="textPassword"
@@ -143,11 +151,12 @@
 
             <EditText
                 android:id="@+id/confirmPassword"
-                android:layout_width="250dp"
+                android:layout_width="200dp"
                 android:layout_height="25dp"
                 android:layout_gravity="center"
                 android:layout_marginTop="10dp"
                 android:background="@drawable/rounded_edittext"
+                android:backgroundTint="#f0aaa0"
                 android:gravity="center"
                 android:hint="Confirm Password"
                 android:inputType="textPassword"
@@ -158,13 +167,13 @@
 
     <Button
         android:id="@+id/btnNextAdd"
-        android:layout_width="100dp"
+        android:layout_width="80dp"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
         android:layout_marginBottom="20dp"
         android:layout_marginTop="5dp"
-        android:background="@color/colorOrange"
+        android:background="#d8e1dc"
         android:text="Create Account"
         android:textColor="@color/colorDark" />
 
