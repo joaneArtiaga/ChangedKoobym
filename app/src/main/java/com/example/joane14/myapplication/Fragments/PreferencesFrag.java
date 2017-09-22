@@ -56,7 +56,7 @@ public class PreferencesFrag extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_most_rented_book, container, false);
+        View view = inflater.inflate(R.layout.fragment_preferences, container, false);
         Log.d("preFrag", "inside");
 
         userObj = new User();
@@ -64,7 +64,7 @@ public class PreferencesFrag extends Fragment {
         Log.d("userModelPass PreFrag", userObj.toString());
         suggested = new ArrayList<RentalDetail>();
 
-        mRecyclerView = (RecyclerView) view.findViewById(R.id.my_recycler_view_rentedBooks);
+        mRecyclerView = (RecyclerView) view.findViewById(R.id.my_recycler_view_preferences);
         mRecyclerView.setHasFixedSize(true);
         mLayoutManager = new LinearLayoutManager(getContext());
         mRecyclerView.setLayoutManager(mLayoutManager);
