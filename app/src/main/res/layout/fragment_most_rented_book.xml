@@ -7,8 +7,8 @@
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/my_recycler_view_rentedBooks"
-        android:layout_width="100dp"
-        android:layout_height="100dp"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
         android:scrollbars="vertical" />
