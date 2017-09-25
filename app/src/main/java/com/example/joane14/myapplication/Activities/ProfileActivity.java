@@ -68,7 +68,7 @@ public class ProfileActivity extends AppCompatActivity implements NavigationView
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbarProfile);
         setSupportActionBar(toolbar);
 
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout_profile);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.setDrawerListener(toggle);
@@ -98,7 +98,7 @@ public class ProfileActivity extends AppCompatActivity implements NavigationView
 //                Log.d("User Login", userObj.getUserFname());
 //                mName.setText(userObj.getUserFname()+" "+ userObj.getUserLname());
 //                mEmail.setText(userObj.getEmail());
-//                Picasso.with(ProfileActivity.this).load(String.format(Constants.IMAGE_URL, userObj.getImageFilename())).fit().into(profileImg);
+                Picasso.with(ProfileActivity.this).load(String.format(Constants.IMAGE_URL, userObj.getImageFilename())).fit().into(profileImg);
                 Log.d("Fragment", "inside");
                 mBundle.putSerializable("userDetails", userObj);
                 Log.d("userDetails", userObj.toString());
@@ -282,7 +282,10 @@ public class ProfileActivity extends AppCompatActivity implements NavigationView
 
         if (id == R.id.home) {
             Intent intent = new Intent(ProfileActivity.this, LandingPage.class);
-            intent.putExtra("fromRegister", false);
+
+            Bundle bundle = new Bundle();
+            bundle.putBoolean("fromRegister", false);
+            intent.putExtra("user", bundle);
             startActivity(intent);
         } else if (id == R.id.profile) {
             flag = false;
@@ -304,10 +307,10 @@ public class ProfileActivity extends AppCompatActivity implements NavigationView
         }
 
         if(flag == false){
-            DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+            DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout_profile);
             drawer.closeDrawer(GravityCompat.START);
         }else{
-            DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+            DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout_profile);
             drawer.closeDrawer(GravityCompat.START);
         }
 
@@ -316,7 +319,7 @@ public class ProfileActivity extends AppCompatActivity implements NavigationView
 
     @Override
     public void onBackPressed() {
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout_profile);
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
         } else {
