@@ -342,8 +342,9 @@ public class LocationChooser extends FragmentActivity implements
 
         if(ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
                 && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED){
-            Toast.makeText(this, "Turn on Location", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Location not granted", Toast.LENGTH_SHORT).show();
         }
+
         Location location = LocationServices.FusedLocationApi.getLastLocation(googleApiClient);
 
         if(location!=null){

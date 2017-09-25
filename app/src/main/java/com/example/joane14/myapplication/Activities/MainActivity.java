@@ -68,6 +68,7 @@ public class    MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+
         if(SPUtility.getSPUtil(this).contains("USER_OBJECT")){
             Log.d("inside", "contain SPUtility");
             User spUser = new User();
@@ -77,6 +78,11 @@ public class    MainActivity extends AppCompatActivity {
             b.putSerializable("userModel", spUser);
             b.putBoolean("fromRegister", false);
             intent.putExtra("user",b);
+            if(spUser==null){
+                Log.d("spUser", "is null");
+            }else{
+                Log.d("spUser", "is not null");
+            }
 //                    intent.putExtra("recommned", b);
             SPUtility.getSPUtil(MainActivity.this).putObject("USER_OBJECT ", spUser);
             startActivity(intent);
@@ -116,23 +122,23 @@ public class    MainActivity extends AppCompatActivity {
 
         });
         mbundle = new Bundle();
-        if (isLoggedIn()) {
-            Log.d("Logged in", "True");
-
-            FbUSer userFB;
-            PrefUtil prefUtil = PrefUtil.getPrefUtilInstance(this);
-            userFB = prefUtil.getLoggedInFacebookUserDetails();
-            mbundle.putString("email", userFB.getEmail());
-            mbundle.putString("name", userFB.getName());
-            mbundle.putString("userId", userFB.getUserId());
-            mbundle.putString("gender", userFB.getGender());
-            Intent intent = new Intent(MainActivity.this, LandingPage.class);
-            intent.putExtra("ProfileBundle", mbundle);
-            startActivity(intent);
-//            getUserData();
-        } else {
-            Log.d("Logged in", "False");
-        }
+//        if (isLoggedIn()) {
+//            Log.d("Logged in", "True");
+//
+//            FbUSer userFB;
+//            PrefUtil prefUtil = PrefUtil.getPrefUtilInstance(this);
+//            userFB = prefUtil.getLoggedInFacebookUserDetails();
+//            mbundle.putString("email", userFB.getEmail());
+//            mbundle.putString("name", userFB.getName());
+//            mbundle.putString("userId", userFB.getUserId());
+//            mbundle.putString("gender", userFB.getGender());
+//            Intent intent = new Intent(MainActivity.this, LandingPage.class);
+//            intent.putExtra("ProfileBundle", mbundle);
+//            startActivity(intent);
+////            getUserData();
+//        } else {
+//            Log.d("Logged in", "False");
+//        }
 
 
         LoginManager.getInstance().registerCallback(callbackManager,
@@ -210,12 +216,12 @@ public class    MainActivity extends AppCompatActivity {
 
     public void login(View view) {
         RequestQueue requestQueue = Volley.newRequestQueue(this);
-        String URL = "http://192.168.1.2:8080/Koobym/user/login";
+        String URL = "http://104.197.4.32:8080/Koobym/user/login";
 //        String URL = Constants.WEB_SERVICE_URL +"user/login";
         User user = new User();
         user.setUsername(mUsername);
         user.setPassword(mPassword);
-        Log.d("Inside", user.toString());
+        Log.d("InsideUser", user.toString());
         final Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd").registerTypeAdapter(Date.class, GsonDateDeserializer.getInstance()).create();
         final String mRequestBody = gson.toJson(user);
         StringRequest stringRequest = new StringRequest(Request.Method.POST, URL, new Response.Listener<String>() {
@@ -236,11 +242,16 @@ public class    MainActivity extends AppCompatActivity {
                     User user = gson.fromJson(response, User.class);
                     Log.d("Response", response);
                     Bundle b = new Bundle();
+//                    intent.putExtra("recommned", b);
+                    SPUtility.getSPUtil(MainActivity.this).putObject("USER_OBJECT", user);
+                    if(user==null){
+                        Log.d("User", "null");
+                    }else{
+                        Log.d("User", "is not null");
+                    }
                     b.putSerializable("userModel", user);
                     b.putBoolean("fromRegister", false);
                     intent.putExtra("user",b);
-//                    intent.putExtra("recommned", b);
-                    SPUtility.getSPUtil(MainActivity.this).putObject("USER_OBJECT", user);
                     startActivity(intent);
                 }
 

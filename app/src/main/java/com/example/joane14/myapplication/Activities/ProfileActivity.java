@@ -39,6 +39,7 @@ import com.example.joane14.myapplication.Fragments.ShowBooksFrag;
 import com.example.joane14.myapplication.Model.Book;
 import com.example.joane14.myapplication.Model.User;
 import com.example.joane14.myapplication.R;
+import com.example.joane14.myapplication.Utilities.SPUtility;
 import com.facebook.login.LoginManager;
 import com.squareup.picasso.Picasso;
 
@@ -133,17 +134,19 @@ public class ProfileActivity extends AppCompatActivity implements NavigationView
             @Override
             public void onResponse(String response) {
                 Log.d("ISBNresponse", response);
-//                try {
-//                    JSONObject obj = new JSONObject(response);
-//                    JSONArray items = obj.getJSONArray("items");
-//                    for(int init = 0; init< items.length(); init++){
-//                        JSONObject arrayObject = items.getJSONObject(init);
-//                        Log.d("Title",arrayObject.getJSONObject("volumeInfo").getString("title"));
-//                    }
-//
-//                } catch (JSONException e) {
-//                    e.printStackTrace();
-//                }
+                try {
+                    JSONObject obj = new JSONObject(response);
+                    JSONArray items = obj.getJSONArray("data");
+                    for(int init = 0; init< items.length(); init++){
+                        JSONObject arrayObject = items.getJSONObject(init);
+                        Log.d("ISBN",arrayObject.getString("isbn13"));
+
+                        searchGoogleBook(arrayObject.getString("isbn13"));
+                    }
+
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
             }
         }, new Response.ErrorListener() {
             @Override
@@ -156,6 +159,61 @@ public class ProfileActivity extends AppCompatActivity implements NavigationView
 
 
     }
+
+
+    public void searchGoogleBook(String booktitle) {
+        String query = booktitle;
+        try {
+            query = URLEncoder.encode(booktitle, "utf-8");
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
+        RequestQueue requestQueue = Volley.newRequestQueue(this);
+        String URL = String.format(Constants.GOOGLE_API_SEARCH_URL_ISBN, query);
+
+        Log.d("BOOK URL", URL);
+
+        StringRequest stringRequest = new StringRequest(Request.Method.GET, URL, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                Log.d("SEARCHGOOGLEBOOK RES", response);
+                try {
+                    JSONObject obj = new JSONObject(response);
+                        Log.d("VolumeInfo",obj.getString("totalItems"));
+
+                    if(obj.getString("totalItems")=="0"){
+                        Log.d("totalItemsNumber", "is 0");
+                    }else{
+                        Log.d("totalItemsNumber", "is not 0");
+                    }
+
+                    Log.d("ImageGoogle", obj.getJSONObject("volumeInfo").getJSONObject("imageLinks").getString("thumbnail"));
+
+                    if(obj.getJSONObject("volumeInfo").getJSONObject("imageLinks").getString("thumbnail")==null){
+                        Log.d("ImageGoogle", "is empty");
+                    }else{
+                        Log.d("ImageGoogle", obj.getJSONObject("volumeInfo").getJSONObject("imageLinks").getString("thumbnail"));
+                    }
+
+
+//                    fragmentManager = getSupportFragmentManager();
+//                    ShowBooksFrag bookModel = new ShowBooksFrag();
+//                    changeFragment(bookModel, response);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.e("GOOGLE BOOK", error.toString());
+            }
+        });
+
+        requestQueue.add(stringRequest);
+
+    }
+
 
     public void searchBook(String booktitle) {
         String query = booktitle;
@@ -179,7 +237,10 @@ public class ProfileActivity extends AppCompatActivity implements NavigationView
                     for(int init = 0; init< items.length(); init++){
                         JSONObject arrayObject = items.getJSONObject(init);
                         Log.d("Title",arrayObject.getJSONObject("volumeInfo").getString("title"));
+                        Log.d("VolumeInfo",arrayObject.getJSONObject("volumeInfo").toString());
+
                     }
+
 
                         fragmentManager = getSupportFragmentManager();
                         ShowBooksFrag bookModel = new ShowBooksFrag();

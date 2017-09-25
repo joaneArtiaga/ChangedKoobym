@@ -122,6 +122,9 @@ public class LandingPage extends AppCompatActivity
             mBundleLogin = intent.getBundleExtra("user");
             this.userModel = (User) mBundleLogin.getSerializable("userModel");
 
+            Log.d("userModel", userModel.toString());
+
+
             Log.d("User filename", userModel.getImageFilename());
             Log.d("User Id", String.valueOf(userModel.getUserId()));
 
@@ -139,6 +142,7 @@ public class LandingPage extends AppCompatActivity
                 fragmentTransaction.replace(R.id.fragment_landing_container, MostRentedBookFrag.newInstance(), mrbf.getTag());
                 fragmentTransaction.commit();
             }else{
+                Log.d("PrefFrag","else inside");
                 bundlePass.putSerializable("userModelPass", userModel);
                 Log.d("userModelPass1st", userModel.toString());
                 fragmentManager = getSupportFragmentManager();

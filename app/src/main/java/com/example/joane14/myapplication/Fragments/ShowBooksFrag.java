@@ -259,7 +259,7 @@ public class ShowBooksFrag extends Fragment {
 
     private void addBook(User userObj, Book bookObj, String bookStatDes, String bookDateBought) {
         RequestQueue requestQueue = Volley.newRequestQueue(getContext());
-        String URL = "http://192.168.1.2:8080/Koobym/bookOwner/add";
+        String URL = "http://104.197.4.32:8080/Koobym/bookOwner/add";
 //        String URL = Constants.WEB_SERVICE_URL+"bookOwner/add";
         BookOwnerModel bookOwnerObj = new BookOwnerModel();
         bookOwnerObj.setBookObj(bookObj);
