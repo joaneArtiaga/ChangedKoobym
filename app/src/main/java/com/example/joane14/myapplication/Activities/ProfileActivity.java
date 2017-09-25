@@ -90,7 +90,7 @@ public class ProfileActivity extends AppCompatActivity implements NavigationView
 
 
                 mBundle = intent.getBundleExtra("user");
-                userObj = (User) mBundle.getSerializable("userModelPass");
+                this.userObj = (User) mBundle.getSerializable("userModelPass");
 
                 Log.d("User filename", userObj.getImageFilename());
                 Log.d("User Id", String.valueOf(userObj.getUserId()));
@@ -99,19 +99,20 @@ public class ProfileActivity extends AppCompatActivity implements NavigationView
 //                mName.setText(userObj.getUserFname()+" "+ userObj.getUserLname());
 //                mEmail.setText(userObj.getEmail());
 //                Picasso.with(ProfileActivity.this).load(String.format(Constants.IMAGE_URL, userObj.getImageFilename())).fit().into(profileImg);
+                Log.d("Fragment", "inside");
+                mBundle.putSerializable("userDetails", userObj);
+                Log.d("userDetails", userObj.toString());
+
+                fragmentManager = getSupportFragmentManager();
+                ProfileFragment profileModel = new ProfileFragment();
+                mBundle.putSerializable("userDetails", userObj);
+                profileModel.setArguments(mBundle);
+                FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+                fragmentTransaction.replace(R.id.fragment_container_books, profileModel, "profile fragment");
+                fragmentTransaction.commit();
             }
 
-            Log.d("Fragment", "inside");
-            mBundle.putSerializable("userDetails", userObj);
-            Log.d("userDetails", userObj.toString());
 
-            fragmentManager = getSupportFragmentManager();
-            ProfileFragment profileModel = new ProfileFragment();
-            mBundle.putSerializable("userDetails", userObj);
-            profileModel.setArguments(mBundle);
-            FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-            fragmentTransaction.replace(R.id.fragment_container_books, profileModel, "profile fragment");
-            fragmentTransaction.commit();
 
 
 
@@ -277,13 +278,14 @@ public class ProfileActivity extends AppCompatActivity implements NavigationView
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         int id = item.getItemId();
+        boolean flag=true;
 
         if (id == R.id.home) {
             Intent intent = new Intent(ProfileActivity.this, LandingPage.class);
+            intent.putExtra("fromRegister", false);
             startActivity(intent);
         } else if (id == R.id.profile) {
-            Intent intent = new Intent(ProfileActivity.this, ProfileActivity.class);
-            startActivity(intent);
+            flag = false;
         } else if (id == R.id.rent) {
 
         } else if (id == R.id.myBook) {
@@ -301,8 +303,14 @@ public class ProfileActivity extends AppCompatActivity implements NavigationView
         } else if (id == R.id.shelf) {
         }
 
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        drawer.closeDrawer(GravityCompat.START);
+        if(flag == false){
+            DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+            drawer.closeDrawer(GravityCompat.START);
+        }else{
+            DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+            drawer.closeDrawer(GravityCompat.START);
+        }
+
         return true;
     }
 
