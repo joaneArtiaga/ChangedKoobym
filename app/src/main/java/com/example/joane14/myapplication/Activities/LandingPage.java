@@ -9,6 +9,8 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.view.MenuItemCompat;
+import android.support.v7.widget.SearchView;
 import android.util.Log;
 import android.view.View;
 import android.support.design.widget.NavigationView;
@@ -268,6 +270,17 @@ public class LandingPage extends AppCompatActivity
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout_landingPage);
         drawer.closeDrawer(GravityCompat.START);
         return true;
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.toolbar_menu, menu);
+
+        // Associate searchable configuration with the SearchView
+        // SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
+        SearchView searchView = (SearchView) MenuItemCompat.getActionView(menu.findItem(R.id.action_search));
+        // searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
+        return super.onCreateOptionsMenu(menu);
     }
 
     @Override

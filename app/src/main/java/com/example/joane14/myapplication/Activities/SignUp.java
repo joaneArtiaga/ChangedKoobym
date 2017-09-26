@@ -121,7 +121,7 @@ public class SignUp extends AppCompatActivity implements
 
     private void register() {
         RequestQueue requestQueue = Volley.newRequestQueue(this);
-        String URL = "http://104.154.241.204:8080/Koobym/user/add";
+        String URL = "http://172.16.16.141:8080/Koobym/user/add";
 //        String URL = Constants.WEB_SERVICE_URL+"user/add";
 
         User user = new User();
@@ -184,7 +184,7 @@ public class SignUp extends AppCompatActivity implements
 
     private void genreAdd() {
         RequestQueue requestQueue = Volley.newRequestQueue(this);
-        String URL = "http://104.197.4.32:8080/Koobym/genre/add";
+        String URL = "http://172.16.16.141:8080/Koobym/genre/add";
 //        String URL = Constants.WEB_SERVICE_URL+"user/add";
 
         User user = new User();
