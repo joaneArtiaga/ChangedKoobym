@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:id="@+id/fragment_container_books"
+    app:layout_behavior="@string/appbar_scrolling_view_behavior"
+    tools:context="com.example.joane14.myapplication.Activities.ProfileActivity"
+    tools:showIn="@layout/app_bar_view_book">
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="150dp"
+        android:orientation="horizontal"
+        android:id="@+id/linearLayout2">
+
+        <ImageView
+            android:id="@+id/vbBookImg"
+            android:layout_width="50dp"
+            android:layout_height="120dp"
+            android:layout_marginTop="13dp"
+            android:layout_weight="1"
+            android:layout_marginLeft="10dp"
+            app:srcCompat="@drawable/com_facebook_tooltip_blue_xout" />
+
+        <LinearLayout
+            android:layout_width="260dp"
+            android:layout_height="120dp"
+            android:layout_marginTop="13dp"
+            android:layout_toRightOf="@id/vbBookImg"
+            android:orientation="vertical">
+
+
+            <TextView
+                android:id="@+id/vbBookTitle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="TextView" />
+
+            <TextView
+                android:id="@+id/vbBookAuthor"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="TextView" />
+
+            <TextView
+                android:id="@+id/vbBookDescription"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="TextView" />
+
+        </LinearLayout>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="80dp"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_below="@+id/linearLayout2"
+        android:layout_weight="0.04"
+        android:orientation="horizontal">
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/linearLayout3"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_centerVertical="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true">
+
+        <ImageView
+            android:id="@+id/imageView9"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_marginLeft="33dp"
+            app:srcCompat="@drawable/location" />
+
+        <ImageView
+            android:id="@+id/imageView10"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_marginLeft="33dp"
+            app:srcCompat="@drawable/ratings" />
+
+        <ImageView
+            android:id="@+id/imageView15"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_marginLeft="33dp"
+            app:srcCompat="@drawable/renter" />
+
+        <ImageView
+            android:id="@+id/imageView12"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_marginLeft="33dp"
+            app:srcCompat="@drawable/genre" />
+
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/textView4"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_below="@+id/linearLayout3"
+        android:layout_marginLeft="18dp"
+        android:layout_marginStart="18dp"
+        android:layout_marginTop="19dp"
+        android:text="REVIEWS" />
+
+
+</RelativeLayout>

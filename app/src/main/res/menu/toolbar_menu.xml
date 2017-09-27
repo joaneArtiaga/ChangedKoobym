@@ -9,4 +9,12 @@
         app:actionViewClass="android.support.v7.widget.SearchView"
         android:icon="@drawable/toolbar_search"
         app:showAsAction="always"/>
+
+    <item
+        android:id="@+id/action_notifications"
+        android:icon="@drawable/toolbar_notification"
+        android:title="Notifications"
+        app:showAsAction="always" />
+
+
 </menu>
