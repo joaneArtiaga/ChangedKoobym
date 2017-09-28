@@ -122,23 +122,23 @@ public class    MainActivity extends AppCompatActivity {
 
         });
         mbundle = new Bundle();
-//        if (isLoggedIn()) {
-//            Log.d("Logged in", "True");
-//
-//            FbUSer userFB;
-//            PrefUtil prefUtil = PrefUtil.getPrefUtilInstance(this);
-//            userFB = prefUtil.getLoggedInFacebookUserDetails();
-//            mbundle.putString("email", userFB.getEmail());
-//            mbundle.putString("name", userFB.getName());
-//            mbundle.putString("userId", userFB.getUserId());
-//            mbundle.putString("gender", userFB.getGender());
-//            Intent intent = new Intent(MainActivity.this, LandingPage.class);
-//            intent.putExtra("ProfileBundle", mbundle);
-//            startActivity(intent);
-////            getUserData();
-//        } else {
-//            Log.d("Logged in", "False");
-//        }
+        if (isLoggedIn()) {
+            Log.d("Logged in", "True");
+
+            FbUSer userFB;
+            PrefUtil prefUtil = PrefUtil.getPrefUtilInstance(this);
+            userFB = prefUtil.getLoggedInFacebookUserDetails();
+            mbundle.putString("email", userFB.getEmail());
+            mbundle.putString("name", userFB.getName());
+            mbundle.putString("userId", userFB.getUserId());
+            mbundle.putString("gender", userFB.getGender());
+            Intent intent = new Intent(MainActivity.this, LandingPage.class);
+            intent.putExtra("ProfileBundle", mbundle);
+            startActivity(intent);
+//            getUserData();
+        } else {
+            Log.d("Logged in", "False");
+        }
 
 
         LoginManager.getInstance().registerCallback(callbackManager,
@@ -216,7 +216,7 @@ public class    MainActivity extends AppCompatActivity {
 
     public void login(View view) {
         RequestQueue requestQueue = Volley.newRequestQueue(this);
-        String URL = "http://172.16.16.141:8080/Koobym/user/login";
+        String URL = "http://104.197.4.32:8080/Koobym/user/login";
 //        String URL = Constants.WEB_SERVICE_URL +"user/login";
         User user = new User();
         user.setUsername(mUsername);
@@ -241,6 +241,7 @@ public class    MainActivity extends AppCompatActivity {
                     Intent intent = new Intent(MainActivity.this, LandingPage.class);
                     User user = gson.fromJson(response, User.class);
                     Log.d("Response", response);
+                    Log.d("userResponse ",user.getImageFilename());
                     Bundle b = new Bundle();
 //                    intent.putExtra("recommned", b);
                     SPUtility.getSPUtil(MainActivity.this).putObject("USER_OBJECT", user);

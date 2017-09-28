@@ -15,4 +15,8 @@
     <string name="date_label_set" />
     <string name="date_view_set" />
     <string name="date_selected" />
+    <string name="title_activity_my_shelf">MyShelf</string>
+    <string name="title_home">Home</string>
+    <string name="title_dashboard">Dashboard</string>
+    <string name="title_notifications">Notifications</string>
 </resources>

@@ -8,8 +8,7 @@ import java.io.Serializable;
 
 public class LocationModel implements Serializable{
 
-    String locationName;
-    double longitude, latitude;
+    String locationName, longitude, latitude;
 
     public String getLocationName() {
         return locationName;
@@ -19,19 +18,19 @@ public class LocationModel implements Serializable{
         this.locationName = locationName;
     }
 
-    public double getLongitude() {
+    public String getLongitude() {
         return longitude;
     }
 
-    public void setLongitude(double longitude) {
+    public void setLongitude(String longitude) {
         this.longitude = longitude;
     }
 
-    public double getLatitude() {
+    public String getLatitude() {
         return latitude;
     }
 
-    public void setLatitude(double latitude) {
+    public void setLatitude(String latitude) {
         this.latitude = latitude;
     }
 }

@@ -15,7 +15,10 @@ public class User implements Serializable{
 
     @SerializedName("genres")
     private List<GenreModel> genreArray;
+
+    @SerializedName("locations")
     private List<LocationModel> locationArray;
+
     private Integer userId;
     private String userFname;
     private String userLname;

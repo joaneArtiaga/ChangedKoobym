@@ -77,8 +77,8 @@ public class LocationAdapter extends RecyclerView.Adapter<LocationAdapter.Locati
     public void onBindViewHolder(LocationObjHolder holder, final int position) {
         final LocationModel locModel = mLocationList.get(position);
         holder.title.setText(locModel.getLocationName());
-        holder.mLongitude.setText(Float.toString((float) locModel.getLongitude()));
-        holder.mLatitude.setText(Float.toString((float) locModel.getLatitude()));
+        holder.mLongitude.setText(locModel.getLongitude());
+        holder.mLatitude.setText(locModel.getLatitude());
 
         holder.mChange.setOnClickListener(new View.OnClickListener() {
             @Override

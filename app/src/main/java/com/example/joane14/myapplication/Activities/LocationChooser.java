@@ -318,8 +318,8 @@ public class LocationChooser extends FragmentActivity implements
 
 
                     locationObj = new LocationModel();
-                    locationObj.setLatitude(latLat);
-                    locationObj.setLongitude(latLong);
+                    locationObj.setLatitude(Double.toString(latLat));
+                    locationObj.setLongitude(Double.toString(latLong));
                     Log.d("get Address", getCompleteAddress(latLat, latLong));
                     locationObj.setLocationName(getCompleteAddress(latLat, latLong));
                     locationList.add(locationObj);

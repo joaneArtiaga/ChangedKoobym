@@ -47,7 +47,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".Activities.MainActivity"></activity>
+        <activity android:name=".Activities.MainActivity" />
         <activity
             android:name=".Activities.LandingPage"
             android:label="@string/title_activity_landing_page"
@@ -65,7 +65,10 @@
         <activity
             android:name=".Activities.LocationChooser"
             android:label="@string/title_activity_location_chooser" />
-        <activity android:name=".Activities.ViewBookActivity"></activity>
+        <activity android:name=".Activities.ViewBookActivity" />
+        <activity
+            android:name=".Activities.MyShelf"
+            android:label="@string/title_activity_my_shelf"></activity>
     </application>
 
 </manifest>

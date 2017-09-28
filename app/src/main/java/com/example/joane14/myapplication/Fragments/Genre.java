@@ -125,7 +125,7 @@ public class Genre extends Fragment implements AdapterView.OnItemClickListener{
 
     public void getGenres() {
         RequestQueue requestQueue = Volley.newRequestQueue(getContext());
-        String URL = "http://172.16.16.141:8080/Koobym/genre/all";
+        String URL = "http://104.197.4.32:8080/Koobym/genre/all";
 //        String URL = Constants.WEB_SERVICE_URL+"genre/all";
         final Gson gson = new Gson();
         StringRequest stringRequest = new StringRequest(Request.Method.GET, URL, new Response.Listener<String>() {

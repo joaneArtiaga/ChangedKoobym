@@ -121,7 +121,7 @@ public class SignUp extends AppCompatActivity implements
 
     private void register() {
         RequestQueue requestQueue = Volley.newRequestQueue(this);
-        String URL = "http://172.16.16.141:8080/Koobym/user/add";
+        String URL = "http://104.197.4.32:8080/Koobym/user/add";
 //        String URL = Constants.WEB_SERVICE_URL+"user/add";
 
         User user = new User();
@@ -182,67 +182,6 @@ public class SignUp extends AppCompatActivity implements
     }
 
 
-    private void genreAdd() {
-        RequestQueue requestQueue = Volley.newRequestQueue(this);
-        String URL = "http://172.16.16.141:8080/Koobym/genre/add";
-//        String URL = Constants.WEB_SERVICE_URL+"user/add";
-
-        User user = new User();
-        user.setUserFname(userModel.getUserFname());
-        user.setUserLname(userModel.getUserLname());
-        user.setAddress(userModel.getAddress());
-        user.setEmail(userModel.getEmail());
-        user.setUsername(userModel.getUsername());
-        user.setPassword(userModel.getPassword());
-        user.setBirthdate(userModel.getBirthdate());
-        user.setImageFilename(userModel.getImageFilename());
-        user.setPhoneNumber(userModel.getPhoneNumber());
-        user.setGenreArray(genres);
-        final Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd").registerTypeAdapter(Date.class, GsonDateDeserializer.getInstance()).create();
-        final String mRequestBody = gson.toJson(user);
-
-
-        Log.d("LOG_VOLLEY", mRequestBody);
-        StringRequest stringRequest = new StringRequest(Request.Method.POST, URL, new Response.Listener<String>() {
-            @Override
-            public void onResponse(String response) {
-                Log.i("LOG_VOLLEY", response);
-                User user = gson.fromJson(response, User.class);
-                Log.i("LOG_VOLLEY", user.getEmail());
-                Log.i("LOG_VOLLEY", user.getUserFname());
-                Log.i("LOG_VOLLEY", user.getUserLname());
-                user.setGenreArray(genres);
-                Intent intent = new Intent(SignUp.this, LandingPage.class);
-                Bundle b = new Bundle();
-                b.putBoolean("fromRegister", true);
-                b.putSerializable("userModel", user);
-                intent.putExtra("user",b);
-                startActivity(intent);
-            }
-        }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                Log.e("LOG_VOLLEY", error.toString());
-            }
-        }) {
-            @Override
-            public String getBodyContentType() {
-                return "application/json; charset=utf-8";
-            }
-
-            @Override
-            public byte[] getBody() throws AuthFailureError {
-                try {
-                    return mRequestBody == null ? null : mRequestBody.getBytes("utf-8");
-                } catch (UnsupportedEncodingException uee) {
-                    VolleyLog.wtf("Unsupported Encoding while trying to get the bytes of %s using %s", mRequestBody, "utf-8");
-                    return null;
-                }
-            }
-        };
-
-        requestQueue.add(stringRequest);
-    }
 
     @Override
     public void onAddTimeClickListener(List<DayTimeModel> listDayTimeModel) {

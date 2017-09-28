@@ -54,7 +54,8 @@ public class LandingPageAdapter extends RecyclerView.Adapter<LandingPageAdapter.
 
         holder.mBookTitle.setText(bookList.get(position).getBookOwner().getBookObj().getBookTitle());
         holder.mBookPrice.setText(bookList.get(position).getBookOwner().getBookObj().getBookOriginalPrice().toString());
-        String author = "";
+        String author = "No Author";
+        Log.d("AuthorDisplay", author);
         if(bookList.get(position).getBookOwner().getBookObj().getBookAuthor()!=null) {
             int size = bookList.get(position).getBookOwner().getBookObj().getBookAuthor().size();
 
@@ -62,6 +63,7 @@ public class LandingPageAdapter extends RecyclerView.Adapter<LandingPageAdapter.
             if (size > 1) {
                 for (int i = 0; i < size; i++) {
                     author += bookList.get(position).getBookOwner().getBookObj().getBookAuthor().get(i).getAuthorFName();
+                    Log.d("authorLoop", bookList.get(position).getBookOwner().getBookObj().getBookAuthor().get(i).getAuthorFName());
                     if (size - 1 > i) {
                         author += ", ";
                     }
@@ -69,16 +71,17 @@ public class LandingPageAdapter extends RecyclerView.Adapter<LandingPageAdapter.
             }
             Log.d("authorName if", "inside");
             Log.d("authorName if", author);
-            holder.mBookAuthor.setText(author);
-        }else{
-            author = "No Author";
-            Log.d("authorName else", "inside");
-            Log.d("authorName else", author);
-            holder.mBookAuthor.setText(author);
         }
+        holder.mBookAuthor.setText(author);
 
         Picasso.with(context).load(String.format(Constants.IMAGE_URL, bookList.get(position).getBookOwner().getBookObj().getBookFilename())).fit().into(holder.mBookFilename);
+//        Log.d("displayImage", bookList.get(position).getBookOwner().getBookObj().getBookFilename());
 
+        if(bookList.get(position).getBookOwner().getBookObj().getBookFilename()==null){
+            Log.d("displayImage", "is null");
+        }else{
+            Log.d("displayImage", "is not null");
+        }
     }
 
     @Override
