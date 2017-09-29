@@ -9,9 +9,10 @@
         android:id="@+id/my_recycler_view_rentedBooks"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:scrollbars="vertical"
+        android:layout_alignParentTop="true"
         android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:scrollbars="vertical" />
+        android:layout_alignParentStart="true" />
 
 
 </RelativeLayout>

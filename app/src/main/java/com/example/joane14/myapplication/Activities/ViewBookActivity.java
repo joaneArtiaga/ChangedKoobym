@@ -2,7 +2,6 @@ package com.example.joane14.myapplication.Activities;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -12,8 +11,10 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.example.joane14.myapplication.Model.RentalDetail;
 import com.example.joane14.myapplication.Model.User;
 import com.example.joane14.myapplication.R;
@@ -27,6 +28,7 @@ public class ViewBookActivity extends AppCompatActivity implements NavigationVie
     TextView mBookTitle;
     TextView mBookAuthor;
     TextView mBookDescription;
+    ImageView imageView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,7 +51,7 @@ public class ViewBookActivity extends AppCompatActivity implements NavigationVie
         NavigationView navigationView1 = (NavigationView) findViewById(R.id.nav_view);
         View hView = navigationView1.getHeaderView(0);
 
-
+        imageView = (ImageView) findViewById(R.id.vbBookImg);
         mBookAuthor = (TextView) findViewById(R.id.vbBookAuthor);
         mBookDescription = (TextView) findViewById(R.id.vbBookDescription);
 
@@ -85,6 +87,7 @@ public class ViewBookActivity extends AppCompatActivity implements NavigationVie
                 mBookAuthor.setText(author);
                 Log.d("RentalBookDescription", rentalDetail.getBookOwner().getBookObj().getBookDescription().toString());
                 mBookDescription.setText((rentalDetail.getBookOwner().getBookObj().getBookDescription().toString()));
+                Glide.with(ViewBookActivity.this).load(rentalDetail.getBookOwner().getBookObj().getBookFilename()).fitCenter().into(imageView);
             }
             Log.d("bundle", "is not empty");
         }else{

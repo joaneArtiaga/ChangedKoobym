@@ -12,13 +12,10 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.example.joane14.myapplication.Activities.LandingPage;
+import com.bumptech.glide.Glide;
 import com.example.joane14.myapplication.Activities.ViewBookActivity;
-import com.example.joane14.myapplication.Fragments.Constants;
-import com.example.joane14.myapplication.Model.BookOwnerModel;
 import com.example.joane14.myapplication.Model.RentalDetail;
 import com.example.joane14.myapplication.R;
-import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
@@ -54,6 +51,7 @@ public class LandingPageAdapter extends RecyclerView.Adapter<LandingPageAdapter.
 
         holder.mBookTitle.setText(bookList.get(position).getBookOwner().getBookObj().getBookTitle());
         holder.mBookPrice.setText(bookList.get(position).getBookOwner().getBookObj().getBookOriginalPrice().toString());
+        Log.d("libroShet",bookList.get(position).getBookOwner().getBookObj().getBookOriginalPrice().toString());
         String author = "No Author";
         Log.d("AuthorDisplay", author);
         if(bookList.get(position).getBookOwner().getBookObj().getBookAuthor()!=null) {
@@ -73,8 +71,9 @@ public class LandingPageAdapter extends RecyclerView.Adapter<LandingPageAdapter.
             Log.d("authorName if", author);
         }
         holder.mBookAuthor.setText(author);
-
-        Picasso.with(context).load(String.format(Constants.IMAGE_URL, bookList.get(position).getBookOwner().getBookObj().getBookFilename())).fit().into(holder.mBookFilename);
+        Log.d("libroPanga",bookList.get(position).getBookOwner().getBookObj().getBookFilename());
+        Glide.with(context).load(bookList.get(position).getBookOwner().getBookObj().getBookFilename()).centerCrop().into(holder.mBookFilename);
+//        Picasso.with(context).load(String.format(Constants.IMAGE_URL, bookList.get(position).getBookOwner().getBookObj().getBookFilename())).fit().into(holder.mBookFilename);
 //        Log.d("displayImage", bookList.get(position).getBookOwner().getBookObj().getBookFilename());
 
         if(bookList.get(position).getBookOwner().getBookObj().getBookFilename()==null){

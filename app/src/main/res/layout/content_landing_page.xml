@@ -13,9 +13,10 @@
         android:id="@+id/fragment_landing_container"
         android:layout_width="match_parent"
         android:layout_height="420dp"
+        android:orientation="vertical"
         android:layout_alignParentBottom="true"
         android:layout_alignParentLeft="true"
-        android:orientation="vertical" />
+        android:layout_alignParentStart="true" />
 
     <LinearLayout
         android:layout_width="match_parent"

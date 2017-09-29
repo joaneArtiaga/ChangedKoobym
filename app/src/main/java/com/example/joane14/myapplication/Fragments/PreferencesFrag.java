@@ -70,6 +70,7 @@ public class PreferencesFrag extends Fragment {
         mRecyclerView.setLayoutManager(mLayoutManager);
         mAdapter = new LandingPageAdapter(suggested);
         mRecyclerView.setAdapter(mAdapter);
+        Log.d("userId$#23", String.valueOf(userObj.getUserId()));
         getSuggested(userObj.getUserId());
 
         return view;
