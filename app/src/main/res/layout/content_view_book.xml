@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:id="@+id/fragment_container_books"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
-    tools:context="com.example.joane14.myapplication.Activities.ProfileActivity"
+    tools:context="com.example.joane14.myapplication.Activities.ViewBookActivity"
     tools:showIn="@layout/app_bar_view_book">
 
 

@@ -125,6 +125,13 @@ public class LandingPage extends AppCompatActivity
             mBundleLogin = intent.getBundleExtra("user");
             this.userModel = (User) mBundleLogin.getSerializable("userModel");
 
+            this.userModel = (User) SPUtility.getSPUtil(this).getObject("USER_OBJECT", User.class);
+            if(userModel==null){
+                Log.d("UserModel", "is null");
+            }else{
+                Log.d("UserModel", "is not null");
+            }
+
             Log.d("userModel", userModel.toString());
 
 
@@ -250,10 +257,9 @@ public class LandingPage extends AppCompatActivity
             bundlePass.putSerializable("userModelPass", userModel);
             intent.putExtra("user",bundlePass);
             startActivity(intent);
-        } else if (id == R.id.rent) {
-
-        } else if (id == R.id.myBook) {
-
+        } else if (id == R.id.shelf) {
+            Intent intent = new Intent(LandingPage.this, MyShelf.class);
+            startActivity(intent);
         } else if (id == R.id.history) {
 
         } else if (id == R.id.transaction) {

@@ -9,9 +9,19 @@
     tools:context="com.example.joane14.myapplication.Activities.MyShelf"
     tools:showIn="@layout/app_bar_shelf">
 
-    <TextView
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="450dp"
+        android:id="@+id/fragment_container_shelf"/>
+
+    <android.support.design.widget.BottomNavigationView
+        android:id="@+id/navigation"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/message"/>
+        android:layout_alignParentBottom="true"
+        android:background="@color/colorPrimary"
+        app:itemIconTint="@color/colorLightOrange"
+        app:itemTextColor="@color/colorDark"
+        app:menu="@menu/navigation"/>
 
 </RelativeLayout>

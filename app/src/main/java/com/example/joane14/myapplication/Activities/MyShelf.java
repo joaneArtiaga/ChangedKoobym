@@ -1,77 +1,105 @@
 package com.example.joane14.myapplication.Activities;
 
 import android.content.Intent;
-import android.os.Bundle;
+import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
 import android.support.design.widget.NavigationView;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
+import android.os.Bundle;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.TextView;
 
+import com.example.joane14.myapplication.Fragments.AuctionShelfFragment;
+import com.example.joane14.myapplication.Fragments.RentShelfFragment;
+import com.example.joane14.myapplication.Fragments.SwapShelfFragment;
 import com.example.joane14.myapplication.Model.User;
 import com.example.joane14.myapplication.R;
 import com.example.joane14.myapplication.Utilities.SPUtility;
 import com.facebook.login.LoginManager;
 
-public class MyShelf extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
-
-    private TextView mTextMessage;
-
-    private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
-            = new BottomNavigationView.OnNavigationItemSelectedListener() {
-
-        @Override
-        public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-            switch (item.getItemId()) {
-                case R.id.navigation_home:
-                    mTextMessage.setText(R.string.title_home);
-                    return true;
-                case R.id.navigation_dashboard:
-                    mTextMessage.setText(R.string.title_dashboard);
-                    return true;
-                case R.id.navigation_notifications:
-                    mTextMessage.setText(R.string.title_notifications);
-                    return true;
-            }
-            return false;
-        }
-
-    };
+public class MyShelf extends AppCompatActivity implements
+    AuctionShelfFragment.OnAuctionShelfInteractionListener,
+    RentShelfFragment.OnRentShelfInteractionListener,
+    SwapShelfFragment.OnSwapShelfInteractionListener,
+        NavigationView.OnNavigationItemSelectedListener {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_my_shelf);
 
-        mTextMessage = (TextView) findViewById(R.id.message);
-        BottomNavigationView navigation = (BottomNavigationView) findViewById(R.id.navigation);
-        navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
-
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout_landingPage);
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout_shelf);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.setDrawerListener(toggle);
         toggle.syncState();
 
-        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view_shelf);
         navigationView.setNavigationItemSelectedListener(this);
-
-
-        NavigationView navigationView1 = (NavigationView) findViewById(R.id.nav_view);
         View hView = navigationView.getHeaderView(0);
+
+
+        BottomNavigationView bottomNavigationView = (BottomNavigationView)
+                hView.findViewById(R.id.navigation);
+
+        if(bottomNavigationView==null){
+            Log.d("bottomNavView", "is null");
+        }else{
+            Log.d("bottomNavView", "is not null");
+        }
+
+//        bottomNavigationView.setOnNavigationItemSelectedListener
+//                (new BottomNavigationView.OnNavigationItemSelectedListener() {
+//                    @Override
+//                    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+//                        Fragment selectedFragment = null;
+//                        switch (item.getItemId()) {
+//                            case R.id.navigation_rent:
+//                                selectedFragment = RentShelfFragment.newInstance();
+//                                break;
+//                            case R.id.navigation_swap:
+//                                selectedFragment = SwapShelfFragment.newInstance();
+//                                break;
+//                            case R.id.navigation_auction:
+//                                selectedFragment = AuctionShelfFragment.newInstance();
+//                                break;
+//                        }
+//                        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+//                        transaction.replace(R.id.fragment_container_shelf, selectedFragment);
+//                        transaction.commit();
+//                        return true;
+//                    }
+//                });
+
+    }
+
+    @Override
+    public void onAuctionClick(Uri uri) {
+
+    }
+
+    @Override
+    public void onSwapClick(Uri uri) {
+
+    }
+
+    @Override
+    public void onRentClick(Uri uri) {
+
     }
 
     @SuppressWarnings("StatementWithEmptyBody")
@@ -83,20 +111,23 @@ public class MyShelf extends AppCompatActivity implements NavigationView.OnNavig
         int id = item.getItemId();
 
         if (id == R.id.home) {
+            Intent intent = new Intent(MyShelf.this, LandingPage.class);
+            Bundle bundle = new Bundle();
+            bundle.putBoolean("fromRegister", false);
+            intent.putExtra("user", bundle);
+            startActivity(intent);
         } else if (id == R.id.profile) {
             Intent intent = new Intent(MyShelf.this, ProfileActivity.class);
-//            User user = userModel;
-//            Log.d("User Id", String.valueOf(userModel.getUserId()));
-//            Log.d("User name", userModel.getUserFname()+" "+userModel.getUserLname());
             User userModel = new User();
             userModel = (User) SPUtility.getSPUtil(this).getObject("USER_OBJECT", User.class);
             Bundle bundlePass = new Bundle();
+//            User user = userModel;
+//            Log.d("User Id", String.valueOf(userModel.getUserId()));
+//            Log.d("User name", userModel.getUserFname()+" "+userModel.getUserLname());
             bundlePass.putSerializable("userModelPass", userModel);
             intent.putExtra("user",bundlePass);
             startActivity(intent);
-        } else if (id == R.id.rent) {
-
-        } else if (id == R.id.myBook) {
+        } else if (id == R.id.shelf) {
 
         } else if (id == R.id.history) {
 
@@ -112,7 +143,7 @@ public class MyShelf extends AppCompatActivity implements NavigationView.OnNavig
         } else if (id == R.id.shelf) {
         }
 
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout_landingPage);
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout_shelf);
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }
@@ -128,4 +159,5 @@ public class MyShelf extends AppCompatActivity implements NavigationView.OnNavig
         // searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
         return super.onCreateOptionsMenu(menu);
     }
+
 }

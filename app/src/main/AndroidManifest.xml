@@ -65,10 +65,10 @@
         <activity
             android:name=".Activities.LocationChooser"
             android:label="@string/title_activity_location_chooser" />
-        <activity android:name=".Activities.ViewBookActivity" />
-        <activity
-            android:name=".Activities.MyShelf"
-            android:label="@string/title_activity_my_shelf"></activity>
+        <activity android:name=".Activities.ViewBookActivity"
+            android:theme="@style/AppTheme.NoActionBar"/>
+        <activity android:name=".Activities.MyShelf"
+            android:theme="@style/AppTheme.NoActionBar"></activity>
     </application>
 
 </manifest>

@@ -85,6 +85,7 @@ public class ProfileActivity extends AppCompatActivity implements NavigationView
         NavigationView navigationView1 = (NavigationView) findViewById(R.id.nav_view);
         View hView = navigationView1.getHeaderView(0);
 
+        profileImg = (ImageView) hView.findViewById(R.id.profPic);
 
         Intent intent = getIntent();
 
@@ -286,17 +287,17 @@ public class ProfileActivity extends AppCompatActivity implements NavigationView
 
         if (id == R.id.home) {
             Intent intent = new Intent(ProfileActivity.this, LandingPage.class);
-
             Bundle bundle = new Bundle();
             bundle.putBoolean("fromRegister", false);
             intent.putExtra("user", bundle);
             startActivity(intent);
         } else if (id == R.id.profile) {
-            flag = false;
+
         } else if (id == R.id.rent) {
 
         } else if (id == R.id.myBook) {
-
+            Intent intent = new Intent(ProfileActivity.this, MyShelf.class);
+            startActivity(intent);
         } else if (id == R.id.history) {
 
         } else if (id == R.id.transaction) {

@@ -36,7 +36,7 @@ public class ViewBookActivity extends AppCompatActivity implements NavigationVie
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbarProfile);
         setSupportActionBar(toolbar);
 
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout_profile);
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout_view_book);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.setDrawerListener(toggle);
@@ -50,11 +50,22 @@ public class ViewBookActivity extends AppCompatActivity implements NavigationVie
         View hView = navigationView1.getHeaderView(0);
 
 
-        mBookAuthor = (TextView) hView.findViewById(R.id.vbBookAuthor);
-        mBookDescription = (TextView) hView.findViewById(R.id.vbBookDescription);
+        mBookAuthor = (TextView) findViewById(R.id.vbBookAuthor);
+        mBookDescription = (TextView) findViewById(R.id.vbBookDescription);
 
+        if (mBookAuthor==null){
+            Log.d("mBookAuthor", "is null");
+        }else{
+            Log.d("mBookAuthor", "is not null");
+        }
+
+        if (mBookDescription==null){
+            Log.d("mBookDescription", "is null");
+        }else{
+            Log.d("mBookDescription", "is not null");
+        }
         rentalDetail = new RentalDetail();
-        String author = "";
+        String author = "Author not found.";
 
         mBookTitle = (TextView) findViewById(R.id.vbBookTitle);
         if(getIntent().getExtras()!=null){
@@ -68,8 +79,9 @@ public class ViewBookActivity extends AppCompatActivity implements NavigationVie
                 Log.d("bundle", "is not empty");
                 Log.d("RentalBookTitle", rentalDetail.getBookOwner().getBookObj().getBookTitle());
                 mBookTitle.setText(rentalDetail.getBookOwner().getBookObj().getBookTitle());
-                Log.d("RentalBookAuthor", String.valueOf(rentalDetail.getBookOwner().getBookObj().getBookAuthor().get(0)));
-                author+=rentalDetail.getBookOwner().getBookObj().getBookAuthor().get(0).getAuthorFName();
+                Log.d("RentalBookAuthor", String.valueOf(rentalDetail.getBookOwner().getBookObj().getBookAuthor().get(0).getAuthorFName()));
+                author=rentalDetail.getBookOwner().getBookObj().getBookAuthor().get(0).getAuthorFName();
+                Log.d("RentalAuthor", author);
                 mBookAuthor.setText(author);
                 Log.d("RentalBookDescription", rentalDetail.getBookOwner().getBookObj().getBookDescription().toString());
                 mBookDescription.setText((rentalDetail.getBookOwner().getBookObj().getBookDescription().toString()));
@@ -104,7 +116,8 @@ public class ViewBookActivity extends AppCompatActivity implements NavigationVie
         } else if (id == R.id.rent) {
 
         } else if (id == R.id.myBook) {
-
+            Intent intent = new Intent(ViewBookActivity.this, MyShelf.class);
+            startActivity(intent);
         } else if (id == R.id.history) {
 
         } else if (id == R.id.transaction) {
