@@ -48,6 +48,11 @@ public class MyShelf extends AppCompatActivity implements
         drawer.setDrawerListener(toggle);
         toggle.syncState();
 
+        RentShelfFragment rentFrag = new RentShelfFragment();
+        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+        transaction.replace(R.id.fragment_container_shelf, rentFrag);
+        transaction.commit();
+
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view_shelf);
         navigationView.setNavigationItemSelectedListener(this);
         View hView = navigationView.getHeaderView(0);

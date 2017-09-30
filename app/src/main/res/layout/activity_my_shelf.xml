@@ -21,7 +21,7 @@
         <include
             layout="@layout/app_bar_shelf"
             android:layout_width="match_parent"
-            android:layout_height="match_parent" />
+            android:layout_height="match_parent"/>
 
         <android.support.design.widget.NavigationView
             android:id="@+id/nav_view_shelf"
@@ -34,11 +34,6 @@
 
     </android.support.v4.widget.DrawerLayout>
 
-    <FrameLayout
-        android:layout_width="match_parent"
-        android:layout_height="450dp"
-        android:id="@+id/fragment_container_shelf"/>
-
     <android.support.design.widget.BottomNavigationView
         android:id="@+id/navigation"
         android:layout_width="match_parent"
@@ -49,4 +44,9 @@
         app:itemTextColor="@color/colorDark"
         app:menu="@menu/navigation"/>
 
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="450dp"
+        android:id="@+id/fragment_container_shelf"
+        android:layout_above="@id/navigation"/>
 </RelativeLayout>
