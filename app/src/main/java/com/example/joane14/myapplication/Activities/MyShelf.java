@@ -59,7 +59,7 @@ public class MyShelf extends AppCompatActivity implements
 
 
         BottomNavigationView bottomNavigationView = (BottomNavigationView)
-                hView.findViewById(R.id.navigation);
+                findViewById(R.id.navigation);
 
         if(bottomNavigationView==null){
             Log.d("bottomNavView", "is null");
@@ -67,28 +67,28 @@ public class MyShelf extends AppCompatActivity implements
             Log.d("bottomNavView", "is not null");
         }
 
-//        bottomNavigationView.setOnNavigationItemSelectedListener
-//                (new BottomNavigationView.OnNavigationItemSelectedListener() {
-//                    @Override
-//                    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-//                        Fragment selectedFragment = null;
-//                        switch (item.getItemId()) {
-//                            case R.id.navigation_rent:
-//                                selectedFragment = RentShelfFragment.newInstance();
-//                                break;
-//                            case R.id.navigation_swap:
-//                                selectedFragment = SwapShelfFragment.newInstance();
-//                                break;
-//                            case R.id.navigation_auction:
-//                                selectedFragment = AuctionShelfFragment.newInstance();
-//                                break;
-//                        }
-//                        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-//                        transaction.replace(R.id.fragment_container_shelf, selectedFragment);
-//                        transaction.commit();
-//                        return true;
-//                    }
-//                });
+        bottomNavigationView.setOnNavigationItemSelectedListener
+                (new BottomNavigationView.OnNavigationItemSelectedListener() {
+                    @Override
+                    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+                        Fragment selectedFragment = null;
+                        switch (item.getItemId()) {
+                            case R.id.navigation_rent:
+                                selectedFragment = RentShelfFragment.newInstance();
+                                break;
+                            case R.id.navigation_swap:
+                                selectedFragment = SwapShelfFragment.newInstance();
+                                break;
+                            case R.id.navigation_auction:
+                                selectedFragment = AuctionShelfFragment.newInstance();
+                                break;
+                        }
+                        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+                        transaction.replace(R.id.fragment_container_shelf, selectedFragment);
+                        transaction.commit();
+                        return true;
+                    }
+                });
 
     }
 

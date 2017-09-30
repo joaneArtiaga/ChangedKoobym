@@ -35,7 +35,7 @@ public class ViewBookActivity extends AppCompatActivity implements NavigationVie
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_view_book);
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbarProfile);
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbarViewBook);
         setSupportActionBar(toolbar);
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout_view_book);
@@ -105,6 +105,11 @@ public class ViewBookActivity extends AppCompatActivity implements NavigationVie
         int id = item.getItemId();
 
         if (id == R.id.home) {
+            Intent intent = new Intent(ViewBookActivity.this, LandingPage.class);
+            Bundle bundle = new Bundle();
+            bundle.putBoolean("fromRegister", false);
+            intent.putExtra("user", bundle);
+            startActivity(intent);
         } else if (id == R.id.profile) {
             Intent intent = new Intent(ViewBookActivity.this, ProfileActivity.class);
 //            User user = userModel;
@@ -116,9 +121,7 @@ public class ViewBookActivity extends AppCompatActivity implements NavigationVie
             bundlePass.putSerializable("userModelPass", userModel);
             intent.putExtra("user",bundlePass);
             startActivity(intent);
-        } else if (id == R.id.rent) {
-
-        } else if (id == R.id.myBook) {
+        } else if (id == R.id.shelf) {
             Intent intent = new Intent(ViewBookActivity.this, MyShelf.class);
             startActivity(intent);
         } else if (id == R.id.history) {
@@ -132,10 +135,9 @@ public class ViewBookActivity extends AppCompatActivity implements NavigationVie
             LoginManager.getInstance().logOut();
             Intent intent = new Intent(ViewBookActivity.this, MainActivity.class);
             startActivity(intent);
-        } else if (id == R.id.shelf) {
         }
 
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout_landingPage);
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout_view_book);
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }

@@ -4,24 +4,14 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/background"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
     tools:context="com.example.joane14.myapplication.Activities.MyShelf"
     tools:showIn="@layout/app_bar_shelf">
 
     <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="450dp"
+        android:layout_height="match_parent"
         android:id="@+id/fragment_container_shelf"/>
 
-    <android.support.design.widget.BottomNavigationView
-        android:id="@+id/navigation"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:background="@color/colorPrimary"
-        app:itemIconTint="@color/colorLightOrange"
-        app:itemTextColor="@color/colorDark"
-        app:menu="@menu/navigation"/>
 
 </RelativeLayout>
