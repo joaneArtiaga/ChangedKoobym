@@ -16,7 +16,6 @@ import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.Toast;
 
 import com.android.volley.NetworkResponse;
 import com.android.volley.Request;
@@ -26,12 +25,12 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.Volley;
 import com.esafirm.imagepicker.features.ImagePicker;
 import com.esafirm.imagepicker.model.Image;
-import com.example.joane14.myapplication.Class.SelectDateFragment;
 import com.example.joane14.myapplication.Model.User;
 import com.example.joane14.myapplication.R;
 import com.squareup.picasso.Picasso;
 
 import org.apache.commons.io.FileUtils;
+
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
@@ -44,8 +43,8 @@ import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
+
 import static android.app.Activity.RESULT_OK;
-import static com.facebook.FacebookSdk.getApplicationContext;
 
 public class AddProfile extends Fragment {
 
@@ -55,6 +54,7 @@ public class AddProfile extends Fragment {
     Button mNextAdd;
     User userModel;
     ImageView slctImage;
+    ImageView imageView;
     String filename;
     private DatePicker datePicker;
     private Calendar calendar;
@@ -251,6 +251,7 @@ public class AddProfile extends Fragment {
                 // parse success output
                 Log.d("RESULT OF UOPLOAD", resultResponse);
                 userModel.setImageFilename(resultResponse);
+
             }
         }, new Response.ErrorListener() {
             @Override

@@ -2,44 +2,31 @@ package com.example.joane14.myapplication.Fragments;
 
 import android.content.Context;
 import android.content.DialogInterface;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.Button;
 import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
-import com.android.volley.VolleyLog;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
-import com.example.joane14.myapplication.Activities.GsonDateDeserializer;
-import com.example.joane14.myapplication.Activities.LocationChooser;
 import com.example.joane14.myapplication.Adapters.GenreAdapter;
 import com.example.joane14.myapplication.Model.GenreModel;
-import com.example.joane14.myapplication.Model.User;
 import com.example.joane14.myapplication.R;
-import com.example.joane14.myapplication.Utilities.SPUtility;
 import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 
-import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Date;
 import java.util.List;
 
 public class Genre extends Fragment implements AdapterView.OnItemClickListener{
@@ -112,13 +99,11 @@ public class Genre extends Fragment implements AdapterView.OnItemClickListener{
             }
         });
 //        User user = (User) SPUtility.getSPUtil(getContext()).getObject("USER_OBJECT", User.class);
-
         mGridViewGenres = (GridView) view.findViewById(R.id.gridView_genres);
         genreAdapter = new GenreAdapter(getContext(), genreArray);
         mGridViewGenres.setAdapter(genreAdapter);
         mGridViewGenres.setOnItemClickListener(this);
         getGenres();
-
         Log.d("Oncreate", "inside");
         return view;
     }
