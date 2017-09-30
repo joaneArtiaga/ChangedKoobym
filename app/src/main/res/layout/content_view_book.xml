@@ -25,128 +25,201 @@
             android:layout_marginLeft="10dp"
             app:srcCompat="@drawable/com_facebook_tooltip_blue_xout" />
 
-        <LinearLayout
-            android:layout_width="260dp"
-            android:layout_height="120dp"
-            android:layout_marginTop="13dp"
-            android:layout_toRightOf="@id/vbBookImg"
-            android:orientation="vertical">
+        <ScrollView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+
+            <LinearLayout
+                android:layout_width="260dp"
+                android:layout_height="120dp"
+                android:layout_marginTop="13dp"
+                android:layout_toRightOf="@id/vbBookImg"
+                android:orientation="vertical">
 
 
-            <TextView
-                android:id="@+id/vbBookTitle"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="TextView" />
+                <TextView
+                    android:id="@+id/vbBookTitle"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="2"
+                    android:textStyle="bold"
+                    android:text="TextView" />
 
-            <TextView
-                android:id="@+id/vbBookAuthor"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="TextView" />
+                <TextView
+                    android:id="@+id/vbBookAuthor"
+                    android:textStyle="italic"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="TextView" />
 
-            <TextView
-                android:id="@+id/vbBookDescription"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="TextView" />
+                <TextView
+                    android:id="@+id/vbBookDescription"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="TextView" />
 
-        </LinearLayout>
+            </LinearLayout>
 
+        </ScrollView>
+        
     </LinearLayout>
-
-    <LinearLayout
-        android:id="@+id/linearLayout3"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:layout_marginTop="137dp"
-        android:layout_below="@+id/linearLayout2"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true">
-
-        <ImageView
-            android:id="@+id/imageView9"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
-            android:layout_marginLeft="33dp"
-            app:srcCompat="@drawable/location" />
-
-        <ImageView
-            android:id="@+id/imageView10"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
-            android:layout_marginLeft="33dp"
-            app:srcCompat="@drawable/ratings" />
-
-        <ImageView
-            android:id="@+id/imageView15"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
-            android:layout_marginLeft="33dp"
-            app:srcCompat="@drawable/renter" />
-
-        <ImageView
-            android:id="@+id/imageView12"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
-            android:layout_marginLeft="33dp"
-            app:srcCompat="@drawable/genre" />
-
-    </LinearLayout>
-
-    <TextView
-        android:id="@+id/textView4"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="18dp"
-        android:layout_marginStart="18dp"
-        android:layout_marginTop="36dp"
-        android:text="REVIEWS"
-        android:layout_below="@+id/linearLayout3"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true" />
-
-    <TextView
-        android:id="@+id/textView6"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="24dp"
-        android:layout_marginRight="24dp"
-        android:text="See all reviews"
-        android:layout_alignBaseline="@+id/textView4"
-        android:layout_alignBottom="@+id/textView4"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true" />
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="horizontal"
-        android:layout_below="@+id/linearLayout2"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:layout_above="@+id/linearLayout3"></LinearLayout>
-
-    <TextView
-        android:id="@+id/textView5"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="reviewtext"
-        android:layout_below="@+id/textView4"
-        android:layout_toRightOf="@+id/textView4"
-        android:layout_toEndOf="@+id/textView4"
-        android:layout_marginTop="43dp" />
 
     <ImageButton
-        android:id="@+id/imageButton"
+        android:id="@+id/vbBtnRequest"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        app:srcCompat="@drawable/RTR"
-        android:layout_below="@+id/textView5" />
+        android:layout_height="50dp"
+        app:srcCompat="@drawable/request_to_rent"
+        android:layout_alignParentBottom="true"/>
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="313dp"
+        android:layout_below="@id/linearLayout2">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <LinearLayout
+                android:id="@+id/linearLayoutMultipleImage"
+                android:layout_width="match_parent"
+                android:layout_height="100dp"
+                android:orientation="horizontal">
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/linearLayoutIcon"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true"
+                android:background="@color/colorDark"
+                android:layout_below="@id/linearLayoutMultipleImage"
+                android:layout_marginTop="10dp"
+                android:orientation="horizontal">
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_marginLeft="20dp"
+                    android:orientation="vertical"
+                    style="@style/viewBookStyle">
+
+                    <ImageView
+                        android:id="@+id/ivVbViewMap"
+                        android:layout_width="50dp"
+                        android:layout_height="50dp"
+                        android:layout_gravity="center_horizontal"
+                        app:srcCompat="@drawable/location" />
+
+                    <TextView
+                        android:id="@+id/tvVbViewMap"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_horizontal"
+                        android:text="Meet Up" />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical"
+                    style="@style/viewBookStyle">
+
+                    <ImageView
+                        android:id="@+id/ivVbViewRating"
+                        android:layout_width="50dp"
+                        android:layout_height="50dp"
+                        android:layout_gravity="center_horizontal"
+                        app:srcCompat="@drawable/ratings" />
+
+                    <TextView
+                        android:id="@+id/tvVbViewRating"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_horizontal"
+                        android:text="Ratings" />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical"
+                    style="@style/viewBookStyle">
+
+                    <ImageView
+                        android:id="@+id/ivVbViewRenters"
+                        android:layout_width="50dp"
+                        android:layout_height="50dp"
+                        android:layout_gravity="center_horizontal"
+                        app:srcCompat="@drawable/renter" />
+
+                    <TextView
+                        android:id="@+id/tvVbViewRenters"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_horizontal"
+                        android:text="Renters" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical"
+                    style="@style/viewBookStyle">
+
+                    <ImageView
+                        android:id="@+id/ivVbViewGenre"
+                        android:layout_width="50dp"
+                        android:layout_height="50dp"
+                        android:layout_gravity="center_horizontal"
+                        app:srcCompat="@drawable/genre" />
+
+                    <TextView
+                        android:id="@+id/tvVbViewGenre"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_horizontal"
+                        android:text="Genre" />
+
+                </LinearLayout>
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/tvVbReview"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/linearLayoutIcon"
+                android:layout_marginLeft="18dp"
+                android:layout_marginTop="36dp"
+                android:text="REVIEWS" />
+
+            <TextView
+                android:id="@+id/tvVbSeeReviews"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_below="@+id/linearLayoutIcon"
+                android:layout_marginRight="18dp"
+                android:layout_marginTop="36dp"
+                android:text="See all reviews" />
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/recylcer_view_view_reviews"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/tvVbReview"
+                android:layout_marginTop="10dp"
+                android:scrollbars="vertical" />
+
+        </RelativeLayout>
+
+    </ScrollView>
 
 
 </RelativeLayout>

@@ -9,9 +9,9 @@
     tools:showIn="@layout/app_bar_shelf">
 
     <FrameLayout
+        android:id="@+id/fragment_container_shelf"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:id="@+id/fragment_container_shelf"/>
+        android:layout_height="450dp" />
 
 
 </RelativeLayout>

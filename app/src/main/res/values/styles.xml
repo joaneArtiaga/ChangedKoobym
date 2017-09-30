@@ -22,4 +22,9 @@
         <item name="android:windowNoTitle">true</item>
         <item name="android:windowIsFloating">false</item>
     </style>
+    
+    <style name="viewBookStyle">
+        <item name="android:layout_marginLeft">40dp</item>
+    </style>
+
 </resources>

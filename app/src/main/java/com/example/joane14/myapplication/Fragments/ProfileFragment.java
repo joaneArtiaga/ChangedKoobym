@@ -15,9 +15,11 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.example.joane14.myapplication.Activities.ProfileActivity;
 import com.example.joane14.myapplication.Model.User;
 import com.example.joane14.myapplication.R;
+import com.example.joane14.myapplication.Utilities.SPUtility;
 import com.squareup.picasso.Picasso;
 
 public class ProfileFragment extends Fragment {
@@ -65,18 +67,22 @@ public class ProfileFragment extends Fragment {
         TextView mBirthDate = (TextView) view.findViewById(R.id.tvBirthDate);
         TextView mPhone = (TextView) view.findViewById(R.id.tvPhoneNumber);
 
+        User userModel = new User();
+
+        userModel = (User) SPUtility.getSPUtil(getContext()).getObject("USER_OBJECT", User.class);
 
 
-        mEmail.setText(userObj.getEmail());
-        mPhone.setText(userObj.getPhoneNumber());
-        mBirthDate.setText(userObj.getBirthdate().toString());
-        mAddress.setText(userObj.getAddress());
+        mEmail.setText(userModel.getEmail());
+        mPhone.setText(userModel.getPhoneNumber());
+        mBirthDate.setText(userModel.getBirthdate().toString());
+        mAddress.setText(userModel.getAddress());
         ImageView profileImg = (ImageView) view.findViewById(R.id.profileDisplayPic);
         mBtnAdd = (FloatingActionButton) view.findViewById(R.id.btnAdd);
 
-        mName.setText(userObj.getUserFname()+" "+ userObj.getUserLname());
+        mName.setText(userModel.getUserFname()+" "+ userModel.getUserLname());
 //        mEmail.setText();
-        Picasso.with(getContext()).load(String.format(Constants.IMAGE_URL, userObj.getImageFilename())).fit().into(profileImg);
+//        Picasso.with(getContext()).load(String.format(Constants.IMAGE_URL, userObj.getImageFilename())).fit().into(profileImg);
+        Glide.with(getContext()).load(userModel.getImageFilename()).centerCrop().into(profileImg);
 
 
         mBtnAdd.setOnClickListener(new View.OnClickListener() {

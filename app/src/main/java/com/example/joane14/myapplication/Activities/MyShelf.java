@@ -19,6 +19,8 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.example.joane14.myapplication.Fragments.AuctionShelfFragment;
 import com.example.joane14.myapplication.Fragments.RentShelfFragment;
@@ -55,8 +57,18 @@ public class MyShelf extends AppCompatActivity implements
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view_shelf);
         navigationView.setNavigationItemSelectedListener(this);
-        View hView = navigationView.getHeaderView(0);
 
+        View hView = navigationView.getHeaderView(0);
+        TextView mName = (TextView) hView.findViewById(R.id.tvName);
+        TextView mEmail = (TextView) hView.findViewById(R.id.tvEmail);
+        ImageView profileImg = (ImageView) hView.findViewById(R.id.profPic);
+
+        if(SPUtility.getSPUtil(this).contains("USER_OBJECT")){
+            User userModel = new User();
+            userModel = (User) SPUtility.getSPUtil(this).getObject("USER_OBJECT", User.class);
+            mName.setText(userModel.getUserFname()+" "+userModel.getUserLname());
+            mEmail.setText(userModel.getEmail());
+        }
 
         BottomNavigationView bottomNavigationView = (BottomNavigationView)
                 findViewById(R.id.navigation);

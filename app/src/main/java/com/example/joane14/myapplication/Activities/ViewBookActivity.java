@@ -1,18 +1,23 @@
 package com.example.joane14.myapplication.Activities;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.example.joane14.myapplication.Model.RentalDetail;
@@ -29,6 +34,8 @@ public class ViewBookActivity extends AppCompatActivity implements NavigationVie
     TextView mBookAuthor;
     TextView mBookDescription;
     ImageView imageView;
+    ImageButton mBtnRequest;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,11 +56,29 @@ public class ViewBookActivity extends AppCompatActivity implements NavigationVie
 
 
         NavigationView navigationView1 = (NavigationView) findViewById(R.id.nav_view);
-        View hView = navigationView1.getHeaderView(0);
+
+
+        View hView = navigationView.getHeaderView(0);
+        TextView mName = (TextView) hView.findViewById(R.id.tvName);
+        TextView mEmail = (TextView) hView.findViewById(R.id.tvEmail);
+        ImageView profileImg = (ImageView) hView.findViewById(R.id.profPic);
+
+        if(SPUtility.getSPUtil(this).contains("USER_OBJECT")){
+            User userModel = new User();
+            userModel = (User) SPUtility.getSPUtil(this).getObject("USER_OBJECT", User.class);
+            mName.setText(userModel.getUserFname()+" "+userModel.getUserLname());
+            mEmail.setText(userModel.getEmail());
+        }
+
+
 
         imageView = (ImageView) findViewById(R.id.vbBookImg);
         mBookAuthor = (TextView) findViewById(R.id.vbBookAuthor);
         mBookDescription = (TextView) findViewById(R.id.vbBookDescription);
+
+        mBtnRequest = (ImageButton) findViewById(R.id.vbBtnRequest);
+
+
 
         if (mBookAuthor==null){
             Log.d("mBookAuthor", "is null");
@@ -93,6 +118,36 @@ public class ViewBookActivity extends AppCompatActivity implements NavigationVie
         }else{
             Log.d("bundle", "is empty");
         }
+
+        mBtnRequest.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(ViewBookActivity.this);
+                alertDialogBuilder.setTitle("Terms and Condition");
+                alertDialogBuilder.setMessage("\n\n1.\tThis book must be returned on time.\n" +
+                        "2.\tThis book should be returned in the same condition it was provided.\n" +
+                        "3.\tThe renter will compensate for the damages that the book may incur during the duration of his/her usage.\n" +
+                        "4.\tA fee of 50 pesos per day will be incurred to the renter if the book is not returned on or before the due date.");
+                        alertDialogBuilder.setPositiveButton("Agree",
+                                new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface arg0, int arg1) {
+                                        Toast.makeText(ViewBookActivity.this, "You agreed to the terms and condition.", Toast.LENGTH_SHORT).show();
+                                    }
+                                });
+
+                alertDialogBuilder.setNegativeButton("Disagree",new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        Toast.makeText(ViewBookActivity.this, "You disagreed to the terms and condition.", Toast.LENGTH_SHORT).show();
+                        finish();
+                    }
+                });
+
+                AlertDialog alertDialog = alertDialogBuilder.create();
+                alertDialog.show();
+            }
+        });
     }
 
 
