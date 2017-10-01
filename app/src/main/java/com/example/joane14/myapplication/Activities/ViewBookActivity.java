@@ -33,7 +33,7 @@ public class ViewBookActivity extends AppCompatActivity implements NavigationVie
     TextView mBookTitle;
     TextView mBookAuthor;
     TextView mBookDescription;
-    ImageView imageView;
+    ImageView imageView, mViewMeetUp;
     ImageButton mBtnRequest;
 
 
@@ -63,6 +63,15 @@ public class ViewBookActivity extends AppCompatActivity implements NavigationVie
         TextView mEmail = (TextView) hView.findViewById(R.id.tvEmail);
         ImageView profileImg = (ImageView) hView.findViewById(R.id.profPic);
 
+        mViewMeetUp = (ImageView) findViewById(R.id.ivVbViewMap);
+
+        mViewMeetUp.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(ViewBookActivity.this, ViewMeetUp.class);
+                startActivity(intent);
+            }
+        });
         if(SPUtility.getSPUtil(this).contains("USER_OBJECT")){
             User userModel = new User();
             userModel = (User) SPUtility.getSPUtil(this).getObject("USER_OBJECT", User.class);
@@ -133,6 +142,11 @@ public class ViewBookActivity extends AppCompatActivity implements NavigationVie
                                     @Override
                                     public void onClick(DialogInterface arg0, int arg1) {
                                         Toast.makeText(ViewBookActivity.this, "You agreed to the terms and condition.", Toast.LENGTH_SHORT).show();
+                                        Intent intent = new Intent(ViewBookActivity.this, MeetUpChooser.class);
+                                        Bundle mbundle = new Bundle();
+                                        mbundle.putSerializable("rentalDetail", rentalDetail);
+                                        intent.putExtras(mbundle);
+                                        startActivity(intent);
                                     }
                                 });
 

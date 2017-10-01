@@ -47,8 +47,9 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".Activities.MainActivity"
-            android:theme="@style/AppTheme.NoActionBar"/>
+        <activity
+            android:name=".Activities.MainActivity"
+            android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".Activities.LandingPage"
             android:label="@string/title_activity_landing_page"
@@ -66,10 +67,18 @@
         <activity
             android:name=".Activities.LocationChooser"
             android:label="@string/title_activity_location_chooser" />
-        <activity android:name=".Activities.ViewBookActivity"
-            android:theme="@style/AppTheme.NoActionBar"/>
-        <activity android:name=".Activities.MyShelf"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
+        <activity
+            android:name=".Activities.ViewBookActivity"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".Activities.MyShelf"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".Activities.ViewMeetUp"
+            android:label="@string/title_activity_view_meet_up" />
+        <activity
+            android:name=".Activities.MeetUpChooser"
+            android:label="@string/title_activity_meet_up_chooser"></activity>
     </application>
 
 </manifest>

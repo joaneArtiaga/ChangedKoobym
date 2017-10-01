@@ -113,7 +113,8 @@
                         android:layout_width="50dp"
                         android:layout_height="50dp"
                         android:layout_gravity="center_horizontal"
-                        app:srcCompat="@drawable/location" />
+                        app:srcCompat="@drawable/location"
+                        android:clickable="true"/>
 
                     <TextView
                         android:id="@+id/tvVbViewMap"
@@ -135,7 +136,8 @@
                         android:layout_width="50dp"
                         android:layout_height="50dp"
                         android:layout_gravity="center_horizontal"
-                        app:srcCompat="@drawable/ratings" />
+                        app:srcCompat="@drawable/ratings"
+                        android:clickable="true"/>
 
                     <TextView
                         android:id="@+id/tvVbViewRating"
@@ -157,7 +159,8 @@
                         android:layout_width="50dp"
                         android:layout_height="50dp"
                         android:layout_gravity="center_horizontal"
-                        app:srcCompat="@drawable/renter" />
+                        app:srcCompat="@drawable/renter"
+                        android:clickable="true"/>
 
                     <TextView
                         android:id="@+id/tvVbViewRenters"
@@ -178,7 +181,8 @@
                         android:layout_width="50dp"
                         android:layout_height="50dp"
                         android:layout_gravity="center_horizontal"
-                        app:srcCompat="@drawable/genre" />
+                        app:srcCompat="@drawable/genre"
+                        android:clickable="true"/>
 
                     <TextView
                         android:id="@+id/tvVbViewGenre"
