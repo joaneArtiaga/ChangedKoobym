@@ -111,6 +111,11 @@ public class MeetUpChooser extends FragmentActivity implements OnMapReadyCallbac
 
                                 int position = mHashMap.get(marker);
                                 Log.d("MarkerPosition", String.valueOf(position));
+                                Intent intent = new Intent(MeetUpChooser.this,TimeDateChooser.class);
+                                Bundle mBundle = new Bundle();
+                                mBundle.putSerializable("rentalDetail", rentalDetailModel);
+                                intent.putExtras(mBundle);
+                                startActivity(intent);
                             }
                         });
 
@@ -127,4 +132,5 @@ public class MeetUpChooser extends FragmentActivity implements OnMapReadyCallbac
             }
         });
     }
+
 }

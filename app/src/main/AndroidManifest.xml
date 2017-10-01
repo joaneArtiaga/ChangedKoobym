@@ -78,7 +78,8 @@
             android:label="@string/title_activity_view_meet_up" />
         <activity
             android:name=".Activities.MeetUpChooser"
-            android:label="@string/title_activity_meet_up_chooser"></activity>
+            android:label="@string/title_activity_meet_up_chooser" />
+        <activity android:name=".Activities.TimeDateChooser"></activity>
     </application>
 
 </manifest>
