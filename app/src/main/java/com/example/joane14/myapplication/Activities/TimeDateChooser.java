@@ -18,7 +18,7 @@ public class TimeDateChooser extends AppCompatActivity {
         rentalDetail = new RentalDetail();
         if(getIntent().getExtras().getSerializable("rentalDetail")!=null){
             rentalDetail = (RentalDetail) getIntent().getExtras().getSerializable("rentalDetail");
-            Log.d("TimeDateChooser", rentalDetail.getBookOwner().getUserObj().toString());
+            Log.d("TimeDateChooser", rentalDetail.getBookOwner().getUserObj().getDayTimeModel().toString());
         }
     }
 }

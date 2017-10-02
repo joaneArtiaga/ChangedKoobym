@@ -245,6 +245,7 @@ public class MainActivity extends AppCompatActivity {
                     User user = gson.fromJson(response, User.class);
                     Log.d("Response", response);
                     Log.d("userResponse ",user.getImageFilename());
+                    Log.d("userResponse ",user.toString());
                     Bundle b = new Bundle();
 //                    intent.putExtra("recommned", b);
                     SPUtility.getSPUtil(MainActivity.this).putObject("USER_OBJECT", user);

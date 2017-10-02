@@ -19,6 +19,9 @@ public class User implements Serializable{
     @SerializedName("locations")
     private List<LocationModel> locationArray;
 
+    @SerializedName("userDayTimes")
+    private List<UserDayTime> dayTimeModel;
+
     private Integer userId;
     private String userFname;
     private String userLname;
@@ -30,6 +33,18 @@ public class User implements Serializable{
     private String email;
     private String imageFilename;
 
+
+    public List<UserDayTime> getDayTimeModel() {
+        return dayTimeModel;
+    }
+
+    public void setDayTimeModel(List<UserDayTime> dayTimeModel) {
+        this.dayTimeModel = dayTimeModel;
+    }
+
+    public void setUserId(Integer userId) {
+        this.userId = userId;
+    }
 
     public void setLocationArray(List<LocationModel> locationArray) {
         this.locationArray = locationArray;
@@ -134,6 +149,7 @@ public class User implements Serializable{
     public String toString() {
         return "User{" +
                 "genreArray=" + genreArray +
+                ", dayTimeArray='" + dayTimeModel + '\'' +
                 ", userId=" + userId +
                 ", userFname='" + userFname + '\'' +
                 ", userLname='" + userLname + '\'' +
