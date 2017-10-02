@@ -1,58 +1,35 @@
 package com.example.joane14.myapplication.Activities;
 
-import android.app.AlertDialog;
 import android.content.Intent;
-import android.graphics.drawable.LayerDrawable;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
+import android.support.design.widget.NavigationView;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
-import android.support.v4.view.MenuItemCompat;
-import android.support.v7.widget.SearchView;
-import android.util.Log;
-import android.view.View;
-import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
+import android.support.v4.view.MenuItemCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.android.volley.AuthFailureError;
-import com.android.volley.Request;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
-import com.android.volley.VolleyLog;
-import com.android.volley.toolbox.StringRequest;
+import com.bumptech.glide.Glide;
 import com.example.joane14.myapplication.Fragments.Constants;
 import com.example.joane14.myapplication.Fragments.MostRentedBookFrag;
 import com.example.joane14.myapplication.Fragments.PreferencesFrag;
-import com.example.joane14.myapplication.Fragments.VolleyUtil;
-import com.example.joane14.myapplication.Model.LocationModel;
-import com.example.joane14.myapplication.Model.RentalDetail;
 import com.example.joane14.myapplication.Model.User;
 import com.example.joane14.myapplication.R;
 import com.example.joane14.myapplication.Utilities.SPUtility;
 import com.facebook.login.LoginManager;
-import com.facebook.login.widget.ProfilePictureView;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import com.squareup.picasso.Picasso;
-
-import org.w3c.dom.Text;
-
-import java.io.UnsupportedEncodingException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Date;
-import java.util.List;
 
 public class LandingPage extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener,
@@ -141,7 +118,9 @@ public class LandingPage extends AppCompatActivity
             Log.d("User Login", userModel.getUserFname());
             mName.setText(userModel.getUserFname()+" "+ userModel.getUserLname());
             mEmail.setText(userModel.getEmail());
-            Picasso.with(LandingPage.this).load(String.format(Constants.IMAGE_URL, userModel.getImageFilename())).fit().into(profileImg);
+            Log.d("moaatay",userModel.getImageFilename());
+            Glide.with(LandingPage.this).load(userModel.getImageFilename()).fitCenter().into(profileImg);
+//            Picasso.with(LandingPage.this).load(String.format(Constants.IMAGE_URL, userModel.getImageFilename())).fit().into(profileImg);
 
 
             if(mBundleLogin.getBoolean("fromRegister")==true){

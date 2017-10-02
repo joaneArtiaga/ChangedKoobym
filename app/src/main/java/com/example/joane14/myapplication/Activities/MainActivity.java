@@ -153,6 +153,8 @@ public class MainActivity extends AppCompatActivity {
                                 new GraphRequest.GraphJSONObjectCallback() {
                                     @Override
                                     public void onCompleted(JSONObject user, GraphResponse response) {
+                                        Log.d("fbLogin", response.toString());
+
                                         Log.d("User Data", response.toString());
                                         Log.d("User json object", user.toString());
                                         try {
