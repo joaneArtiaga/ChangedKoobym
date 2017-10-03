@@ -4,7 +4,10 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.design.widget.BottomNavigationView;
 import android.support.design.widget.NavigationView;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
@@ -22,9 +25,12 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.example.joane14.myapplication.Fragments.AuctionShelfFragment;
 import com.example.joane14.myapplication.Fragments.Constants;
 import com.example.joane14.myapplication.Fragments.MostRentedBookFrag;
 import com.example.joane14.myapplication.Fragments.PreferencesFrag;
+import com.example.joane14.myapplication.Fragments.RentShelfFragment;
+import com.example.joane14.myapplication.Fragments.SwapShelfFragment;
 import com.example.joane14.myapplication.Model.User;
 import com.example.joane14.myapplication.R;
 import com.example.joane14.myapplication.Utilities.SPUtility;
@@ -65,6 +71,37 @@ public class LandingPage extends AppCompatActivity
         View hView = navigationView.getHeaderView(0);
         TextView mName = (TextView) hView.findViewById(R.id.tvName);
         TextView mEmail = (TextView) hView.findViewById(R.id.tvEmail);
+
+        BottomNavigationView bottomNavigationView = (BottomNavigationView)
+                findViewById(R.id.navigation);
+
+        if(bottomNavigationView==null){
+            Log.d("bottomNavView", "is null");
+        }else{
+            Log.d("bottomNavView", "is not null");
+        }
+
+        bottomNavigationView.setOnNavigationItemSelectedListener
+                (new BottomNavigationView.OnNavigationItemSelectedListener() {
+                    @Override
+                    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+                        Fragment selectedFragment = null;
+                        switch (item.getItemId()) {
+                            case R.id.navigation_rent:
+                                break;
+                            case R.id.navigation_swap:
+//                                selectedFragment = SwapShelfFragment.newInstance();
+                                break;
+                            case R.id.navigation_auction:
+//                                selectedFragment = AuctionShelfFragment.newInstance();
+                                break;
+                        }
+                        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+                        transaction.replace(R.id.fragment_container_shelf, selectedFragment);
+                        transaction.commit();
+                        return true;
+                    }
+                });
 
         Log.d("Inside", "landing page");
 
