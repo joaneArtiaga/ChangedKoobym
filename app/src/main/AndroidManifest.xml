@@ -79,7 +79,8 @@
         <activity
             android:name=".Activities.MeetUpChooser"
             android:label="@string/title_activity_meet_up_chooser" />
-        <activity android:name=".Activities.TimeDateChooser"></activity>
+        <activity android:name=".Activities.TimeDateChooser" />
+        <activity android:name=".Activities.RequestActivity"></activity>
     </application>
 
 </manifest>
