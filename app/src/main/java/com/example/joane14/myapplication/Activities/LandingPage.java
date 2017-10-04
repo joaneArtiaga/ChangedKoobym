@@ -25,12 +25,9 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
-import com.example.joane14.myapplication.Fragments.AuctionShelfFragment;
 import com.example.joane14.myapplication.Fragments.Constants;
 import com.example.joane14.myapplication.Fragments.MostRentedBookFrag;
 import com.example.joane14.myapplication.Fragments.PreferencesFrag;
-import com.example.joane14.myapplication.Fragments.RentShelfFragment;
-import com.example.joane14.myapplication.Fragments.SwapShelfFragment;
 import com.example.joane14.myapplication.Model.User;
 import com.example.joane14.myapplication.R;
 import com.example.joane14.myapplication.Utilities.SPUtility;
@@ -69,8 +66,11 @@ public class LandingPage extends AppCompatActivity
 
         NavigationView navigationView1 = (NavigationView) findViewById(R.id.nav_view);
         View hView = navigationView.getHeaderView(0);
+//        View hView = navigationView1.findViewById(R.id.navHeader)
         TextView mName = (TextView) hView.findViewById(R.id.tvName);
         TextView mEmail = (TextView) hView.findViewById(R.id.tvEmail);
+        profileImg = (ImageView) hView.findViewById(R.id.profPic);
+
 
         BottomNavigationView bottomNavigationView = (BottomNavigationView)
                 findViewById(R.id.navigation);
@@ -105,7 +105,6 @@ public class LandingPage extends AppCompatActivity
 
         Log.d("Inside", "landing page");
 
-        profileImg = (ImageView) hView.findViewById(R.id.profPic);
 
         bundlePass = new Bundle();
 
@@ -156,7 +155,7 @@ public class LandingPage extends AppCompatActivity
             mName.setText(userModel.getUserFname()+" "+ userModel.getUserLname());
             mEmail.setText(userModel.getEmail());
             Log.d("moaatay",userModel.getImageFilename());
-            Glide.with(LandingPage.this).load(userModel.getImageFilename()).fitCenter().into(profileImg);
+            Glide.with(LandingPage.this).load(userModel.getImageFilename()).into(profileImg);
 //            Picasso.with(LandingPage.this).load(String.format(Constants.IMAGE_URL, userModel.getImageFilename())).fit().into(profileImg);
 
 
