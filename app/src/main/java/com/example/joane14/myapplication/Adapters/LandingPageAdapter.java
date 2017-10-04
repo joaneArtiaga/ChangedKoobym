@@ -52,8 +52,7 @@ public class LandingPageAdapter extends RecyclerView.Adapter<LandingPageAdapter.
         holder.mBookTitle.setText(bookList.get(position).getBookOwner().getBookObj().getBookTitle());
         holder.mBookPrice.setText(bookList.get(position).getBookOwner().getBookObj().getBookOriginalPrice().toString());
         Log.d("libroShet",bookList.get(position).getBookOwner().getBookObj().getBookOriginalPrice().toString());
-        String author = "No Author";
-        Log.d("AuthorDisplay", author);
+        String author = " ";
         if(bookList.get(position).getBookOwner().getBookObj().getBookAuthor()!=null) {
             int size = bookList.get(position).getBookOwner().getBookObj().getBookAuthor().size();
 

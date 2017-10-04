@@ -19,7 +19,6 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
@@ -30,12 +29,10 @@ public class MeetUpChooser extends FragmentActivity implements OnMapReadyCallbac
     List<LocationModel> locationModelList;
     RentalDetail rentalDetailModel;
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_meet_up_chooser);
-        // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
@@ -43,34 +40,21 @@ public class MeetUpChooser extends FragmentActivity implements OnMapReadyCallbac
         rentalDetailModel = new RentalDetail();
 
         if(getIntent().getExtras().getSerializable("rentalDetail")!=null){
-                rentalDetailModel = (RentalDetail) getIntent().getExtras().getSerializable("rentalDetail");
+            rentalDetailModel = (RentalDetail) getIntent().getExtras().getSerializable("rentalDetail");
             Log.d("MeetUpChooser", String.valueOf(rentalDetailModel.getBookOwner().getUserObj().getUserId()));
             locationModelList = rentalDetailModel.getBookOwner().getUserObj().getLocationArray();
             for(int init = 0; init<locationModelList.size(); init++){
                 Log.d("MeetUpChooser Location", locationModelList.get(init).getLocationName());
             }
         }
-
     }
 
 
-    /**
-     * Manipulates the map once available.
-     * This callback is triggered when the map is ready to be used.
-     * This is where we can add markers or lines, add listeners or move the camera. In this case,
-     * we just add a marker near Sydney, Australia.
-     * If Google Play services is not installed on the device, the user will be prompted to install
-     * it inside the SupportMapFragment. This method will only be triggered once the user has
-     * installed Google Play services and returned to the app.
-     */
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
-
         Marker mapMarker;
-        // Add a marker in Sydney and
-        // move the camera
-//        LatLng sydney = new LatLng(-34, 151);
+
 
         LatLng location = null;
 
@@ -94,8 +78,6 @@ public class MeetUpChooser extends FragmentActivity implements OnMapReadyCallbac
         mMap.moveCamera(CameraUpdateFactory.newLatLng(location));
         mMap.animateCamera(CameraUpdateFactory.zoomTo(18));
         mMap.getUiSettings().setZoomControlsEnabled(true);
-//        mMap.moveCamera(CameraUpdateFactory.newLatLng(sydney));
-
 
         mMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
             @Override
@@ -132,6 +114,6 @@ public class MeetUpChooser extends FragmentActivity implements OnMapReadyCallbac
                 return false;
             }
         });
-    }
 
+    }
 }

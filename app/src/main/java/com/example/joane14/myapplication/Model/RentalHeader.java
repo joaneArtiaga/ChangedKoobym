@@ -27,6 +27,28 @@ public class RentalHeader implements Serializable {
     @SerializedName("location")
     LocationModel location;
 
+    @SerializedName("status")
+    String status;
+
+    @SerializedName("rentalDetail")
+    RentalDetail rentalDetail;
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
+    public RentalDetail getRentalDetail() {
+        return rentalDetail;
+    }
+
+    public void setRentalDetail(RentalDetail rentalDetail) {
+        this.rentalDetail = rentalDetail;
+    }
+
     public Long getRentalHeaderId() {
         return rentalHeaderId;
     }

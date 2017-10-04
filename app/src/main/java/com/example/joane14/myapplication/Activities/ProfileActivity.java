@@ -313,7 +313,8 @@ public class ProfileActivity extends AppCompatActivity implements NavigationView
         } else if (id == R.id.transaction) {
 
         } else if (id == R.id.request) {
-
+            Intent intent = new Intent(ProfileActivity.this, RequestActivity.class);
+            startActivity(intent);
         } else if (id == R.id.signOut) {
             LoginManager.getInstance().logOut();
             Intent intent = new Intent(ProfileActivity.this, MainActivity.class);

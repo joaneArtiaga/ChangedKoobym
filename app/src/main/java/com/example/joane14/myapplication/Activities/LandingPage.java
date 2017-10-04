@@ -281,7 +281,8 @@ public class LandingPage extends AppCompatActivity
         } else if (id == R.id.transaction) {
 
         } else if (id == R.id.request) {
-
+            Intent intent = new Intent(LandingPage.this, RequestActivity.class);
+            startActivity(intent);
         } else if (id == R.id.signOut) {
             SPUtility.getSPUtil(LandingPage.this).clear();
             LoginManager.getInstance().logOut();

@@ -5,12 +5,15 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
+import android.support.v4.view.MenuItemCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
@@ -115,8 +118,14 @@ public class ViewBookActivity extends AppCompatActivity implements NavigationVie
                 Log.d("bundle", "is not empty");
                 Log.d("RentalBookTitle", rentalDetail.getBookOwner().getBookObj().getBookTitle());
                 mBookTitle.setText(rentalDetail.getBookOwner().getBookObj().getBookTitle());
-                Log.d("RentalBookAuthor", String.valueOf(rentalDetail.getBookOwner().getBookObj().getBookAuthor().get(0).getAuthorFName()));
-                author=rentalDetail.getBookOwner().getBookObj().getBookAuthor().get(0).getAuthorFName();
+                if(rentalDetail.getBookOwner().getBookObj().getBookAuthor().get(0).getAuthorFName()==null){
+                    if(rentalDetail.getBookOwner().getBookObj().getBookAuthor().get(0).getAuthorLName()==null){
+                        author="Unknown Author";
+                    }
+                }else{
+                    Log.d("RentalBookAuthor", String.valueOf(rentalDetail.getBookOwner().getBookObj().getBookAuthor().get(0).getAuthorFName()));
+                    author=rentalDetail.getBookOwner().getBookObj().getBookAuthor().get(0).getAuthorFName();
+                }
                 Log.d("RentalAuthor", author);
                 mBookAuthor.setText(author);
                 Log.d("RentalBookDescription", rentalDetail.getBookOwner().getBookObj().getBookDescription().toString());
@@ -198,7 +207,8 @@ public class ViewBookActivity extends AppCompatActivity implements NavigationVie
         } else if (id == R.id.transaction) {
 
         } else if (id == R.id.request) {
-
+            Intent intent = new Intent(ViewBookActivity.this, RequestActivity.class);
+            startActivity(intent);
         } else if (id == R.id.signOut) {
             SPUtility.getSPUtil(ViewBookActivity.this).clear();
             LoginManager.getInstance().logOut();
@@ -209,6 +219,18 @@ public class ViewBookActivity extends AppCompatActivity implements NavigationVie
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout_view_book);
         drawer.closeDrawer(GravityCompat.START);
         return true;
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.toolbar_menu, menu);
+
+        // Associate searchable configuration with the SearchView
+        // SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
+        SearchView searchView = (SearchView) MenuItemCompat.getActionView(menu.findItem(R.id.action_search));
+        MenuItem item = menu.findItem(R.id.action_notifications);
+        // searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
+        return super.onCreateOptionsMenu(menu);
     }
 
 }

@@ -19,7 +19,7 @@
         android:label="Koobym"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/AppTheme">
+        android:theme="@style/MyMaterialTheme">
         <meta-data
             android:name="com.facebook.sdk.ApplicationId"
             android:value="@string/facebook_app_id" />
@@ -76,11 +76,12 @@
         <activity
             android:name=".Activities.ViewMeetUp"
             android:label="@string/title_activity_view_meet_up" />
+        <activity android:name=".Activities.TimeDateChooser" />
+        <activity android:name=".Activities.RequestActivity"
+            android:theme="@style/AppTheme.NoActionBar"/>
         <activity
             android:name=".Activities.MeetUpChooser"
-            android:label="@string/title_activity_meet_up_chooser" />
-        <activity android:name=".Activities.TimeDateChooser" />
-        <activity android:name=".Activities.RequestActivity"></activity>
+            android:label="@string/title_activity_meet_up_chooser"></activity>
     </application>
 
 </manifest>

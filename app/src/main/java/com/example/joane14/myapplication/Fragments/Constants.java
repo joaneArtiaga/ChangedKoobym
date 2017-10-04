@@ -19,9 +19,14 @@ public class Constants {
 
     public static final String GOOGLE_API_SEARCH_URL_ISBN = "https://www.googleapis.com/books/v1/volumes?q=isbn:%s";
 
-    public static final String POST_USER_RENTAL = "http://104.197.4.32:8080/Koobym/userRental/add";
-
     public static final String POST_RENTAL_HEADER = "http://104.197.4.32:8080/Koobym/rentalHeader/add";
+
+    public static final String GET_RENTAL_HEADER = "http://104.197.4.32:8080/Koobym/rentalHeader/all";
+
+    public static final String GET_RENTAL_HEADER_BY_ID = "http://104.197.4.32:8080/Koobym/rentalHeader/rentalById/";
+
+    public static final String GET_RENTAL_HEADER_BY_DELIVERY = "http://104.197.4.32:8080/Koobym/rentalHeader/rentalById/";
+
 
 
 }

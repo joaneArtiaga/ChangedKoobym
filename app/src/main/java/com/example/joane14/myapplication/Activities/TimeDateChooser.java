@@ -32,7 +32,6 @@ import com.example.joane14.myapplication.Model.RentalDetail;
 import com.example.joane14.myapplication.Model.RentalHeader;
 import com.example.joane14.myapplication.Model.User;
 import com.example.joane14.myapplication.Model.UserDayTime;
-import com.example.joane14.myapplication.Model.UserRental;
 import com.example.joane14.myapplication.R;
 import com.example.joane14.myapplication.Utilities.SPUtility;
 import com.google.gson.Gson;
@@ -48,7 +47,6 @@ public class TimeDateChooser extends AppCompatActivity {
     RentalDetail rentalDetail;
     List<UserDayTime> userDayTimeList;
     UserDayTime userDayTimeModel;
-    UserRental userRental;
     RentalHeader rentalHeader;
     LocationModel locationChosen;
 
@@ -63,7 +61,6 @@ public class TimeDateChooser extends AppCompatActivity {
         Log.d("CurrentDate", date);
 
         userDayTimeList = new ArrayList<UserDayTime>();
-        userRental = new UserRental();
         rentalHeader = new RentalHeader();
         locationChosen = new LocationModel();
 
@@ -117,16 +114,11 @@ public class TimeDateChooser extends AppCompatActivity {
                         new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface arg0, int arg1) {
-                                userRental.setRentalDetail(rentalDetail);
-                                userRental.setUser((User) SPUtility.getSPUtil(TimeDateChooser.this).getObject("USER_OBJECT", User.class));
-                                userRental.setRentStatus("Confirmation");
-                                userRental.setTimeStamp(date);
                                 rentalHeader.setUser((User) SPUtility.getSPUtil(TimeDateChooser.this).getObject("USER_OBJECT", User.class));
                                 rentalHeader.setRentalTimeStamp(date);
                                 rentalHeader.setTotalPrice((float) rentalDetail.getCalculatedPrice());
 
                                 Log.d("ONClickTime", "inside");
-                                Log.d("UserRentalRent", userRental.toString());
                                 Log.d("RentalHeaderRent", rentalHeader.toString());
 
                                 showSummary(position, date);
@@ -193,16 +185,15 @@ public class TimeDateChooser extends AppCompatActivity {
                 new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface arg0, int arg1) {
-                        userRental.setRentalDetail(rentalDetail);
-                        userRental.setUser((User) SPUtility.getSPUtil(TimeDateChooser.this).getObject("USER_OBJECT", User.class));
-                        userRental.setRentStatus("Confirmation");
-                        userRental.setTimeStamp(date);
+
+
+                        rentalHeader.setStatus("Confirmation");
+                        rentalHeader.setRentalDetail(rentalDetail);
                         rentalHeader.setUser((User) SPUtility.getSPUtil(TimeDateChooser.this).getObject("USER_OBJECT", User.class));
                         rentalHeader.setRentalTimeStamp(date);
                         rentalHeader.setTotalPrice((float) rentalDetail.getCalculatedPrice());
 
                         Log.d("ONClickTime", "inside");
-                        Log.d("UserRentalRent", userRental.toString());
                         Log.d("RentalHeaderRent", rentalHeader.toString());
 
                         addRentalHeader();
@@ -217,7 +208,7 @@ public class TimeDateChooser extends AppCompatActivity {
     public void addRentalHeader(){
         RequestQueue requestQueue = Volley.newRequestQueue(this);
 //        String URL = "http://104.197.4.32:8080/Koobym/user/add";
-        String URL = Constants.POST_USER_RENTAL;
+        String URL = Constants.POST_RENTAL_HEADER;
 //        String URL = Constants.WEB_SERVICE_URL+"user/add";
 
 //        User user = new User();
@@ -232,14 +223,14 @@ public class TimeDateChooser extends AppCompatActivity {
 //        user.setPhoneNumber(userModel.getPhoneNumber());
 //        user.setGenreArray(genres);
         final Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd").registerTypeAdapter(Date.class, GsonDateDeserializer.getInstance()).create();
-        final String mRequestBody = gson.toJson(userRental);
+        final String mRequestBody = gson.toJson(rentalHeader);
 
 
         Log.d("LOG_VOLLEY", mRequestBody);
         StringRequest stringRequest = new StringRequest(Request.Method.POST, URL, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
-                Log.i("UserRental", response);
+                Log.i("ResponseRentalHeader", response);
 //                User user = gson.fromJson(response, User.class);
 //                Log.i("LOG_VOLLEY", user.getEmail());
 //                Log.i("LOG_VOLLEY", user.getUserFname());
