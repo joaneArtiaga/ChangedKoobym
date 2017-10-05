@@ -1,8 +1,15 @@
 package com.example.joane14.myapplication.Activities;
 
-/**
- * Created by Kimberly Cañedo on 05/10/2017.
- */
+import android.support.v7.app.AppCompatActivity;
+import android.os.Bundle;
 
-public class UserReviewActivity {
+import com.example.joane14.myapplication.R;
+
+public class UserReviewActivity extends AppCompatActivity {
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_user_review);
+    }
 }

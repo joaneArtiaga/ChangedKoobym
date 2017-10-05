@@ -276,7 +276,8 @@ public class LandingPage extends AppCompatActivity
             Intent intent = new Intent(LandingPage.this, MyShelf.class);
             startActivity(intent);
         } else if (id == R.id.history) {
-
+            Intent intent = new Intent(LandingPage.this, UserReviewActivity.class);
+            startActivity(intent);
         } else if (id == R.id.transaction) {
             Intent intent = new Intent(LandingPage.this, TransactionActivity.class);
             startActivity(intent);
