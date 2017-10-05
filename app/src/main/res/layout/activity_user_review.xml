@@ -33,7 +33,8 @@
             android:layout_height="82dp"
             android:layout_weight="1"
             android:background="@color/colorTuftBrush"
-            android:text="TextView" />
+            android:text="TextView"
+            android:textAlignment="viewStart" />
 
 
 

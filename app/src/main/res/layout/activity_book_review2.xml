@@ -18,6 +18,7 @@
             android:layout_width="wrap_content"
             android:layout_height="72dp"
             android:layout_weight="1"
+            android:background="@color/colorTuftBrush"
             android:text="TextView" />
     </LinearLayout>
 
@@ -34,45 +35,6 @@
             android:layout_height="100dp"
             android:layout_weight="1"
             app:srcCompat="@drawable/com_facebook_tooltip_blue_xout" />
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="220dp"
-        android:layout_height="100dp"
-        android:layout_marginRight="16dp"
-        android:orientation="horizontal"
-        app:layout_constraintRight_toRightOf="parent"
-        tools:layout_editor_absoluteY="16dp"
-        android:layout_marginEnd="16dp">
-
-        <TextView
-            android:id="@+id/Name"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="TextView" />
-
-        <TextView
-            android:id="@+id/address"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="TextView" />
-
-        <TextView
-            android:id="@+id/birthDate"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="TextView" />
-
-        <TextView
-            android:id="@+id/gender"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="TextView"/>
-
     </LinearLayout>
 
     <Spinner
@@ -99,5 +61,49 @@
         android:text="Books for Rent"
         tools:layout_editor_absoluteX="199dp"
         tools:layout_editor_absoluteY="212dp" />
+
+    <LinearLayout
+        android:layout_width="250dp"
+        android:layout_height="100dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginRight="32dp"
+        android:orientation="vertical"
+        app:layout_constraintRight_toRightOf="parent"
+        tools:layout_editor_absoluteY="16dp">
+
+        <TextView
+            android:id="@+id/Name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="TextView" />
+
+        <TextView
+            android:id="@+id/Address"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="TextView" />
+
+        <TextView
+            android:id="@+id/textView29"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="TextView" />
+
+        <TextView
+            android:id="@+id/Gender"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="TextView" />
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/textView31"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="RATING"
+        android:textColor="@color/colorOrange"
+        android:textStyle="bold"
+        tools:layout_editor_absoluteX="81dp"
+        tools:layout_editor_absoluteY="131dp" />
 
 </android.support.constraint.ConstraintLayout>
