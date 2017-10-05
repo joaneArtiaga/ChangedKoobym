@@ -278,7 +278,8 @@ public class LandingPage extends AppCompatActivity
         } else if (id == R.id.history) {
 
         } else if (id == R.id.transaction) {
-
+            Intent intent = new Intent(LandingPage.this, TransactionActivity.class);
+            startActivity(intent);
         } else if (id == R.id.request) {
             Intent intent = new Intent(LandingPage.this, RequestActivity.class);
             startActivity(intent);

@@ -28,6 +28,7 @@ public class RequestAdapter extends RecyclerView.Adapter<RequestAdapter.BookHold
 
     public List<RentalHeader> bookList;
     public Activity context;
+    public String fromWhere;
 
     @Override
     public RequestAdapter.BookHolder onCreateViewHolder(ViewGroup parent, int viewType) {
@@ -43,14 +44,19 @@ public class RequestAdapter extends RecyclerView.Adapter<RequestAdapter.BookHold
         return dataObjectHolder;
     }
 
-    public RequestAdapter(List<RentalHeader> myDataset) {
+    public RequestAdapter(List<RentalHeader> myDataset, String fromWhere) {
         bookList = myDataset;
+        this.fromWhere = fromWhere;
     }
 
     @Override
     public void onBindViewHolder(RequestAdapter.BookHolder holder, int position) {
 
-        holder.mRequestor.setText(bookList.get(position).getRentalDetail().getBookOwner().getUserObj().getUserFname()+" "+bookList.get(position).getRentalDetail().getBookOwner().getUserObj().getUserLname());
+        if(fromWhere.equals("MyRequest")){
+            holder.mRequestor.setText("You");
+        }else{
+            holder.mRequestor.setText(bookList.get(position).getRentalDetail().getBookOwner().getUserObj().getUserFname()+" "+bookList.get(position).getRentalDetail().getBookOwner().getUserObj().getUserLname());
+        }
         holder.mBookReq.setText(bookList.get(position).getRentalDetail().getBookOwner().getBookObj().getBookTitle());
         Log.d("libroShet", String.valueOf(bookList.get(position).getRentalDetail().getBookOwner().getBookObj().getBookOriginalPrice()));
         String author = " ";
@@ -145,6 +151,9 @@ public class RequestAdapter extends RecyclerView.Adapter<RequestAdapter.BookHold
         return result;
 
     }
+
+
+
 
 
 }

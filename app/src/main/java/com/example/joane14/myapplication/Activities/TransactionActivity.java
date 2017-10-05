@@ -2,14 +2,11 @@ package com.example.joane14.myapplication.Activities;
 
 import android.content.Intent;
 import android.net.Uri;
-import android.support.annotation.NonNull;
-import android.support.design.widget.BottomNavigationView;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v4.view.ViewPager;
@@ -27,9 +24,13 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.example.joane14.myapplication.Fragments.CompleteFrag;
 import com.example.joane14.myapplication.Fragments.Constants;
 import com.example.joane14.myapplication.Fragments.MyRequestFrag;
 import com.example.joane14.myapplication.Fragments.RequestReceivedFrag;
+import com.example.joane14.myapplication.Fragments.ToDeliverFrag;
+import com.example.joane14.myapplication.Fragments.ToReceiveFrag;
+import com.example.joane14.myapplication.Fragments.ToReturnFrag;
 import com.example.joane14.myapplication.Model.User;
 import com.example.joane14.myapplication.R;
 import com.example.joane14.myapplication.Utilities.SPUtility;
@@ -39,27 +40,28 @@ import com.squareup.picasso.Picasso;
 import java.util.ArrayList;
 import java.util.List;
 
-public class RequestActivity extends AppCompatActivity
+public class TransactionActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener,
-        MyRequestFrag.OnMyRequestInteractionListener,
-        RequestReceivedFrag.OnRequestReceivedInteractionListener{
-
+        ToDeliverFrag.OnToDeliverInteractionListener,
+        ToReturnFrag.OnToReturnInteractionListener,
+        ToReceiveFrag.OnToReceiveInteractionListener,
+        CompleteFrag.OnCompleteInteractionListener{
 
     ImageView profileImg;
     private TabLayout tabLayout;
     private ViewPager viewPager;
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_request);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbarRequest);
+        setContentView(R.layout.activity_transaction);
+
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
         Log.d("RequestActivity", "inside");
 
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout_request);
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout_transaction);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.setDrawerListener(toggle);
@@ -81,10 +83,7 @@ public class RequestActivity extends AppCompatActivity
         View hView = navigationView.getHeaderView(0);
         TextView mName = (TextView) hView.findViewById(R.id.tvName);
         TextView mEmail = (TextView) hView.findViewById(R.id.tvEmail);
-
-
         Log.d("Inside", "landing page");
-
         profileImg = (ImageView) hView.findViewById(R.id.profPic);
 
         if(SPUtility.getSPUtil(this).contains("USER_OBJECT")){
@@ -92,20 +91,19 @@ public class RequestActivity extends AppCompatActivity
             userModel = (User) SPUtility.getSPUtil(this).getObject("USER_OBJECT", User.class);
             mName.setText(userModel.getUserFname()+" "+userModel.getUserLname());
             mEmail.setText(userModel.getEmail());
-            Glide.with(RequestActivity.this).load(userModel.getImageFilename()).into(profileImg);
-            Picasso.with(RequestActivity.this).load(String.format(Constants.IMAGE_URL, userModel.getImageFilename())).fit().into(profileImg);
-
+//            Glide.with(TransactionActivity.this).load(userModel.getImageFilename()).into(profileImg);
+            Picasso.with(TransactionActivity.this).load(String.format(Constants.IMAGE_URL, userModel.getImageFilename())).fit().into(profileImg);
         }
-
     }
 
     private void setupViewPager(ViewPager viewPager) {
-        ViewPagerAdapter adapter = new ViewPagerAdapter(getSupportFragmentManager());
-        adapter.addFragment(new MyRequestFrag(), "My Requests");
-        adapter.addFragment(new RequestReceivedFrag(), "Requests Received");
+        TransactionActivity.ViewPagerAdapter adapter = new TransactionActivity.ViewPagerAdapter(getSupportFragmentManager());
+        adapter.addFragment(new ToDeliverFrag(), "To Deliver");
+        adapter.addFragment(new ToReceiveFrag(), "To Receive");
+        adapter.addFragment(new ToReturnFrag(), "To Return");
+        adapter.addFragment(new CompleteFrag(), "Complete");
         viewPager.setAdapter(adapter);
     }
-
 
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
@@ -117,7 +115,7 @@ public class RequestActivity extends AppCompatActivity
 
         if (id == R.id.home) {
         } else if (id == R.id.profile) {
-            Intent intent = new Intent(RequestActivity.this, ProfileActivity.class);
+            Intent intent = new Intent(TransactionActivity.this, ProfileActivity.class);
 //            User user = userModel;
 //            Log.d("User Id", String.valueOf(userModel.getUserId()));
 //            Log.d("User name", userModel.getUserFname()+" "+userModel.getUserLname());
@@ -128,24 +126,23 @@ public class RequestActivity extends AppCompatActivity
             intent.putExtra("user",bundlePass);
             startActivity(intent);
         } else if (id == R.id.shelf) {
-            Intent intent = new Intent(RequestActivity.this, MyShelf.class);
+            Intent intent = new Intent(TransactionActivity.this, MyShelf.class);
             startActivity(intent);
         } else if (id == R.id.history) {
 
         } else if (id == R.id.transaction) {
-            Intent intent = new Intent(RequestActivity.this, TransactionActivity.class);
-            startActivity(intent);
+
         } else if (id == R.id.request) {
 
         } else if (id == R.id.signOut) {
-            SPUtility.getSPUtil(RequestActivity.this).clear();
+            SPUtility.getSPUtil(TransactionActivity.this).clear();
             LoginManager.getInstance().logOut();
-            Intent intent = new Intent(RequestActivity.this, MainActivity.class);
+            Intent intent = new Intent(TransactionActivity.this, MainActivity.class);
             startActivity(intent);
         } else if (id == R.id.shelf) {
         }
 
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout_request);
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout_transaction);
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }
@@ -163,12 +160,22 @@ public class RequestActivity extends AppCompatActivity
     }
 
     @Override
-    public void onMyRequestOnClick(Uri uri) {
+    public void onToDeliverOnClick(Uri uri) {
 
     }
 
     @Override
-    public void onRequestReceivedOnClick(Uri uri) {
+    public void onToReceiveOnClick(Uri uri) {
+
+    }
+
+    @Override
+    public void onCompleteOnClick(Uri uri) {
+
+    }
+
+    @Override
+    public void onToReturnOnClick(Uri uri) {
 
     }
 
@@ -200,4 +207,5 @@ public class RequestActivity extends AppCompatActivity
             return mFragmentTitleList.get(position);
         }
     }
+
 }

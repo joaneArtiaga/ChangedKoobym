@@ -20,9 +20,8 @@ import com.android.volley.VolleyLog;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.example.joane14.myapplication.Activities.GsonDateDeserializer;
-import com.example.joane14.myapplication.Adapters.LandingPageAdapter;
 import com.example.joane14.myapplication.Adapters.RequestAdapter;
-import com.example.joane14.myapplication.Model.RentalDetail;
+import com.example.joane14.myapplication.Adapters.ToDeliverAdapter;
 import com.example.joane14.myapplication.Model.RentalHeader;
 import com.example.joane14.myapplication.Model.User;
 import com.example.joane14.myapplication.R;
@@ -36,59 +35,56 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
-public class MyRequestFrag extends Fragment {
+public class ToDeliverFrag extends Fragment {
+
 
     List<RentalHeader> rentalHeaderList;
     private RecyclerView mRecyclerView;
     private RecyclerView.Adapter mAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
+    private OnToDeliverInteractionListener mListener;
 
-    private OnMyRequestInteractionListener mListener;
-
-    public MyRequestFrag() {
-
+    public ToDeliverFrag() {
     }
 
-    public static MyRequestFrag newInstance() {
-        MyRequestFrag fragment = new MyRequestFrag();
+    public static ToDeliverFrag newInstance() {
+        ToDeliverFrag fragment = new ToDeliverFrag();
         return fragment;
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_my_request, container, false);
+        View view = inflater.inflate(R.layout.fragment_to_deliver, container, false);
 
         rentalHeaderList = new ArrayList<RentalHeader>();
-        mRecyclerView = (RecyclerView) view.findViewById(R.id.my_recycler_view_my_request);
+        mRecyclerView = (RecyclerView) view.findViewById(R.id.my_recycler_view_to_deliver);
         mRecyclerView.setHasFixedSize(true);
         mLayoutManager = new LinearLayoutManager(getContext());
         mRecyclerView.setLayoutManager(mLayoutManager);
-        mAdapter = new RequestAdapter(rentalHeaderList,"MyRequest");
+        mAdapter = new ToDeliverAdapter(rentalHeaderList);
         mRecyclerView.setAdapter(mAdapter);
-        getMyRequests();
-
+        getMyDeliveries();
 
         return view;
     }
 
     public void onButtonPressed(Uri uri) {
         if (mListener != null) {
-            mListener.onMyRequestOnClick(uri);
+            mListener.onToDeliverOnClick(uri);
         }
     }
 
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        if (context instanceof OnMyRequestInteractionListener) {
-            mListener = (OnMyRequestInteractionListener) context;
+        if (context instanceof OnToDeliverInteractionListener) {
+            mListener = (OnToDeliverInteractionListener) context;
         } else {
             throw new RuntimeException(context.toString()
                     + " must implement OnFragmentInteractionListener");
@@ -101,12 +97,16 @@ public class MyRequestFrag extends Fragment {
         mListener = null;
     }
 
-    public void getMyRequests(){
+    public interface OnToDeliverInteractionListener {
+        void onToDeliverOnClick(Uri uri);
+    }
+
+    public void getMyDeliveries(){
         RequestQueue requestQueue = Volley.newRequestQueue(getContext());
 //        String URL = "http://104.197.4.32:8080/Koobym/user/add";
         User user = new User();
         user = (User) SPUtility.getSPUtil(getContext()).getObject("USER_OBJECT", User.class);
-        String URL = Constants.GET_RENTAL_HEADER_MY_REQUEST+user.getUserId();
+        String URL = Constants.GET_TRANSACTION_TO_DELIVER+user.getUserId();
 //        String URL = Constants.WEB_SERVICE_URL+"user/add";
 
         final RentalHeader rentalHeader =new RentalHeader();
@@ -148,10 +148,5 @@ public class MyRequestFrag extends Fragment {
         };
 
         requestQueue.add(stringRequest);
-    }
-
-    public interface OnMyRequestInteractionListener {
-        // TODO: Update argument type and name
-        void onMyRequestOnClick(Uri uri);
     }
 }

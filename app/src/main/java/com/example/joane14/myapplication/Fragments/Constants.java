@@ -25,8 +25,17 @@ public class Constants {
 
     public static final String GET_RENTAL_HEADER_BY_ID = "http://104.197.4.32:8080/Koobym/rentalHeader/rentalById/";
 
-    public static final String GET_RENTAL_HEADER_BY_DELIVERY = "http://104.197.4.32:8080/Koobym/rentalHeader/rentalById/";
+    public static final String GET_RENTAL_HEADER_MY_REQUEST = "http://104.197.4.32:8080/Koobym/rentalHeader/myRequestById/";
 
+    public static final String GET_TRANSACTION_TO_RETURN_RENTER = "http://104.197.4.32:8080/Koobym/rentalHeader/toReturnByIdRenter/";
+
+    public static final String GET_TRANSACTION_TO_RECEIVE_RENTER = "http://104.197.4.32:8080/Koobym/rentalHeader/toReceiveByIdRenter/";
+
+    public static final String GET_TRANSACTION_COMPLETE_RENTER = "http://104.197.4.32:8080/Koobym/rentalHeader/completeByIdRenter/";
+
+    public static final String GET_TRANSACTION_TO_DELIVER= "http://104.197.4.32:8080/Koobym/rentalHeader/toDeliverById/";
+
+    public static final String UPDATE_RENTAL_HEADER= "http://104.197.4.32:8080/Koobym/rentalHeader/update";
 
 
 }

@@ -86,11 +86,6 @@ public class TimeDateChooser extends AppCompatActivity {
                 userDayTimeList.add(userDayTimeModel);
             }
 
-//            userDayTimeModel.setUserDayTimeId(((UserDayTime) rentalDetail.getBookOwner().getUserObj().getDayTimeModel()).getUserDayTimeId());
-//            userDayTimeModel.setDay(((UserDayTime) rentalDetail.getBookOwner().getUserObj().getDayTimeModel()).getDay());
-//            userDayTimeModel.setTime(((UserDayTime) rentalDetail.getBookOwner().getUserObj().getDayTimeModel()).getTime());
-//            userDayTimeModel.setUserId(((UserDayTime) rentalDetail.getBookOwner().getUserObj().getDayTimeModel()).getUserId());
-//            userDayTimeList.add(userDayTimeModel);
         }
 
         ListView list = (ListView) findViewById(R.id.myList);
@@ -168,6 +163,14 @@ public class TimeDateChooser extends AppCompatActivity {
                 case Calendar.SUNDAY: stringDay = "Sunday";
                     break;
             }
+
+//        if (mCalendar.get(Calendar.DAY_OF_WEEK) != dayvalues) {
+//            mCalendar.add(Calendar.DAY_OF_MONTH, (dayvalues + 7 - mCalendar.get(Calendar.DAY_OF_WEEK)) % 7);
+//        } else {
+//            int minOfDay = mCalendar.get(Calendar.HOUR_OF_DAY) * 60 + mCalendar.get(Calendar.MINUTE);
+//            if (minOfDay >= hour * 60 + minute)
+//                cal.add(Calendar.DAY_OF_MONTH, 7); // Bump to next week
+//        }
 
         TextView mTitle = (TextView) findViewById(R.id.tdMyDate);
         mTitle.setText("Today is "+stringDay+", "+date);

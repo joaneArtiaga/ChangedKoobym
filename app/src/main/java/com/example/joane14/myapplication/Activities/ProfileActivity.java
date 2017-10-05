@@ -90,13 +90,6 @@ public class ProfileActivity extends AppCompatActivity implements NavigationView
         TextView mEmail = (TextView) hView.findViewById(R.id.tvEmail);
         ImageView profileImg = (ImageView) hView.findViewById(R.id.profPic);
 
-        if(SPUtility.getSPUtil(this).contains("USER_OBJECT")){
-            User userModel = new User();
-            userModel = (User) SPUtility.getSPUtil(this).getObject("USER_OBJECT", User.class);
-            mName.setText(userModel.getUserFname()+" "+userModel.getUserLname());
-            mEmail.setText(userModel.getEmail());
-        }
-
 
 
         Intent intent = getIntent();
@@ -311,7 +304,8 @@ public class ProfileActivity extends AppCompatActivity implements NavigationView
         } else if (id == R.id.history) {
 
         } else if (id == R.id.transaction) {
-
+            Intent intent = new Intent(ProfileActivity.this, TransactionActivity.class);
+            startActivity(intent);
         } else if (id == R.id.request) {
             Intent intent = new Intent(ProfileActivity.this, RequestActivity.class);
             startActivity(intent);
