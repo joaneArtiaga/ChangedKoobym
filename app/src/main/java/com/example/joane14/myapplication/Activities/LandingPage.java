@@ -28,6 +28,7 @@ import com.bumptech.glide.Glide;
 import com.example.joane14.myapplication.Fragments.Constants;
 import com.example.joane14.myapplication.Fragments.MostRentedBookFrag;
 import com.example.joane14.myapplication.Fragments.PreferencesFrag;
+import com.example.joane14.myapplication.Fragments.SwapLandingPageFrag;
 import com.example.joane14.myapplication.Model.User;
 import com.example.joane14.myapplication.R;
 import com.example.joane14.myapplication.Utilities.SPUtility;
@@ -37,7 +38,8 @@ import com.squareup.picasso.Picasso;
 public class LandingPage extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener,
         MostRentedBookFrag.OnFragmentInteractionListener,
-        PreferencesFrag.OnFragmentInteractionListener{
+        PreferencesFrag.OnFragmentInteractionListener,
+        SwapLandingPageFrag.OnSwapLPInteractionListener{
     private String name, userId, email, gender;
     Bundle mBundle, mBundleLogin, bundlePass;
     User userModel;
@@ -88,17 +90,35 @@ public class LandingPage extends AppCompatActivity
                         Fragment selectedFragment = null;
                         switch (item.getItemId()) {
                             case R.id.navigation_rent:
+                                if(mBundleLogin.getBoolean("fromRegister")==true){
+                                    Log.d("inside", "TRUEfromRegister");
+//                                    fragmentManager = getSupportFragmentManager();
+                                    selectedFragment = MostRentedBookFrag.newInstance();
+//                                    FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+//                                    fragmentTransaction.replace(R.id.fragment_landing_container, MostRentedBookFrag.newInstance(), mrbf.getTag());
+//                                    fragmentTransaction.commit();
+                                }else{
+                                    Log.d("PrefFrag","else inside");
+                                    bundlePass.putSerializable("userModelPass", userModel);
+                                    Log.d("userModelPass1st", userModel.toString());
+//                                    fragmentManager = getSupportFragmentManager();
+                                    selectedFragment = PreferencesFrag.newInstance(bundlePass);
+//                                    FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+//                                    fragmentTransaction.replace(R.id.fragment_landing_container, prefFrag, prefFrag.getTag());
+//                                    fragmentTransaction.commit();
+
+                                }
                                 break;
                             case R.id.navigation_swap:
-//                                selectedFragment = SwapShelfFragment.newInstance();
+                                selectedFragment = SwapLandingPageFrag.newInstance();
                                 break;
                             case R.id.navigation_auction:
 //                                selectedFragment = AuctionShelfFragment.newInstance();
                                 break;
                         }
-//                        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-//                        transaction.replace(R.id.fragment_container_shelf, selectedFragment);
-//                        transaction.commit();
+                        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+                        transaction.replace(R.id.fragment_landing_container, selectedFragment);
+                        transaction.commit();
                         return true;
                     }
                 });
@@ -319,4 +339,8 @@ public class LandingPage extends AppCompatActivity
 
     }
 
+    @Override
+    public void onSwapLPInteraction(Uri uri) {
+
+    }
 }
