@@ -14,6 +14,7 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.example.joane14.myapplication.Activities.ViewBookActivity;
+import com.example.joane14.myapplication.Activities.ViewBookSwapActivity;
 import com.example.joane14.myapplication.Model.RentalDetail;
 import com.example.joane14.myapplication.Model.SwapDetail;
 import com.example.joane14.myapplication.R;
@@ -111,7 +112,7 @@ public class SwapLPAdapter extends RecyclerView.Adapter<SwapLPAdapter.BookHolder
                     Bundle bundle = new Bundle();
                     int position = getAdapterPosition();
                     Log.d("AdapterPosition", "inside "+Integer.toString(position));
-                    Intent intent = new Intent(SwapLPAdapter.this.context, ViewBookActivity.class);
+                    Intent intent = new Intent(SwapLPAdapter.this.context, ViewBookSwapActivity.class);
                     swapDetailObj = SwapLPAdapter.this.bookList.get(position);
                     if(swapDetailObj==null){
                         Log.d("rentalDetailAdapter", "is null");

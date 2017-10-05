@@ -87,7 +87,8 @@
             android:name=".Activities.TransactionActivity"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity android:name=".Activities.UserReviewActivity" />
-        <activity android:name=".Activities.BookReviewActivity"></activity>
+        <activity android:name=".Activities.BookReviewActivity" />
+        <activity android:name=".Activities.ViewBookSwapActivity"></activity>
     </application>
 
 </manifest>
