@@ -23,12 +23,14 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.joane14.myapplication.Fragments.AuctionShelfFragment;
+import com.example.joane14.myapplication.Fragments.Constants;
 import com.example.joane14.myapplication.Fragments.RentShelfFragment;
 import com.example.joane14.myapplication.Fragments.SwapShelfFragment;
 import com.example.joane14.myapplication.Model.User;
 import com.example.joane14.myapplication.R;
 import com.example.joane14.myapplication.Utilities.SPUtility;
 import com.facebook.login.LoginManager;
+import com.squareup.picasso.Picasso;
 
 public class MyShelf extends AppCompatActivity implements
     AuctionShelfFragment.OnAuctionShelfInteractionListener,
@@ -68,6 +70,8 @@ public class MyShelf extends AppCompatActivity implements
             userModel = (User) SPUtility.getSPUtil(this).getObject("USER_OBJECT", User.class);
             mName.setText(userModel.getUserFname()+" "+userModel.getUserLname());
             mEmail.setText(userModel.getEmail());
+//            Glide.with(TransactionActivity.this).load(userModel.getImageFilename()).into(profileImg);
+            Picasso.with(MyShelf.this).load(String.format(Constants.IMAGE_URL, userModel.getImageFilename())).fit().into(profileImg);
         }
 
         BottomNavigationView bottomNavigationView = (BottomNavigationView)
@@ -149,9 +153,11 @@ public class MyShelf extends AppCompatActivity implements
         } else if (id == R.id.history) {
 
         } else if (id == R.id.transaction) {
-
+            Intent intent = new Intent(MyShelf.this, TransactionActivity.class);
+            startActivity(intent);
         } else if (id == R.id.request) {
-
+            Intent intent = new Intent(MyShelf.this, RequestActivity.class);
+            startActivity(intent);
         } else if (id == R.id.signOut) {
             SPUtility.getSPUtil(MyShelf.this).clear();
             LoginManager.getInstance().logOut();

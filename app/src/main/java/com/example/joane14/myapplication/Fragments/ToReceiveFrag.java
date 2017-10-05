@@ -132,6 +132,7 @@ public class ToReceiveFrag extends Fragment {
         final String mRequestBody = gson.toJson(rentalHeader);
 
 
+
         Log.d("LOG_VOLLEY", mRequestBody);
         StringRequest stringRequest = new StringRequest(Request.Method.GET, URL, new Response.Listener<String>() {
             @Override
@@ -140,6 +141,12 @@ public class ToReceiveFrag extends Fragment {
 //                RentalHeader rentalHeaderModel = gson.fromJson(response, RentalHeader.class);
                 rentalHeaderList.clear();
                 rentalHeaderList.addAll(Arrays.asList(gson.fromJson(response, RentalHeader[].class)));
+                Log.d("RentalHeaderAPI", rentalHeaderList.get(0).toString());
+                if(rentalHeaderList.get(0).getUser()==null){
+                    Log.d("UserRental", "null");
+                }else{
+                    Log.d("UserRental", "not null");
+                }
                 mAdapter.notifyDataSetChanged();
             }
         }, new Response.ErrorListener() {

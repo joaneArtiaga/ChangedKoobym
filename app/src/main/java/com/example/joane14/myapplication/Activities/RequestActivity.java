@@ -94,7 +94,6 @@ public class RequestActivity extends AppCompatActivity
             mEmail.setText(userModel.getEmail());
             Glide.with(RequestActivity.this).load(userModel.getImageFilename()).into(profileImg);
             Picasso.with(RequestActivity.this).load(String.format(Constants.IMAGE_URL, userModel.getImageFilename())).fit().into(profileImg);
-
         }
 
     }
@@ -116,6 +115,11 @@ public class RequestActivity extends AppCompatActivity
         int id = item.getItemId();
 
         if (id == R.id.home) {
+            Intent intent = new Intent(RequestActivity.this, LandingPage.class);
+            Bundle bundle = new Bundle();
+            bundle.putBoolean("fromRegister", false);
+            intent.putExtra("user", bundle);
+            startActivity(intent);
         } else if (id == R.id.profile) {
             Intent intent = new Intent(RequestActivity.this, ProfileActivity.class);
 //            User user = userModel;

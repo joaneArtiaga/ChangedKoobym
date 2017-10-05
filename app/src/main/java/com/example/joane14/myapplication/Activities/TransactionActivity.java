@@ -114,6 +114,11 @@ public class TransactionActivity extends AppCompatActivity
         int id = item.getItemId();
 
         if (id == R.id.home) {
+            Intent intent = new Intent(TransactionActivity.this, LandingPage.class);
+            Bundle bundle = new Bundle();
+            bundle.putBoolean("fromRegister", false);
+            intent.putExtra("user", bundle);
+            startActivity(intent);
         } else if (id == R.id.profile) {
             Intent intent = new Intent(TransactionActivity.this, ProfileActivity.class);
 //            User user = userModel;
@@ -133,15 +138,14 @@ public class TransactionActivity extends AppCompatActivity
         } else if (id == R.id.transaction) {
 
         } else if (id == R.id.request) {
-
+            Intent intent = new Intent(TransactionActivity.this, RequestActivity.class);
+            startActivity(intent);
         } else if (id == R.id.signOut) {
             SPUtility.getSPUtil(TransactionActivity.this).clear();
             LoginManager.getInstance().logOut();
             Intent intent = new Intent(TransactionActivity.this, MainActivity.class);
             startActivity(intent);
-        } else if (id == R.id.shelf) {
         }
-
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout_transaction);
         drawer.closeDrawer(GravityCompat.START);
         return true;

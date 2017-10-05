@@ -200,6 +200,8 @@ public class TimeDateChooser extends AppCompatActivity {
                         Log.d("RentalHeaderRent", rentalHeader.toString());
 
                         addRentalHeader();
+                        Intent intent = new Intent(TimeDateChooser.this, RequestActivity.class);
+                        startActivity(intent);
                     }
                 });
 
@@ -234,6 +236,8 @@ public class TimeDateChooser extends AppCompatActivity {
             @Override
             public void onResponse(String response) {
                 Log.i("ResponseRentalHeader", response);
+                Intent intent = new Intent(TimeDateChooser.this, RequestActivity.class);
+                startActivity(intent);
 //                User user = gson.fromJson(response, User.class);
 //                Log.i("LOG_VOLLEY", user.getEmail());
 //                Log.i("LOG_VOLLEY", user.getUserFname());

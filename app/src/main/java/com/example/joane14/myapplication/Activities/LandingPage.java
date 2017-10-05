@@ -96,9 +96,9 @@ public class LandingPage extends AppCompatActivity
 //                                selectedFragment = AuctionShelfFragment.newInstance();
                                 break;
                         }
-                        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-                        transaction.replace(R.id.fragment_container_shelf, selectedFragment);
-                        transaction.commit();
+//                        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+//                        transaction.replace(R.id.fragment_container_shelf, selectedFragment);
+//                        transaction.commit();
                         return true;
                     }
                 });
@@ -155,8 +155,8 @@ public class LandingPage extends AppCompatActivity
             mName.setText(userModel.getUserFname()+" "+ userModel.getUserLname());
             mEmail.setText(userModel.getEmail());
             Log.d("moaatay",userModel.getImageFilename());
-            Glide.with(LandingPage.this).load(userModel.getImageFilename()).into(profileImg);
-//            Picasso.with(LandingPage.this).load(String.format(Constants.IMAGE_URL, userModel.getImageFilename())).fit().into(profileImg);
+//            Glide.with(LandingPage.this).load(userModel.getImageFilename()).into(profileImg);
+            Picasso.with(LandingPage.this).load(String.format(Constants.IMAGE_URL, userModel.getImageFilename())).fit().into(profileImg);
 
 
             if(mBundleLogin.getBoolean("fromRegister")==true){

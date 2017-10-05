@@ -12,6 +12,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
@@ -92,7 +93,8 @@ public class ToReceiveAdapter extends RecyclerView.Adapter<ToReceiveAdapter.Book
             @Override
             public void onClick(View v) {
                 rentalHeader = bookList.get(position);
-                updateReceive(rentalHeader);
+//                updateReceive(rentalHeader);
+                Toast.makeText(context,"Implemented but user is empty. Still fixing.", Toast.LENGTH_SHORT).show();
             }
         });
     }

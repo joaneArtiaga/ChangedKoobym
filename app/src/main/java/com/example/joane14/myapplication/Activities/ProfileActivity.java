@@ -105,9 +105,9 @@ public class ProfileActivity extends AppCompatActivity implements NavigationView
                 Log.d("User filename", userObj.getImageFilename());
                 Log.d("User Id", String.valueOf(userObj.getUserId()));
 
-//                Log.d("User Login", userObj.getUserFname());
-//                mName.setText(userObj.getUserFname()+" "+ userObj.getUserLname());
-//                mEmail.setText(userObj.getEmail());
+                Log.d("User Login", userObj.getUserFname());
+                mName.setText(userObj.getUserFname()+" "+ userObj.getUserLname());
+                mEmail.setText(userObj.getEmail());
                 Picasso.with(ProfileActivity.this).load(String.format(Constants.IMAGE_URL, userObj.getImageFilename())).fit().into(profileImg);
                 Log.d("Fragment", "inside");
                 mBundle.putSerializable("userDetails", userObj);
