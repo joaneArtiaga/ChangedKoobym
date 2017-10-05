@@ -10,6 +10,6 @@ public class BookReviewActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_book_review2);
+        setContentView(R.layout.activity_user_review2);
     }
 }
