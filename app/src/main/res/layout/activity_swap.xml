@@ -69,6 +69,7 @@
                 android:textColor="@color/colorLightOrange"
                 android:textStyle="bold" />
 
+
             <TextView
                 android:id="@+id/textView37"
                 android:layout_width="196dp"
@@ -129,6 +130,14 @@
             app:srcCompat="@drawable/swap"
             tools:layout_editor_absoluteX="149dp"
             tools:layout_editor_absoluteY="529dp" />
+
+        <TextView
+            android:id="@+id/textView38"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="BOOK OWNER NAME"
+            tools:layout_editor_absoluteX="12dp"
+            tools:layout_editor_absoluteY="284dp" />
 
 
     </android.support.constraint.ConstraintLayout>
