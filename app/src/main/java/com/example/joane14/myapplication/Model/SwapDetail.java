@@ -3,6 +3,7 @@ package com.example.joane14.myapplication.Model;
 import com.google.gson.annotations.SerializedName;
 
 import java.io.Serializable;
+import java.util.List;
 
 /**
  * Created by Joane14 on 06/10/2017.
@@ -24,6 +25,17 @@ public class SwapDetail implements Serializable {
 
     @SerializedName("price")
     private float swapPrice;
+
+    @SerializedName("swapComments")
+    private List<SwapComment> swapComments;
+
+    public List<SwapComment> getSwapComments() {
+        return swapComments;
+    }
+
+    public void setSwapComments(List<SwapComment> swapComments) {
+        this.swapComments = swapComments;
+    }
 
     public BookOwnerModel getBookOwner() {
         return bookOwner;
