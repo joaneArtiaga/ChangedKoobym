@@ -15,7 +15,7 @@
             android:layout_height="118dp"
             android:layout_weight="1"
             app:srcCompat="@drawable/com_facebook_tooltip_blue_xout"
-            tools:layout_editor_absoluteX="160dp"
+            tools:layout_editor_absoluteX="144dp"
             tools:layout_editor_absoluteY="95dp" />
 
         <LinearLayout
@@ -24,22 +24,22 @@
             android:orientation="vertical"
             android:weightSum="1"
             tools:layout_editor_absoluteX="64dp"
-            tools:layout_editor_absoluteY="237dp" >
-
-            <TextView
-                android:id="@+id/textView33"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="BookTittle"
-                android:textAlignment="center"
-                android:textColor="@color/colorLightOrange"
-                android:textStyle="bold" />
+            tools:layout_editor_absoluteY="262dp" >
 
             <TextView
                 android:id="@+id/textView34"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="Author"
+                android:textAlignment="center"
+                android:textColor="@color/colorLightOrange"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/textView33"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="BookTittle"
                 android:textAlignment="center"
                 android:textColor="@color/colorLightOrange"
                 android:textStyle="bold" />
@@ -59,11 +59,11 @@
             android:layout_height="63dp"
             android:orientation="vertical"
             tools:layout_editor_absoluteX="144dp"
-            tools:layout_editor_absoluteY="355dp">
+            tools:layout_editor_absoluteY="380dp">
 
             <TextView
                 android:id="@+id/User1"
-                android:layout_width="198dp"
+                android:layout_width="237dp"
                 android:layout_height="wrap_content"
                 android:text="Name"
                 android:textColor="@color/colorLightOrange"
@@ -72,9 +72,20 @@
 
             <TextView
                 android:id="@+id/textView37"
-                android:layout_width="196dp"
+                android:layout_width="246dp"
                 android:layout_height="wrap_content"
                 android:text="BookTittle"
+                android:textAlignment="center"
+                android:textColor="@color/colorLightOrange"
+                android:textStyle="bold" />
+
+            <Button
+                android:id="@+id/button3"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:background="@color/cardview_light_background"
+                android:text="See Shelf"
+                android:textAlignment="center"
                 android:textColor="@color/colorLightOrange"
                 android:textStyle="bold" />
 
@@ -85,23 +96,31 @@
             android:layout_height="71dp"
             android:orientation="vertical"
             tools:layout_editor_absoluteX="144dp"
-            tools:layout_editor_absoluteY="441dp">
+            tools:layout_editor_absoluteY="466dp">
 
             <TextView
                 android:id="@+id/User1"
-                android:layout_width="198dp"
+                android:layout_width="241dp"
                 android:layout_height="wrap_content"
                 android:text="Name"
                 android:textColor="@color/colorLightOrange"
                 android:textStyle="bold" />
 
-            <Button
-                android:id="@+id/button3"
-                android:layout_width="158dp"
+            <TextView
+                android:id="@+id/textView10"
+                android:layout_width="242dp"
                 android:layout_height="wrap_content"
-                android:background="@color/cardview_light_background"
-                android:text="See Shelf"
+                android:text="BookTittle"
                 android:textAlignment="center"
+                android:textColor="@color/colorLightOrange"
+                android:textStyle="bold" />
+
+            <Button
+                android:id="@+id/button7"
+                android:layout_width="wrap_content"
+                android:layout_height="32dp"
+                android:backgroundTint="@color/cardview_light_background"
+                android:text="SEE SHELF"
                 android:textColor="@color/colorLightOrange"
                 android:textStyle="bold" />
 
@@ -113,7 +132,7 @@
             android:layout_height="78dp"
             app:srcCompat="@drawable/swap"
             tools:layout_editor_absoluteX="149dp"
-            tools:layout_editor_absoluteY="551dp" />
+            tools:layout_editor_absoluteY="576dp" />
 
         <TextView
             android:id="@+id/textView38"
@@ -121,45 +140,23 @@
             android:layout_height="wrap_content"
             android:text="BOOK OWNER NAME"
             tools:layout_editor_absoluteX="16dp"
-            tools:layout_editor_absoluteY="307dp" />
+            tools:layout_editor_absoluteY="332dp" />
 
         <ImageView
             android:id="@+id/imageView19"
-            android:layout_width="97dp"
-            android:layout_height="71dp"
+            android:layout_width="85dp"
+            android:layout_height="64dp"
             app:srcCompat="@drawable/com_facebook_profile_picture_blank_square"
-            tools:layout_editor_absoluteX="30dp"
-            tools:layout_editor_absoluteY="347dp" />
+            tools:layout_editor_absoluteX="42dp"
+            tools:layout_editor_absoluteY="379dp" />
 
         <ImageView
             android:id="@+id/imageView20"
-            android:layout_width="92dp"
-            android:layout_height="66dp"
+            android:layout_width="86dp"
+            android:layout_height="70dp"
             app:srcCompat="@drawable/com_facebook_profile_picture_blank_square"
-            tools:layout_editor_absoluteX="38dp"
-            tools:layout_editor_absoluteY="441dp" />
-
-        <TextView
-            android:id="@+id/textView37"
-            android:layout_width="196dp"
-            android:layout_height="wrap_content"
-            android:text="BookTittle"
-            android:textColor="@color/colorLightOrange"
-            android:textStyle="bold"
-            tools:layout_editor_absoluteX="-82dp"
-            tools:layout_editor_absoluteY="54dp" />
-
-        <Button
-            android:id="@+id/button3"
-            android:layout_width="158dp"
-            android:layout_height="wrap_content"
-            android:background="@color/com_facebook_button_background_color_focused"
-            android:text="See Shelf"
-            android:textAlignment="center"
-            android:textColor="@color/colorLightOrange"
-            android:textStyle="bold"
-            tools:layout_editor_absoluteX="-102dp"
-            tools:layout_editor_absoluteY="117dp" />
+            tools:layout_editor_absoluteX="44dp"
+            tools:layout_editor_absoluteY="462dp" />
 
 
     </android.support.constraint.ConstraintLayout>
