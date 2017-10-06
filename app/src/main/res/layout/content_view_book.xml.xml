@@ -25,14 +25,13 @@
             android:orientation="vertical"
             android:weightSum="1"
             tools:layout_editor_absoluteX="64dp"
-            tools:layout_editor_absoluteY="262dp" >
+            tools:layout_editor_absoluteY="262dp">
 
             <TextView
                 android:id="@+id/textView34"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="Author"
-                android:textAlignment="center"
                 android:textColor="@color/colorLightOrange"
                 android:textStyle="bold" />
 
@@ -41,7 +40,6 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="BookTittle"
-                android:textAlignment="center"
                 android:textColor="@color/colorLightOrange"
                 android:textStyle="bold" />
 
@@ -50,7 +48,6 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="Price"
-                android:textAlignment="center"
                 android:textColor="@color/colorLightOrange"
                 android:textStyle="bold" />
         </LinearLayout>
@@ -59,8 +56,8 @@
             android:layout_width="307dp"
             android:layout_height="63dp"
             android:orientation="vertical"
-            tools:layout_editor_absoluteX="144dp"
-            tools:layout_editor_absoluteY="380dp">
+            tools:layout_editor_absoluteX="137dp"
+            tools:layout_editor_absoluteY="358dp">
 
             <TextView
                 android:id="@+id/User1"
@@ -73,7 +70,7 @@
 
             <TextView
                 android:id="@+id/textView37"
-                android:layout_width="246dp"
+                android:layout_width="239dp"
                 android:layout_height="wrap_content"
                 android:text="BookTittle"
                 android:textAlignment="center"
@@ -92,12 +89,44 @@
 
         </LinearLayout>
 
+        <ImageView
+            android:id="@+id/imageView16"
+            android:layout_width="181dp"
+            android:layout_height="78dp"
+            app:srcCompat="@drawable/swap"
+            tools:layout_editor_absoluteX="149dp"
+            tools:layout_editor_absoluteY="576dp" />
+
+        <TextView
+            android:id="@+id/textView38"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="BOOK OWNER NAME"
+            tools:layout_editor_absoluteX="16dp"
+            tools:layout_editor_absoluteY="332dp" />
+
+        <ImageView
+            android:id="@+id/imageView19"
+            android:layout_width="85dp"
+            android:layout_height="64dp"
+            app:srcCompat="@drawable/com_facebook_profile_picture_blank_square"
+            tools:layout_editor_absoluteX="33dp"
+            tools:layout_editor_absoluteY="358dp" />
+
+        <ImageView
+            android:id="@+id/imageView20"
+            android:layout_width="86dp"
+            android:layout_height="70dp"
+            app:srcCompat="@drawable/com_facebook_profile_picture_blank_square"
+            tools:layout_editor_absoluteX="33dp"
+            tools:layout_editor_absoluteY="432dp" />
+
         <LinearLayout
             android:layout_width="310dp"
             android:layout_height="71dp"
             android:orientation="vertical"
-            tools:layout_editor_absoluteX="144dp"
-            tools:layout_editor_absoluteY="466dp">
+            tools:layout_editor_absoluteX="134dp"
+            tools:layout_editor_absoluteY="432dp">
 
             <TextView
                 android:id="@+id/User1"
@@ -128,36 +157,12 @@
         </LinearLayout>
 
         <ImageView
-            android:id="@+id/imageView16"
-            android:layout_width="181dp"
-            android:layout_height="78dp"
+            android:id="@+id/imageView3"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
             app:srcCompat="@drawable/swap"
-            tools:layout_editor_absoluteX="149dp"
-            tools:layout_editor_absoluteY="576dp" />
-
-        <TextView
-            android:id="@+id/textView38"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="BOOK OWNER NAME"
-            tools:layout_editor_absoluteX="16dp"
-            tools:layout_editor_absoluteY="332dp" />
-
-        <ImageView
-            android:id="@+id/imageView19"
-            android:layout_width="85dp"
-            android:layout_height="64dp"
-            app:srcCompat="@drawable/com_facebook_profile_picture_blank_square"
-            tools:layout_editor_absoluteX="42dp"
-            tools:layout_editor_absoluteY="379dp" />
-
-        <ImageView
-            android:id="@+id/imageView20"
-            android:layout_width="86dp"
-            android:layout_height="70dp"
-            app:srcCompat="@drawable/com_facebook_profile_picture_blank_square"
-            tools:layout_editor_absoluteX="44dp"
-            tools:layout_editor_absoluteY="462dp" />
+            tools:layout_editor_absoluteY="487dp"
+            tools:layout_editor_absoluteX="156dp" />
 
 
     </android.support.constraint.ConstraintLayout>
