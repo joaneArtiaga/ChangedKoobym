@@ -15,16 +15,14 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="Renter"
-            android:onClick="getToReturnRenter"/>
+            android:text="Renter"/>
 
         <Button
             android:id="@+id/returnBtnOwner"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="Owner"
-            android:onClick="getToReturnOwner"/>
+            android:text="Owner" />
     </LinearLayout>
 
     <android.support.v7.widget.RecyclerView
