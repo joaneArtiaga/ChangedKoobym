@@ -40,15 +40,17 @@
                         android:id="@+id/deliverRenter"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:gravity="right"
                         android:text="TextView"
-                        android:gravity="right"/>
+                        android:textColor="@color/colorPrimaryDark" />
 
                     <TextView
                         android:id="@+id/textView4"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:gravity="right"
                         android:text="RENTER"
-                        android:gravity="right"/>
+                        android:textColor="@color/colorPrimaryDark" />
 
                 </LinearLayout>
 
@@ -75,13 +77,15 @@
                         android:id="@+id/deliverBook"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="TextView"/>
+                        android:text="TextView"
+                        android:textColor="@color/colorPrimaryDark" />
 
                     <TextView
                         android:id="@+id/textView5"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="BOOK"/>
+                        android:text="BOOK"
+                        android:textColor="@color/colorPrimaryDark" />
 
                 </LinearLayout>
                 <ImageView
