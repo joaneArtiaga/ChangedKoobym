@@ -109,10 +109,9 @@ public class TimeDateChooser extends AppCompatActivity {
                         new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface arg0, int arg1) {
-                                rentalHeader.setUser((User) SPUtility.getSPUtil(TimeDateChooser.this).getObject("USER_OBJECT", User.class));
-                                rentalHeader.setRentalTimeStamp(date);
-                                rentalHeader.setTotalPrice((float) rentalDetail.getCalculatedPrice());
-
+//                                rentalHeader.setRentalTimeStamp(date);
+//                                rentalHeader.setTotalPrice((float) rentalDetail.getCalculatedPrice());
+//
                                 Log.d("ONClickTime", "inside");
                                 Log.d("RentalHeaderRent", rentalHeader.toString());
 
