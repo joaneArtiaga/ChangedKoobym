@@ -7,7 +7,8 @@
 
     <android.support.constraint.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:background="@color/colorMint">
 
         <ImageView
             android:id="@+id/imageView8"
@@ -31,7 +32,7 @@
                 android:layout_width="98dp"
                 android:layout_height="wrap_content"
                 android:text="First Name"
-                android:textColor="@color/colorOrange"
+                android:textColor="@color/colorPrimaryDark"
                 android:textSize="18sp"
                 android:textStyle="bold" />
 
@@ -40,14 +41,16 @@
                 android:layout_width="match_parent"
                 android:layout_height="24dp"
                 android:ems="10"
-                android:inputType="textPersonName" />
+                android:inputType="textPersonName"
+                android:textAlignment="viewStart"
+                android:textColor="@color/cardview_light_background" />
 
             <TextView
                 android:id="@+id/textView11"
                 android:layout_width="100dp"
                 android:layout_height="wrap_content"
                 android:text="Last Name"
-                android:textColor="@color/colorOrange"
+                android:textColor="@color/colorPrimaryDark"
                 android:textSize="18sp"
                 android:textStyle="bold" />
 
@@ -56,14 +59,15 @@
                 android:layout_width="match_parent"
                 android:layout_height="24dp"
                 android:ems="10"
-                android:inputType="textPersonName" />
+                android:inputType="textPersonName"
+                android:textColor="@color/cardview_light_background" />
 
             <TextView
                 android:id="@+id/textView12"
                 android:layout_width="100dp"
                 android:layout_height="wrap_content"
                 android:text="Email"
-                android:textColor="@color/colorOrange"
+                android:textColor="@color/colorPrimaryDark"
                 android:textSize="18sp"
                 android:textStyle="bold" />
 
@@ -72,14 +76,15 @@
                 android:layout_width="match_parent"
                 android:layout_height="30dp"
                 android:ems="10"
-                android:inputType="textEmailAddress" />
+                android:inputType="textEmailAddress"
+                android:textColor="@color/cardview_light_background" />
 
             <TextView
                 android:id="@+id/textView14"
                 android:layout_width="100dp"
                 android:layout_height="wrap_content"
                 android:text="Contact no."
-                android:textColor="@color/colorOrange"
+                android:textColor="@color/colorPrimaryDark"
                 android:textSize="18sp"
                 android:textStyle="bold" />
 
@@ -88,14 +93,15 @@
                 android:layout_width="match_parent"
                 android:layout_height="27dp"
                 android:ems="10"
-                android:inputType="phone" />
+                android:inputType="phone"
+                android:textColor="@color/cardview_light_background" />
 
             <TextView
                 android:id="@+id/textView15"
                 android:layout_width="100dp"
                 android:layout_height="wrap_content"
                 android:text="Username"
-                android:textColor="@color/colorOrange"
+                android:textColor="@color/colorPrimaryDark"
                 android:textSize="18sp"
                 android:textStyle="bold" />
 
@@ -104,14 +110,15 @@
                 android:layout_width="match_parent"
                 android:layout_height="30dp"
                 android:ems="10"
-                android:inputType="textPersonName" />
+                android:inputType="textPersonName"
+                android:textColor="@color/cardview_light_background" />
 
             <TextView
                 android:id="@+id/textView16"
                 android:layout_width="100dp"
                 android:layout_height="wrap_content"
                 android:text="Address"
-                android:textColor="@color/colorOrange"
+                android:textColor="@color/colorPrimaryDark"
                 android:textSize="18sp"
                 android:textStyle="bold" />
 
@@ -120,14 +127,15 @@
                 android:layout_width="match_parent"
                 android:layout_height="22dp"
                 android:ems="10"
-                android:inputType="textPersonName" />
+                android:inputType="textPersonName"
+                android:textColor="@color/cardview_light_background" />
 
             <TextView
                 android:id="@+id/textView17"
                 android:layout_width="100dp"
                 android:layout_height="wrap_content"
                 android:text="Birthdate"
-                android:textColor="@color/colorOrange"
+                android:textColor="@color/colorPrimaryDark"
                 android:textSize="18sp"
                 android:textStyle="bold" />
 
@@ -143,7 +151,7 @@
             android:layout_height="100dp"
             app:srcCompat="@drawable/update"
             tools:layout_editor_absoluteX="142dp"
-            tools:layout_editor_absoluteY="488dp" />
+            tools:layout_editor_absoluteY="473dp" />
 
 
     </android.support.constraint.ConstraintLayout>

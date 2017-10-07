@@ -42,22 +42,25 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_weight="2"
-                    android:textStyle="bold"
-                    android:text="TextView" />
+                    android:text="TextView"
+                    android:textAllCaps="false"
+                    android:textColor="@color/colorLightOrange"
+                    android:textStyle="bold" />
 
                 <TextView
                     android:id="@+id/vbBookAuthor"
-                    android:textStyle="italic"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:text="TextView" />
+                    android:text="TextView"
+                    android:textAlignment="viewStart"
+                    android:textColor="@color/colorOrange"
+                    android:textStyle="bold|italic" />
 
                 <TextView
                     android:id="@+id/vbBookDescription"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
+                    android:layout_height="65dp"
                     android:text="TextView" />
 
             </LinearLayout>
@@ -70,7 +73,7 @@
         android:id="@+id/vbBtnRequest"
         android:layout_width="match_parent"
         android:layout_height="50dp"
-        app:srcCompat="@drawable/request_to_rent"
+        app:srcCompat="@drawable/rrent"
         android:layout_alignParentBottom="true"/>
 
     <ScrollView
@@ -94,101 +97,105 @@
                 android:id="@+id/linearLayoutIcon"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@color/colorDark"
-                android:orientation="horizontal"
-                android:layout_below="@+id/linearLayoutMultipleImage"
                 android:layout_alignParentLeft="true"
-                android:layout_alignParentStart="true">
+                android:layout_alignParentStart="true"
+                android:layout_below="@+id/linearLayoutMultipleImage"
+                android:background="@color/colorPrimaryDark"
+                android:orientation="horizontal">
 
                 <LinearLayout
+                    style="@style/viewBookStyle"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:layout_marginLeft="20dp"
-                    android:orientation="vertical"
-                    style="@style/viewBookStyle">
+                    android:orientation="vertical">
 
                     <ImageView
                         android:id="@+id/ivVbViewMap"
                         android:layout_width="50dp"
                         android:layout_height="50dp"
                         android:layout_gravity="center_horizontal"
-                        app:srcCompat="@drawable/location"
-                        android:clickable="true"/>
+                        android:clickable="true"
+                        app:srcCompat="@drawable/location" />
 
                     <TextView
                         android:id="@+id/tvVbViewMap"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_horizontal"
-                        android:text="Meet Up" />
+                        android:text="Meet Up"
+                        android:textColor="@color/colorLightOrange" />
 
                 </LinearLayout>
 
                 <LinearLayout
+                    style="@style/viewBookStyle"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
-                    android:orientation="vertical"
-                    style="@style/viewBookStyle">
+                    android:orientation="vertical">
 
                     <ImageView
                         android:id="@+id/ivVbViewRating"
                         android:layout_width="50dp"
                         android:layout_height="50dp"
                         android:layout_gravity="center_horizontal"
-                        app:srcCompat="@drawable/ratings"
-                        android:clickable="true"/>
+                        android:clickable="true"
+                        app:srcCompat="@drawable/ratings" />
 
                     <TextView
                         android:id="@+id/tvVbViewRating"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_horizontal"
-                        android:text="Ratings" />
+                        android:text="Ratings"
+                        android:textColor="@color/colorLightOrange" />
 
                 </LinearLayout>
 
                 <LinearLayout
+                    style="@style/viewBookStyle"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
-                    android:orientation="vertical"
-                    style="@style/viewBookStyle">
+                    android:orientation="vertical">
 
                     <ImageView
                         android:id="@+id/ivVbViewRenters"
                         android:layout_width="50dp"
                         android:layout_height="50dp"
                         android:layout_gravity="center_horizontal"
-                        app:srcCompat="@drawable/renter"
-                        android:clickable="true"/>
+                        android:clickable="true"
+                        app:srcCompat="@drawable/renter" />
 
                     <TextView
                         android:id="@+id/tvVbViewRenters"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_horizontal"
-                        android:text="Renters" />
+                        android:text="Renters"
+                        android:textColor="@color/colorLightOrange" />
                 </LinearLayout>
 
                 <LinearLayout
+                    style="@style/viewBookStyle"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
-                    android:orientation="vertical"
-                    style="@style/viewBookStyle">
+                    android:orientation="vertical">
 
                     <ImageView
                         android:id="@+id/ivVbViewGenre"
                         android:layout_width="50dp"
                         android:layout_height="50dp"
                         android:layout_gravity="center_horizontal"
-                        app:srcCompat="@drawable/genre"
-                        android:clickable="true"/>
+                        android:clickable="true"
+                        app:srcCompat="@drawable/genre" />
 
                     <TextView
                         android:id="@+id/tvVbViewGenre"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_horizontal"
-                        android:text="Genre" />
+                        android:text="Genre"
+                        android:textColor="@color/colorLightOrange" />
 
                 </LinearLayout>
             </LinearLayout>
@@ -200,7 +207,9 @@
                 android:layout_below="@+id/linearLayoutIcon"
                 android:layout_marginLeft="18dp"
                 android:layout_marginTop="36dp"
-                android:text="REVIEWS" />
+                android:text="REVIEWS"
+                android:textColor="@color/colorPrimaryDark"
+                android:textStyle="bold" />
 
             <TextView
                 android:id="@+id/tvVbSeeReviews"
@@ -210,7 +219,9 @@
                 android:layout_below="@+id/linearLayoutIcon"
                 android:layout_marginRight="18dp"
                 android:layout_marginTop="36dp"
-                android:text="See all reviews" />
+                android:text="See all reviews"
+                android:textColor="@color/colorPrimaryDark"
+                android:textStyle="bold" />
 
             <android.support.v7.widget.RecyclerView
                 android:id="@+id/recylcer_view_view_reviews"

@@ -40,13 +40,15 @@
                         android:id="@+id/toReceiveRenter"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="TextView" />
+                        android:text="TextView"
+                        android:textColor="@color/colorPrimaryDark" />
 
                     <TextView
                         android:id="@+id/userType"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="RENTER" />
+                        android:text="RENTER"
+                        android:textColor="@color/colorPrimaryDark" />
 
                 </LinearLayout>
 
@@ -73,13 +75,15 @@
                         android:id="@+id/toReceiveBook"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="TextView"/>
+                        android:text="TextView"
+                        android:textColor="@color/colorPrimaryDark" />
 
                     <TextView
                         android:id="@+id/textView5"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="BOOK"/>
+                        android:text="BOOK"
+                        android:textColor="@color/colorPrimaryDark" />
 
                 </LinearLayout>
                 <ImageView
@@ -171,7 +175,7 @@
             android:layout_width="50dp"
             android:layout_height="50dp"
             android:layout_weight="1"
-            app:srcCompat="@drawable/approve"
+            app:srcCompat="@drawable/gapprove"
             android:clickable="true"/>
 
         <ImageView
@@ -179,7 +183,7 @@
             android:layout_width="50dp"
             android:layout_height="50dp"
             android:layout_weight="1"
-            app:srcCompat="@drawable/rejected" />
+            app:srcCompat="@drawable/greject" />
 
     </LinearLayout>
 </RelativeLayout>

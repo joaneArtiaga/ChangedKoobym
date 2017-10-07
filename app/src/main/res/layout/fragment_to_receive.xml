@@ -14,14 +14,16 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="Renter"/>
+            android:background="@color/colorLightOrange"
+            android:text="Renter" />
 
         <Button
             android:id="@+id/receiveBtnOwner"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="Owner"/>
+            android:layout_weight="0.75"
+            android:background="@color/colorLightOrange"
+            android:text="Owner" />
     </LinearLayout>
 
     <android.support.v7.widget.RecyclerView

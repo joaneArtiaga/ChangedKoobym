@@ -1,9 +1,9 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:background="@color/colorDark"
+    android:background="@color/colorMint"
     tools:context="com.example.joane14.myapplication.Fragments.AddProfile">
 
     <ImageView
@@ -29,17 +29,17 @@
             android:layout_height="250dp"
             android:layout_alignParentBottom="true"
             android:layout_marginBottom="10dp"
-            android:background="@color/colorDark"
+            android:background="@color/colorMint"
             android:orientation="vertical">
 
 
             <ImageView
+                android:id="@+id/displayPic"
                 android:layout_width="80dp"
                 android:layout_height="90dp"
-                android:layout_marginTop="10dp"
-                android:id="@+id/displayPic"
-                android:clickable="true"
                 android:layout_gravity="center_horizontal"
+                android:layout_marginTop="10dp"
+                android:clickable="true"
                 app:srcCompat="@mipmap/ic_launcher" />
 
             <EditText

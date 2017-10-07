@@ -2,21 +2,24 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/colorLightOrange"
+    android:orientation="vertical"
     android:weightSum="1">
 
     <android.support.constraint.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:background="@color/colorMint">
 
         <ImageView
             android:id="@+id/imageView10"
             android:layout_width="124dp"
             android:layout_height="154dp"
             app:srcCompat="@drawable/com_facebook_tooltip_blue_xout"
-            tools:layout_editor_absoluteX="109dp"
-            tools:layout_editor_absoluteY="68dp" />
+            tools:layout_editor_absoluteX="139dp"
+            tools:layout_editor_absoluteY="66dp" />
 
         <LinearLayout
             android:layout_width="350dp"
@@ -30,7 +33,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="Book Tittle "
-                android:textColor="@color/colorLightOrange"
+                android:textColor="@color/colorPrimaryDark"
                 android:textSize="18sp"
                 android:textStyle="bold" />
 
@@ -46,7 +49,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="Book Author"
-                android:textColor="@color/colorLightOrange"
+                android:textColor="@color/colorPrimaryDark"
                 android:textSize="18sp"
                 android:textStyle="bold" />
 
@@ -62,7 +65,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="Description"
-                android:textColor="@color/colorLightOrange"
+                android:textColor="@color/colorPrimaryDark"
                 android:textSize="18sp"
                 android:textStyle="bold" />
         </LinearLayout>
@@ -78,11 +81,11 @@
 
         <ImageView
             android:id="@+id/imageView11"
-            android:layout_width="180dp"
-            android:layout_height="100dp"
+            android:layout_width="174dp"
+            android:layout_height="82dp"
             app:srcCompat="@drawable/update"
-            tools:layout_editor_absoluteX="102dp"
-            tools:layout_editor_absoluteY="471dp" />
+            tools:layout_editor_absoluteX="105dp"
+            tools:layout_editor_absoluteY="480dp" />
 
     </android.support.constraint.ConstraintLayout>
 </LinearLayout>

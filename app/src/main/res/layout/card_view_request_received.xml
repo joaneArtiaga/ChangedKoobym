@@ -75,7 +75,7 @@
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:clickable="true"
-            app:srcCompat="@drawable/rejected" />
+            app:srcCompat="@drawable/greject" />
 
         <ImageView
             android:clickable="true"
@@ -83,6 +83,6 @@
             android:layout_width="50dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            app:srcCompat="@drawable/approve" />
+            app:srcCompat="@drawable/gapprove" />
     </LinearLayout>
 </LinearLayout>
