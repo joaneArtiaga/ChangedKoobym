@@ -2,7 +2,6 @@ package com.example.joane14.myapplication.Adapters;
 
 import android.app.Activity;
 import android.content.Context;
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -13,10 +12,10 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
-import com.example.joane14.myapplication.Activities.ViewBookActivity;
-import com.example.joane14.myapplication.Model.RentalDetail;
+import com.example.joane14.myapplication.Fragments.Constants;
 import com.example.joane14.myapplication.Model.RentalHeader;
 import com.example.joane14.myapplication.R;
+import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
@@ -55,7 +54,7 @@ public class RequestAdapter extends RecyclerView.Adapter<RequestAdapter.BookHold
         if(fromWhere.equals("MyRequest")){
             holder.mRequestor.setText("You");
         }else{
-            holder.mRequestor.setText(bookList.get(position).getRentalDetail().getBookOwner().getUserObj().getUserFname()+" "+bookList.get(position).getRentalDetail().getBookOwner().getUserObj().getUserLname());
+            holder.mRequestor.setText(bookList.get(position).getUserId().getUserFname()+" "+bookList.get(position).getUserId().getUserLname());
         }
         holder.mBookReq.setText(bookList.get(position).getRentalDetail().getBookOwner().getBookObj().getBookTitle());
         Log.d("libroShet", String.valueOf(bookList.get(position).getRentalDetail().getBookOwner().getBookObj().getBookOriginalPrice()));
@@ -79,9 +78,8 @@ public class RequestAdapter extends RecyclerView.Adapter<RequestAdapter.BookHold
 //        holder.mBookAuthor.setText(author);
         Log.d("libroPanga",bookList.get(position).getRentalDetail().getBookOwner().getBookObj().getBookFilename());
         Glide.with(context).load(bookList.get(position).getRentalDetail().getBookOwner().getBookObj().getBookFilename()).centerCrop().into(holder.mIvBookReq);
-        Glide.with(context).load(bookList.get(position).getRentalDetail().getBookOwner().getUserObj().getImageFilename()).centerCrop().into(holder.mIvRequestor);
 
-//        Picasso.with(context).load(String.format(Constants.IMAGE_URL, bookList.get(position).getBookOwner().getBookObj().getBookFilename())).fit().into(holder.mBookFilename);
+        Picasso.with(context).load(String.format(Constants.IMAGE_URL, bookList.get(position).getRentalDetail().getBookOwner().getBookObj().getBookFilename())).fit().into(holder.mIvRequestor);
 //        Log.d("displayImage", bookList.get(position).getBookOwner().getBookObj().getBookFilename());
 
     }

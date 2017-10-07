@@ -1,6 +1,5 @@
 package com.example.joane14.myapplication.Adapters;
 
-import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
@@ -9,7 +8,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -75,16 +73,16 @@ public class ToReceiveAdapter extends RecyclerView.Adapter<ToReceiveAdapter.Book
         holder.mMU.setText(bookList.get(position).getLocation().getLocationName());
         holder.mPrice.setText(String.valueOf(bookList.get(position).getRentalDetail().getCalculatedPrice()));
 
-        if(bookList.get(position).getUser()==null){
+        if(bookList.get(position).getUserId()==null){
             holder.mRenter.setText("Renter not Found");
         }else{
-            holder.mRenter.setText(bookList.get(position).getUser().getUserFname()+" "+bookList.get(position).getUser().getUserLname());
+            holder.mRenter.setText(bookList.get(position).getUserId().getUserFname()+" "+bookList.get(position).getUserId().getUserLname());
         }
 
         holder.mReminder.setText("Return book and receive by DATE.");
 
 
-        Picasso.with(context).load(String.format(Constants.IMAGE_URL, bookList.get(position).getRentalDetail().getBookOwner().getUserObj().getImageFilename())).fit().into(holder.mIvRenter);
+        Picasso.with(context).load(String.format(Constants.IMAGE_URL, bookList.get(position).getUserId().getImageFilename())).fit().into(holder.mIvRenter);
         Glide.with(context).load(bookList.get(position).getRentalDetail().getBookOwner().getBookObj().getBookFilename()).centerCrop().into(holder.mIvBookImg);
 
 //        Log.d("displayImage", bookList.get(position).getBookOwner().getBookObj().getBookFilename());
@@ -182,8 +180,8 @@ public class ToReceiveAdapter extends RecyclerView.Adapter<ToReceiveAdapter.Book
         User user = new User();
         user = (User) SPUtility.getSPUtil(context).getObject("USER_OBJECT", User.class);
 
-        Log.d("RentalHeaderReceive",rentalHeader.getUser().toString());
-        if(rentalHeader.getUser().getUserId()==user.getUserId()){
+        Log.d("RentalHeaderReceive",rentalHeader.getUserId().toString());
+        if(rentalHeader.getUserId().getUserId()==user.getUserId()){
             rentalHeader.setStatus("To Return");
         }
 

@@ -121,8 +121,10 @@ public class MyRequestFrag extends Fragment {
             public void onResponse(String response) {
                 Log.i("ResponseRentalHeader", response);
 //                RentalHeader rentalHeaderModel = gson.fromJson(response, RentalHeader.class);
+
                 rentalHeaderList.clear();
                 rentalHeaderList.addAll(Arrays.asList(gson.fromJson(response, RentalHeader[].class)));
+//                Log.d("MyRequest", rentalHeaderList.get(0).getUserId().toString());
                 mAdapter.notifyDataSetChanged();
             }
         }, new Response.ErrorListener() {

@@ -11,7 +11,6 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.bumptech.glide.Glide;
 import com.example.joane14.myapplication.Fragments.Constants;
 import com.example.joane14.myapplication.Model.RentalHeader;
 import com.example.joane14.myapplication.R;
@@ -52,10 +51,10 @@ public class CompleteAdapter extends RecyclerView.Adapter<CompleteAdapter.BookHo
 
         holder.mBookRented.setText(bookList.get(position).getRentalDetail().getBookOwner().getBookObj().getBookTitle());
 
-        if(bookList.get(position).getUser()==null){
+        if(bookList.get(position).getUserId()==null){
             holder.mRenter.setText("Renter not Found");
         }else{
-            holder.mRenter.setText(bookList.get(position).getUser().getUserFname()+" "+bookList.get(position).getUser().getUserLname());
+            holder.mRenter.setText(bookList.get(position).getUserId().getUserFname()+" "+bookList.get(position).getUserId().getUserLname());
         }
 
 

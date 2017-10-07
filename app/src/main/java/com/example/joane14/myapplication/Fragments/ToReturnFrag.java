@@ -42,7 +42,6 @@ public class ToReturnFrag extends Fragment {
     private RecyclerView mRecyclerView;
     private RecyclerView.Adapter mAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
-    Button mBtnRenterReceive, mBtnRenterOwner;
 
 
     public ToReturnFrag() {
@@ -63,9 +62,6 @@ public class ToReturnFrag extends Fragment {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_to_return, container, false);
 
-        mBtnRenterReceive = (Button) view.findViewById(R.id.returnBtnOwner);
-        mBtnRenterOwner = (Button) view.findViewById(R.id.returnBtnOwner);
-
         rentalHeaderList = new ArrayList<RentalHeader>();
         mRecyclerView = (RecyclerView) view.findViewById(R.id.my_recycler_view_to_return);
         mRecyclerView.setHasFixedSize(true);
@@ -75,20 +71,6 @@ public class ToReturnFrag extends Fragment {
         mRecyclerView.setAdapter(mAdapter);
         getToReturnRenter();
 
-        mBtnRenterReceive.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                getToReturnRenter();
-            }
-        });
-
-        mBtnRenterOwner.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Log.d("BtnOwner", "inside");
-                getToReturnOwner();
-            }
-        });
         return view;
     }
 

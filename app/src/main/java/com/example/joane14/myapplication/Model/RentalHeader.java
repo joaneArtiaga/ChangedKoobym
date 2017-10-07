@@ -16,7 +16,7 @@ public class RentalHeader implements Serializable {
     Long rentalHeaderId;
 
     @SerializedName("user")
-    User user;
+    User userId;
 
     @SerializedName("rentalTimeStamp")
     String rentalTimeStamp;
@@ -57,12 +57,12 @@ public class RentalHeader implements Serializable {
         this.rentalHeaderId = rentalHeaderId;
     }
 
-    public User getUser() {
-        return user;
+    public User getUserId() {
+        return userId;
     }
 
-    public void setUser(User user) {
-        this.user = user;
+    public void setUserId(User user) {
+        this.userId = user;
     }
 
     public String getRentalTimeStamp() {
@@ -93,7 +93,9 @@ public class RentalHeader implements Serializable {
     public String toString() {
         return "RentalHeader{" +
                 "rentalHeaderId=" + rentalHeaderId +
-                ", user='" + user + '\'' +
+                ", rentalDetail='" + rentalDetail.toString() + '\'' +
+                ", status='" + status + '\'' +
+                ", user='" + userId.toString() + '\'' +
                 ", rentalTimeStamp=" + rentalTimeStamp +
                 ", totalPrice='" + totalPrice + '\'' +
                 ", location='" + location + '\'' +

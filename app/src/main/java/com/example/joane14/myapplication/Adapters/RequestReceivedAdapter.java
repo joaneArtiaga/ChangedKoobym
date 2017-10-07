@@ -11,15 +11,29 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
+import com.android.volley.AuthFailureError;
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.VolleyLog;
+import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
 import com.bumptech.glide.Glide;
+import com.example.joane14.myapplication.Activities.GsonDateDeserializer;
+import com.example.joane14.myapplication.Activities.RequestActivity;
+import com.example.joane14.myapplication.Activities.TimeDateChooser;
 import com.example.joane14.myapplication.Activities.TransactionActivity;
 import com.example.joane14.myapplication.Fragments.Constants;
 import com.example.joane14.myapplication.Model.RentalHeader;
 import com.example.joane14.myapplication.R;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.squareup.picasso.Picasso;
 
+import java.io.UnsupportedEncodingException;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -31,6 +45,7 @@ public class RequestReceivedAdapter extends RecyclerView.Adapter<RequestReceived
     public List<RentalHeader> bookList;
     public Activity context;
     public String fromWhere;
+    public RentalHeader rentalHeader;
 
     @Override
     public RequestReceivedAdapter.BookHolder onCreateViewHolder(ViewGroup parent, int viewType) {
@@ -51,22 +66,24 @@ public class RequestReceivedAdapter extends RecyclerView.Adapter<RequestReceived
     }
 
     @Override
-    public void onBindViewHolder(RequestReceivedAdapter.BookHolder holder, int position) {
+    public void onBindViewHolder(RequestReceivedAdapter.BookHolder holder, final int position) {
 
-        holder.mRequestor.setText(bookList.get(position).getRentalDetail().getBookOwner().getUserObj().getUserFname()+" "+bookList.get(position).getRentalDetail().getBookOwner().getUserObj().getUserLname());
+        rentalHeader = new RentalHeader();
+
+        holder.mRequestor.setText(bookList.get(position).getUserId().getUserFname()+" "+bookList.get(position).getUserId().getUserLname());
 
         holder.mBookReq.setText(bookList.get(position).getRentalDetail().getBookOwner().getBookObj().getBookTitle());
         Log.d("libroShet", String.valueOf(bookList.get(position).getRentalDetail().getBookOwner().getBookObj().getBookOriginalPrice()));
 
         Glide.with(context).load(bookList.get(position).getRentalDetail().getBookOwner().getBookObj().getBookFilename()).centerCrop().into(holder.mIvBookReq);
 
-//        Picasso.with(context).load(String.format(Constants.IMAGE_URL, bookList.get(position).getImageFilename())).fit().into(holder.mIvRequestor);
+        Picasso.with(context).load(String.format(Constants.IMAGE_URL, bookList.get(position).getUserId().getImageFilename())).fit().into(holder.mIvRequestor);
 
         holder.mBtnApprove.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(context, TransactionActivity.class);
-                context.startActivity(intent);
+                Log.d("ChangeStatusBTN", "nganong di musulod");
+                updateRequest(position);
             }
         });
     }
@@ -128,6 +145,64 @@ public class RequestReceivedAdapter extends RecyclerView.Adapter<RequestReceived
 //        }
     }
 
+    public void updateRequest(int position){
+        RequestQueue requestQueue = Volley.newRequestQueue(context);
+//        String URL = "http://104.197.4.32:8080/Koobym/user/add";
+        String URL = Constants.UPDATE_RENTAL_HEADER;
+//        String URL = Constants.WEB_SERVICE_URL+"user/add";
+
+        rentalHeader = bookList.get(position);
+        String status="";
+        if(rentalHeader.getStatus().equals("Confirmation")){
+            status = "Approved";
+        }else if(rentalHeader.getStatus().equals("Approved")){
+            status = "Received";
+        }else{
+            status = "Complete";
+        }
+        rentalHeader.setStatus(status);
+        Log.d("SetStatus", "ResponseReceived");
+        Log.d("DisplayStatus", rentalHeader.getStatus());
+        Log.d("RentalHeaderInside", rentalHeader.toString());
+        Log.d("User", rentalHeader.getUserId().toString());
+
+
+        final Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd").registerTypeAdapter(Date.class, GsonDateDeserializer.getInstance()).create();
+        final String mRequestBody = gson.toJson(rentalHeader);
+
+
+        Log.d("LOG_VOLLEY", mRequestBody);
+        Log.d("LOG_VOLLEY rentalHeader", mRequestBody);
+        StringRequest stringRequest = new StringRequest(Request.Method.PUT, URL, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                Log.i("RequestReceivedStatus", response);
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.e("LOG_VOLLEY", error.toString());
+                error.printStackTrace();
+            }
+        }) {
+            @Override
+            public String getBodyContentType() {
+                return "application/json; charset=utf-8";
+            }
+
+            @Override
+            public byte[] getBody() throws AuthFailureError {
+                try {
+                    return mRequestBody == null ? null : mRequestBody.getBytes("utf-8");
+                } catch (UnsupportedEncodingException uee) {
+                    VolleyLog.wtf("Unsupported Encoding while trying to get the bytes of %s using %s", mRequestBody, "utf-8");
+                    return null;
+                }
+            }
+        };
+
+        requestQueue.add(stringRequest);
+    }
 
 
 
