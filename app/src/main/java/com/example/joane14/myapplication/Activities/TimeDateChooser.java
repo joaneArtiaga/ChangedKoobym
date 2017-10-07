@@ -102,8 +102,8 @@ public class TimeDateChooser extends AppCompatActivity {
 
                 AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(TimeDateChooser.this);
                 alertDialogBuilder.setTitle("Are you sure you will be available at the time selected?");
-                alertDialogBuilder.setMessage("Date:\tFREEZE\n" +
-                        "\nDay:\t"+userDayTimeList.get(position).getDay().getStrDay()+
+                alertDialogBuilder.setMessage("Date:\tFIXING" +
+                        "\n\nDay:\t"+userDayTimeList.get(position).getDay().getStrDay()+
                         "\n\nTime:\t"+userDayTimeList.get(position).getTime().getStrTime());
                 alertDialogBuilder.setPositiveButton("Yes",
                         new DialogInterface.OnClickListener() {
@@ -177,11 +177,13 @@ public class TimeDateChooser extends AppCompatActivity {
 
     }
 
+
+
     public void showSummary(int position, final String date){
         AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(TimeDateChooser.this);
         alertDialogBuilder.setTitle("Meet Up Summary");
-        alertDialogBuilder.setMessage("Date:\tFREEZE\n" +
-                "\nDay:\t"+userDayTimeList.get(position).getDay().getStrDay()+
+        alertDialogBuilder.setMessage("Date:\tFIXING" +
+                "\n\nDay:\t"+userDayTimeList.get(position).getDay().getStrDay()+
                 "\n\nTime:\t"+userDayTimeList.get(position).getTime().getStrTime()+
                 "\n\nLocation:\t"+locationChosen.getLocationName());
         alertDialogBuilder.setPositiveButton("Okay",
@@ -190,9 +192,9 @@ public class TimeDateChooser extends AppCompatActivity {
                     public void onClick(DialogInterface arg0, int arg1) {
 
 
+
                         rentalHeader.setStatus("Confirmation");
                         rentalHeader.setRentalDetail(rentalDetail);
-                        rentalHeader.setUser((User) SPUtility.getSPUtil(TimeDateChooser.this).getObject("USER_OBJECT", User.class));
                         rentalHeader.setRentalTimeStamp(date);
                         rentalHeader.setTotalPrice((float) rentalDetail.getCalculatedPrice());
 

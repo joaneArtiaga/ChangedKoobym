@@ -118,10 +118,8 @@ public class ViewBookActivity extends AppCompatActivity implements NavigationVie
                 Log.d("bundle", "is not empty");
                 Log.d("RentalBookTitle", rentalDetail.getBookOwner().getBookObj().getBookTitle());
                 mBookTitle.setText(rentalDetail.getBookOwner().getBookObj().getBookTitle());
-                if(rentalDetail.getBookOwner().getBookObj().getBookAuthor().get(0).getAuthorFName()==null){
-                    if(rentalDetail.getBookOwner().getBookObj().getBookAuthor().get(0).getAuthorLName()==null){
+                if(rentalDetail.getBookOwner().getBookObj().getBookAuthor().isEmpty()){
                         author="Unknown Author";
-                    }
                 }else{
                     Log.d("RentalBookAuthor", String.valueOf(rentalDetail.getBookOwner().getBookObj().getBookAuthor().get(0).getAuthorFName()));
                     author=rentalDetail.getBookOwner().getBookObj().getBookAuthor().get(0).getAuthorFName();

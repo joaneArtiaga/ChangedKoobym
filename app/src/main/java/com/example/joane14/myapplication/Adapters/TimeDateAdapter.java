@@ -10,9 +10,11 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
 
+import com.example.joane14.myapplication.Activities.TimeDateChooser;
 import com.example.joane14.myapplication.Model.UserDayTime;
 import com.example.joane14.myapplication.R;
 
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -25,8 +27,9 @@ public class TimeDateAdapter extends BaseAdapter {
 
     private Context context;
     private List<UserDayTime> userDayTimeList;
+    public static List<String> dateOfDay;
     private Date nextDate;
-    private String nextDateStr;
+    public static String nextDateStr;
 
     public TimeDateAdapter(Context context, List<UserDayTime> userDayTimeList){
         this.context = context;
@@ -55,6 +58,8 @@ public class TimeDateAdapter extends BaseAdapter {
 
         UserDayTime userDayTime = new UserDayTime();
         userDayTime = userDayTimeList.get(position);
+
+        dateOfDay = new ArrayList<String>();
 
         if(convertView==null){
             LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -89,7 +94,10 @@ public class TimeDateAdapter extends BaseAdapter {
         mTime.setText(userDayTimeModel.getTime().getStrTime());
 
         nextDateStr = DateFormat.getDateInstance(DateFormat.MEDIUM).format(nextDate);
+        dateOfDay.add(nextDateStr);
         mDate.setText(nextDateStr);
+
+
 
 
         return vi;

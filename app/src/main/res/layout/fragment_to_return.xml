@@ -1,8 +1,31 @@
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
     tools:context="com.example.joane14.myapplication.Fragments.ToReturnFrag">
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="70dp">
+
+        <Button
+            android:id="@+id/returnBtnRenter"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Renter"
+            android:onClick="getToReturnRenter"/>
+
+        <Button
+            android:id="@+id/returnBtnOwner"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Owner"
+            android:onClick="getToReturnOwner"/>
+    </LinearLayout>
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/my_recycler_view_to_return"
@@ -10,4 +33,4 @@
         android:layout_height="match_parent"
         android:scrollbars="vertical" />
 
-</FrameLayout>
+</LinearLayout>

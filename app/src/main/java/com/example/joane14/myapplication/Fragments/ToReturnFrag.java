@@ -10,6 +10,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 
 import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
@@ -41,6 +42,8 @@ public class ToReturnFrag extends Fragment {
     private RecyclerView mRecyclerView;
     private RecyclerView.Adapter mAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
+    Button mBtnRenterReceive, mBtnRenterOwner;
+
 
     public ToReturnFrag() {
     }
@@ -60,6 +63,9 @@ public class ToReturnFrag extends Fragment {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_to_return, container, false);
 
+        mBtnRenterReceive = (Button) view.findViewById(R.id.returnBtnOwner);
+        mBtnRenterOwner = (Button) view.findViewById(R.id.returnBtnOwner);
+
         rentalHeaderList = new ArrayList<RentalHeader>();
         mRecyclerView = (RecyclerView) view.findViewById(R.id.my_recycler_view_to_return);
         mRecyclerView.setHasFixedSize(true);
@@ -67,8 +73,22 @@ public class ToReturnFrag extends Fragment {
         mRecyclerView.setLayoutManager(mLayoutManager);
         mAdapter = new ToDeliverAdapter(rentalHeaderList);
         mRecyclerView.setAdapter(mAdapter);
-        getToReturn();
+        getToReturnRenter();
 
+        mBtnRenterReceive.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                getToReturnRenter();
+            }
+        });
+
+        mBtnRenterOwner.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Log.d("BtnOwner", "inside");
+                getToReturnOwner();
+            }
+        });
         return view;
     }
 
@@ -99,7 +119,7 @@ public class ToReturnFrag extends Fragment {
         void onToReturnOnClick(Uri uri);
     }
 
-    public void getToReturn(){
+    public void getToReturnRenter(){
         RequestQueue requestQueue = Volley.newRequestQueue(getContext());
 //        String URL = "http://104.197.4.32:8080/Koobym/user/add";
         User user = new User();
@@ -113,11 +133,60 @@ public class ToReturnFrag extends Fragment {
         final String mRequestBody = gson.toJson(rentalHeader);
 
 
-        Log.d("LOG_VOLLEY", mRequestBody);
+        Log.d("ReturnOwner", mRequestBody);
         StringRequest stringRequest = new StringRequest(Request.Method.GET, URL, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
-                Log.i("ResponseRentalHeader", response);
+                Log.i("Return Renter", response);
+//                RentalHeader rentalHeaderModel = gson.fromJson(response, RentalHeader.class);
+                rentalHeaderList.clear();
+                rentalHeaderList.addAll(Arrays.asList(gson.fromJson(response, RentalHeader[].class)));
+                mAdapter.notifyDataSetChanged();
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.e("LOG_VOLLEY", error.toString());
+            }
+        }) {
+            @Override
+            public String getBodyContentType() {
+                return "application/json; charset=utf-8";
+            }
+
+            @Override
+            public byte[] getBody() throws AuthFailureError {
+                try {
+                    return mRequestBody == null ? null : mRequestBody.getBytes("utf-8");
+                } catch (UnsupportedEncodingException uee) {
+                    VolleyLog.wtf("Unsupported Encoding while trying to get the bytes of %s using %s", mRequestBody, "utf-8");
+                    return null;
+                }
+            }
+        };
+
+        requestQueue.add(stringRequest);
+    }
+
+    public void getToReturnOwner(){
+        RequestQueue requestQueue = Volley.newRequestQueue(getContext());
+//        String URL = "http://104.197.4.32:8080/Koobym/user/add";
+        User user = new User();
+        user = (User) SPUtility.getSPUtil(getContext()).getObject("USER_OBJECT", User.class);
+        String URL = Constants.GET_TRANSACTION_TO_RETURN_OWNER+user.getUserId();
+//        String URL = Constants.WEB_SERVICE_URL+"user/add";
+
+        final RentalHeader rentalHeader =new RentalHeader();
+
+        final Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd").registerTypeAdapter(Date.class, GsonDateDeserializer.getInstance()).create();
+        final String mRequestBody = gson.toJson(rentalHeader);
+
+
+        Log.d("ReturnRenter", mRequestBody);
+        StringRequest stringRequest = new StringRequest(Request.Method.GET, URL, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                Log.i("Return Renter", response);
 //                RentalHeader rentalHeaderModel = gson.fromJson(response, RentalHeader.class);
                 rentalHeaderList.clear();
                 rentalHeaderList.addAll(Arrays.asList(gson.fromJson(response, RentalHeader[].class)));

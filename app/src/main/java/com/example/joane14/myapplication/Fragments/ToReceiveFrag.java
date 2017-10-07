@@ -84,6 +84,14 @@ public class ToReceiveFrag extends Fragment {
                 getToReceiveRenter();
             }
         });
+
+        mBtnRenterOwner.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Log.d("BtnOwner", "inside");
+                getRequestReceived();
+            }
+        });
         return view;
     }
 
@@ -118,6 +126,57 @@ public class ToReceiveFrag extends Fragment {
         void onToReceiveOnClick(Uri uri);
     }
 
+
+    public void getRequestReceived(){
+        RequestQueue requestQueue = Volley.newRequestQueue(getContext());
+//        String URL = "http://104.197.4.32:8080/Koobym/user/add";
+        User user = new User();
+        user = (User) SPUtility.getSPUtil(getContext()).getObject("USER_OBJECT", User.class);
+        String URL = Constants.GET_REQUEST_RECEIVED+user.getUserId();
+//        String URL = Constants.WEB_SERVICE_URL+"user/add";
+
+        final RentalHeader rentalHeader =new RentalHeader();
+
+        final Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd").registerTypeAdapter(Date.class, GsonDateDeserializer.getInstance()).create();
+        final String mRequestBody = gson.toJson(rentalHeader);
+
+
+        Log.d("LOG_VOLLEY", mRequestBody);
+        StringRequest stringRequest = new StringRequest(Request.Method.GET, URL, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                Log.i("ResponseRequestReceived", response);
+//                RentalHeader rentalHeaderModel = gson.fromJson(response, RentalHeader.class);
+                rentalHeaderList.clear();
+                rentalHeaderList.addAll(Arrays.asList(gson.fromJson(response, RentalHeader[].class)));
+                mAdapter.notifyDataSetChanged();
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.e("LOG_VOLLEY", error.toString());
+            }
+        }) {
+            @Override
+            public String getBodyContentType() {
+                return "application/json; charset=utf-8";
+            }
+
+            @Override
+            public byte[] getBody() throws AuthFailureError {
+                try {
+                    return mRequestBody == null ? null : mRequestBody.getBytes("utf-8");
+                } catch (UnsupportedEncodingException uee) {
+                    VolleyLog.wtf("Unsupported Encoding while trying to get the bytes of %s using %s", mRequestBody, "utf-8");
+                    return null;
+                }
+            }
+        };
+
+        requestQueue.add(stringRequest);
+    }
+
+
     public void getToReceiveRenter(){
         RequestQueue requestQueue = Volley.newRequestQueue(getContext());
 //        String URL = "http://104.197.4.32:8080/Koobym/user/add";
@@ -141,12 +200,9 @@ public class ToReceiveFrag extends Fragment {
 //                RentalHeader rentalHeaderModel = gson.fromJson(response, RentalHeader.class);
                 rentalHeaderList.clear();
                 rentalHeaderList.addAll(Arrays.asList(gson.fromJson(response, RentalHeader[].class)));
-                Log.d("RentalHeaderAPI", rentalHeaderList.get(0).toString());
-                if(rentalHeaderList.get(0).getUser()==null){
-                    Log.d("UserRental", "null");
-                }else{
-                    Log.d("UserRental", "not null");
-                }
+//                Log.d("RentalHeaderAPI", rentalHeaderList.get(0).toString());
+
+
                 mAdapter.notifyDataSetChanged();
             }
         }, new Response.ErrorListener() {

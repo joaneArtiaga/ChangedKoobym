@@ -22,15 +22,34 @@ public class User implements Serializable{
     @SerializedName("userDayTimes")
     private List<UserDayTime> dayTimeModel;
 
+    @SerializedName("userId")
     private Integer userId;
+
+    @SerializedName("userFname")
     private String userFname;
+
+    @SerializedName("userLname")
     private String userLname;
+
+    @SerializedName("username")
     private String username;
+
+    @SerializedName("password")
     private String password;
+
+    @SerializedName("phoneNumber")
     private String phoneNumber;
+
+    @SerializedName("address")
     private String address;
+
+    @SerializedName("birthdate")
     private Date birthdate;
+
+    @SerializedName("email")
     private String email;
+
+    @SerializedName("imageFilename")
     private String imageFilename;
 
 
