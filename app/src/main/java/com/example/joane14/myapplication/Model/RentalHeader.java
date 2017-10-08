@@ -93,7 +93,7 @@ public class RentalHeader implements Serializable {
     public String toString() {
         return "RentalHeader{" +
                 "rentalHeaderId=" + rentalHeaderId +
-                ", rentalDetail='" + rentalDetail.toString() + '\'' +
+//                ", rentalDetail='" + rentalDetail.toString() + '\'' +
                 ", status='" + status + '\'' +
                 ", user='" + userId.toString() + '\'' +
                 ", rentalTimeStamp=" + rentalTimeStamp +

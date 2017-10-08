@@ -148,7 +148,6 @@ public class RequestReceivedAdapter extends RecyclerView.Adapter<RequestReceived
     public void updateRequest(int position){
         RequestQueue requestQueue = Volley.newRequestQueue(context);
 //        String URL = "http://104.197.4.32:8080/Koobym/user/add";
-        String URL = Constants.UPDATE_RENTAL_HEADER;
 //        String URL = Constants.WEB_SERVICE_URL+"user/add";
 
         rentalHeader = bookList.get(position);
@@ -160,11 +159,8 @@ public class RequestReceivedAdapter extends RecyclerView.Adapter<RequestReceived
         }else{
             status = "Complete";
         }
-        rentalHeader.setStatus(status);
-        Log.d("SetStatus", "ResponseReceived");
-        Log.d("DisplayStatus", rentalHeader.getStatus());
-        Log.d("RentalHeaderInside", rentalHeader.toString());
-        Log.d("User", rentalHeader.getUserId().toString());
+
+        String URL = Constants.UPDATE_RENTAL_HEADER+"/"+rentalHeader.getRentalHeaderId()+"/"+status;
 
 
         final Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd").registerTypeAdapter(Date.class, GsonDateDeserializer.getInstance()).create();
@@ -173,7 +169,7 @@ public class RequestReceivedAdapter extends RecyclerView.Adapter<RequestReceived
 
         Log.d("LOG_VOLLEY", mRequestBody);
         Log.d("LOG_VOLLEY rentalHeader", mRequestBody);
-        StringRequest stringRequest = new StringRequest(Request.Method.PUT, URL, new Response.Listener<String>() {
+        StringRequest stringRequest = new StringRequest(Request.Method.GET, URL, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
                 Log.i("RequestReceivedStatus", response);

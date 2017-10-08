@@ -78,6 +78,7 @@ public class ToReceiveFrag extends Fragment {
 
         getToReceiveRenter();
 
+
         mBtnRenterReceive.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -89,7 +90,7 @@ public class ToReceiveFrag extends Fragment {
             @Override
             public void onClick(View v) {
                 Log.d("BtnOwner", "inside");
-                getRequestReceived();
+                getToReceiveOwner();
             }
         });
         return view;
@@ -127,12 +128,13 @@ public class ToReceiveFrag extends Fragment {
     }
 
 
-    public void getRequestReceived(){
+    public void getToReceiveRenter(){
         RequestQueue requestQueue = Volley.newRequestQueue(getContext());
 //        String URL = "http://104.197.4.32:8080/Koobym/user/add";
         User user = new User();
         user = (User) SPUtility.getSPUtil(getContext()).getObject("USER_OBJECT", User.class);
-        String URL = Constants.GET_REQUEST_RECEIVED+user.getUserId();
+        Log.d("UserIdReceive", String.valueOf(user.getUserId()));
+        String URL = Constants.GET_TRANSACTION_TO_RECEIVE_RENTER+user.getUserId();
 //        String URL = Constants.WEB_SERVICE_URL+"user/add";
 
         final RentalHeader rentalHeader =new RentalHeader();
@@ -177,12 +179,12 @@ public class ToReceiveFrag extends Fragment {
     }
 
 
-    public void getToReceiveRenter(){
+    public void getToReceiveOwner(){
         RequestQueue requestQueue = Volley.newRequestQueue(getContext());
 //        String URL = "http://104.197.4.32:8080/Koobym/user/add";
         User user = new User();
         user = (User) SPUtility.getSPUtil(getContext()).getObject("USER_OBJECT", User.class);
-        String URL = Constants.GET_TRANSACTION_TO_RECEIVE_RENTER+user.getUserId();
+        String URL = Constants.GET_TRANSACTION_TO_RECEIVE_OWNER+user.getUserId();
 //        String URL = Constants.WEB_SERVICE_URL+"user/add";
 
         final RentalHeader rentalHeader =new RentalHeader();
