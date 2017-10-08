@@ -114,7 +114,6 @@ public class ViewBookSwapActivity extends AppCompatActivity implements Navigatio
                 Log.d("rentalDetail", "is empty");
             }else{
                 Log.d("bundle", "is not empty");
-                Log.d("SwapDetailBook", swapDetailObj.getSwapComments().get(0).getSwapComment());
                 bundle.putSerializable("swapComment", swapDetailObj);
                 fragmentManager = getSupportFragmentManager();
                 DisplaySwapComments displaySwapComments = DisplaySwapComments.newInstance(bundle);
