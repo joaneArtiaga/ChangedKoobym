@@ -29,13 +29,13 @@ public class Constants {
 
     public static final String GET_TRANSACTION_TO_RETURN_RENTER = "http://104.197.4.32:8080/Koobym/rentalHeader/toReturnByIdRenter/";
 
-    public static final String GET_TRANSACTION_TO_RETURN_OWNER = "http://104.197.4.32:8080/Koobym/rentalHeader/toReturnByIdOwner/";
-
     public static final String GET_TRANSACTION_TO_RECEIVE_RENTER = "http://104.197.4.32:8080/Koobym/rentalHeader/toReceiveByIdRenter/";
 
     public static final String GET_TRANSACTION_TO_RECEIVE_OWNER = "http://104.197.4.32:8080/Koobym/rentalHeader/toReceiveByIdOwner/";
 
     public static final String GET_TRANSACTION_COMPLETE_RENTER = "http://104.197.4.32:8080/Koobym/rentalHeader/completeByIdRenter/";
+
+    public static final String GET_TRANSACTION_COMPLETE_OWNER = "http://104.197.4.32:8080/Koobym/rentalHeader/completeByIdOwner/";
 
     public static final String GET_TRANSACTION_TO_DELIVER= "http://104.197.4.32:8080/Koobym/rentalHeader/toDeliverById/";
 

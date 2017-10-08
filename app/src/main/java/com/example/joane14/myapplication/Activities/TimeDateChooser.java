@@ -3,6 +3,7 @@ package com.example.joane14.myapplication.Activities;
 import android.annotation.SuppressLint;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.icu.text.DateFormat;
 import android.icu.text.SimpleDateFormat;
 import android.icu.util.Calendar;
 import android.support.v7.app.AlertDialog;
@@ -49,6 +50,10 @@ public class TimeDateChooser extends AppCompatActivity {
     UserDayTime userDayTimeModel;
     RentalHeader rentalHeader;
     LocationModel locationChosen;
+    User user;
+    String nextDateStr;
+    Date nextDate;
+
 
     @SuppressLint("NewApi")
     @Override
@@ -63,6 +68,10 @@ public class TimeDateChooser extends AppCompatActivity {
         userDayTimeList = new ArrayList<UserDayTime>();
         rentalHeader = new RentalHeader();
         locationChosen = new LocationModel();
+        user = new User();
+        nextDateStr = "";
+
+        user = (User) SPUtility.getSPUtil(TimeDateChooser.this).getObject("USER_OBJECT", User.class);
 
 
 
@@ -96,25 +105,38 @@ public class TimeDateChooser extends AppCompatActivity {
         list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, final int position, long id) {
+
+                if(userDayTimeList.get(position).getDay().getStrDay().equals("Monday")){
+                    nextDate=getNextDate(java.util.Calendar.MONDAY);
+                }else if(userDayTimeList.get(position).getDay().getStrDay().equals("Tuesday")){
+                    nextDate=getNextDate(java.util.Calendar.TUESDAY);
+                }else if(userDayTimeList.get(position).getDay().getStrDay().equals("Wednesday")){
+                    nextDate=getNextDate(java.util.Calendar.WEDNESDAY);
+                }else if(userDayTimeList.get(position).getDay().getStrDay().equals("Thursday")){
+                    nextDate=getNextDate(java.util.Calendar.THURSDAY);
+                }else if(userDayTimeList.get(position).getDay().getStrDay().equals("Friday")){
+                    nextDate=getNextDate(java.util.Calendar.FRIDAY);
+                }else if(userDayTimeList.get(position).getDay().getStrDay().equals("Saturday")){
+                    nextDate=getNextDate(java.util.Calendar.SATURDAY);
+                }else if(userDayTimeList.get(position).getDay().getStrDay().equals("Sunday")){
+                    nextDate=getNextDate(java.util.Calendar.SUNDAY);
+                }
+
+                nextDateStr = DateFormat.getDateInstance(DateFormat.MEDIUM).format(nextDate);
+
                 Log.d("ItemClicked", String.valueOf(position));
                 Log.d("userDateList", userDayTimeList.get(position).getDay().getStrDay()+", "+userDayTimeList.get(position).getTime().getStrTime());
                 Log.d("DateOwner", String.valueOf(userDayTimeList.get(position).getUserId()));
 
                 AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(TimeDateChooser.this);
                 alertDialogBuilder.setTitle("Are you sure you will be available at the time selected?");
-                alertDialogBuilder.setMessage("Date:\tFIXING" +
+                alertDialogBuilder.setMessage("Date:\t" + nextDateStr +
                         "\n\nDay:\t"+userDayTimeList.get(position).getDay().getStrDay()+
                         "\n\nTime:\t"+userDayTimeList.get(position).getTime().getStrTime());
                 alertDialogBuilder.setPositiveButton("Yes",
                         new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface arg0, int arg1) {
-//                                rentalHeader.setRentalTimeStamp(date);
-//                                rentalHeader.setTotalPrice((float) rentalDetail.getCalculatedPrice());
-//
-                                Log.d("ONClickTime", "inside");
-                                Log.d("RentalHeaderRent", rentalHeader.toString());
-
                                 showSummary(position, date);
                             }
                         });
@@ -176,12 +198,26 @@ public class TimeDateChooser extends AppCompatActivity {
 
     }
 
+    @SuppressLint("NewApi")
+    public Date getNextDate(int dayOfWeek) {
+        @SuppressLint({"NewApi", "LocalSuppress"})
+        java.util.Calendar c = java.util.Calendar.getInstance();
+        for ( int i = 0; i < 7; i++ ) {
+            if ( c.get(java.util.Calendar.DAY_OF_WEEK) == dayOfWeek ) {
+                return c.getTime();
+            } else {
+                c.add(java.util.Calendar.DAY_OF_WEEK, 1);
+            }
+        }
+        return c.getTime();
+    }
+
 
 
     public void showSummary(int position, final String date){
         AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(TimeDateChooser.this);
         alertDialogBuilder.setTitle("Meet Up Summary");
-        alertDialogBuilder.setMessage("Date:\tFIXING" +
+        alertDialogBuilder.setMessage("Date:\t" +nextDateStr+
                 "\n\nDay:\t"+userDayTimeList.get(position).getDay().getStrDay()+
                 "\n\nTime:\t"+userDayTimeList.get(position).getTime().getStrTime()+
                 "\n\nLocation:\t"+locationChosen.getLocationName());
@@ -194,15 +230,19 @@ public class TimeDateChooser extends AppCompatActivity {
 
                         rentalHeader.setStatus("Confirmation");
                         rentalHeader.setRentalDetail(rentalDetail);
-                        rentalHeader.setRentalTimeStamp(date);
+                        rentalHeader.setUserId(user);
+                        rentalHeader.setRentalTimeStamp(nextDateStr);
                         rentalHeader.setTotalPrice((float) rentalDetail.getCalculatedPrice());
+                        rentalHeader.setLocation(locationChosen);
 
+//
                         Log.d("ONClickTime", "inside");
                         Log.d("RentalHeaderRent", rentalHeader.toString());
 
-                        addRentalHeader();
-                        Intent intent = new Intent(TimeDateChooser.this, RequestActivity.class);
-                        startActivity(intent);
+
+//                        addRentalHeader();
+//                        Intent intent = new Intent(TimeDateChooser.this, RequestActivity.class);
+//                        startActivity(intent);
                     }
                 });
 

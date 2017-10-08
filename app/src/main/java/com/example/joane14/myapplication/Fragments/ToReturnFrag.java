@@ -150,52 +150,5 @@ public class ToReturnFrag extends Fragment {
         requestQueue.add(stringRequest);
     }
 
-    public void getToReturnOwner(){
-        RequestQueue requestQueue = Volley.newRequestQueue(getContext());
-//        String URL = "http://104.197.4.32:8080/Koobym/user/add";
-        User user = new User();
-        user = (User) SPUtility.getSPUtil(getContext()).getObject("USER_OBJECT", User.class);
-        String URL = Constants.GET_TRANSACTION_TO_RETURN_OWNER+user.getUserId();
-//        String URL = Constants.WEB_SERVICE_URL+"user/add";
 
-        final RentalHeader rentalHeader =new RentalHeader();
-
-        final Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd").registerTypeAdapter(Date.class, GsonDateDeserializer.getInstance()).create();
-        final String mRequestBody = gson.toJson(rentalHeader);
-
-
-        Log.d("ReturnRenter", mRequestBody);
-        StringRequest stringRequest = new StringRequest(Request.Method.GET, URL, new Response.Listener<String>() {
-            @Override
-            public void onResponse(String response) {
-                Log.i("Return Renter", response);
-//                RentalHeader rentalHeaderModel = gson.fromJson(response, RentalHeader.class);
-                rentalHeaderList.clear();
-                rentalHeaderList.addAll(Arrays.asList(gson.fromJson(response, RentalHeader[].class)));
-                mAdapter.notifyDataSetChanged();
-            }
-        }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                Log.e("LOG_VOLLEY", error.toString());
-            }
-        }) {
-            @Override
-            public String getBodyContentType() {
-                return "application/json; charset=utf-8";
-            }
-
-            @Override
-            public byte[] getBody() throws AuthFailureError {
-                try {
-                    return mRequestBody == null ? null : mRequestBody.getBytes("utf-8");
-                } catch (UnsupportedEncodingException uee) {
-                    VolleyLog.wtf("Unsupported Encoding while trying to get the bytes of %s using %s", mRequestBody, "utf-8");
-                    return null;
-                }
-            }
-        };
-
-        requestQueue.add(stringRequest);
-    }
 }

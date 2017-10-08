@@ -2,6 +2,7 @@ package com.example.joane14.myapplication.Adapters;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -21,7 +22,9 @@ import com.android.volley.VolleyLog;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.bumptech.glide.Glide;
+import com.example.joane14.myapplication.Activities.BookReviewActivity;
 import com.example.joane14.myapplication.Activities.GsonDateDeserializer;
+import com.example.joane14.myapplication.Activities.UserReviewActivity;
 import com.example.joane14.myapplication.Fragments.Constants;
 import com.example.joane14.myapplication.Fragments.ToReceiveFrag;
 import com.example.joane14.myapplication.Model.RentalHeader;
@@ -92,7 +95,7 @@ public class ToReceiveAdapter extends RecyclerView.Adapter<ToReceiveAdapter.Book
             public void onClick(View v) {
                 rentalHeader = bookList.get(position);
                 updateReceive(position);
-                Toast.makeText(context,"Implemented but user is empty. Still fixing.", Toast.LENGTH_SHORT).show();
+
             }
         });
     }
@@ -169,8 +172,18 @@ public class ToReceiveAdapter extends RecyclerView.Adapter<ToReceiveAdapter.Book
             status = "Approved";
         }else if(rentalHeader.getStatus().equals("Approved")){
             status = "Received";
+            Intent intent = new Intent(context, BookReviewActivity.class);
+            Bundle bundle = new Bundle();
+            bundle.putSerializable("rentalHeader", rentalHeader);
+            intent.putExtras(bundle);
+            context.startActivity(intent);
         }else{
             status = "Complete";
+            Intent intent = new Intent(context, UserReviewActivity.class);
+            Bundle bundle = new Bundle();
+            bundle.putSerializable("rentalHeader", rentalHeader);
+            intent.putExtras(bundle);
+            context.startActivity(intent);
         }
 
         String URL = Constants.UPDATE_RENTAL_HEADER+"/"+rentalHeader.getRentalHeaderId()+"/"+status;
