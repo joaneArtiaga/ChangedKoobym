@@ -91,7 +91,7 @@ public class ToReceiveAdapter extends RecyclerView.Adapter<ToReceiveAdapter.Book
             @Override
             public void onClick(View v) {
                 rentalHeader = bookList.get(position);
-//                updateReceive(rentalHeader);
+                updateReceive(position);
                 Toast.makeText(context,"Implemented but user is empty. Still fixing.", Toast.LENGTH_SHORT).show();
             }
         });
@@ -158,56 +158,40 @@ public class ToReceiveAdapter extends RecyclerView.Adapter<ToReceiveAdapter.Book
 //        }
     }
 
-    public String getDetails(int position){
-        String result = "";
-
-        result = bookList.get(position).toString();
-
-
-
-        return result;
-
-    }
-
-
-    public void updateReceive(RentalHeader rentalHeader){
+    public void updateReceive(int position){
         RequestQueue requestQueue = Volley.newRequestQueue(context);
 //        String URL = "http://104.197.4.32:8080/Koobym/user/add";
-        String URL = Constants.UPDATE_RENTAL_HEADER;
+//        String URL = Constants.WEB_SERVICE_URL+"user/add";
+
+        rentalHeader = bookList.get(position);
+        String status="";
+        if(rentalHeader.getStatus().equals("Confirmation")){
+            status = "Approved";
+        }else if(rentalHeader.getStatus().equals("Approved")){
+            status = "Received";
+        }else{
+            status = "Complete";
+        }
+
+        String URL = Constants.UPDATE_RENTAL_HEADER+"/"+rentalHeader.getRentalHeaderId()+"/"+status;
+
 
         final Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd").registerTypeAdapter(Date.class, GsonDateDeserializer.getInstance()).create();
         final String mRequestBody = gson.toJson(rentalHeader);
-        User user = new User();
-        user = (User) SPUtility.getSPUtil(context).getObject("USER_OBJECT", User.class);
 
-        Log.d("RentalHeaderReceive",rentalHeader.getUserId().toString());
-        if(rentalHeader.getUserId().getUserId()==user.getUserId()){
-            rentalHeader.setStatus("To Return");
-        }
 
         Log.d("LOG_VOLLEY", mRequestBody);
-        StringRequest stringRequest = new StringRequest(Request.Method.PUT, URL, new Response.Listener<String>() {
+        Log.d("LOG_VOLLEY rentalHeader", mRequestBody);
+        StringRequest stringRequest = new StringRequest(Request.Method.GET, URL, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
-                Log.i("ResponseRentalHeader", response);
-                ToReceiveFrag toReceiveFrag = new ToReceiveFrag();
-                toReceiveFrag.refreshAdapter();
-//                User user = gson.fromJson(response, User.class);
-//                Log.i("LOG_VOLLEY", user.getEmail());
-//                Log.i("LOG_VOLLEY", user.getUserFname());
-//                Log.i("LOG_VOLLEY", user.getUserLname());
-//                user.setGenreArray(genres);
-//                Intent intent = new Intent(SignUp.this, LandingPage.class);
-//                Bundle b = new Bundle();
-//                b.putBoolean("fromRegister", true);
-//                b.putSerializable("userModel", user);
-//                intent.putExtra("user",b);
-//                startActivity(intent);
+                Log.i("RequestReceivedStatus", response);
             }
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
                 Log.e("LOG_VOLLEY", error.toString());
+                error.printStackTrace();
             }
         }) {
             @Override
@@ -228,5 +212,7 @@ public class ToReceiveAdapter extends RecyclerView.Adapter<ToReceiveAdapter.Book
 
         requestQueue.add(stringRequest);
     }
+
+
 
 }
