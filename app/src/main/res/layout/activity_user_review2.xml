@@ -4,30 +4,16 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/colorTuftBrush"
     tools:context="com.example.joane14.myapplication.Activities.BookReviewActivity">
-
-    <LinearLayout
-        android:layout_width="366dp"
-        android:layout_height="257dp"
-        android:orientation="horizontal"
-        tools:layout_editor_absoluteX="9dp"
-        tools:layout_editor_absoluteY="294dp">
-
-        <TextView
-            android:id="@+id/textView13"
-            android:layout_width="wrap_content"
-            android:layout_height="72dp"
-            android:layout_weight="1"
-            android:background="@color/colorTuftBrush"
-            android:text="TextView" />
-    </LinearLayout>
 
     <LinearLayout
         android:layout_width="100dp"
         android:layout_height="100dp"
         android:orientation="horizontal"
         tools:layout_editor_absoluteX="16dp"
-        tools:layout_editor_absoluteY="16dp">
+        tools:layout_editor_absoluteY="16dp"
+        android:id="@+id/linearLayout">
 
         <ImageButton
             android:id="@+id/imageButton6"
@@ -41,35 +27,23 @@
         android:id="@+id/spinner"
         android:layout_width="204dp"
         android:layout_height="20dp"
-        tools:layout_editor_absoluteX="164dp"
-        tools:layout_editor_absoluteY="131dp" />
-
-    <Button
-        android:id="@+id/button4"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:background="@color/colorLightOrange"
-        android:text="Reviews"
-        tools:layout_editor_absoluteX="93dp"
-        tools:layout_editor_absoluteY="212dp" />
-
-    <Button
-        android:id="@+id/button5"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:background="@color/colorLightOrange"
-        android:text="Books for Rent"
-        tools:layout_editor_absoluteX="199dp"
-        tools:layout_editor_absoluteY="212dp" />
+        tools:layout_editor_absoluteX="177dp"
+        tools:layout_editor_absoluteY="96dp" />
 
     <LinearLayout
         android:layout_width="250dp"
         android:layout_height="100dp"
         android:layout_marginEnd="8dp"
-        android:layout_marginRight="32dp"
+        android:layout_marginRight="8dp"
         android:orientation="vertical"
         app:layout_constraintRight_toRightOf="parent"
         tools:layout_editor_absoluteY="16dp">
+
+        <TextView
+            android:id="@+id/textView6"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="TextView" />
 
         <TextView
             android:id="@+id/Name"
@@ -84,16 +58,11 @@
             android:text="TextView" />
 
         <TextView
-            android:id="@+id/textView29"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="TextView" />
-
-        <TextView
             android:id="@+id/Gender"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="TextView" />
+
     </LinearLayout>
 
     <TextView
@@ -103,7 +72,47 @@
         android:text="RATING"
         android:textColor="@color/colorOrange"
         android:textStyle="bold"
-        tools:layout_editor_absoluteX="81dp"
-        tools:layout_editor_absoluteY="131dp" />
+        tools:layout_editor_absoluteX="126dp"
+        tools:layout_editor_absoluteY="99dp" />
+
+    <ImageView
+        android:id="@+id/imageView7"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        app:srcCompat="@drawable/reviews"
+        tools:layout_editor_absoluteX="72dp"
+        tools:layout_editor_absoluteY="160dp" />
+
+    <TextView
+        android:id="@+id/Gender"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="TextView"
+        tools:layout_editor_absoluteX="16dp"
+        tools:layout_editor_absoluteY="275dp" />
+
+    <ImageView
+        android:id="@+id/imageView12"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        app:srcCompat="@drawable/booksforrent"
+        tools:layout_editor_absoluteX="236dp"
+        tools:layout_editor_absoluteY="160dp" />
+
+    <LinearLayout
+        android:layout_width="366dp"
+        android:layout_height="257dp"
+        android:orientation="horizontal"
+        tools:layout_editor_absoluteX="9dp"
+        tools:layout_editor_absoluteY="351dp">
+
+        <TextView
+            android:id="@+id/textView13"
+            android:layout_width="wrap_content"
+            android:layout_height="72dp"
+            android:layout_weight="1"
+            android:background="@color/colorTuftBrush"
+            android:text="TextView" />
+    </LinearLayout>
 
 </android.support.constraint.ConstraintLayout>

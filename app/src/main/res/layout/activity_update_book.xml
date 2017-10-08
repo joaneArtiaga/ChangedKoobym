@@ -4,45 +4,28 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/colorLightOrange"
     android:orientation="vertical"
     android:weightSum="1">
 
     <android.support.constraint.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/colorMint">
+        android:background="@color/colorTuftBrush">
 
         <ImageView
             android:id="@+id/imageView10"
             android:layout_width="124dp"
             android:layout_height="154dp"
             app:srcCompat="@drawable/com_facebook_tooltip_blue_xout"
-            tools:layout_editor_absoluteX="139dp"
-            tools:layout_editor_absoluteY="66dp" />
+            tools:layout_editor_absoluteX="119dp"
+            tools:layout_editor_absoluteY="63dp" />
 
         <LinearLayout
             android:layout_width="350dp"
             android:layout_height="219dp"
             android:orientation="vertical"
-            tools:layout_editor_absoluteX="18dp"
-            tools:layout_editor_absoluteY="261dp">
-
-            <TextView
-                android:id="@+id/BkTittle"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Book Tittle "
-                android:textColor="@color/colorPrimaryDark"
-                android:textSize="18sp"
-                android:textStyle="bold" />
-
-            <EditText
-                android:id="@+id/editText"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:ems="10"
-                android:inputType="textPersonName" />
+            tools:layout_editor_absoluteX="17dp"
+            tools:layout_editor_absoluteY="336dp">
 
             <TextView
                 android:id="@+id/textView19"
@@ -55,37 +38,60 @@
 
             <EditText
                 android:id="@+id/editText2"
-                android:layout_width="match_parent"
+                android:layout_width="370dp"
                 android:layout_height="wrap_content"
                 android:ems="10"
                 android:inputType="none|textPersonName" />
 
-            <TextView
-                android:id="@+id/textView20"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Description"
-                android:textColor="@color/colorPrimaryDark"
-                android:textSize="18sp"
-                android:textStyle="bold" />
         </LinearLayout>
 
         <EditText
             android:id="@+id/editText3"
-            android:layout_width="345dp"
-            android:layout_height="40dp"
+            android:layout_width="354dp"
+            android:layout_height="35dp"
             android:ems="10"
             android:inputType="textPersonName"
-            tools:layout_editor_absoluteX="16dp"
-            tools:layout_editor_absoluteY="422dp" />
+            tools:layout_editor_absoluteX="20dp"
+            tools:layout_editor_absoluteY="301dp" />
 
         <ImageView
-            android:id="@+id/imageView11"
-            android:layout_width="174dp"
-            android:layout_height="82dp"
+            android:id="@+id/imageView4"
+            android:layout_width="290dp"
+            android:layout_height="100dp"
             app:srcCompat="@drawable/update"
-            tools:layout_editor_absoluteX="105dp"
-            tools:layout_editor_absoluteY="480dp" />
+            tools:layout_editor_absoluteX="34dp"
+            tools:layout_editor_absoluteY="477dp" />
+
+        <TextView
+            android:id="@+id/BkTittle"
+            android:layout_width="123dp"
+            android:layout_height="wrap_content"
+            android:text="Book Tittle "
+            android:textColor="@color/colorPrimaryDark"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            tools:layout_editor_absoluteX="20dp"
+            tools:layout_editor_absoluteY="283dp" />
+
+        <TextView
+            android:id="@+id/textView20"
+            android:layout_width="123dp"
+            android:layout_height="wrap_content"
+            android:text="Description"
+            android:textColor="@color/colorPrimaryDark"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            tools:layout_editor_absoluteX="16dp"
+            tools:layout_editor_absoluteY="413dp" />
+
+        <EditText
+            android:id="@+id/editText"
+            android:layout_width="359dp"
+            android:layout_height="39dp"
+            android:ems="10"
+            android:inputType="textPersonName"
+            tools:layout_editor_absoluteX="20dp"
+            tools:layout_editor_absoluteY="433dp" />
 
     </android.support.constraint.ConstraintLayout>
 </LinearLayout>

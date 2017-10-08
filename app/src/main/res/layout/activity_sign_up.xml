@@ -1,6 +1,273 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent">
 
+    <android.support.constraint.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/colorTuftBrush">
+
+        <LinearLayout
+            android:layout_width="381dp"
+            android:layout_height="44dp"
+            android:orientation="horizontal"
+            tools:layout_editor_absoluteX="2dp"
+            tools:layout_editor_absoluteY="94dp" />
+
+        <ImageView
+            android:id="@+id/imageView11"
+            android:layout_width="51dp"
+            android:layout_height="44dp"
+            app:srcCompat="@drawable/firstname"
+            tools:layout_editor_absoluteX="0dp"
+            tools:layout_editor_absoluteY="94dp" />
+
+        <EditText
+            android:id="@+id/editText6"
+            android:layout_width="330dp"
+            android:layout_height="40dp"
+            android:layout_weight="1"
+            android:ems="10"
+            android:inputType="textPersonName"
+            android:text="First Name"
+            android:textColor="@color/cardview_light_background"
+            android:textStyle="bold"
+            tools:layout_editor_absoluteX="62dp"
+            tools:layout_editor_absoluteY="94dp" />
+
+        <ImageView
+            android:id="@+id/imageView11"
+            android:layout_width="51dp"
+            android:layout_height="44dp"
+            app:srcCompat="@drawable/lastname"
+            tools:layout_editor_absoluteX="2dp"
+            tools:layout_editor_absoluteY="138dp" />
+
+        <LinearLayout
+            android:layout_width="392dp"
+            android:layout_height="43dp"
+            android:orientation="horizontal"
+            tools:layout_editor_absoluteX="-4dp"
+            tools:layout_editor_absoluteY="138dp">
+
+        </LinearLayout>
+
+        <EditText
+            android:id="@+id/editText10"
+            android:layout_width="392dp"
+            android:layout_height="0dp"
+            android:ems="10"
+            android:inputType="textPersonName"
+            android:text="Last Name"
+            android:textColor="@color/cardview_light_background"
+            android:textStyle="bold"
+            tools:layout_editor_absoluteX="62dp"
+            tools:layout_editor_absoluteY="138dp" />
+
+        <ImageView
+            android:id="@+id/imageView13"
+            android:layout_width="45dp"
+            android:layout_height="42dp"
+            app:srcCompat="@drawable/bday"
+            tools:layout_editor_absoluteX="2dp"
+            tools:layout_editor_absoluteY="182dp" />
+
+        <LinearLayout
+            android:layout_width="392dp"
+            android:layout_height="43dp"
+            android:orientation="vertical"
+            tools:layout_editor_absoluteX="-4dp"
+            tools:layout_editor_absoluteY="181dp">
+
+        </LinearLayout>
+
+        <EditText
+            android:id="@+id/editText12"
+            android:layout_width="128dp"
+            android:layout_height="38dp"
+            android:ems="10"
+            android:inputType="textPersonName"
+            android:text="Birthday"
+            android:textColor="@color/cardview_light_background"
+            android:textStyle="bold"
+            tools:layout_editor_absoluteX="53dp"
+            tools:layout_editor_absoluteY="181dp" />
+
+        <ImageView
+            android:id="@+id/imageView14"
+            android:layout_width="56dp"
+            android:layout_height="44dp"
+            app:srcCompat="@drawable/contactnumber"
+            tools:layout_editor_absoluteX="181dp"
+            tools:layout_editor_absoluteY="182dp" />
+
+        <EditText
+            android:id="@+id/editText13"
+            android:layout_width="155dp"
+            android:layout_height="46dp"
+            android:ems="10"
+            android:inputType="phone"
+            android:text="Contact #"
+            android:textColor="@color/cardview_light_background"
+            tools:layout_editor_absoluteX="228dp"
+            tools:layout_editor_absoluteY="181dp" />
+
+        <LinearLayout
+            android:layout_width="381dp"
+            android:layout_height="44dp"
+            android:orientation="horizontal"
+            tools:layout_editor_absoluteX="2dp"
+            tools:layout_editor_absoluteY="224dp">
+
+            <ImageView
+                android:id="@+id/imageView14"
+                android:layout_width="56dp"
+                android:layout_height="44dp"
+                app:srcCompat="@drawable/location1"
+                tools:layout_editor_absoluteX="179dp"
+                tools:layout_editor_absoluteY="354dp" />
+
+            <EditText
+                android:id="@+id/editText14"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:ems="10"
+                android:inputType="textPostalAddress"
+                android:text="Address"
+                android:textColor="@color/cardview_light_background" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="381dp"
+            android:layout_height="44dp"
+            android:orientation="horizontal"
+            tools:layout_editor_absoluteX="2dp"
+            tools:layout_editor_absoluteY="268dp">
+
+            <ImageView
+                android:id="@+id/imageView14"
+                android:layout_width="52dp"
+                android:layout_height="39dp"
+                app:srcCompat="@drawable/username"
+                tools:layout_editor_absoluteX="179dp"
+                tools:layout_editor_absoluteY="354dp" />
+
+            <EditText
+                android:id="@+id/editText14"
+                android:layout_width="314dp"
+                android:layout_height="39dp"
+                android:layout_weight="1"
+                android:ems="10"
+                android:inputType="textPostalAddress"
+                android:text="Username"
+                android:textColor="@color/cardview_light_background"
+                tools:layout_editor_absoluteX="69dp"
+                tools:layout_editor_absoluteY="389dp" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="381dp"
+            android:layout_height="44dp"
+            android:orientation="horizontal"
+            tools:layout_editor_absoluteX="2dp"
+            tools:layout_editor_absoluteY="320dp">
+
+            <ImageView
+                android:id="@+id/imageView14"
+                android:layout_width="52dp"
+                android:layout_height="39dp"
+                app:srcCompat="@drawable/email"
+                tools:layout_editor_absoluteX="179dp"
+                tools:layout_editor_absoluteY="354dp" />
+
+            <EditText
+                android:id="@+id/editText16"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:ems="10"
+                android:inputType="textEmailAddress"
+                android:text="Email"
+                android:textColor="@color/cardview_light_background"
+                android:textStyle="bold" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="381dp"
+            android:layout_height="44dp"
+            android:orientation="horizontal"
+            tools:layout_editor_absoluteX="2dp"
+            tools:layout_editor_absoluteY="364dp">
+
+            <ImageView
+                android:id="@+id/imageView14"
+                android:layout_width="52dp"
+                android:layout_height="39dp"
+                app:srcCompat="@drawable/password"
+                tools:layout_editor_absoluteX="179dp"
+                tools:layout_editor_absoluteY="354dp" />
+
+            <EditText
+                android:id="@+id/editText17"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:ems="10"
+                android:inputType="textPassword"
+                android:text="Password"
+                android:textColor="@color/cardview_light_background"
+                android:textStyle="bold" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="381dp"
+            android:layout_height="44dp"
+            android:orientation="horizontal"
+            tools:layout_editor_absoluteX="2dp"
+            tools:layout_editor_absoluteY="408dp">
+
+            <ImageView
+                android:id="@+id/imageView14"
+                android:layout_width="52dp"
+                android:layout_height="39dp"
+                app:srcCompat="@drawable/confirmpassword"
+                tools:layout_editor_absoluteX="179dp"
+                tools:layout_editor_absoluteY="354dp" />
+
+            <EditText
+                android:id="@+id/editText17"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:ems="10"
+                android:inputType="textPassword"
+                android:text="Password"
+                android:textColor="@color/cardview_light_background"
+                android:textStyle="bold" />
+
+        </LinearLayout>
+
+        <ImageView
+            android:id="@+id/imageView17"
+            android:layout_width="183dp"
+            android:layout_height="112dp"
+            app:srcCompat="@drawable/signup"
+            tools:layout_editor_absoluteY="451dp"
+            tools:layout_editor_absoluteX="100dp" />
+
+        <ImageView
+            android:id="@+id/imageView18"
+            android:layout_width="122dp"
+            android:layout_height="81dp"
+            app:srcCompat="@drawable/add"
+            tools:layout_editor_absoluteY="1dp"
+            tools:layout_editor_absoluteX="145dp" />
+    </android.support.constraint.ConstraintLayout>
 </LinearLayout>
