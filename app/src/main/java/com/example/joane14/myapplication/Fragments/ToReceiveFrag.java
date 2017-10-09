@@ -24,6 +24,7 @@ import com.example.joane14.myapplication.Activities.GsonDateDeserializer;
 import com.example.joane14.myapplication.Adapters.ToDeliverAdapter;
 import com.example.joane14.myapplication.Adapters.ToReceiveAdapter;
 import com.example.joane14.myapplication.Model.RentalHeader;
+import com.example.joane14.myapplication.Model.SwapHeader;
 import com.example.joane14.myapplication.Model.User;
 import com.example.joane14.myapplication.R;
 import com.example.joane14.myapplication.Utilities.SPUtility;
@@ -39,11 +40,13 @@ import java.util.List;
 public class ToReceiveFrag extends Fragment {
 
     List<RentalHeader> rentalHeaderList;
+    List<SwapHeader> swapHeaderList;
     private RecyclerView mRecyclerView;
     private RecyclerView.Adapter mAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
     private ToReceiveFrag.OnToReceiveInteractionListener mListener;
     Button mBtnRenterReceive, mBtnRenterOwner, mBtnSwap;
+
 
 
     public ToReceiveFrag() {
@@ -70,11 +73,12 @@ public class ToReceiveFrag extends Fragment {
 
 
         rentalHeaderList = new ArrayList<RentalHeader>();
+        swapHeaderList = new ArrayList<SwapHeader>();
         mRecyclerView = (RecyclerView) view.findViewById(R.id.my_recycler_view_to_receive);
         mRecyclerView.setHasFixedSize(true);
         mLayoutManager = new LinearLayoutManager(getContext());
         mRecyclerView.setLayoutManager(mLayoutManager);
-        mAdapter = new ToReceiveAdapter(rentalHeaderList);
+        mAdapter = new ToReceiveAdapter(rentalHeaderList, swapHeaderList);
         mRecyclerView.setAdapter(mAdapter);
 
         getToReceiveRenter();
@@ -106,14 +110,60 @@ public class ToReceiveFrag extends Fragment {
         return view;
     }
 
+    public void getToReceiveSwap(){
+        RequestQueue requestQueue = Volley.newRequestQueue(getContext());
+//        String URL = "http://104.197.4.32:8080/Koobym/user/add";
+        User user = new User();
+        user = (User) SPUtility.getSPUtil(getContext()).getObject("USER_OBJECT", User.class);
+        Log.d("UserIdReceive", String.valueOf(user.getUserId()));
+        String URL = Constants.GET_TRANSACTION_TO_RECEIVE_SWAP+user.getUserId();
+//        String URL = Constants.WEB_SERVICE_URL+"user/add";
+
+        final SwapHeader swapHeader =new SwapHeader();
+
+        final Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd").registerTypeAdapter(Date.class, GsonDateDeserializer.getInstance()).create();
+        final String mRequestBody = gson.toJson(swapHeader);
+
+
+        Log.d("LOG_VOLLEY", mRequestBody);
+        StringRequest stringRequest = new StringRequest(Request.Method.GET, URL, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                Log.i("ResponseRequestReceived", response);
+//                RentalHeader rentalHeaderModel = gson.fromJson(response, RentalHeader.class);
+                swapHeaderList.clear();
+                swapHeaderList.addAll(Arrays.asList(gson.fromJson(response, SwapHeader[].class)));
+                mAdapter.notifyDataSetChanged();
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.e("LOG_VOLLEY", error.toString());
+            }
+        }) {
+            @Override
+            public String getBodyContentType() {
+                return "application/json; charset=utf-8";
+            }
+
+            @Override
+            public byte[] getBody() throws AuthFailureError {
+                try {
+                    return mRequestBody == null ? null : mRequestBody.getBytes("utf-8");
+                } catch (UnsupportedEncodingException uee) {
+                    VolleyLog.wtf("Unsupported Encoding while trying to get the bytes of %s using %s", mRequestBody, "utf-8");
+                    return null;
+                }
+            }
+        };
+
+        requestQueue.add(stringRequest);
+    }
+
     public void onButtonPressed(Uri uri) {
         if (mListener != null) {
             mListener.onToReceiveOnClick(uri);
         }
-    }
-
-    public void refreshAdapter(){
-        mAdapter.notifyDataSetChanged();
     }
 
     @Override

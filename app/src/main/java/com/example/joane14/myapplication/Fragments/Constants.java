@@ -33,6 +33,8 @@ public class Constants {
 
     public static final String GET_TRANSACTION_TO_RECEIVE_RENTER = "http://104.197.4.32:8080/Koobym/rentalHeader/toReceiveByIdRenter/";
 
+    public static final String GET_TRANSACTION_TO_RECEIVE_SWAP = "http://104.197.4.32:8080/Koobym/swapHeader/toReceiveById/";
+
     public static final String GET_TRANSACTION_TO_RECEIVE_OWNER = "http://104.197.4.32:8080/Koobym/rentalHeader/toReceiveByIdOwner/";
 
     public static final String GET_TRANSACTION_COMPLETE_RENTER = "http://104.197.4.32:8080/Koobym/rentalHeader/completeByIdRenter/";
@@ -42,6 +44,8 @@ public class Constants {
     public static final String GET_TRANSACTION_TO_DELIVER= "http://104.197.4.32:8080/Koobym/rentalHeader/toDeliverById/";
 
     public static final String UPDATE_RENTAL_HEADER= "http://104.197.4.32:8080/Koobym/rentalHeader/updateStatus";
+
+    public static final String UPDATE_SWAP_HEADER= "http://104.197.4.32:8080/Koobym/swapHeader/updateStatus";
 
     public static final String GET_SWAP_DETAILS_ALL= "http://104.197.4.32:8080/Koobym/swapDetail/all";
 

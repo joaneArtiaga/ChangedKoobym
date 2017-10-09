@@ -28,6 +28,7 @@ import com.example.joane14.myapplication.Activities.UserReviewActivity;
 import com.example.joane14.myapplication.Fragments.Constants;
 import com.example.joane14.myapplication.Fragments.ToReceiveFrag;
 import com.example.joane14.myapplication.Model.RentalHeader;
+import com.example.joane14.myapplication.Model.SwapHeader;
 import com.example.joane14.myapplication.Model.User;
 import com.example.joane14.myapplication.R;
 import com.example.joane14.myapplication.Utilities.SPUtility;
@@ -46,6 +47,10 @@ import java.util.List;
 public class ToReceiveAdapter extends RecyclerView.Adapter<ToReceiveAdapter.BookHolder> {
 
     public List<RentalHeader> bookList;
+    public List<SwapHeader> swapHeaderList;
+    public String fromWhere;
+
+    SwapHeader swapHeader;
     RentalHeader rentalHeader;
     public Activity context;
 
@@ -56,6 +61,9 @@ public class ToReceiveAdapter extends RecyclerView.Adapter<ToReceiveAdapter.Book
 
         this.context = (Activity) parent.getContext();
         rentalHeader = new RentalHeader();
+        swapHeader = new SwapHeader();
+
+
         Log.d("LandingPAgeAdapter","inside");
         ToReceiveAdapter.BookHolder dataObjectHolder = new ToReceiveAdapter.BookHolder(this.context, view);
 
@@ -63,39 +71,65 @@ public class ToReceiveAdapter extends RecyclerView.Adapter<ToReceiveAdapter.Book
         return dataObjectHolder;
     }
 
-    public ToReceiveAdapter(List<RentalHeader> myDataset) {
+    public ToReceiveAdapter(List<RentalHeader> myDataset, List<SwapHeader> swapHeaderList) {
         bookList = myDataset;
+        this.swapHeaderList = swapHeaderList;
+
+        if(myDataset.isEmpty()){
+            fromWhere = "swap";
+            Log.d("TRAdapter", "rent empty");
+        }else if(swapHeaderList.isEmpty()){
+            fromWhere = "rent";
+            Log.d("TRAdapter", "swap empty");
+        }
     }
 
     @Override
     public void onBindViewHolder(ToReceiveAdapter.BookHolder holder, final int position) {
 
 
-        holder.mBookRented.setText(bookList.get(position).getRentalDetail().getBookOwner().getBookObj().getBookTitle());
-        holder.mDaysRent.setText("Available "+bookList.get(position).getRentalDetail().getDaysForRent()+" days for rent.");
-        holder.mMU.setText(bookList.get(position).getLocation().getLocationName());
-        holder.mPrice.setText(String.valueOf(bookList.get(position).getRentalDetail().getCalculatedPrice()));
+        if(fromWhere.equals("rent")){
+            Log.d("TRAdapter OnbindView", "swap empty");
+            holder.mBookRented.setText(bookList.get(position).getRentalDetail().getBookOwner().getBookObj().getBookTitle());
+            holder.mDaysRent.setText("Available "+bookList.get(position).getRentalDetail().getDaysForRent()+" days for rent.");
+            holder.mMU.setText(bookList.get(position).getLocation().getLocationName());
+            holder.mPrice.setText(String.valueOf(bookList.get(position).getRentalDetail().getCalculatedPrice()));
 
-        if(bookList.get(position).getUserId()==null){
-            holder.mRenter.setText("Renter not Found");
-        }else{
-            holder.mRenter.setText(bookList.get(position).getUserId().getUserFname()+" "+bookList.get(position).getUserId().getUserLname());
+            if(bookList.get(position).getUserId()==null){
+                holder.mRenter.setText("Renter not Found");
+            }else{
+                holder.mRenter.setText(bookList.get(position).getUserId().getUserFname()+" "+bookList.get(position).getUserId().getUserLname());
+            }
+
+            holder.mReminder.setText("Receive book on "+ bookList.get(position).getRentalTimeStamp());
+
+
+            Picasso.with(context).load(String.format(Constants.IMAGE_URL, bookList.get(position).getUserId().getImageFilename())).fit().into(holder.mIvRenter);
+            Glide.with(context).load(bookList.get(position).getRentalDetail().getBookOwner().getBookObj().getBookFilename()).centerCrop().into(holder.mIvBookImg);
+
+        } else if(fromWhere.equals("swap")){
+            Log.d("TRAdapter OnbindView", "rent empty");
+            holder.mBookRented.setText(swapHeaderList.get(position).getSwapDetail().getBookOwner().getBookObj().getBookTitle());
+            holder.mDaysRent.setText("");
+            holder.mMU.setText(swapHeaderList.get(position).getLocation().getLocationName());
+            holder.mRenter.setText(swapHeaderList.get(position).getUser().getUserFname()+" "+swapHeaderList.get(position).getUser().getUserLname());
+            holder.mReminder.setText("Receive book on "+swapHeaderList.get(position).getDateTimeStamp());
+
+            Picasso.with(context).load(String.format(Constants.IMAGE_URL, swapHeaderList.get(position).getUser().getImageFilename())).fit().into(holder.mIvRenter);
+            Glide.with(context).load(swapHeaderList.get(position).getSwapDetail().getBookOwner().getBookObj().getBookFilename()).centerCrop().into(holder.mIvBookImg);
         }
-
-        holder.mReminder.setText("Return book and receive by DATE.");
-
-
-        Picasso.with(context).load(String.format(Constants.IMAGE_URL, bookList.get(position).getUserId().getImageFilename())).fit().into(holder.mIvRenter);
-        Glide.with(context).load(bookList.get(position).getRentalDetail().getBookOwner().getBookObj().getBookFilename()).centerCrop().into(holder.mIvBookImg);
-
 //        Log.d("displayImage", bookList.get(position).getBookOwner().getBookObj().getBookFilename());
 
         holder.mBtnAccept.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                rentalHeader = bookList.get(position);
-                updateReceive(position);
+                if(fromWhere.equals("rent")){
+                    rentalHeader = bookList.get(position);
+                    updateReceive(position);
+                }else if(fromWhere.equals("swap")){
+                    swapHeader = swapHeaderList.get(position);
 
+                }
             }
         });
     }
@@ -110,6 +144,7 @@ public class ToReceiveAdapter extends RecyclerView.Adapter<ToReceiveAdapter.Book
         ImageView mIvRenter, mIvBookImg;
         ImageView mBtnAccept;
         RentalHeader rentalHeaderObj;
+        SwapHeader swapHeaderObj;
         Context context;
 
 
@@ -132,21 +167,27 @@ public class ToReceiveAdapter extends RecyclerView.Adapter<ToReceiveAdapter.Book
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    rentalHeaderObj = new RentalHeader();
-                    Bundle bundle = new Bundle();
-                    int position = getAdapterPosition();
-                    Log.d("AdapterPosition", "inside "+Integer.toString(position));
+                    if(fromWhere.equals("rent")){
+                        rentalHeaderObj = new RentalHeader();
+                        Bundle bundle = new Bundle();
+                        int position = getAdapterPosition();
+                        Log.d("AdapterPosition", "inside "+Integer.toString(position));
 //                    Intent intent = new Intent(LandingPageAdapter.this.context, ViewBookActivity.class);
-                    rentalHeaderObj = ToReceiveAdapter.this.bookList.get(position);
-                    if(rentalHeaderObj==null){
-                        Log.d("rentalHeaderAdapter", "is null");
-                    }else{
-                        Log.d("rentalHeaderAdapter", "is not null");
-                    }
+                        rentalHeaderObj = ToReceiveAdapter.this.bookList.get(position);
+                        if(rentalHeaderObj==null){
+                            Log.d("rentalHeaderAdapter", "is null");
+                        }else{
+                            Log.d("rentalHeaderAdapter", "is not null");
+                        }
 //                    intent.putExtra("ViewBook", "fromAdapter");
 //                    bundle.putSerializable("View", rentalDetailObj);
 //                    intent.putExtras(bundle);
 //                    context.startActivity(intent);
+
+                    }else if(fromWhere.equals("swap")){
+                        swapHeaderObj = new SwapHeader();
+                        Log.d("SwapHeaderToReceive", swapHeaderList.get(getAdapterPosition()).toString());
+                    }
                 }
             });
         }
@@ -160,6 +201,72 @@ public class ToReceiveAdapter extends RecyclerView.Adapter<ToReceiveAdapter.Book
 //
 //        }
     }
+
+    public void updateSwapReceive(int position){
+        RequestQueue requestQueue = Volley.newRequestQueue(context);
+//        String URL = "http://104.197.4.32:8080/Koobym/user/add";
+//        String URL = Constants.WEB_SERVICE_URL+"user/add";
+
+        rentalHeader = bookList.get(position);
+        String status="";
+        if(rentalHeader.getStatus().equals("Confirmation")){
+            status = "Approved";
+        }else if(rentalHeader.getStatus().equals("Approved")){
+            status = "Received";
+            Intent intent = new Intent(context, BookReviewActivity.class);
+            Bundle bundle = new Bundle();
+            bundle.putSerializable("rentalHeader", rentalHeader);
+            intent.putExtras(bundle);
+            context.startActivity(intent);
+        }else{
+            status = "Complete";
+            Intent intent = new Intent(context, UserReviewActivity.class);
+            Bundle bundle = new Bundle();
+            bundle.putSerializable("rentalHeader", rentalHeader);
+            intent.putExtras(bundle);
+            context.startActivity(intent);
+        }
+
+        String URL = Constants.UPDATE_RENTAL_HEADER+"/"+rentalHeader.getRentalHeaderId()+"/"+status;
+
+
+        final Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd").registerTypeAdapter(Date.class, GsonDateDeserializer.getInstance()).create();
+        final String mRequestBody = gson.toJson(rentalHeader);
+
+
+        Log.d("LOG_VOLLEY", mRequestBody);
+        Log.d("LOG_VOLLEY rentalHeader", mRequestBody);
+        StringRequest stringRequest = new StringRequest(Request.Method.GET, URL, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                Log.i("RequestReceivedStatus", response);
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.e("LOG_VOLLEY", error.toString());
+                error.printStackTrace();
+            }
+        }) {
+            @Override
+            public String getBodyContentType() {
+                return "application/json; charset=utf-8";
+            }
+
+            @Override
+            public byte[] getBody() throws AuthFailureError {
+                try {
+                    return mRequestBody == null ? null : mRequestBody.getBytes("utf-8");
+                } catch (UnsupportedEncodingException uee) {
+                    VolleyLog.wtf("Unsupported Encoding while trying to get the bytes of %s using %s", mRequestBody, "utf-8");
+                    return null;
+                }
+            }
+        };
+
+        requestQueue.add(stringRequest);
+    }
+
 
     public void updateReceive(int position){
         RequestQueue requestQueue = Volley.newRequestQueue(context);
