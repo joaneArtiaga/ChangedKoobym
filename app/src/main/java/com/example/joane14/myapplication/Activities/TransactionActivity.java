@@ -30,6 +30,7 @@ import com.example.joane14.myapplication.Fragments.MyRequestFrag;
 import com.example.joane14.myapplication.Fragments.RequestReceivedFrag;
 import com.example.joane14.myapplication.Fragments.ToDeliverFrag;
 import com.example.joane14.myapplication.Fragments.ToReceiveFrag;
+import com.example.joane14.myapplication.Fragments.ToReceiveSwapFrag;
 import com.example.joane14.myapplication.Fragments.ToReturnFrag;
 import com.example.joane14.myapplication.Model.User;
 import com.example.joane14.myapplication.R;
@@ -45,7 +46,8 @@ public class TransactionActivity extends AppCompatActivity
         ToDeliverFrag.OnToDeliverInteractionListener,
         ToReturnFrag.OnToReturnInteractionListener,
         ToReceiveFrag.OnToReceiveInteractionListener,
-        CompleteFrag.OnCompleteInteractionListener{
+        CompleteFrag.OnCompleteInteractionListener,
+        ToReceiveSwapFrag.OnToSwapReceiveInteractionListener{
 
     ImageView profileImg;
     private TabLayout tabLayout;
@@ -180,6 +182,11 @@ public class TransactionActivity extends AppCompatActivity
 
     @Override
     public void onToReturnOnClick(Uri uri) {
+
+    }
+
+    @Override
+    public void onToSwapReceiveOnClick(Uri uri) {
 
     }
 
