@@ -160,7 +160,7 @@ public class ToReceiveSwapAdapter extends RecyclerView.Adapter<ToReceiveSwapAdap
 //        }
     }
 
-    public void updateReceive(int position){
+    public void updateReceive(final int position){
         RequestQueue requestQueue = Volley.newRequestQueue(context);
 //        String URL = "http://104.197.4.32:8080/Koobym/user/add";
 //        String URL = Constants.WEB_SERVICE_URL+"user/add";
@@ -178,14 +178,70 @@ public class ToReceiveSwapAdapter extends RecyclerView.Adapter<ToReceiveSwapAdap
             context.startActivity(intent);
         }
 
-        String URL = Constants.UPDATE_SWAP_HEADER+"/Received/"+user.getUserId();
+        String URL = Constants.UPDATE_SWAP_HEADER+"/Received/"+swapHeader.getSwapHeaderId();
+
+        Log.d("Update SwapHeader URL", URL);
 
 
         final Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd").registerTypeAdapter(Date.class, GsonDateDeserializer.getInstance()).create();
         final String mRequestBody = gson.toJson(swapHeader);
 
 
-        Log.d("LOG_VOLLEY", mRequestBody);
+        Log.d("LOG_VOLLEY_swapHeaderUD", mRequestBody);
+        Log.d("LOG_VOLLEY rentalHeader", mRequestBody);
+        StringRequest stringRequest = new StringRequest(Request.Method.GET, URL, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                Log.i("RequestReceivedStatus", response);
+
+                updateBookOwner(position);
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.e("LOG_VOLLEY", error.toString());
+                error.printStackTrace();
+            }
+        }) {
+            @Override
+            public String getBodyContentType() {
+                return "application/json; charset=utf-8";
+            }
+
+            @Override
+            public byte[] getBody() throws AuthFailureError {
+                try {
+                    return mRequestBody == null ? null : mRequestBody.getBytes("utf-8");
+                } catch (UnsupportedEncodingException uee) {
+                    VolleyLog.wtf("Unsupported Encoding while trying to get the bytes of %s using %s", mRequestBody, "utf-8");
+                    return null;
+                }
+            }
+        };
+
+        requestQueue.add(stringRequest);
+    }
+
+    public void updateBookOwner(int position){
+        RequestQueue requestQueue = Volley.newRequestQueue(context);
+//        String URL = "http://104.197.4.32:8080/Koobym/user/add";
+//        String URL = Constants.WEB_SERVICE_URL+"user/add";
+
+        User user = new User();
+        user = (User) SPUtility.getSPUtil(context).getObject("USER_OBJECT", User.class);
+        swapHeader = bookList.get(position);
+        String status="";
+
+        String URL = Constants.UPDATE_BOOK_OWNER+"/"+swapHeader.getSwapDetail().getBookOwner().getBookOwnerId()+"/"+user.getUserId();
+
+        Log.d("Update SwapHeader URL", URL);
+
+
+        final Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd").registerTypeAdapter(Date.class, GsonDateDeserializer.getInstance()).create();
+        final String mRequestBody = gson.toJson(swapHeader);
+
+
+        Log.d("LOG_VOLLEY_swapHeaderUD", mRequestBody);
         Log.d("LOG_VOLLEY rentalHeader", mRequestBody);
         StringRequest stringRequest = new StringRequest(Request.Method.GET, URL, new Response.Listener<String>() {
             @Override

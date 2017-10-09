@@ -171,7 +171,8 @@ public class TimeDateChooser extends AppCompatActivity {
                         new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface arg0, int arg1) {
-                                showSummary(position, date);
+                                Log.d("DialogInterface", "inside");
+                                showSummary(position);
                             }
                         });
 
@@ -248,7 +249,7 @@ public class TimeDateChooser extends AppCompatActivity {
 
 
 
-    public void showSummary(final int position, final String date){
+    public void showSummary(final int position){
         AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(TimeDateChooser.this);
         alertDialogBuilder.setTitle("Meet Up Summary");
         alertDialogBuilder.setMessage("Date:\t" +nextDateStr+

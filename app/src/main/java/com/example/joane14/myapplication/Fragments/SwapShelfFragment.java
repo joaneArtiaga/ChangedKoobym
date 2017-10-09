@@ -85,7 +85,7 @@ public class SwapShelfFragment extends Fragment {
         }else{
             Log.d("User","is not null");
         }
-        String URL = Constants.RENT_BY_ID+user.getUserId();
+        String URL = Constants.GET_MY_SWAP+user.getUserId();
         Log.d("RentById Url", URL);
 //        String URL = Constants.WEB_SERVICE_URL+"genre/all";
         final Gson gson = new Gson();

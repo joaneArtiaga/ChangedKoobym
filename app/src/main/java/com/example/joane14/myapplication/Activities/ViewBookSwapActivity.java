@@ -1,5 +1,7 @@
 package com.example.joane14.myapplication.Activities;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.support.annotation.NonNull;
@@ -17,9 +19,12 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -50,12 +55,15 @@ public class ViewBookSwapActivity extends AppCompatActivity implements Navigatio
     SwapDetail swapDetailObj;
     Bundle bundle;
     TextView mBookTitle, mAuthor, mPrice, mBookOwner;
+    Button mBookSwap;
     ImageView mBookImg, mBookOwnerImg;
     List<SwapComment> swapCommentList;
     private RecyclerView mRecyclerView;
     private RecyclerView.Adapter mAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
     FragmentManager fragmentManager;
+    SwapComment swapComment;
+    User user;
 
 
     @Override
@@ -97,13 +105,27 @@ public class ViewBookSwapActivity extends AppCompatActivity implements Navigatio
         mAuthor = (TextView) findViewById(R.id.vbsBookAuthor);
         mPrice = (TextView) findViewById(R.id.vbsBookPrice);
 
+        mBookSwap = (Button) findViewById(R.id.btnSwap);
+
         mBookOwner = (TextView) findViewById(R.id.vbsBookOwner);
 
         mBookOwnerImg = (ImageView) findViewById(R.id.vbsBookOwnerIgm);
         mBookImg = (ImageView) findViewById(R.id.vbsBookImg);
 
 
-        swapDetailObj = new SwapDetail();
+        mBookSwap.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                user = new User();
+                user = (User) SPUtility.getSPUtil(ViewBookSwapActivity.this).getObject("USER_OBJECT", User.class);
+
+                if(user.getUserId()==swapDetailObj.getBookOwner().getUserObj().getUserId()){
+
+                }else
+                    showInputDialog();
+            }
+        });
 
         String author = "";
         if(getIntent().getExtras()!=null){
@@ -149,6 +171,59 @@ public class ViewBookSwapActivity extends AppCompatActivity implements Navigatio
         }else{
             Log.d("bundle", "is empty");
         }
+    }
+
+    public void showWarning(final int position){
+        android.support.v7.app.AlertDialog.Builder alertDialogBuilder = new android.support.v7.app.AlertDialog.Builder(ViewBookSwapActivity.this);
+        alertDialogBuilder.setTitle("!!!");
+        alertDialogBuilder.setMessage("You can't swap your own book.");
+        alertDialogBuilder.setPositiveButton("Okay",
+                new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface arg0, int arg1) {
+
+                    }
+                });
+
+        android.support.v7.app.AlertDialog alertDialog = alertDialogBuilder.create();
+        alertDialog.show();
+    }
+
+    private void showInputDialog() {
+        AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(this);
+        LayoutInflater inflater = this.getLayoutInflater();
+        final View dialogView = inflater.inflate(R.layout.dialog_input_swap, null);
+        dialogBuilder.setView(dialogView);
+
+        final EditText edt = (EditText) dialogView.findViewById(R.id.disSwapDescription);
+        final TextView tv = (TextView) dialogView.findViewById(R.id.disBookTitle);
+
+        tv.setText(swapDetailObj.getBookOwner().getBookObj().getBookTitle());
+
+        dialogBuilder.setTitle("Swap Commnet Input");
+        dialogBuilder.setPositiveButton("Swap", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int whichButton) {
+                Log.d("InsideSwap", "dialog");
+                user = new User();
+                user = (User) SPUtility.getSPUtil(ViewBookSwapActivity.this).getObject("USER_OBJECT", User.class);
+                swapComment = new SwapComment();
+                swapComment.setUser(user);
+                swapComment.setSwapComment(edt.getText().toString());
+
+                if(swapComment==null){
+                    Log.d("SwapComment", "is null");
+                }else{
+                    Log.d("SwapComment", swapComment.toString());
+                }
+            }
+        });
+        dialogBuilder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int whichButton) {
+
+            }
+        });
+        AlertDialog b = dialogBuilder.create();
+        b.show();
     }
 
     @SuppressWarnings("StatementWithEmptyBody")

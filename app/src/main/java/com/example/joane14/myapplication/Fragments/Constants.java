@@ -45,9 +45,11 @@ public class Constants {
 
     public static final String UPDATE_RENTAL_HEADER= "http://104.197.4.32:8080/Koobym/rentalHeader/updateStatus";
 
+    public static final String UPDATE_BOOK_OWNER= "http://104.197.4.32:8080/Koobym/bookOwner/updateBookOwner";
+
     public static final String UPDATE_SWAP_HEADER= "http://104.197.4.32:8080/Koobym/swapHeader/updateStatus";
 
-    public static final String GET_SWAP_DETAILS_ALL= "http://104.197.4.32:8080/Koobym/swapDetail/all";
+    public static final String GET_SWAP_DETAILS_ALL= "http://104.197.4.32:8080/Koobym/swapDetail/getAllSwap";
 
     public static final String GET_REQUEST_RECEIVED = "http://104.197.4.32:8080/Koobym/rentalHeader/requestReceivedById/";
 

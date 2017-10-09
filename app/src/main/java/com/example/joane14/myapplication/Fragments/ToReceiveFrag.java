@@ -98,8 +98,10 @@ public class ToReceiveFrag extends Fragment {
         mBtnSwap.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
                 final FragmentTransaction ft = getFragmentManager().beginTransaction();
-                ft.replace(R.id.fragment_to_receive, new ToReceiveSwapFrag(), "NewFragmentTag");
+                ft.replace(R.id.fragment_container_swap_receive, new ToReceiveSwapFrag(), "NewFragmentTag");
+                ft.addToBackStack(null);
                 ft.commit();
             }
         });

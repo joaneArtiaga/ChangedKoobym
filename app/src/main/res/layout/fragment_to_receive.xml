@@ -8,7 +8,8 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="70dp">
+        android:layout_height="70dp"
+        android:orientation="horizontal">
 
         <Button
             android:id="@+id/receiveBtnRenter"
@@ -36,10 +37,17 @@
 
     </LinearLayout>
 
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/my_recycler_view_to_receive"
+    <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="400dp"
-        android:scrollbars="vertical" />
+        android:layout_height="wrap_content"
+        android:id="@+id/fragment_container_swap_receive">
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/my_recycler_view_to_receive"
+            android:layout_width="match_parent"
+            android:layout_height="400dp"
+            android:scrollbars="vertical" />
+
+    </FrameLayout>
 
 </LinearLayout>

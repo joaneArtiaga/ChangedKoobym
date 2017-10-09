@@ -138,37 +138,63 @@ public class ViewBookActivity extends AppCompatActivity implements NavigationVie
         mBtnRequest.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(ViewBookActivity.this);
-                alertDialogBuilder.setTitle("Terms and Condition");
-                alertDialogBuilder.setMessage("\n\n1.\tThis book must be returned on time.\n" +
-                        "2.\tThis book should be returned in the same condition it was provided.\n" +
-                        "3.\tThe renter will compensate for the damages that the book may incur during the duration of his/her usage.\n" +
-                        "4.\tA fee of 50 pesos per day will be incurred to the renter if the book is not returned on or before the due date.");
-                        alertDialogBuilder.setPositiveButton("Agree",
-                                new DialogInterface.OnClickListener() {
-                                    @Override
-                                    public void onClick(DialogInterface arg0, int arg1) {
-                                        Toast.makeText(ViewBookActivity.this, "You agreed to the terms and condition.", Toast.LENGTH_SHORT).show();
-                                        Intent intent = new Intent(ViewBookActivity.this, MeetUpChooser.class);
-                                        Bundle mbundle = new Bundle();
-                                        mbundle.putSerializable("rentalDetail", rentalDetail);
-                                        intent.putExtras(mbundle);
-                                        startActivity(intent);
-                                    }
-                                });
+                User user = new User();
+                user = (User) SPUtility.getSPUtil(ViewBookActivity.this).getObject("USER_OBJECT", User.class);
 
-                alertDialogBuilder.setNegativeButton("Disagree",new DialogInterface.OnClickListener() {
+                if(user.getUserId()==rentalDetail.getBookOwner().getUserObj().getUserId()){
+                    showWarning();
+                }else{
+
+                    AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(ViewBookActivity.this);
+                    alertDialogBuilder.setTitle("Terms and Condition");
+                    alertDialogBuilder.setMessage("\n\n1.\tThis book must be returned on time.\n" +
+                            "2.\tThis book should be returned in the same condition it was provided.\n" +
+                            "3.\tThe renter will compensate for the damages that the book may incur during the duration of his/her usage.\n" +
+                            "4.\tA fee of 50 pesos per day will be incurred to the renter if the book is not returned on or before the due date.");
+                    alertDialogBuilder.setPositiveButton("Agree",
+                            new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface arg0, int arg1) {
+                                    Toast.makeText(ViewBookActivity.this, "You agreed to the terms and condition.", Toast.LENGTH_SHORT).show();
+                                    Intent intent = new Intent(ViewBookActivity.this, MeetUpChooser.class);
+                                    Bundle mbundle = new Bundle();
+                                    mbundle.putSerializable("rentalDetail", rentalDetail);
+                                    intent.putExtras(mbundle);
+                                    startActivity(intent);
+                                }
+                            });
+
+                    alertDialogBuilder.setNegativeButton("Disagree",new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            Toast.makeText(ViewBookActivity.this, "You disagreed to the terms and condition.", Toast.LENGTH_SHORT).show();
+                            finish();
+                        }
+                    });
+
+                    AlertDialog alertDialog = alertDialogBuilder.create();
+                    alertDialog.show();
+
+
+                }
+            }
+        });
+    }
+
+    public void showWarning(){
+        android.support.v7.app.AlertDialog.Builder alertDialogBuilder = new android.support.v7.app.AlertDialog.Builder(ViewBookActivity.this);
+        alertDialogBuilder.setTitle("!!!");
+        alertDialogBuilder.setMessage("You can't rent your own book.");
+        alertDialogBuilder.setPositiveButton("Okay",
+                new DialogInterface.OnClickListener() {
                     @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        Toast.makeText(ViewBookActivity.this, "You disagreed to the terms and condition.", Toast.LENGTH_SHORT).show();
-                        finish();
+                    public void onClick(DialogInterface arg0, int arg1) {
+
                     }
                 });
 
-                AlertDialog alertDialog = alertDialogBuilder.create();
-                alertDialog.show();
-            }
-        });
+        android.support.v7.app.AlertDialog alertDialog = alertDialogBuilder.create();
+        alertDialog.show();
     }
 
 

@@ -43,4 +43,14 @@ public class SwapComment implements Serializable {
     public void setSwapComment(String swapComment) {
         this.swapComment = swapComment;
     }
+
+
+    @Override
+    public String toString() {
+        return "SwapComment{" +
+                "User=" + user.toString() +
+                ", swapComment='" + swapComment + '\'' +
+                '}';
+    }
+
 }

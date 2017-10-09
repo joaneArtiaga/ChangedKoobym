@@ -2,8 +2,10 @@ package com.example.joane14.myapplication.Adapters;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -14,12 +16,16 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.example.joane14.myapplication.Activities.RequestActivity;
 import com.example.joane14.myapplication.Activities.SwapBookChooser;
+import com.example.joane14.myapplication.Activities.TimeDateChooser;
 import com.example.joane14.myapplication.Activities.ViewBookSwapActivity;
 import com.example.joane14.myapplication.Fragments.Constants;
 import com.example.joane14.myapplication.Model.SwapComment;
 import com.example.joane14.myapplication.Model.SwapDetail;
+import com.example.joane14.myapplication.Model.User;
 import com.example.joane14.myapplication.R;
+import com.example.joane14.myapplication.Utilities.SPUtility;
 import com.squareup.picasso.Picasso;
 
 import java.util.List;
@@ -64,15 +70,38 @@ public class SwapCommentsAdapter extends RecyclerView.Adapter<SwapCommentsAdapte
         holder.mBtnSwapSeeShelf.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Log.d("SwapComment onClick", bookList.get(position).getSwapComment());
-                Intent intent = new Intent(context, SwapBookChooser.class);
-                Bundle bundle = new Bundle();
-                bundle.putSerializable("swapDetail", swapDetail);
-                bundle.putSerializable("swapComment", bookList.get(position));
-                intent.putExtras(bundle);
-                context.startActivity(intent);
+                User user = new User();
+                user = (User) SPUtility.getSPUtil(context).getObject("USER_OBJECT", User.class);
+                if(user.getUserId()==swapDetail.getBookOwner().getUserObj().getUserId()){
+                    Log.d("SwapComment onClick", bookList.get(position).getSwapComment());
+                    Intent intent = new Intent(context, SwapBookChooser.class);
+                    Bundle bundle = new Bundle();
+                    bundle.putSerializable("swapDetail", swapDetail);
+                    bundle.putSerializable("swapComment", bookList.get(position));
+                    intent.putExtras(bundle);
+                    context.startActivity(intent);
+                }else{
+                    showSummary(position);
+                }
             }
         });
+    }
+
+    public void showSummary(final int position){
+        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(context);
+        alertDialogBuilder.setTitle("!!!");
+        alertDialogBuilder.setMessage("You can't view "+bookList.get(position).getUser().getUserFname()+" "+bookList.get(position).getUser().getUserLname()+
+                " because you are not the owner of the book "+swapDetail.getBookOwner().getBookObj().getBookTitle());
+        alertDialogBuilder.setPositiveButton("Okay",
+                new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface arg0, int arg1) {
+
+                    }
+                });
+
+        AlertDialog alertDialog = alertDialogBuilder.create();
+        alertDialog.show();
     }
 
     @Override
