@@ -62,7 +62,7 @@ public class DisplaySwapComments extends Fragment {
         mRecyclerView.setHasFixedSize(true);
         mLayoutManager = new LinearLayoutManager(getContext());
         mRecyclerView.setLayoutManager(mLayoutManager);
-        mAdapter = new SwapCommentsAdapter(suggested);
+        mAdapter = new SwapCommentsAdapter(suggested, swapDetailObj);
         mRecyclerView.setAdapter(mAdapter);
 
 

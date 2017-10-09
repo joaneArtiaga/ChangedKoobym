@@ -45,5 +45,10 @@ public class Constants {
 
     public static final String GET_REQUEST_RECEIVED = "http://104.197.4.32:8080/Koobym/rentalHeader/requestReceivedById/";
 
+    public static final String GET_MY_SWAP = "http://104.197.4.32:8080/Koobym/swapDetail/mySwapBooks/";
+
+    public static final String RECOMMEND_SWAP_BOOK = "http://104.197.4.32:8080/Koobym/swapDetail/mySwapBooksPrice";
+
+
 
 }

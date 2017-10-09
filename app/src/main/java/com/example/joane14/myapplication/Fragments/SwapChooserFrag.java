@@ -1,11 +1,15 @@
-package com.example.joane14.myapplication.Activities;
+package com.example.joane14.myapplication.Fragments;
 
-import android.support.v7.app.AppCompatActivity;
+import android.content.Context;
+import android.net.Uri;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
-import android.widget.Toast;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
 
 import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
@@ -15,10 +19,9 @@ import com.android.volley.VolleyError;
 import com.android.volley.VolleyLog;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
-import com.example.joane14.myapplication.Adapters.LandingPageAdapter;
+import com.example.joane14.myapplication.Activities.GsonDateDeserializer;
+import com.example.joane14.myapplication.Activities.SwapBookChooser;
 import com.example.joane14.myapplication.Adapters.SwapChooserAdapter;
-import com.example.joane14.myapplication.Fragments.Constants;
-import com.example.joane14.myapplication.Model.RentalDetail;
 import com.example.joane14.myapplication.Model.SwapComment;
 import com.example.joane14.myapplication.Model.SwapDetail;
 import com.example.joane14.myapplication.R;
@@ -31,7 +34,8 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
-public class SwapBookChooser extends AppCompatActivity {
+
+public class SwapChooserFrag extends Fragment {
 
     SwapComment swapCommentModel;
     SwapDetail swapDetailModel;
@@ -39,48 +43,70 @@ public class SwapBookChooser extends AppCompatActivity {
     private RecyclerView mRecyclerView;
     private RecyclerView.Adapter mAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
+    private OnSwapChooserInteractionListener mListener;
+
+    public SwapChooserFrag() {
+    }
+
+    public static SwapChooserFrag newInstance(Bundle bundle) {
+        SwapChooserFrag fragment = new SwapChooserFrag();
+        Bundle args = new Bundle();
+        fragment.setArguments(args);
+        return fragment;
+    }
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_swap_book_chooser);
-        Toast.makeText(SwapBookChooser.this, "Inside Swap Book Chooser", Toast.LENGTH_SHORT).show();
 
+    }
 
-        swapCommentModel = new SwapComment();
-        swapDetailModel = new SwapDetail();
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        View view = inflater.inflate(R.layout.fragment_swap_chooser, container, false);
 
         suggested = new ArrayList<SwapDetail>();
 
-        if(getIntent().getExtras().getSerializable("swapComment")!=null){
-            swapCommentModel = (SwapComment) getIntent().getExtras().getSerializable("swapComment");
-        }
-        if(getIntent().getExtras().getSerializable("swapDetail")!=null){
-            swapDetailModel = (SwapDetail) getIntent().getExtras().getSerializable("swapDetail");
-            Log.d("SwapDetailDisplay", String.valueOf(swapDetailModel.getSwapPrice()));
-            Log.d("SwapDetailDisplay", String.valueOf(swapDetailModel.getSwapDetailId()));
-            Log.d("SwapDetailDisplay", swapDetailModel.getSwapDescription());
 
+        this.swapCommentModel = (SwapComment) getArguments().getSerializable("swapComment");
+        this.swapDetailModel = (SwapDetail) getArguments().getSerializable("swapDetail");
+
+        if(swapCommentModel==null){
+            Log.d("SwapCommentModel", "is null");
+        }else{
+            Log.d("SwapCommentModel", "is not null");
         }
 
-        mRecyclerView = (RecyclerView) findViewById(R.id.my_recycler_view_swap_chooser);
+        if(swapDetailModel==null){
+            Log.d("SwapDetailModel", "is null");
+        }else{
+            Log.d("SwapDetailModel", "is not null");
+        }
+
+        mRecyclerView = (RecyclerView) view.findViewById(R.id.my_recycler_view_swap_chooser);
         mRecyclerView.setHasFixedSize(true);
-        mLayoutManager = new LinearLayoutManager(SwapBookChooser.this);
+        mLayoutManager = new LinearLayoutManager(getContext());
         mRecyclerView.setLayoutManager(mLayoutManager);
-        mAdapter = new SwapChooserAdapter(suggested, swapDetailModel);
+        mAdapter = new SwapChooserAdapter(suggested,swapDetailModel);
         mRecyclerView.setAdapter(mAdapter);
+
+
         getRecommendSwap();
+
+
+
+        return view;
     }
 
     public void getRecommendSwap(){
-        RequestQueue requestQueue = Volley.newRequestQueue(SwapBookChooser.this);
+        RequestQueue requestQueue = Volley.newRequestQueue(getContext());
 //        String URL = "http://104.197.4.32:8080/Koobym/user/add";
-        String URL = Constants.GET_MY_SWAP+swapCommentModel.getUser().getUserId();
+//        String URL = Constants.WEB_SERVICE_URL+"user/add";
 
-//        String URL = Constants.RECOMMEND_SWAP_BOOK+"/"+swapCommentModel.getUser().getUserId()+"/"+swapDetailModel.getSwapPrice();
+        String URL = Constants.RECOMMEND_SWAP_BOOK+"/"+swapCommentModel.getUser().getUserId()+"/"+swapDetailModel.getSwapPrice();
 
-        Log.d("SwapURL", URL);
-        Log.d("SwapPrice", String.valueOf(swapDetailModel.getSwapPrice()));
+        Log.d("RecommendSwap Url", URL);
 
         final Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd").registerTypeAdapter(Date.class, GsonDateDeserializer.getInstance()).create();
         final String mRequestBody = gson.toJson(swapDetailModel);
@@ -92,7 +118,7 @@ public class SwapBookChooser extends AppCompatActivity {
             @Override
             public void onResponse(String response) {
                 Log.i("SwapDetailResponse", response);
-                if(response.isEmpty()){
+                if(response.equals("")){
                     Log.d("Available", "No books for swap");
                 }else{
                     Log.d("Available","books for swap");
@@ -128,4 +154,31 @@ public class SwapBookChooser extends AppCompatActivity {
         requestQueue.add(stringRequest);
     }
 
+    public void onButtonPressed(Uri uri) {
+        if (mListener != null) {
+            mListener.onSwapChooserOnClick(uri);
+        }
+    }
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        if (context instanceof OnSwapChooserInteractionListener) {
+            mListener = (OnSwapChooserInteractionListener) context;
+        } else {
+            throw new RuntimeException(context.toString()
+                    + " must implement OnFragmentInteractionListener");
+        }
+    }
+
+    @Override
+    public void onDetach() {
+        super.onDetach();
+        mListener = null;
+    }
+
+
+    public interface OnSwapChooserInteractionListener {
+        void onSwapChooserOnClick(Uri uri);
+    }
 }

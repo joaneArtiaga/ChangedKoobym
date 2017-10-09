@@ -14,6 +14,9 @@ public class BookOwnerModel implements Serializable{
 
     int noRenters;
 
+    @SerializedName("book_ownerId")
+    int bookOwnerId;
+
     @SerializedName("book")
     Book bookObj;
 
@@ -29,6 +32,14 @@ public class BookOwnerModel implements Serializable{
         this.statusDescription = statusDescription;
         this.bookObj = bookObj;
         this.userObj = userObj;
+    }
+
+    public int getBookOwnerId() {
+        return bookOwnerId;
+    }
+
+    public void setBookOwnerId(int bookOwnerId) {
+        this.bookOwnerId = bookOwnerId;
     }
 
     public int getNoRenters() {

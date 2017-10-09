@@ -122,7 +122,9 @@ public class TimeDateChooser extends AppCompatActivity {
                     nextDate=getNextDate(java.util.Calendar.SUNDAY);
                 }
 
-                nextDateStr = DateFormat.getDateInstance(DateFormat.MEDIUM).format(nextDate);
+
+                DateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+                nextDateStr = format.format(nextDate);
 
                 Log.d("ItemClicked", String.valueOf(position));
                 Log.d("userDateList", userDayTimeList.get(position).getDay().getStrDay()+", "+userDayTimeList.get(position).getTime().getStrTime());
@@ -240,9 +242,9 @@ public class TimeDateChooser extends AppCompatActivity {
                         Log.d("RentalHeaderRent", rentalHeader.toString());
 
 
-//                        addRentalHeader();
-//                        Intent intent = new Intent(TimeDateChooser.this, RequestActivity.class);
-//                        startActivity(intent);
+                        addRentalHeader();
+                        Intent intent = new Intent(TimeDateChooser.this, RequestActivity.class);
+                        startActivity(intent);
                     }
                 });
 
@@ -255,46 +257,28 @@ public class TimeDateChooser extends AppCompatActivity {
         RequestQueue requestQueue = Volley.newRequestQueue(this);
 //        String URL = "http://104.197.4.32:8080/Koobym/user/add";
         String URL = Constants.POST_RENTAL_HEADER;
-//        String URL = Constants.WEB_SERVICE_URL+"user/add";
 
-//        User user = new User();
-//        user.setUserFname(userModel.getUserFname());
-//        user.setUserLname(userModel.getUserLname());
-//        user.setAddress(userModel.getAddress());
-//        user.setEmail(userModel.getEmail());
-//        user.setUsername(userModel.getUsername());
-//        user.setPassword(userModel.getPassword());
-//        user.setBirthdate(userModel.getBirthdate());
-//        user.setImageFilename(userModel.getImageFilename());
-//        user.setPhoneNumber(userModel.getPhoneNumber());
-//        user.setGenreArray(genres);
         final Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd").registerTypeAdapter(Date.class, GsonDateDeserializer.getInstance()).create();
         final String mRequestBody = gson.toJson(rentalHeader);
+
+        Log.d("RentalHeaderAdd", rentalHeader.toString());
 
 
         Log.d("LOG_VOLLEY", mRequestBody);
         StringRequest stringRequest = new StringRequest(Request.Method.POST, URL, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
-                Log.i("ResponseRentalHeader", response);
+                Log.d("onResponse addRentalH", "inside");
+                Log.i("AddRentalHeader", response);
                 Intent intent = new Intent(TimeDateChooser.this, RequestActivity.class);
                 startActivity(intent);
-//                User user = gson.fromJson(response, User.class);
-//                Log.i("LOG_VOLLEY", user.getEmail());
-//                Log.i("LOG_VOLLEY", user.getUserFname());
-//                Log.i("LOG_VOLLEY", user.getUserLname());
-//                user.setGenreArray(genres);
-//                Intent intent = new Intent(SignUp.this, LandingPage.class);
-//                Bundle b = new Bundle();
-//                b.putBoolean("fromRegister", true);
-//                b.putSerializable("userModel", user);
-//                intent.putExtra("user",b);
-//                startActivity(intent);
+
             }
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
                 Log.e("LOG_VOLLEY", error.toString());
+                error.printStackTrace();
             }
         }) {
             @Override

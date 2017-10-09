@@ -14,6 +14,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.example.joane14.myapplication.Activities.SwapBookChooser;
 import com.example.joane14.myapplication.Activities.ViewBookSwapActivity;
 import com.example.joane14.myapplication.Fragments.Constants;
 import com.example.joane14.myapplication.Model.SwapComment;
@@ -30,6 +31,7 @@ import java.util.List;
 public class SwapCommentsAdapter extends RecyclerView.Adapter<SwapCommentsAdapter.BookHolder> {
 
     public List<SwapComment> bookList;
+    public SwapDetail swapDetail;
     public Activity context;
 
 
@@ -46,8 +48,9 @@ public class SwapCommentsAdapter extends RecyclerView.Adapter<SwapCommentsAdapte
 
 
 
-    public SwapCommentsAdapter(List<SwapComment> myDataset) {
+    public SwapCommentsAdapter(List<SwapComment> myDataset, SwapDetail swapDetail) {
         bookList = myDataset;
+        this.swapDetail = swapDetail;
     }
 
     @Override
@@ -62,6 +65,12 @@ public class SwapCommentsAdapter extends RecyclerView.Adapter<SwapCommentsAdapte
             @Override
             public void onClick(View v) {
                 Log.d("SwapComment onClick", bookList.get(position).getSwapComment());
+                Intent intent = new Intent(context, SwapBookChooser.class);
+                Bundle bundle = new Bundle();
+                bundle.putSerializable("swapDetail", swapDetail);
+                bundle.putSerializable("swapComment", bookList.get(position));
+                intent.putExtras(bundle);
+                context.startActivity(intent);
             }
         });
     }
