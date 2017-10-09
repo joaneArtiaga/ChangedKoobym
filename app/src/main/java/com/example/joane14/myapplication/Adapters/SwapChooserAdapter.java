@@ -18,6 +18,7 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.example.joane14.myapplication.Activities.RequestActivity;
 import com.example.joane14.myapplication.Activities.SwapBookChooser;
+import com.example.joane14.myapplication.Activities.SwapMeetUpChooser;
 import com.example.joane14.myapplication.Activities.TimeDateChooser;
 import com.example.joane14.myapplication.Activities.TransactionActivity;
 import com.example.joane14.myapplication.Activities.ViewBookSwapActivity;
@@ -155,7 +156,11 @@ public class SwapChooserAdapter extends RecyclerView.Adapter<SwapChooserAdapter.
                     @Override
                     public void onClick(DialogInterface arg0, int arg1) {
 
-                        Intent intent = new Intent(context, TransactionActivity.class);
+
+                        Intent intent = new Intent(context, SwapMeetUpChooser.class);
+                        Bundle bundle = new Bundle();
+                        bundle.putSerializable("swapDetail", swapDetail);
+                        intent.putExtras(bundle);
                         context.startActivity(intent);
 
                     }

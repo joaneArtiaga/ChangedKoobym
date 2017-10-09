@@ -31,6 +31,8 @@ import com.example.joane14.myapplication.Fragments.Constants;
 import com.example.joane14.myapplication.Model.LocationModel;
 import com.example.joane14.myapplication.Model.RentalDetail;
 import com.example.joane14.myapplication.Model.RentalHeader;
+import com.example.joane14.myapplication.Model.SwapDetail;
+import com.example.joane14.myapplication.Model.SwapHeader;
 import com.example.joane14.myapplication.Model.User;
 import com.example.joane14.myapplication.Model.UserDayTime;
 import com.example.joane14.myapplication.R;
@@ -49,9 +51,11 @@ public class TimeDateChooser extends AppCompatActivity {
     List<UserDayTime> userDayTimeList;
     UserDayTime userDayTimeModel;
     RentalHeader rentalHeader;
+    SwapDetail swapDetail;
+    SwapHeader swapHeader;
     LocationModel locationChosen;
     User user;
-    String nextDateStr;
+    String nextDateStr, fromWhere;
     Date nextDate;
 
 
@@ -61,6 +65,7 @@ public class TimeDateChooser extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_time_date_chooser);
 
+        fromWhere = "";
         @SuppressLint({"NewApi", "LocalSuppress"}) final
         String date = new SimpleDateFormat("yyyy-MM-dd").format(new Date());
         Log.d("CurrentDate", date);
@@ -83,18 +88,34 @@ public class TimeDateChooser extends AppCompatActivity {
             Log.d("LocationChosen", "is null");
         }
 
-        rentalDetail = new RentalDetail();
-        if(getIntent().getExtras().getSerializable("rentalDetail")!=null){
-            userDayTimeModel = new UserDayTime();
-            rentalDetail = (RentalDetail) getIntent().getExtras().getSerializable("rentalDetail");
-            Log.d("TimeDateChooser", rentalDetail.getBookOwner().getUserObj().getDayTimeModel().toString());
+        if(getIntent().getBundleExtra("confirm").getBoolean("fromSwap")==true){
+            fromWhere = "swap";
+            swapDetail = new SwapDetail();
+            swapHeader = new SwapHeader();
+            if(getIntent().getExtras().getSerializable("swapDetail")!=null){
+                userDayTimeModel = new UserDayTime();
+                swapDetail = (SwapDetail) getIntent().getExtras().getSerializable("swapDetail");
 
-
-            for(int init=0; init<rentalDetail.getBookOwner().getUserObj().getDayTimeModel().size(); init++){
-                userDayTimeModel = (UserDayTime) rentalDetail.getBookOwner().getUserObj().getDayTimeModel().get(init);
-                userDayTimeList.add(userDayTimeModel);
+                for(int init=0; init<swapDetail.getBookOwner().getUserObj().getDayTimeModel().size(); init++){
+                    userDayTimeModel = swapDetail.getBookOwner().getUserObj().getDayTimeModel().get(init);
+                    userDayTimeList.add(userDayTimeModel);
+                }
             }
+        }else{
+            fromWhere = "rent";
+            rentalDetail = new RentalDetail();
+            if(getIntent().getExtras().getSerializable("rentalDetail")!=null){
+                userDayTimeModel = new UserDayTime();
+                rentalDetail = (RentalDetail) getIntent().getExtras().getSerializable("rentalDetail");
+                Log.d("TimeDateChooser", rentalDetail.getBookOwner().getUserObj().getDayTimeModel().toString());
 
+
+                for(int init=0; init<rentalDetail.getBookOwner().getUserObj().getDayTimeModel().size(); init++){
+                    userDayTimeModel = (UserDayTime) rentalDetail.getBookOwner().getUserObj().getDayTimeModel().get(init);
+                    userDayTimeList.add(userDayTimeModel);
+                }
+
+            }
         }
 
         ListView list = (ListView) findViewById(R.id.myList);
@@ -216,7 +237,7 @@ public class TimeDateChooser extends AppCompatActivity {
 
 
 
-    public void showSummary(int position, final String date){
+    public void showSummary(final int position, final String date){
         AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(TimeDateChooser.this);
         alertDialogBuilder.setTitle("Meet Up Summary");
         alertDialogBuilder.setMessage("Date:\t" +nextDateStr+
@@ -228,28 +249,86 @@ public class TimeDateChooser extends AppCompatActivity {
                     @Override
                     public void onClick(DialogInterface arg0, int arg1) {
 
+                        if(fromWhere.equals("rent")){
 
-
-                        rentalHeader.setStatus("Confirmation");
-                        rentalHeader.setRentalDetail(rentalDetail);
-                        rentalHeader.setUserId(user);
-                        rentalHeader.setRentalTimeStamp(nextDateStr);
-                        rentalHeader.setTotalPrice((float) rentalDetail.getCalculatedPrice());
-                        rentalHeader.setLocation(locationChosen);
+                            rentalHeader.setStatus("Confirmation");
+                            rentalHeader.setRentalDetail(rentalDetail);
+                            rentalHeader.setUserId(user);
+                            rentalHeader.setRentalTimeStamp(nextDateStr);
+                            rentalHeader.setTotalPrice((float) rentalDetail.getCalculatedPrice());
+                            rentalHeader.setLocation(locationChosen);
 
 //
-                        Log.d("ONClickTime", "inside");
-                        Log.d("RentalHeaderRent", rentalHeader.toString());
+                            Log.d("ONClickTime", "inside");
+                            Log.d("RentalHeaderRent", rentalHeader.toString());
 
 
-                        addRentalHeader();
-                        Intent intent = new Intent(TimeDateChooser.this, RequestActivity.class);
-                        startActivity(intent);
+                            addRentalHeader();
+                            Intent intent = new Intent(TimeDateChooser.this, RequestActivity.class);
+                            startActivity(intent);
+                        }else{
+                            swapHeader.setStatus("Approved");
+                            swapHeader.setSwapDetail(swapDetail);
+                            swapHeader.setUser(user);
+                            swapHeader.setDateTimeStamp(nextDateStr);
+                            swapHeader.setLocation(locationChosen);
+                            swapHeader.setUserDayTime(userDayTimeList.get(position));
+
+                            addSwapHeader();
+                            Log.d("SwapHeader dialog", "inside");
+                        }
+
                     }
                 });
 
         AlertDialog alertDialog = alertDialogBuilder.create();
         alertDialog.show();
+    }
+
+    public void addSwapHeader(){
+        RequestQueue requestQueue = Volley.newRequestQueue(this);
+//        String URL = "http://104.197.4.32:8080/Koobym/user/add";
+        String URL = Constants.POST_SWAP_HEADER;
+
+        final Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd").registerTypeAdapter(Date.class, GsonDateDeserializer.getInstance()).create();
+        final String mRequestBody = gson.toJson(swapHeader);
+
+
+
+        Log.d("LOG_VOLLEY", mRequestBody);
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, URL, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                Log.d("onResponse addSwapH", "inside");
+                Log.i("AddSwapHeader", response);
+//                Intent intent = new Intent(TimeDateChooser.this, RequestActivity.class);
+//                startActivity(intent);
+
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.e("LOG_VOLLEY", error.toString());
+                error.printStackTrace();
+            }
+        }) {
+            @Override
+            public String getBodyContentType() {
+                return "application/json; charset=utf-8";
+            }
+
+            @Override
+            public byte[] getBody() throws AuthFailureError {
+                try {
+                    return mRequestBody == null ? null : mRequestBody.getBytes("utf-8");
+                } catch (UnsupportedEncodingException uee) {
+                    VolleyLog.wtf("Unsupported Encoding while trying to get the bytes of %s using %s", mRequestBody, "utf-8");
+                    return null;
+                }
+            }
+        };
+
+        requestQueue.add(stringRequest);
     }
 
 

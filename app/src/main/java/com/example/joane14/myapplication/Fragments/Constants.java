@@ -21,6 +21,8 @@ public class Constants {
 
     public static final String POST_RENTAL_HEADER = "http://104.197.4.32:8080/Koobym/rentalHeader/add";
 
+    public static final String POST_SWAP_HEADER = "http://104.197.4.32:8080/Koobym/swapHeader/add";
+
     public static final String GET_RENTAL_HEADER = "http://104.197.4.32:8080/Koobym/rentalHeader/all";
 
     public static final String GET_RENTAL_HEADER_BY_ID = "http://104.197.4.32:8080/Koobym/rentalHeader/rentalById/";

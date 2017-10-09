@@ -10,6 +10,7 @@ import android.widget.Toast;
 
 import com.example.joane14.myapplication.Model.LocationModel;
 import com.example.joane14.myapplication.Model.RentalDetail;
+import com.example.joane14.myapplication.Model.SwapDetail;
 import com.example.joane14.myapplication.R;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -22,32 +23,34 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import java.util.HashMap;
 import java.util.List;
 
-public class MeetUpChooser extends FragmentActivity implements OnMapReadyCallback {
+public class SwapMeetUpChooser extends FragmentActivity implements OnMapReadyCallback {
 
     private GoogleMap mMap;
     private HashMap<Marker, Integer> mHashMap = new HashMap<Marker, Integer>();
     List<LocationModel> locationModelList;
-    RentalDetail rentalDetailModel;
+    SwapDetail swapDetailModel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_meet_up_chooser);
+        setContentView(R.layout.activity_swap_meet_up_chooser);
+        // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
 
-        rentalDetailModel = new RentalDetail();
+        swapDetailModel = new SwapDetail();
 
-        if(getIntent().getExtras().getSerializable("rentalDetail")!=null){
-            rentalDetailModel = (RentalDetail) getIntent().getExtras().getSerializable("rentalDetail");
-            Log.d("MeetUpChooser", String.valueOf(rentalDetailModel.getBookOwner().getUserObj().getUserId()));
-            locationModelList = rentalDetailModel.getBookOwner().getUserObj().getLocationArray();
+        if(getIntent().getExtras().getSerializable("swapDetail")!=null){
+            swapDetailModel = (SwapDetail) getIntent().getExtras().getSerializable("swapDetail");
+            Log.d("MeetUpChooser", String.valueOf(swapDetailModel.getBookOwner().getUserObj().getUserId()));
+            locationModelList = swapDetailModel.getBookOwner().getUserObj().getLocationArray();
             for(int init = 0; init<locationModelList.size(); init++){
                 Log.d("MeetUpChooser Location", locationModelList.get(init).getLocationName());
             }
         }
     }
+
 
 
     @Override
@@ -82,26 +85,24 @@ public class MeetUpChooser extends FragmentActivity implements OnMapReadyCallbac
         mMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
             @Override
             public boolean onMarkerClick(final Marker marker) {
-                AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(MeetUpChooser.this);
+                AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(SwapMeetUpChooser.this);
                 alertDialogBuilder.setTitle("Selected Location");
                 alertDialogBuilder.setMessage(marker.getTitle());
                 alertDialogBuilder.setPositiveButton("Yes",
                         new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface arg0, int arg1) {
-                                Toast.makeText(MeetUpChooser.this, "You agreed to the terms and condition.", Toast.LENGTH_SHORT).show();
 
                                 int position = mHashMap.get(marker);
                                 Log.d("MarkerPosition", String.valueOf(position));
-                                Intent intent = new Intent(MeetUpChooser.this,TimeDateChooser.class);
+                                Intent intent = new Intent(SwapMeetUpChooser.this,TimeDateChooser.class);
                                 Bundle mBundle = new Bundle();
-                                mBundle.putSerializable("rentDetail", rentalDetailModel);
-                                mBundle.putBoolean("fromSwap", false);
+                                mBundle.putSerializable("swapDetail", swapDetailModel);
+                                mBundle.putBoolean("fromSwap", true);
                                 mBundle.putSerializable("locationChose", locationModelList.get(position));
                                 intent.putExtra("confirm", mBundle);
                                 intent.putExtras(mBundle);
                                 startActivity(intent);
-
                             }
                         });
 
@@ -117,6 +118,5 @@ public class MeetUpChooser extends FragmentActivity implements OnMapReadyCallbac
                 return false;
             }
         });
-
     }
 }

@@ -89,7 +89,10 @@
         <activity android:name=".Activities.UserReviewActivity" />
         <activity android:name=".Activities.BookReviewActivity" />
         <activity android:name=".Activities.ViewBookSwapActivity" />
-        <activity android:name=".Activities.SwapBookChooser"></activity>
+        <activity android:name=".Activities.SwapBookChooser" />
+        <activity
+            android:name=".Activities.SwapMeetUpChooser"
+            android:label="@string/title_activity_swap_meet_up_chooser"></activity>
     </application>
 
 </manifest>
