@@ -27,4 +27,13 @@ public class DayTimeModel implements Serializable {
     public void setTime(List<String> time) {
         this.time = time;
     }
+
+    @Override
+    public String toString() {
+        return "UserDayTimeModel{" +
+                ", day='" + day + '\'' +
+                ", time=" + time.toString() +
+                '}';
+    }
+
 }

@@ -55,6 +55,7 @@ public class Constants {
 
     public static final String RECOMMEND_SWAP_BOOK = "http://104.197.4.32:8080/Koobym/swapDetail/mySwapBooksPrice";
 
+    public static final String UPLOAD_IMAGE = "http://104.197.4.32:8080/Koobym/image/upload";
 
 
 }

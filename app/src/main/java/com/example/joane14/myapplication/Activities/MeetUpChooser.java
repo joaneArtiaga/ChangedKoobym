@@ -96,7 +96,7 @@ public class MeetUpChooser extends FragmentActivity implements OnMapReadyCallbac
                                 Intent intent = new Intent(MeetUpChooser.this,TimeDateChooser.class);
                                 Bundle mBundle = new Bundle();
                                 mBundle.putSerializable("rentDetail", rentalDetailModel);
-                                mBundle.putBoolean("fromSwap", false);
+                                mBundle.putBoolean("fromRent", true);
                                 mBundle.putSerializable("locationChose", locationModelList.get(position));
                                 intent.putExtra("confirm", mBundle);
                                 intent.putExtras(mBundle);

@@ -117,9 +117,9 @@ public class LocationChooser extends FragmentActivity implements
             @Override
             public void onClick(View v) {
                 Log.d("Next Button", "Triggered");
-                if(recyclerAdapter.getItemCount()<5){
+                if(recyclerAdapter.getItemCount()<3){
                     AlertDialog.Builder builder1 = new AlertDialog.Builder(LocationChooser.this);
-                    builder1.setMessage("Only 5 locations are available. You cannot choose more than 5 or less than 5.");
+                    builder1.setMessage("Only 3 locations are available. You cannot choose less than 3.");
                     builder1.setCancelable(true);
 
                     builder1.setPositiveButton(
@@ -132,7 +132,22 @@ public class LocationChooser extends FragmentActivity implements
 
                     AlertDialog alert11 = builder1.create();
                     alert11.show();
-                }else{
+                }else if(recyclerAdapter.getItemCount()>3){
+                    AlertDialog.Builder builder1 = new AlertDialog.Builder(LocationChooser.this);
+                    builder1.setMessage("Only 3 locations are available. You cannot choose more than 3.");
+                    builder1.setCancelable(true);
+
+                    builder1.setPositiveButton(
+                            "Okay",
+                            new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int id) {
+                                    dialog.cancel();
+                                }
+                            });
+
+                    AlertDialog alert11 = builder1.create();
+                    alert11.show();
+                }else {
 //                    CreateAlertDialogWithRadioButtonGroup();
 //
                     AlertDialog.Builder builder = new AlertDialog.Builder(LocationChooser.this);
@@ -161,11 +176,12 @@ public class LocationChooser extends FragmentActivity implements
                                     }
                                     MeetUpLocObj meetUpLocObj = new MeetUpLocObj();
                                     meetUpLocObj.setLocationModelList(locationList);
+                                    meetUpLocObj.setItemSelected(itemsSelected);
                                     Intent intent = new Intent(LocationChooser.this, SignUp.class);
-                                    intent.putExtra("AddTime", "AddTimeFrag");
-                                    intent.putStringArrayListExtra("listDay", itemsSelected);
                                     bundle.putSerializable("locationObj", meetUpLocObj);
+                                    bundle.putBoolean("AddFrag", true);
                                     intent.putExtras(bundle);
+                                    intent.putExtra("confirmation", bundle);
                                     startActivity(intent);
                                 }
                             })

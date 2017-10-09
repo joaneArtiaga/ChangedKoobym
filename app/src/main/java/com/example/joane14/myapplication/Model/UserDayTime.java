@@ -54,6 +54,16 @@ public class UserDayTime implements Serializable {
     public void setTime(TimeModel time) {
         this.time = time;
     }
+
+
+    @Override
+    public String toString() {
+        return "UserDayTimeModel{" +
+                "userId=" + userId +
+                ", day='" + day.getStrDay() + '\'' +
+                ", time=" + time.getStrTime() +
+                '}';
+    }
 }
 
 

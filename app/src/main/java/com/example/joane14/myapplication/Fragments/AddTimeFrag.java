@@ -18,17 +18,21 @@ import android.widget.ListView;
 import com.example.joane14.myapplication.Activities.SignUp;
 import com.example.joane14.myapplication.Adapters.TimeDayAdapter;
 import com.example.joane14.myapplication.Model.DayTimeModel;
+import com.example.joane14.myapplication.Model.MeetUpLocObj;
+import com.example.joane14.myapplication.Model.UserDayTime;
 import com.example.joane14.myapplication.R;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class AddTimeFrag extends Fragment {
+public class AddTimeFrag extends Fragment{
+
     private OnAddTimeInteractionListener mListener;
 
     Bundle bundle;
     ArrayList<String> selectedDays;
     ArrayList<DayTimeModel> dayTimeModelArrayList;
+    List<UserDayTime> userDayTimeList;
     private static RecyclerView.Adapter adapter;
     private RecyclerView.LayoutManager layoutManager;
     private static RecyclerView recyclerView;
@@ -55,19 +59,34 @@ public class AddTimeFrag extends Fragment {
 
 
         bundle = new Bundle();
+        bundle = getArguments();
         dayTimeModelArrayList = new ArrayList<DayTimeModel>();
+        userDayTimeList = new ArrayList<UserDayTime>();
         mNext = (Button) view.findViewById(R.id.btnNextTime);
 
-        selectedDays = getArguments().getStringArrayList("listDay");
+        MeetUpLocObj meetUpLocObj = new MeetUpLocObj();
+        meetUpLocObj = (MeetUpLocObj) bundle.getSerializable("meetUpLocObj");
+        selectedDays = (ArrayList<String>) meetUpLocObj.getItemSelected();
+
+        if(meetUpLocObj==null){
+            Log.d("meetUpLocObj", "null");
+        }else{
+            Log.d("meetUpLocObj", "not null");
+        }
+
+        if(selectedDays.isEmpty()){
+            Log.d("selectedDays", "null");
+        }else{
+            Log.d("selectedDays", "not null");
+
+        }
 
         mNext.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 mListener.onAddTimeClickListener(dayTimeModelArrayList);
+                Log.d("dayTimeModelArrayList", dayTimeModelArrayList.toString());
                 Log.d("inside onclickListener", "mNext Button");
-                Intent intent = new Intent(getContext(), SignUp.class);
-                intent.putExtra("Genre", "genreChooser");
-                startActivity(intent);
             }
         });
 
@@ -75,6 +94,7 @@ public class AddTimeFrag extends Fragment {
             DayTimeModel dayTimeModel = new DayTimeModel();
             dayTimeModel.setDay(String.valueOf(selectedDays.get(init)));
             dayTimeModelArrayList.add(dayTimeModel);
+
         }
 
         recyclerView = (RecyclerView) view.findViewById(R.id.recycler_view_timeDay);
@@ -88,6 +108,7 @@ public class AddTimeFrag extends Fragment {
             Log.d("dayTimeModelArrayList", "first is empty");
         }else{
             Log.d("dayTimeModelArrayList", "first is not empty");
+
         }
 
         adapter = new TimeDayAdapter(dayTimeModelArrayList, getContext());

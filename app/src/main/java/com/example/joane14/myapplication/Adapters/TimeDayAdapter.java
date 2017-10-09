@@ -16,7 +16,10 @@ import android.widget.TextView;
 import android.widget.TimePicker;
 
 import com.example.joane14.myapplication.Activities.LocationChooser;
+import com.example.joane14.myapplication.Model.DayModel;
 import com.example.joane14.myapplication.Model.DayTimeModel;
+import com.example.joane14.myapplication.Model.TimeModel;
+import com.example.joane14.myapplication.Model.UserDayTime;
 import com.example.joane14.myapplication.R;
 
 import java.util.ArrayList;
@@ -30,6 +33,10 @@ import java.util.List;
 public class TimeDayAdapter extends RecyclerView.Adapter<TimeDayAdapter.MyViewHolder>{
 
     private ArrayList<DayTimeModel> dayTimeModelArrayList;
+    List<UserDayTime> userDayTimeList;
+    UserDayTime userDayTime;
+    DayModel dayModel;
+    TimeModel timeModel;
     private static MyClickListener myClickListener;
     Context context;
     private int mHour, mMinute;
@@ -68,7 +75,7 @@ public class TimeDayAdapter extends RecyclerView.Adapter<TimeDayAdapter.MyViewHo
         if(dayTimeModelArrayList.size()==0){
             Log.d("dayTimeModelArrayList", "is empty");
         }else{
-            Log.d("dayTimeModelArrayList", dayTimeModelArrayList.toString());
+//            Log.d("dayTimeModelArrayList", dayTimeModelArrayList.toString());
         }
     }
 
@@ -79,6 +86,9 @@ public class TimeDayAdapter extends RecyclerView.Adapter<TimeDayAdapter.MyViewHo
                 .inflate(R.layout.card_time_item, parent, false);
 
         MyViewHolder dataObjectHolder = new MyViewHolder(view);
+
+        userDayTime = new UserDayTime();
+        userDayTimeList = new ArrayList<UserDayTime>();
 
         return dataObjectHolder;
     }
@@ -112,6 +122,8 @@ public class TimeDayAdapter extends RecyclerView.Adapter<TimeDayAdapter.MyViewHo
                 }
 
                 v.onTouchEvent(event);
+
+
                 return true;
 
             }
@@ -156,6 +168,20 @@ public class TimeDayAdapter extends RecyclerView.Adapter<TimeDayAdapter.MyViewHo
                         String timeGiven = "";
                         timeGiven = hourOfDay + ":" + minute;
                         Log.d("time selected", timeGiven);
+
+
+                        dayModel = new DayModel();
+                        timeModel = new TimeModel();
+
+                        dayModel.setStrDay(dtm.getDay());
+                        timeModel.setStrTime(timeGiven);
+
+                        userDayTime.setDay(dayModel);
+                        userDayTime.setTime(timeModel);
+
+                        userDayTimeList.add(userDayTime);
+
+
                         dtm.getTime().add(timeGiven);
 
                         notifyDataSetChanged();

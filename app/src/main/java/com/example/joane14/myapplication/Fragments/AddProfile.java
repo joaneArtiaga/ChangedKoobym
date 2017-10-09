@@ -238,11 +238,12 @@ public class AddProfile extends Fragment {
         }
     }
 
-    String uploadUrl = "http://172.16.16.141:8080/Koobym/image/upload";
+
 //    String uploadUrl = Constants.WEB_SERVICE_URL+"image/upload";
 
     private void uploadFile(final String path) {
 
+        String uploadUrl = Constants.UPLOAD_IMAGE;
         RequestQueue requestQueue = Volley.newRequestQueue(getContext());
         VolleyMultipartRequest multipartRequest = new VolleyMultipartRequest(Request.Method.POST, uploadUrl, new Response.Listener<NetworkResponse>() {
             @Override

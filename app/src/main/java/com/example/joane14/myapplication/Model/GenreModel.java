@@ -7,6 +7,7 @@ import java.io.Serializable;
  */
 
 public class GenreModel implements Serializable{
+
     String genreName;
     long genreId;
     boolean isSelected;

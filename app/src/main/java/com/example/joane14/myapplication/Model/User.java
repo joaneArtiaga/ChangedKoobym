@@ -177,6 +177,8 @@ public class User implements Serializable{
                 ", phoneNumber='" + phoneNumber + '\'' +
                 ", address='" + address + '\'' +
                 ", birthdate=" + birthdate +
+                ", userDayTime=" + dayTimeModel+
+                ", location=" + locationArray +
                 ", email='" + email + '\'' +
                 ", imageFilename='" + imageFilename + '\'' +
                 '}';

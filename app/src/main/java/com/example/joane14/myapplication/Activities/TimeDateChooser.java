@@ -89,6 +89,7 @@ public class TimeDateChooser extends AppCompatActivity {
         }
 
         if(getIntent().getBundleExtra("confirm").getBoolean("fromSwap")==true){
+            Log.d("So this ", "is swap");
             fromWhere = "swap";
             swapDetail = new SwapDetail();
             swapHeader = new SwapHeader();
@@ -101,12 +102,15 @@ public class TimeDateChooser extends AppCompatActivity {
                     userDayTimeList.add(userDayTimeModel);
                 }
             }
-        }else{
+        }
+
+        if(getIntent().getBundleExtra("confirm").getBoolean("fromRent")== true){
+            Log.d("So this ", "is rent");
             fromWhere = "rent";
             rentalDetail = new RentalDetail();
-            if(getIntent().getExtras().getSerializable("rentalDetail")!=null){
+            if(getIntent().getExtras().getSerializable("rentDetail")!=null){
                 userDayTimeModel = new UserDayTime();
-                rentalDetail = (RentalDetail) getIntent().getExtras().getSerializable("rentalDetail");
+                rentalDetail = (RentalDetail) getIntent().getExtras().getSerializable("rentDetail");
                 Log.d("TimeDateChooser", rentalDetail.getBookOwner().getUserObj().getDayTimeModel().toString());
 
 
@@ -115,6 +119,13 @@ public class TimeDateChooser extends AppCompatActivity {
                     userDayTimeList.add(userDayTimeModel);
                 }
 
+                if(!(userDayTimeList.isEmpty())){
+                    Log.d("userDayTimeList","not empty");
+                }else{
+                    Log.d("userDayTimeList","empty");
+                }
+            }else{
+                Log.d("rentalDetailPassed", "null");
             }
         }
 

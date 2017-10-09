@@ -10,6 +10,15 @@ import java.util.List;
 public class MeetUpLocObj implements Serializable {
 
     List<LocationModel> locationModelList;
+    List<String> itemSelected;
+
+    public List<String> getItemSelected() {
+        return itemSelected;
+    }
+
+    public void setItemSelected(List<String> itemSelected) {
+        this.itemSelected = itemSelected;
+    }
 
     public List<LocationModel> getLocationModelList() {
         return locationModelList;

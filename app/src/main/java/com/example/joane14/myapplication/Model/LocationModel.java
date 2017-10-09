@@ -33,4 +33,13 @@ public class LocationModel implements Serializable{
     public void setLatitude(String latitude) {
         this.latitude = latitude;
     }
+
+    @Override
+    public String toString() {
+        return "Location{" +
+                "locationName=" + locationName +
+                ", longitude ='" + longitude + '\'' +
+                ", latitude =" + latitude +
+                '}';
+    }
 }

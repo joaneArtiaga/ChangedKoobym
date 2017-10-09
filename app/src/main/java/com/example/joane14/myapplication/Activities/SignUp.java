@@ -21,16 +21,21 @@ import com.example.joane14.myapplication.Fragments.AddProfile;
 import com.example.joane14.myapplication.Fragments.AddTimeFrag;
 import com.example.joane14.myapplication.Fragments.Constants;
 import com.example.joane14.myapplication.Fragments.Genre;
+import com.example.joane14.myapplication.Model.DayModel;
 import com.example.joane14.myapplication.Model.DayTimeModel;
 import com.example.joane14.myapplication.Model.GenreModel;
 import com.example.joane14.myapplication.Model.LocationModel;
 import com.example.joane14.myapplication.Model.MeetUpLocObj;
+import com.example.joane14.myapplication.Model.TimeModel;
 import com.example.joane14.myapplication.Model.User;
+import com.example.joane14.myapplication.Model.UserDayTime;
 import com.example.joane14.myapplication.R;
+import com.example.joane14.myapplication.Utilities.SPUtility;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
 import java.io.UnsupportedEncodingException;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -42,6 +47,10 @@ public class SignUp extends AppCompatActivity implements
     private List<GenreModel> genres;
     private List<LocationModel> locations;
     private List<DayTimeModel> dayTimeList;
+    private List<UserDayTime> userDayTimeList;
+    UserDayTime userDayTime;
+    DayModel dayModel;
+    TimeModel timeModel;
     private FragmentManager fragmentManager;
     private User userModel;
     Bundle mBundle;
@@ -51,41 +60,49 @@ public class SignUp extends AppCompatActivity implements
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sign_up);
 
-        if(getIntent().getExtras().getString("Genre")!=null){
+        if(getIntent().getExtras().getBoolean("Genre")==true){
+            Log.d("genreTrue", "inside");
             fragmentManager = getSupportFragmentManager();
             Genre genreModel = new Genre();
             changeFragment(genreModel);
-        }
-
-        if(getIntent().getExtras().getString("AddTime")!=null){
+        } else
+            if(getIntent().getBundleExtra("confirmation").getBoolean("AddFrag")==true){
             MeetUpLocObj meetUpLocObj = new MeetUpLocObj();
             mBundle = getIntent().getExtras();
             meetUpLocObj = (MeetUpLocObj) mBundle.getSerializable("locationObj");
             if(meetUpLocObj!=null){
                 Log.d("MeetUpLocObj", "is not null");
                 this.locations = meetUpLocObj.getLocationModelList();
+
+                if(this.locations.size()==0){
+                    Log.d("Location", "is null");
+                }else{
+                    Log.d("Location", "is not null");
+                }
             }else{
                 Log.d("MeetUpLocObj", "is null");
             }
-            if(getIntent().getExtras().getStringArrayList("listDay")!=null){
-                Log.d("listDay", "is not null");
-                Log.d("listDay", getIntent().getExtras().getStringArrayList("listDay").toString());
-            }else{
-                Log.d("listDay", "is null");
-            }
 
-            mBundle.putStringArrayList("listDay", getIntent().getExtras().getStringArrayList("listDay"));
+            Bundle bundle = new Bundle();
+            bundle.putSerializable("meetUpLocObj", meetUpLocObj);
             fragmentManager = getSupportFragmentManager();
             AddTimeFrag addTimeModel = new AddTimeFrag();
-            addTimeModel.setArguments(mBundle);
+            addTimeModel.setArguments(bundle);
             changeFragment(addTimeModel);
         }
 
+        if(this.locations== null || this.locations.size()==0){
+            Log.d("Location", "is null");
+        }else{
+            Log.d("Location", "is not null");
+        }
 
 
+        this.userDayTimeList = new ArrayList<UserDayTime>();
     }
 
     private void changeFragment(Fragment fragment) {
+        Log.d("changeFragment", "inside");
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
         fragmentTransaction.replace(R.id.fragment_container, fragment, fragment.getTag());
         fragmentTransaction.commit();
@@ -135,11 +152,23 @@ public class SignUp extends AppCompatActivity implements
         user.setImageFilename(userModel.getImageFilename());
         user.setPhoneNumber(userModel.getPhoneNumber());
         user.setGenreArray(genres);
+        user.setLocationArray(this.locations);
+        user.setDayTimeModel(userDayTimeList);
+
+        for(int init=0; init<userDayTimeList.size(); init++){
+            Log.d("SoneNull", userDayTimeList.get(init).toString());
+        }
+
+        for(int init=0; init<this.locations.size(); init++){
+            Log.d("SeoNull", this.locations.get(init).toString());
+        }
+
+//        user.setDayTimeModel();
         final Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd").registerTypeAdapter(Date.class, GsonDateDeserializer.getInstance()).create();
         final String mRequestBody = gson.toJson(user);
 
 
-        Log.d("LOG_VOLLEY", mRequestBody);
+        Log.d("LOG_VOLLEY_RequestBody", mRequestBody);
         StringRequest stringRequest = new StringRequest(Request.Method.POST, URL, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
@@ -149,6 +178,7 @@ public class SignUp extends AppCompatActivity implements
                 Log.i("LOG_VOLLEY", user.getUserFname());
                 Log.i("LOG_VOLLEY", user.getUserLname());
                 user.setGenreArray(genres);
+                SPUtility.getSPUtil(SignUp.this).putObject("USER_OBJECT", user);
                 Intent intent = new Intent(SignUp.this, LandingPage.class);
                 Bundle b = new Bundle();
                 b.putBoolean("fromRegister", true);
@@ -187,6 +217,32 @@ public class SignUp extends AppCompatActivity implements
     public void onAddTimeClickListener(List<DayTimeModel> listDayTimeModel) {
         Log.d("addTimeClickListerner", "inside");
         this.dayTimeList = listDayTimeModel;
+
+        userDayTime = new UserDayTime();
+        dayModel = new DayModel();
+        timeModel = new TimeModel();
+
+        for(int init=0; init<dayTimeList.size(); init++){
+            for (int initialize = 0; initialize<dayTimeList.get(init).getTime().size(); initialize++){
+                dayModel.setStrDay(dayTimeList.get(init).getDay());
+                timeModel.setStrTime(dayTimeList.get(init).getTime().get(initialize));
+
+                userDayTime.setDay(dayModel);
+                userDayTime.setTime(timeModel);
+                Log.d("userDayTimeDay", dayModel.getStrDay());
+                Log.d("userDayTimeTime", timeModel.getStrTime());
+
+                this.userDayTimeList.add(userDayTime);
+            }
+        }
+
+        if(userDayTimeList.size() == 0){
+            Log.d("FvckNull", "true");
+        }else{
+            Log.d("FvckNull", "false");
+            for(int init=0; init<userDayTimeList.size(); init++)
+            Log.d("FvckNull", userDayTimeList.get(init).toString());
+        }
         Genre genreModel = new Genre();
         changeFragment(genreModel);
     }
