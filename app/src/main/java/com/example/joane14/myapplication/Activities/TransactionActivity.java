@@ -25,10 +25,15 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.example.joane14.myapplication.Fragments.CompleteFrag;
+import com.example.joane14.myapplication.Fragments.CompleteSwapFrag;
 import com.example.joane14.myapplication.Fragments.Constants;
 import com.example.joane14.myapplication.Fragments.MyRequestFrag;
+import com.example.joane14.myapplication.Fragments.RentTransaction;
 import com.example.joane14.myapplication.Fragments.RequestReceivedFrag;
+import com.example.joane14.myapplication.Fragments.SwapTransaction;
+import com.example.joane14.myapplication.Fragments.ToApproveFrag;
 import com.example.joane14.myapplication.Fragments.ToDeliverFrag;
+import com.example.joane14.myapplication.Fragments.ToDeliverSwapFrag;
 import com.example.joane14.myapplication.Fragments.ToReceiveFrag;
 import com.example.joane14.myapplication.Fragments.ToReceiveSwapFrag;
 import com.example.joane14.myapplication.Fragments.ToReturnFrag;
@@ -47,7 +52,12 @@ public class TransactionActivity extends AppCompatActivity
         ToReturnFrag.OnToReturnInteractionListener,
         ToReceiveFrag.OnToReceiveInteractionListener,
         CompleteFrag.OnCompleteInteractionListener,
-        ToReceiveSwapFrag.OnToSwapReceiveInteractionListener{
+        ToReceiveSwapFrag.OnToSwapReceiveInteractionListener,
+        RentTransaction.OnRentTransactionInteractionListener,
+        SwapTransaction.OnSwapTransactionInteractionListener,
+        ToDeliverSwapFrag.OnToDeliverSwapInteractionListener,
+        CompleteSwapFrag.OnCompleteSwapInteractionListener,
+        ToApproveFrag.OnToApproveInteractionListener{
 
     ImageView profileImg;
     private TabLayout tabLayout;
@@ -100,10 +110,10 @@ public class TransactionActivity extends AppCompatActivity
 
     private void setupViewPager(ViewPager viewPager) {
         TransactionActivity.ViewPagerAdapter adapter = new TransactionActivity.ViewPagerAdapter(getSupportFragmentManager());
-        adapter.addFragment(new ToDeliverFrag(), "To Deliver");
-        adapter.addFragment(new ToReceiveFrag(), "To Receive");
-        adapter.addFragment(new ToReturnFrag(), "To Return");
-        adapter.addFragment(new CompleteFrag(), "Complete");
+        adapter.addFragment(new RentTransaction(), "Rent");
+        adapter.addFragment(new SwapTransaction(), "Swap");
+//        adapter.addFragment(new ToReturnFrag(), "To Return");
+//        adapter.addFragment(new CompleteFrag(), "Complete");
         viewPager.setAdapter(adapter);
     }
 
@@ -187,6 +197,31 @@ public class TransactionActivity extends AppCompatActivity
 
     @Override
     public void onToSwapReceiveOnClick(Uri uri) {
+
+    }
+
+    @Override
+    public void onRentTransactionOnClick(Uri uri) {
+
+    }
+
+    @Override
+    public void onSwapTransasctionOnClick(Uri uri) {
+
+    }
+
+    @Override
+    public void onCompleteSwapOnClick(Uri uri) {
+
+    }
+
+    @Override
+    public void onToDeliverSwapOnClick(Uri uri) {
+
+    }
+
+    @Override
+    public void ontToApproveOnClick(Uri uri) {
 
     }
 
