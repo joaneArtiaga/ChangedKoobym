@@ -2,12 +2,14 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.example.joane14.myapplication.Fragments.CompleteSwapFrag">
+    tools:context="com.example.joane14.myapplication.Fragments.DisplayBookReview">
 
     <android.support.v7.widget.RecyclerView
-        android:id="@+id/my_recycler_view_complete_swap"
+        android:id="@+id/my_recycler_view_book_reviews"
         android:layout_width="match_parent"
-        android:layout_height="400dp"
+        android:layout_height="320dp"
+        android:layout_below="@id/brBtnPost"
+        android:layout_marginTop="5dp"
         android:scrollbars="vertical" />
 
 </FrameLayout>

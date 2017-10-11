@@ -11,7 +11,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
@@ -26,11 +25,9 @@ import com.example.joane14.myapplication.Activities.BookReviewActivity;
 import com.example.joane14.myapplication.Activities.GsonDateDeserializer;
 import com.example.joane14.myapplication.Activities.UserReviewActivity;
 import com.example.joane14.myapplication.Fragments.Constants;
-import com.example.joane14.myapplication.Fragments.ToReceiveFrag;
 import com.example.joane14.myapplication.Model.RentalHeader;
 import com.example.joane14.myapplication.Model.User;
 import com.example.joane14.myapplication.R;
-import com.example.joane14.myapplication.Utilities.SPUtility;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.squareup.picasso.Picasso;
@@ -94,6 +91,8 @@ public class ToReceiveAdapter extends RecyclerView.Adapter<ToReceiveAdapter.Book
             @Override
             public void onClick(View v) {
                 rentalHeader = bookList.get(position);
+
+                Log.d("ApproveStat", rentalHeader.getStatus());
                 updateReceive(position);
 
             }
@@ -121,11 +120,11 @@ public class ToReceiveAdapter extends RecyclerView.Adapter<ToReceiveAdapter.Book
             mRenter = (TextView) itemView.findViewById(R.id.toReceiveRenter);
             mReminder = (TextView) itemView.findViewById(R.id.toReceiveReminder);
             mMU = (TextView) itemView.findViewById(R.id.toReceiveMU);
-            mDaysRent = (TextView) itemView.findViewById(R.id.toReceiveDaysForRent);
             mPrice = (TextView) itemView.findViewById(R.id.toReceivePrice);
             mBookRented = (TextView) itemView.findViewById(R.id.toReceiveBook);
             mIvRenter = (ImageView) itemView.findViewById(R.id.toReceiveRenterImage);
             mIvBookImg = (ImageView) itemView.findViewById(R.id.toReceiveBookImage);
+            mDaysRent = (TextView) itemView.findViewById(R.id.toReceiveDaysForRent);
 //            itemView.setOnClickListener(this);
 
 
@@ -199,6 +198,8 @@ public class ToReceiveAdapter extends RecyclerView.Adapter<ToReceiveAdapter.Book
             @Override
             public void onResponse(String response) {
                 Log.i("RequestReceivedStatus", response);
+                RentalHeader rentalHeaderModel = new RentalHeader();
+
             }
         }, new Response.ErrorListener() {
             @Override

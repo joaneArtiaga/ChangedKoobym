@@ -20,11 +20,12 @@ import com.android.volley.VolleyLog;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.example.joane14.myapplication.Activities.GsonDateDeserializer;
-import com.example.joane14.myapplication.Adapters.CompleteSwapAdapter;
-import com.example.joane14.myapplication.Adapters.ToReceiveSwapAdapter;
+import com.example.joane14.myapplication.Adapters.ReviewAdapter;
+import com.example.joane14.myapplication.Adapters.UserReviewAdapter;
+import com.example.joane14.myapplication.Model.BookOwnerReview;
 import com.example.joane14.myapplication.Model.RentalHeader;
-import com.example.joane14.myapplication.Model.SwapHeader;
 import com.example.joane14.myapplication.Model.User;
+import com.example.joane14.myapplication.Model.UserRating;
 import com.example.joane14.myapplication.R;
 import com.example.joane14.myapplication.Utilities.SPUtility;
 import com.google.gson.Gson;
@@ -36,21 +37,24 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
-public class CompleteSwapFrag extends Fragment {
 
-    private OnCompleteSwapInteractionListener mListener;
+public class DisplayUserReview extends Fragment {
 
-    List<SwapHeader> swapHeaderList;
+
+    RentalHeader rentalHeader;
+    List<UserRating> userRatingList;
     private RecyclerView mRecyclerView;
     private RecyclerView.Adapter mAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
 
+    private OnUserReviewInteractionListener mListener;
 
-    public CompleteSwapFrag() {
+    public DisplayUserReview() {
     }
 
-    public static CompleteSwapFrag newInstance(String param1, String param2) {
-        CompleteSwapFrag fragment = new CompleteSwapFrag();
+    public static DisplayUserReview newInstance(Bundle bundle) {
+        DisplayUserReview fragment = new DisplayUserReview();
+        fragment.setArguments(bundle);
         return fragment;
     }
 
@@ -62,45 +66,46 @@ public class CompleteSwapFrag extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_complete_swap, container, false);
+        View view = inflater.inflate(R.layout.fragment_display_user_review, container, false);
 
-        swapHeaderList = new ArrayList<SwapHeader>();
-        mRecyclerView = (RecyclerView) view.findViewById(R.id.my_recycler_view_complete_swap);
+        rentalHeader = (RentalHeader) getArguments().getSerializable("rentalHeader");
+
+        userRatingList = new ArrayList<UserRating>();
+        mRecyclerView = (RecyclerView) view.findViewById(R.id.my_recycler_view_user_reviews);
         mRecyclerView.setHasFixedSize(true);
         mLayoutManager = new LinearLayoutManager(getContext());
         mRecyclerView.setLayoutManager(mLayoutManager);
-        mAdapter = new CompleteSwapAdapter(swapHeaderList);
+        mAdapter = new UserReviewAdapter(userRatingList);
         mRecyclerView.setAdapter(mAdapter);
 
-
-        getComplete();
-
+        getUserRating();
         return view;
     }
 
-    public void getComplete(){
+    public void getUserRating(){
         RequestQueue requestQueue = Volley.newRequestQueue(getContext());
 //        String URL = "http://104.197.4.32:8080/Koobym/user/add";
         User user = new User();
         user = (User) SPUtility.getSPUtil(getContext()).getObject("USER_OBJECT", User.class);
         Log.d("UserIdReceive", String.valueOf(user.getUserId()));
-        String URL = Constants.GET_COMPLETE_SWAP+"/"+user.getUserId();
+        String URL = Constants.GET_USER_REVIEWS+"/"+rentalHeader.getUserId().getUserId();
 //        String URL = Constants.WEB_SERVICE_URL+"user/add";
 
+        Log.d("UserReview URL", URL);
         final RentalHeader rentalHeader =new RentalHeader();
 
         final Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd").registerTypeAdapter(Date.class, GsonDateDeserializer.getInstance()).create();
         final String mRequestBody = gson.toJson(rentalHeader);
 
 
-        Log.d("completeSwap_VOLLEY", mRequestBody);
+        Log.d("LOG_VOLLEY", mRequestBody);
         StringRequest stringRequest = new StringRequest(Request.Method.GET, URL, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
                 Log.i("ResponseRequestReceived", response);
 //                RentalHeader rentalHeaderModel = gson.fromJson(response, RentalHeader.class);
-                swapHeaderList.clear();
-                swapHeaderList.addAll(Arrays.asList(gson.fromJson(response, SwapHeader[].class)));
+                userRatingList.clear();
+                userRatingList.addAll(Arrays.asList(gson.fromJson(response, UserRating[].class)));
                 mAdapter.notifyDataSetChanged();
             }
         }, new Response.ErrorListener() {
@@ -128,17 +133,18 @@ public class CompleteSwapFrag extends Fragment {
         requestQueue.add(stringRequest);
     }
 
+
     public void onButtonPressed(Uri uri) {
         if (mListener != null) {
-            mListener.onCompleteSwapOnClick(uri);
+            mListener.onUserReviewOnClick(uri);
         }
     }
 
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        if (context instanceof OnCompleteSwapInteractionListener) {
-            mListener = (OnCompleteSwapInteractionListener) context;
+        if (context instanceof OnUserReviewInteractionListener) {
+            mListener = (OnUserReviewInteractionListener) context;
         } else {
             throw new RuntimeException(context.toString()
                     + " must implement OnFragmentInteractionListener");
@@ -151,7 +157,7 @@ public class CompleteSwapFrag extends Fragment {
         mListener = null;
     }
 
-    public interface OnCompleteSwapInteractionListener {
-        void onCompleteSwapOnClick(Uri uri);
+    public interface OnUserReviewInteractionListener {
+        void onUserReviewOnClick(Uri uri);
     }
 }

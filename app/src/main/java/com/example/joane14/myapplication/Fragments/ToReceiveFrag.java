@@ -44,7 +44,7 @@ public class ToReceiveFrag extends Fragment {
     private RecyclerView.Adapter mAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
     private ToReceiveFrag.OnToReceiveInteractionListener mListener;
-    Button mBtnRenterReceive, mBtnRenterOwner, mBtnSwap;
+    Button mBtnRenterReceive, mBtnRenterOwner;
 
 
     public ToReceiveFrag() {
@@ -67,7 +67,6 @@ public class ToReceiveFrag extends Fragment {
 
         mBtnRenterReceive = (Button) view.findViewById(R.id.receiveBtnRenter);
         mBtnRenterOwner = (Button) view.findViewById(R.id.receiveBtnOwner);
-        mBtnSwap = (Button) view.findViewById(R.id.receiveSwap);
 
 
         rentalHeaderList = new ArrayList<RentalHeader>();
@@ -95,16 +94,7 @@ public class ToReceiveFrag extends Fragment {
                 getToReceiveOwner();
             }
         });
-        mBtnSwap.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
 
-                final FragmentTransaction ft = getFragmentManager().beginTransaction();
-                ft.replace(R.id.fragment_container_swap_receive, new ToReceiveSwapFrag(), "NewFragmentTag");
-                ft.addToBackStack(null);
-                ft.commit();
-            }
-        });
         return view;
     }
 

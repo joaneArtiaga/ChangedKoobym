@@ -1,53 +1,70 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.example.joane14.myapplication.Activities.UserReviewActivity">
+    tools:context="com.example.joane14.myapplication.Activities.BookReviewActivity"
+    android:background="@color/colorDark">
 
-    <LinearLayout
-        android:layout_width="400dp"
-        android:layout_height="300dp"
-        android:layout_marginLeft="-8dp"
-        android:orientation="vertical"
-        app:layout_constraintLeft_toLeftOf="parent"
-        tools:layout_editor_absoluteY="264dp"
-        android:weightSum="1">
 
-        <TextView
-            android:id="@+id/textView7"
-            android:layout_width="match_parent"
+    <TextView
+        android:id="@+id/textViewTitle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Book Review"
+        android:textColor="@color/colorLightOrange"
+        android:textSize="30dp"
+        android:textStyle="bold"
+        android:gravity="center_horizontal"
+        android:layout_marginTop="20dp"
+        android:paddingLeft="5dp"
+        android:paddingBottom="5dp"
+        android:paddingRight="5dp"
+        android:paddingTop="5dp"/>
+
+        <EditText
+            android:id="@+id/brComment"
+            android:layout_width="300dp"
+            android:layout_height="100dp"
+            android:hint="Write Comment here"
+            android:gravity="top"
+            android:layout_below="@id/textViewTitle"
+            android:background="@drawable/rounded_multiline"
+            android:inputType="textMultiLine"
+            android:layout_marginTop="10dp"
+            android:layout_centerHorizontal="true"/>
+
+        <Spinner
+            android:id="@+id/spinner1"
+            android:layout_width="100dp"
+            android:layout_below="@id/brComment"
             android:layout_height="wrap_content"
-            android:layout_weight="0.25"
-            android:background="@color/colorTuftBrush"
-            android:text="TextView"
+            android:entries="@array/rating_array"
+            android:prompt="@string/spinner_prompt"
+            android:layout_alignRight="@id/brComment"
+            android:layout_marginTop="5dp"
+            android:background="#FFFFFF"/>
 
-            />
+        <Button
+            android:layout_width="100dp"
+            android:layout_height="50dp"
+            android:id="@+id/brBtnPost"
+            android:text="Post"
+            android:layout_marginTop="5dp"
+            android:layout_below="@+id/spinner1"
+            android:layout_alignRight="@id/spinner1"
+            android:layout_marginLeft="13dp"
+            android:layout_marginStart="13dp"
+            android:background="@color/colorLightOrange"/>
 
-        <TextView
-            android:id="@+id/textView8"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="0.25"
-            android:background="@color/colorTuftBrush"
-            android:text="TextView" />
 
-        <TextView
-            android:id="@+id/textView9"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="0.25"
-            android:background="@color/colorTuftBrush"
-            android:text="TextView" />
-    </LinearLayout>
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/brBtnPost"
+        android:id="@+id/fragment_container_book_review"/>
 
-    <ImageView
-        android:id="@+id/imageView4"
-        android:layout_width="239dp"
-        android:layout_height="248dp"
-        app:srcCompat="@drawable/bookreviews"
-        tools:layout_editor_absoluteX="73dp"
-        tools:layout_editor_absoluteY="16dp" />
 
-</android.support.constraint.ConstraintLayout>
+</RelativeLayout>

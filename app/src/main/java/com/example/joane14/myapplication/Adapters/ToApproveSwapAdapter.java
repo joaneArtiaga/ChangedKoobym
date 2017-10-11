@@ -2,6 +2,7 @@ package com.example.joane14.myapplication.Adapters;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -20,7 +21,9 @@ import com.android.volley.VolleyLog;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.bumptech.glide.Glide;
+import com.example.joane14.myapplication.Activities.BookReviewActivity;
 import com.example.joane14.myapplication.Activities.GsonDateDeserializer;
+import com.example.joane14.myapplication.Activities.TransactionActivity;
 import com.example.joane14.myapplication.Fragments.Constants;
 import com.example.joane14.myapplication.Model.SwapHeader;
 import com.example.joane14.myapplication.Model.User;
@@ -35,35 +38,35 @@ import java.util.Date;
 import java.util.List;
 
 /**
- * Created by Joane14 on 09/10/2017.
+ * Created by Joane14 on 11/10/2017.
  */
 
-public class ToReceiveSwapAdapter extends RecyclerView.Adapter<ToReceiveSwapAdapter.BookHolder> {
+public class ToApproveSwapAdapter extends RecyclerView.Adapter<ToApproveSwapAdapter.BookHolder> {
 
     public List<SwapHeader> bookList;
     SwapHeader swapHeader;
     public Activity context;
 
     @Override
-    public ToReceiveSwapAdapter.BookHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public ToApproveSwapAdapter.BookHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.card_to_receive_swap, parent, false);
 
         this.context = (Activity) parent.getContext();
         swapHeader = new SwapHeader();
         Log.d("LandingPAgeAdapter","inside");
-        ToReceiveSwapAdapter.BookHolder dataObjectHolder = new ToReceiveSwapAdapter.BookHolder(this.context, view);
+        ToApproveSwapAdapter.BookHolder dataObjectHolder = new ToApproveSwapAdapter.BookHolder(this.context, view);
 
         Log.d("RequestAdapter", String.valueOf(bookList.size()));
         return dataObjectHolder;
     }
 
-    public ToReceiveSwapAdapter(List<SwapHeader> myDataset) {
+    public ToApproveSwapAdapter(List<SwapHeader> myDataset) {
         bookList = myDataset;
     }
 
     @Override
-    public void onBindViewHolder(ToReceiveSwapAdapter.BookHolder holder, final int position) {
+    public void onBindViewHolder(ToApproveSwapAdapter.BookHolder holder, final int position) {
 
 
         User user = new User();
@@ -111,7 +114,7 @@ public class ToReceiveSwapAdapter extends RecyclerView.Adapter<ToReceiveSwapAdap
     }
 
     public class BookHolder extends RecyclerView.ViewHolder {
-        TextView mRenter, mBookRented, mReminder, mPrice, mMU, mMyBook;
+        TextView mRenter, mBookRented, mReminder, mPrice, mMU, mDaysRent, mMyBook;
         ImageView mIvRenter, mIvBookImg, mMyIvBookImg;
         ImageView mBtnAccept;
         SwapHeader swapHeaderObj;
@@ -128,10 +131,10 @@ public class ToReceiveSwapAdapter extends RecyclerView.Adapter<ToReceiveSwapAdap
             mMU = (TextView) itemView.findViewById(R.id.toReceiveMU);
             mPrice = (TextView) itemView.findViewById(R.id.toReceivePrice);
             mBookRented = (TextView) itemView.findViewById(R.id.toReceiveBook);
-            mMyBook = (TextView) itemView.findViewById(R.id.toReceiveMyBook);
             mIvRenter = (ImageView) itemView.findViewById(R.id.toReceiveRenterImage);
             mIvBookImg = (ImageView) itemView.findViewById(R.id.toReceiveBookImage);
             mMyIvBookImg = (ImageView) itemView.findViewById(R.id.toReceiveMyBookImage);
+            mMyBook = (TextView) itemView.findViewById(R.id.toReceiveMyBook);
 //            itemView.setOnClickListener(this);
 
 
@@ -143,7 +146,7 @@ public class ToReceiveSwapAdapter extends RecyclerView.Adapter<ToReceiveSwapAdap
                     int position = getAdapterPosition();
                     Log.d("AdapterPosition", "inside "+Integer.toString(position));
 //                    Intent intent = new Intent(LandingPageAdapter.this.context, ViewBookActivity.class);
-                    swapHeaderObj = ToReceiveSwapAdapter.this.bookList.get(position);
+                    swapHeaderObj = ToApproveSwapAdapter.this.bookList.get(position);
                     if(swapHeaderObj==null){
                         Log.d("rentalHeaderAdapter", "is null");
                     }else{
@@ -176,8 +179,10 @@ public class ToReceiveSwapAdapter extends RecyclerView.Adapter<ToReceiveSwapAdap
         user = (User) SPUtility.getSPUtil(context).getObject("USER_OBJECT", User.class);
         swapHeader = bookList.get(position);
         String status="";
-        if(swapHeader.getStatus().equals("Approved")){
-            status = "Complete";
+        if(swapHeader.getStatus().equals("APPROVED_BY_REQUESTOR")){
+            status = "Approved";
+            Intent intent = new Intent(context, TransactionActivity.class);
+            context.startActivity(intent);
         }
 
         String URL = Constants.UPDATE_SWAP_HEADER+"/"+status+"/"+swapHeader.getSwapHeaderId();
@@ -279,3 +284,4 @@ public class ToReceiveSwapAdapter extends RecyclerView.Adapter<ToReceiveSwapAdap
 
 
 }
+

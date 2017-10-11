@@ -61,5 +61,20 @@ public class Constants {
 
     public static final String POST_SWAP_COMMENT_DETAIL ="http://104.197.4.32:8080/Koobym/swapCommentDetail/add";
 
+    public static final String GET_TO_APPROVE ="http://104.197.4.32:8080/Koobym/swapHeader/toApproveById";
+
+    public static final String GET_COMPLETE_SWAP ="http://104.197.4.32:8080/Koobym/swapHeader/completeById";
+
+    public static final String GET_TO_DELIVER_SWAP ="http://104.197.4.32:8080/Koobym/swapHeader/toDeliverById";
+
+    public static final String POST_BOOK_OWNER_REVIEW ="http://104.197.4.32:8080/Koobym/bookOwnerReview/add";
+
+    public static final String POST_BOOK_OWNER_RATE ="http://104.197.4.32:8080/Koobym/bookOwnerRating/add";
+
+    public static final String POST_USER_RATE ="http://104.197.4.32:8080/Koobym/userRating/add";
+
+    public static final String GET_BOOK_REVIEWS ="http://104.197.4.32:8080/Koobym/bookOwnerReview/getAllReviewOfBookOwner";
+
+    public static final String GET_USER_REVIEWS ="http://104.197.4.32:8080/Koobym/userRating/getAllUserRatingsOf";
 
 }

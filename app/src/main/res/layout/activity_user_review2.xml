@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -7,112 +7,60 @@
     android:background="@color/colorTuftBrush"
     tools:context="com.example.joane14.myapplication.Activities.BookReviewActivity">
 
-    <LinearLayout
-        android:layout_width="100dp"
-        android:layout_height="100dp"
-        android:orientation="horizontal"
-        tools:layout_editor_absoluteX="16dp"
-        tools:layout_editor_absoluteY="16dp"
-        android:id="@+id/linearLayout">
+    <TextView
+        android:id="@+id/textViewTitle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="User Review"
+        android:textColor="@color/colorLightOrange"
+        android:textSize="30dp"
+        android:textStyle="bold"
+        android:gravity="center_horizontal"
+        android:layout_marginTop="20dp"
+        android:paddingLeft="5dp"
+        android:paddingBottom="5dp"
+        android:paddingRight="5dp"
+        android:paddingTop="5dp"/>
 
-        <ImageButton
-            android:id="@+id/imageButton6"
-            android:layout_width="100dp"
-            android:layout_height="100dp"
-            android:layout_weight="1"
-            app:srcCompat="@drawable/com_facebook_tooltip_blue_xout" />
-    </LinearLayout>
+    <EditText
+        android:id="@+id/brComment"
+        android:layout_width="300dp"
+        android:layout_height="100dp"
+        android:hint="Write Comment here"
+        android:gravity="top"
+        android:layout_below="@id/textViewTitle"
+        android:background="@drawable/rounded_multiline"
+        android:inputType="textMultiLine"
+        android:layout_marginTop="10dp"
+        android:layout_centerHorizontal="true"/>
 
     <Spinner
-        android:id="@+id/spinner"
-        android:layout_width="204dp"
-        android:layout_height="20dp"
-        tools:layout_editor_absoluteX="177dp"
-        tools:layout_editor_absoluteY="96dp" />
-
-    <LinearLayout
-        android:layout_width="250dp"
-        android:layout_height="100dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginRight="8dp"
-        android:orientation="vertical"
-        app:layout_constraintRight_toRightOf="parent"
-        tools:layout_editor_absoluteY="16dp">
-
-        <TextView
-            android:id="@+id/textView6"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="TextView" />
-
-        <TextView
-            android:id="@+id/Name"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="TextView" />
-
-        <TextView
-            android:id="@+id/Address"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="TextView" />
-
-        <TextView
-            android:id="@+id/Gender"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="TextView" />
-
-    </LinearLayout>
-
-    <TextView
-        android:id="@+id/textView31"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="RATING"
-        android:textColor="@color/colorOrange"
-        android:textStyle="bold"
-        tools:layout_editor_absoluteX="126dp"
-        tools:layout_editor_absoluteY="99dp" />
-
-    <ImageView
-        android:id="@+id/imageView7"
+        android:id="@+id/spinner1"
         android:layout_width="100dp"
-        android:layout_height="100dp"
-        app:srcCompat="@drawable/reviews"
-        tools:layout_editor_absoluteX="72dp"
-        tools:layout_editor_absoluteY="160dp" />
-
-    <TextView
-        android:id="@+id/Gender"
-        android:layout_width="0dp"
+        android:layout_below="@id/brComment"
         android:layout_height="wrap_content"
-        android:text="TextView"
-        tools:layout_editor_absoluteX="16dp"
-        tools:layout_editor_absoluteY="275dp" />
+        android:entries="@array/rating_array"
+        android:prompt="@string/spinner_prompt"
+        android:layout_alignRight="@id/brComment"
+        android:layout_marginTop="5dp"
+        android:background="#FFFFFF"/>
 
-    <ImageView
-        android:id="@+id/imageView12"
+    <Button
         android:layout_width="100dp"
-        android:layout_height="100dp"
-        app:srcCompat="@drawable/booksforrent"
-        tools:layout_editor_absoluteX="236dp"
-        tools:layout_editor_absoluteY="160dp" />
+        android:layout_height="50dp"
+        android:id="@+id/brBtnPost"
+        android:text="Post"
+        android:layout_marginTop="5dp"
+        android:layout_below="@+id/spinner1"
+        android:layout_alignRight="@id/spinner1"
+        android:layout_marginLeft="13dp"
+        android:layout_marginStart="13dp"
+        android:background="@color/colorLightOrange"/>
 
-    <LinearLayout
-        android:layout_width="366dp"
-        android:layout_height="257dp"
-        android:orientation="horizontal"
-        tools:layout_editor_absoluteX="9dp"
-        tools:layout_editor_absoluteY="351dp">
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/brBtnPost"
+        android:id="@+id/fragment_container_user_review"/>
 
-        <TextView
-            android:id="@+id/textView13"
-            android:layout_width="wrap_content"
-            android:layout_height="72dp"
-            android:layout_weight="1"
-            android:background="@color/colorTuftBrush"
-            android:text="TextView" />
-    </LinearLayout>
-
-</android.support.constraint.ConstraintLayout>
+</RelativeLayout>
