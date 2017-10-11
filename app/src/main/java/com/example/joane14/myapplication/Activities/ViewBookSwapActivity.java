@@ -28,6 +28,14 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.android.volley.AuthFailureError;
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.VolleyLog;
+import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
 import com.bumptech.glide.Glide;
 import com.example.joane14.myapplication.Adapters.LandingPageAdapter;
 import com.example.joane14.myapplication.Adapters.SwapCommentsAdapter;
@@ -36,15 +44,22 @@ import com.example.joane14.myapplication.Fragments.DisplaySwapComments;
 import com.example.joane14.myapplication.Fragments.PreferencesFrag;
 import com.example.joane14.myapplication.Model.RentalDetail;
 import com.example.joane14.myapplication.Model.SwapComment;
+import com.example.joane14.myapplication.Model.SwapCommentDetail;
 import com.example.joane14.myapplication.Model.SwapDetail;
+import com.example.joane14.myapplication.Model.SwapHeader;
 import com.example.joane14.myapplication.Model.User;
+import com.example.joane14.myapplication.Model.UserDayTime;
 import com.example.joane14.myapplication.R;
 import com.example.joane14.myapplication.Utilities.SPUtility;
 import com.facebook.login.LoginManager;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.squareup.picasso.Picasso;
 
+import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 
 import static com.example.joane14.myapplication.R.id.imageView;
@@ -53,6 +68,7 @@ public class ViewBookSwapActivity extends AppCompatActivity implements Navigatio
         DisplaySwapComments.OnSwapCommentInteractionListener{
 
     SwapDetail swapDetailObj;
+    SwapCommentDetail swapCommentDetail;
     Bundle bundle;
     TextView mBookTitle, mAuthor, mPrice, mBookOwner;
     Button mBookSwap;
@@ -173,22 +189,6 @@ public class ViewBookSwapActivity extends AppCompatActivity implements Navigatio
         }
     }
 
-    public void showWarning(final int position){
-        android.support.v7.app.AlertDialog.Builder alertDialogBuilder = new android.support.v7.app.AlertDialog.Builder(ViewBookSwapActivity.this);
-        alertDialogBuilder.setTitle("!!!");
-        alertDialogBuilder.setMessage("You can't swap your own book.");
-        alertDialogBuilder.setPositiveButton("Okay",
-                new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface arg0, int arg1) {
-
-                    }
-                });
-
-        android.support.v7.app.AlertDialog alertDialog = alertDialogBuilder.create();
-        alertDialog.show();
-    }
-
     private void showInputDialog() {
         AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(this);
         LayoutInflater inflater = this.getLayoutInflater();
@@ -210,6 +210,9 @@ public class ViewBookSwapActivity extends AppCompatActivity implements Navigatio
                 swapComment.setUser(user);
                 swapComment.setSwapComment(edt.getText().toString());
 
+                swapCommentDetail.setSwapDetail(swapDetailObj);
+                swapCommentDetail.setSwapComment(swapComment);
+                addSwapComment();
                 if(swapComment==null){
                     Log.d("SwapComment", "is null");
                 }else{
@@ -225,6 +228,76 @@ public class ViewBookSwapActivity extends AppCompatActivity implements Navigatio
         AlertDialog b = dialogBuilder.create();
         b.show();
     }
+
+    public void addSwapComment(){
+        RequestQueue requestQueue = Volley.newRequestQueue(this);
+//        String URL = "http://192.168.1.6:8080/Koobym/swapHeader/add";
+        String URL = Constants.POST_SWAP_COMMENT_DETAIL;
+
+
+        SwapComment swapCommentToPost = new SwapComment();
+        swapCommentToPost.setSwapComment(swapComment.getSwapComment());
+        swapCommentToPost.setUser(swapComment.getUser());
+
+        SwapCommentDetail swapCommentDetailToPost = new SwapCommentDetail();
+        swapCommentDetailToPost.setSwapComment(swapCommentToPost);
+        swapCommentDetailToPost.setSwapDetail(swapDetailObj);
+
+        final Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd").registerTypeAdapter(Date.class, GsonDateDeserializer.getInstance()).create();
+        final String mRequestBody = gson.toJson(swapCommentDetailToPost);
+
+        Log.d("swapHeader_VOLLEY", mRequestBody);
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, URL, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                Log.d("onResponse addSwapC", "inside");
+                Log.i("addSwapComment", response);
+                Intent intent = new Intent(ViewBookSwapActivity.this, RequestActivity.class);
+                startActivity(intent);
+
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.e("LOG_VOLLEY", error.toString());
+                error.printStackTrace();
+            }
+        }) {
+            @Override
+            public String getBodyContentType() {
+                return "application/json; charset=utf-8";
+            }
+
+            @Override
+            public byte[] getBody() throws AuthFailureError {
+                try {
+                    return mRequestBody == null ? null : mRequestBody.getBytes("utf-8");
+                } catch (UnsupportedEncodingException uee) {
+                    VolleyLog.wtf("Unsupported Encoding while trying to get the bytes of %s using %s", mRequestBody, "utf-8");
+                    return null;
+                }
+            }
+        };
+
+        requestQueue.add(stringRequest);
+    }
+
+    public void showWarning(final int position){
+        android.support.v7.app.AlertDialog.Builder alertDialogBuilder = new android.support.v7.app.AlertDialog.Builder(ViewBookSwapActivity.this);
+        alertDialogBuilder.setTitle("!!!");
+        alertDialogBuilder.setMessage("You can't swap your own book.");
+        alertDialogBuilder.setPositiveButton("Okay",
+                new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface arg0, int arg1) {
+
+                    }
+                });
+
+        android.support.v7.app.AlertDialog alertDialog = alertDialogBuilder.create();
+        alertDialog.show();
+    }
+
 
     @SuppressWarnings("StatementWithEmptyBody")
     @Override

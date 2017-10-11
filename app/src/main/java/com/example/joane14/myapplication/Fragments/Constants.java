@@ -59,5 +59,7 @@ public class Constants {
 
     public static final String UPLOAD_IMAGE = "http://104.197.4.32:8080/Koobym/image/upload";
 
+    public static final String POST_SWAP_COMMENT_DETAIL ="http://104.197.4.32:8080/Koobym/swapCommentDetail/add";
+
 
 }

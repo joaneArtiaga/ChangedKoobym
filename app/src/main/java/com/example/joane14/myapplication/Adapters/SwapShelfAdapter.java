@@ -120,7 +120,7 @@ public class SwapShelfAdapter extends RecyclerView.Adapter<SwapShelfAdapter.Book
                         Log.d("rentalDetailAdapter", "is not null");
                     }
                     intent.putExtra("ViewBook", "fromAdapter");
-                    bundle.putSerializable("View", swapDetailObj);
+                    bundle.putSerializable("ViewSwap", swapDetailObj);
                     intent.putExtras(bundle);
                     context.startActivity(intent);
                 }

@@ -11,8 +11,8 @@ import java.util.List;
 
 public class SwapDetail implements Serializable {
 
-    @SerializedName("swap_detailId")
-    private int swapDetailId;
+    @SerializedName("swapDetailId")
+    private Integer swapDetailId;
 
     @SerializedName("bookOwner")
     private BookOwnerModel bookOwner;
@@ -24,7 +24,7 @@ public class SwapDetail implements Serializable {
     private String swapTimeStamp;
 
     @SerializedName("price")
-    private float swapPrice;
+    private Float swapPrice;
 
     @SerializedName("swapComments")
     private List<SwapComment> swapComments;
@@ -61,19 +61,19 @@ public class SwapDetail implements Serializable {
         this.swapTimeStamp = swapTimeStamp;
     }
 
-    public float getSwapPrice() {
+    public Float getSwapPrice() {
         return swapPrice;
     }
 
-    public void setSwapPrice(float swapPrice) {
+    public void setSwapPrice(Float swapPrice) {
         this.swapPrice = swapPrice;
     }
 
-    public int getSwapDetailId() {
+    public Integer getSwapDetailId() {
         return swapDetailId;
     }
 
-    public void setSwapDetailId(int swapDetailId) {
+    public void setSwapDetailId(Integer swapDetailId) {
         this.swapDetailId = swapDetailId;
     }
 }

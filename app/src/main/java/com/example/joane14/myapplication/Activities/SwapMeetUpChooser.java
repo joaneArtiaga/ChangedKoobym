@@ -75,6 +75,8 @@ public class SwapMeetUpChooser extends FragmentActivity implements OnMapReadyCal
             location = new LatLng(latitude,longitude);
             mapMarker = mMap.addMarker(new MarkerOptions().position(location).title(locationModelList.get(init).getLocationName()));
 
+            mapMarker.showInfoWindow();
+
             mHashMap.put(mapMarker, init);
             Log.d("MarkerPosition", String.valueOf(mapMarker.getPosition()));
         }

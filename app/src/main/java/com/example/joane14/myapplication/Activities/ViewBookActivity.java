@@ -68,13 +68,6 @@ public class ViewBookActivity extends AppCompatActivity implements NavigationVie
 
         mViewMeetUp = (ImageView) findViewById(R.id.ivVbViewMap);
 
-        mViewMeetUp.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(ViewBookActivity.this, ViewMeetUp.class);
-                startActivity(intent);
-            }
-        });
         if(SPUtility.getSPUtil(this).contains("USER_OBJECT")){
             User userModel = new User();
             userModel = (User) SPUtility.getSPUtil(this).getObject("USER_OBJECT", User.class);
@@ -177,6 +170,17 @@ public class ViewBookActivity extends AppCompatActivity implements NavigationVie
 
 
                 }
+            }
+        });
+
+        mViewMeetUp.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(ViewBookActivity.this, ViewMeetUp.class);
+                Bundle mbundle = new Bundle();
+                mbundle.putSerializable("rentalDetail", rentalDetail);
+                intent.putExtras(mbundle);
+                startActivity(intent);
             }
         });
     }

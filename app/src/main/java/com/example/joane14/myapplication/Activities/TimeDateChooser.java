@@ -299,22 +299,31 @@ public class TimeDateChooser extends AppCompatActivity {
 
     public void addSwapHeader(){
         RequestQueue requestQueue = Volley.newRequestQueue(this);
-//        String URL = "http://104.197.4.32:8080/Koobym/user/add";
-        String URL = Constants.POST_SWAP_HEADER;
+        String URL = "http://192.168.1.6:8080/Koobym/swapHeader/add";
+        //String URL = Constants.POST_SWAP_HEADER;
+
+        SwapHeader swapToPost = new SwapHeader();
+        swapToPost.setUser(new User());
+        swapToPost.getUser().setUserId(swapHeader.getUser().getUserId());
+        swapToPost.setSwapDetail(new SwapDetail());
+        swapToPost.getSwapDetail().setSwapDetailId(swapHeader.getSwapDetail().getSwapDetailId());
+        swapToPost.setUserDayTime(new UserDayTime());
+        swapToPost.getUserDayTime().setUserDayTimeId(swapHeader.getUserDayTime().getUserDayTimeId());
+        swapToPost.setLocation(swapHeader.getLocation());
+        swapToPost.setDateTimeStamp(nextDateStr);
+        swapToPost.setStatus("APPROVED_BY_REQUESTOR");
 
         final Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd").registerTypeAdapter(Date.class, GsonDateDeserializer.getInstance()).create();
-        final String mRequestBody = gson.toJson(swapHeader);
+        final String mRequestBody = gson.toJson(swapToPost);
 
-
-
-        Log.d("LOG_VOLLEY", mRequestBody);
+        d("swapHeader_VOLLEY", mRequestBody);
         StringRequest stringRequest = new StringRequest(Request.Method.POST, URL, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
                 Log.d("onResponse addSwapH", "inside");
                 Log.i("AddSwapHeader", response);
-//                Intent intent = new Intent(TimeDateChooser.this, RequestActivity.class);
-//                startActivity(intent);
+                Intent intent = new Intent(TimeDateChooser.this, RequestActivity.class);
+                startActivity(intent);
 
             }
         }, new Response.ErrorListener() {
@@ -343,6 +352,15 @@ public class TimeDateChooser extends AppCompatActivity {
         requestQueue.add(stringRequest);
     }
 
+    public static void d(String TAG, String message) {
+        int maxLogSize = 2000;
+        for(int i = 0; i <= message.length() / maxLogSize; i++) {
+            int start = i * maxLogSize;
+            int end = (i+1) * maxLogSize;
+            end = end > message.length() ? message.length() : end;
+            android.util.Log.d(TAG, message.substring(start, end));
+        }
+    }
 
     public void addRentalHeader(){
         RequestQueue requestQueue = Volley.newRequestQueue(this);
