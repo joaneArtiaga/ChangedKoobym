@@ -1,5 +1,7 @@
 package com.example.joane14.myapplication.Fragments;
 
+import android.app.Dialog;
+import android.app.TimePickerDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
@@ -13,12 +15,18 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.TextView;
+import android.widget.TimePicker;
 
 import com.example.joane14.myapplication.Activities.SignUp;
+import com.example.joane14.myapplication.Activities.TimeDateChooser;
 import com.example.joane14.myapplication.Adapters.TimeDayAdapter;
+import com.example.joane14.myapplication.Model.DayModel;
 import com.example.joane14.myapplication.Model.DayTimeModel;
 import com.example.joane14.myapplication.Model.MeetUpLocObj;
+import com.example.joane14.myapplication.Model.TimeModel;
 import com.example.joane14.myapplication.Model.UserDayTime;
 import com.example.joane14.myapplication.R;
 
@@ -36,7 +44,10 @@ public class AddTimeFrag extends Fragment{
     private static RecyclerView.Adapter adapter;
     private RecyclerView.LayoutManager layoutManager;
     private static RecyclerView recyclerView;
-    Button mNext;
+    Button mNext, mAddTime;
+    DayModel dayModel;
+    TimeModel timeModel;
+    UserDayTime userDayTime;
 
     public AddTimeFrag() {
     }
@@ -63,6 +74,8 @@ public class AddTimeFrag extends Fragment{
         dayTimeModelArrayList = new ArrayList<DayTimeModel>();
         userDayTimeList = new ArrayList<UserDayTime>();
         mNext = (Button) view.findViewById(R.id.btnNextTime);
+        mAddTime = (Button) view.findViewById(R.id.btnAddTime);
+
 
         MeetUpLocObj meetUpLocObj = new MeetUpLocObj();
         meetUpLocObj = (MeetUpLocObj) bundle.getSerializable("meetUpLocObj");
@@ -80,6 +93,14 @@ public class AddTimeFrag extends Fragment{
             Log.d("selectedDays", "not null");
 
         }
+
+        mAddTime.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                customDialog();
+            }
+        });
+
 
         mNext.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -118,6 +139,51 @@ public class AddTimeFrag extends Fragment{
         return view;
 
     }
+
+    public void customDialog(){
+        final Dialog dialog = new Dialog(getContext());
+        dialog.setContentView(R.layout.time_date_dialog);
+        dialog.setTitle("Choose Time and Day");
+
+        // set the custom dialog components - text, image and button
+        TextView text = (TextView) dialog.findViewById(R.id.text);
+        text.setText("Android custom dialog example!");
+
+        EditText etTime = (EditText) dialog.findViewById(R.id.timeChooser);
+
+        etTime.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                CreateTimePicker();
+            }
+        });
+    }
+
+    public void CreateTimePicker(){
+
+        userDayTime = new UserDayTime();
+
+        final java.util.Calendar c = java.util.Calendar.getInstance();
+        int mHour = c.get(java.util.Calendar.HOUR_OF_DAY);
+        int mMinute = c.get(java.util.Calendar.MINUTE);
+
+
+        TimePickerDialog timePickerDialog = new TimePickerDialog(getContext(),
+                new TimePickerDialog.OnTimeSetListener() {
+
+                    @Override
+                    public void onTimeSet(TimePicker view, int hourOfDay,
+                                          int minute) {
+                        String timeGiven = "";
+                        timeGiven = hourOfDay + ":" + minute;
+                        Log.d("time selected", timeGiven);
+
+
+                    }
+                }, mHour, mMinute, false);
+        timePickerDialog.show();
+    }
+
 
     public void onButtonPressed(List<DayTimeModel> listDayTimeModel) {
         if (mListener != null) {

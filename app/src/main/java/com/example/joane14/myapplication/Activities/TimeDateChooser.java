@@ -1,6 +1,8 @@
 package com.example.joane14.myapplication.Activities;
 
 import android.annotation.SuppressLint;
+import android.app.Dialog;
+import android.app.TimePickerDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.icu.text.DateFormat;
@@ -12,9 +14,13 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.Switch;
 import android.widget.TextView;
+import android.widget.TimePicker;
 import android.widget.Toast;
 
 import com.android.volley.AuthFailureError;
@@ -28,11 +34,14 @@ import com.android.volley.toolbox.Volley;
 import com.example.joane14.myapplication.Adapters.TimeDateAdapter;
 import com.example.joane14.myapplication.Adapters.TimeDayAdapter;
 import com.example.joane14.myapplication.Fragments.Constants;
+import com.example.joane14.myapplication.Model.DayModel;
+import com.example.joane14.myapplication.Model.DayTimeModel;
 import com.example.joane14.myapplication.Model.LocationModel;
 import com.example.joane14.myapplication.Model.RentalDetail;
 import com.example.joane14.myapplication.Model.RentalHeader;
 import com.example.joane14.myapplication.Model.SwapDetail;
 import com.example.joane14.myapplication.Model.SwapHeader;
+import com.example.joane14.myapplication.Model.TimeModel;
 import com.example.joane14.myapplication.Model.User;
 import com.example.joane14.myapplication.Model.UserDayTime;
 import com.example.joane14.myapplication.R;
@@ -93,12 +102,11 @@ public class TimeDateChooser extends AppCompatActivity {
             fromWhere = "swap";
             swapDetail = new SwapDetail();
             swapHeader = new SwapHeader();
-            if(getIntent().getExtras().getSerializable("swapDetail")!=null){
+            if(getIntent().getExtras().getSerializable("swapHeader")!=null){
                 userDayTimeModel = new UserDayTime();
-                swapDetail = (SwapDetail) getIntent().getExtras().getSerializable("swapDetail");
-
-                for(int init=0; init<swapDetail.getBookOwner().getUserObj().getDayTimeModel().size(); init++){
-                    userDayTimeModel = swapDetail.getBookOwner().getUserObj().getDayTimeModel().get(init);
+                swapHeader = (SwapHeader) getIntent().getSerializableExtra("swapHeader");
+                for(int init=0; init<swapHeader.getRequestedSwapDetail().getBookOwner().getUserObj().getDayTimeModel().size(); init++){
+                    userDayTimeModel = swapHeader.getRequestedSwapDetail().getBookOwner().getUserObj().getDayTimeModel().get(init);
                     userDayTimeList.add(userDayTimeModel);
                 }
             }
@@ -220,13 +228,6 @@ public class TimeDateChooser extends AppCompatActivity {
                     break;
             }
 
-//        if (mCalendar.get(Calendar.DAY_OF_WEEK) != dayvalues) {
-//            mCalendar.add(Calendar.DAY_OF_MONTH, (dayvalues + 7 - mCalendar.get(Calendar.DAY_OF_WEEK)) % 7);
-//        } else {
-//            int minOfDay = mCalendar.get(Calendar.HOUR_OF_DAY) * 60 + mCalendar.get(Calendar.MINUTE);
-//            if (minOfDay >= hour * 60 + minute)
-//                cal.add(Calendar.DAY_OF_MONTH, 7); // Bump to next week
-//        }
 
         TextView mTitle = (TextView) findViewById(R.id.tdMyDate);
         mTitle.setText("Today is "+stringDay+", "+date);
@@ -280,8 +281,6 @@ public class TimeDateChooser extends AppCompatActivity {
                             startActivity(intent);
                         }else{
                             swapHeader.setStatus("Approved");
-                            swapHeader.setSwapDetail(swapDetail);
-                            swapHeader.setUser(user);
                             swapHeader.setDateTimeStamp(nextDateStr);
                             swapHeader.setLocation(locationChosen);
                             swapHeader.setUserDayTime(userDayTimeList.get(position));
@@ -297,16 +296,20 @@ public class TimeDateChooser extends AppCompatActivity {
         alertDialog.show();
     }
 
+
+
     public void addSwapHeader(){
         RequestQueue requestQueue = Volley.newRequestQueue(this);
-        String URL = "http://192.168.1.6:8080/Koobym/swapHeader/add";
-        //String URL = Constants.POST_SWAP_HEADER;
+//        String URL = "http://192.168.1.6:8080/Koobym/swapHeader/add";
+        String URL = Constants.POST_SWAP_HEADER;
 
         SwapHeader swapToPost = new SwapHeader();
         swapToPost.setUser(new User());
         swapToPost.getUser().setUserId(swapHeader.getUser().getUserId());
         swapToPost.setSwapDetail(new SwapDetail());
         swapToPost.getSwapDetail().setSwapDetailId(swapHeader.getSwapDetail().getSwapDetailId());
+        swapToPost.setRequestedSwapDetail(new SwapDetail());
+        swapToPost.setRequestedSwapDetail(swapHeader.getSwapDetail());
         swapToPost.setUserDayTime(new UserDayTime());
         swapToPost.getUserDayTime().setUserDayTimeId(swapHeader.getUserDayTime().getUserDayTimeId());
         swapToPost.setLocation(swapHeader.getLocation());

@@ -23,6 +23,7 @@ import com.example.joane14.myapplication.Activities.ViewBookSwapActivity;
 import com.example.joane14.myapplication.Fragments.Constants;
 import com.example.joane14.myapplication.Model.SwapComment;
 import com.example.joane14.myapplication.Model.SwapDetail;
+import com.example.joane14.myapplication.Model.SwapHeader;
 import com.example.joane14.myapplication.Model.User;
 import com.example.joane14.myapplication.R;
 import com.example.joane14.myapplication.Utilities.SPUtility;
@@ -38,6 +39,7 @@ public class SwapCommentsAdapter extends RecyclerView.Adapter<SwapCommentsAdapte
 
     public List<SwapComment> bookList;
     public SwapDetail swapDetail;
+    SwapHeader swapHeader;
     public Activity context;
 
 
@@ -55,8 +57,10 @@ public class SwapCommentsAdapter extends RecyclerView.Adapter<SwapCommentsAdapte
 
 
     public SwapCommentsAdapter(List<SwapComment> myDataset, SwapDetail swapDetail) {
+        swapHeader = new SwapHeader();
         bookList = myDataset;
         this.swapDetail = swapDetail;
+        swapHeader.setSwapDetail(swapDetail);
     }
 
     @Override
@@ -73,10 +77,12 @@ public class SwapCommentsAdapter extends RecyclerView.Adapter<SwapCommentsAdapte
                 User user = new User();
                 user = (User) SPUtility.getSPUtil(context).getObject("USER_OBJECT", User.class);
                 if(user.getUserId()==swapDetail.getBookOwner().getUserObj().getUserId()){
+                    swapHeader.setUser(user);
                     Log.d("SwapComment onClick", bookList.get(position).getSwapComment());
                     Intent intent = new Intent(context, SwapBookChooser.class);
                     Bundle bundle = new Bundle();
                     bundle.putSerializable("swapDetail", swapDetail);
+                    bundle.putSerializable("swapHeader", swapHeader);
                     bundle.putSerializable("swapComment", bookList.get(position));
                     intent.putExtras(bundle);
                     context.startActivity(intent);

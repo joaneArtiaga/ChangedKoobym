@@ -16,6 +16,7 @@ import com.example.joane14.myapplication.Adapters.SwapCommentsAdapter;
 import com.example.joane14.myapplication.Model.RentalDetail;
 import com.example.joane14.myapplication.Model.SwapComment;
 import com.example.joane14.myapplication.Model.SwapDetail;
+import com.example.joane14.myapplication.Model.SwapHeader;
 import com.example.joane14.myapplication.Model.User;
 import com.example.joane14.myapplication.R;
 
@@ -26,6 +27,7 @@ public class DisplaySwapComments extends Fragment {
 
     private OnSwapCommentInteractionListener mListener;
     List<SwapComment> suggested;
+    SwapHeader swapHeader;
     private RecyclerView mRecyclerView;
     private RecyclerView.Adapter mAdapter;
     private RecyclerView.LayoutManager mLayoutManager;

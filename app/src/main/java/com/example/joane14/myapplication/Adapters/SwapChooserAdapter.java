@@ -26,6 +26,7 @@ import com.example.joane14.myapplication.Fragments.Constants;
 import com.example.joane14.myapplication.Model.RentalDetail;
 import com.example.joane14.myapplication.Model.SwapComment;
 import com.example.joane14.myapplication.Model.SwapDetail;
+import com.example.joane14.myapplication.Model.SwapHeader;
 import com.example.joane14.myapplication.R;
 import com.squareup.picasso.Picasso;
 
@@ -38,7 +39,8 @@ import java.util.List;
 public class SwapChooserAdapter extends RecyclerView.Adapter<SwapChooserAdapter.BookHolder> {
 
     public List<SwapDetail> bookList;
-    SwapDetail swapDetail;
+    SwapDetail swapDetailObj;
+    SwapHeader swapHeader;
     public Activity context;
 
 
@@ -55,14 +57,16 @@ public class SwapChooserAdapter extends RecyclerView.Adapter<SwapChooserAdapter.
 
 
 
-    public SwapChooserAdapter(List<SwapDetail> myDataset, SwapDetail swapBook) {
+    public SwapChooserAdapter(List<SwapDetail> myDataset, SwapHeader swapBook) {
         bookList = myDataset;
-        this.swapDetail = swapBook;
+        this.swapHeader = swapBook;
     }
 
     @Override
     public void onBindViewHolder(SwapChooserAdapter.BookHolder holder, final int position) {
 
+
+        swapHeader.setRequestedSwapDetail(bookList.get(position));
         String author = "";
         holder.mBookTitle.setText(bookList.get(position).getBookOwner().getBookObj().getBookTitle());
         holder.mBookPrice.setText(String.valueOf(bookList.get(position).getSwapPrice()));
@@ -147,7 +151,7 @@ public class SwapChooserAdapter extends RecyclerView.Adapter<SwapChooserAdapter.
     public void showConfirmation(int position){
         AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(context);
         alertDialogBuilder.setTitle("Meet Up Summary");
-        alertDialogBuilder.setMessage("Are you sure you want to swap your book "+swapDetail.getBookOwner().getBookObj().getBookTitle()+" " +
+        alertDialogBuilder.setMessage("Are you sure you want to swap your book "+swapHeader.getSwapDetail().getBookOwner().getBookObj().getBookTitle()+" " +
                 "with "+bookList.get(position).getBookOwner().getUserObj().getUserFname()+" "+bookList.get(position).getBookOwner().getUserObj().getUserLname()+
                 "'s book, "+bookList.get(position).getBookOwner().getBookObj().getBookTitle()+"?");
         alertDialogBuilder.setPositiveButton("Yes",
@@ -158,7 +162,7 @@ public class SwapChooserAdapter extends RecyclerView.Adapter<SwapChooserAdapter.
 
                         Intent intent = new Intent(context, SwapMeetUpChooser.class);
                         Bundle bundle = new Bundle();
-                        bundle.putSerializable("swapDetail", swapDetail);
+                        bundle.putSerializable("swapHeader", swapHeader);
                         intent.putExtras(bundle);
                         context.startActivity(intent);
 

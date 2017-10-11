@@ -31,6 +31,17 @@ public class SwapHeader implements Serializable {
     @SerializedName("status")
     private String status;
 
+    @SerializedName("requestedSwapDetail")
+    private SwapDetail requestedSwapDetail;
+
+
+    public SwapDetail getRequestedSwapDetail() {
+        return requestedSwapDetail;
+    }
+
+    public void setRequestedSwapDetail(SwapDetail requestedSwapDetail) {
+        this.requestedSwapDetail = requestedSwapDetail;
+    }
 
     public int getSwapHeaderId() {
         return swapHeaderId;

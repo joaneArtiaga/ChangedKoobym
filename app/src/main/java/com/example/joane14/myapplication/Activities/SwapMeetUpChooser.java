@@ -11,6 +11,7 @@ import android.widget.Toast;
 import com.example.joane14.myapplication.Model.LocationModel;
 import com.example.joane14.myapplication.Model.RentalDetail;
 import com.example.joane14.myapplication.Model.SwapDetail;
+import com.example.joane14.myapplication.Model.SwapHeader;
 import com.example.joane14.myapplication.R;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -28,7 +29,7 @@ public class SwapMeetUpChooser extends FragmentActivity implements OnMapReadyCal
     private GoogleMap mMap;
     private HashMap<Marker, Integer> mHashMap = new HashMap<Marker, Integer>();
     List<LocationModel> locationModelList;
-    SwapDetail swapDetailModel;
+    SwapHeader swapHeader;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,12 +40,12 @@ public class SwapMeetUpChooser extends FragmentActivity implements OnMapReadyCal
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
 
-        swapDetailModel = new SwapDetail();
+        swapHeader = new SwapHeader();
 
-        if(getIntent().getExtras().getSerializable("swapDetail")!=null){
-            swapDetailModel = (SwapDetail) getIntent().getExtras().getSerializable("swapDetail");
-            Log.d("MeetUpChooser", String.valueOf(swapDetailModel.getBookOwner().getUserObj().getUserId()));
-            locationModelList = swapDetailModel.getBookOwner().getUserObj().getLocationArray();
+        if(getIntent().getExtras().getSerializable("swapHeader")!=null){
+            swapHeader = (SwapHeader) getIntent().getExtras().getSerializable("swapHeader");
+            Log.d("MeetUpChooser", String.valueOf(swapHeader.getRequestedSwapDetail().getBookOwner().getUserObj().getUserId()));
+            locationModelList = swapHeader.getRequestedSwapDetail().getBookOwner().getUserObj().getLocationArray();
             for(int init = 0; init<locationModelList.size(); init++){
                 Log.d("MeetUpChooser Location", locationModelList.get(init).getLocationName());
             }
@@ -99,7 +100,7 @@ public class SwapMeetUpChooser extends FragmentActivity implements OnMapReadyCal
                                 Log.d("MarkerPosition", String.valueOf(position));
                                 Intent intent = new Intent(SwapMeetUpChooser.this,TimeDateChooser.class);
                                 Bundle mBundle = new Bundle();
-                                mBundle.putSerializable("swapDetail", swapDetailModel);
+                                mBundle.putSerializable("swapHeader", swapHeader);
                                 mBundle.putBoolean("fromSwap", true);
                                 mBundle.putSerializable("locationChose", locationModelList.get(position));
                                 intent.putExtra("confirm", mBundle);

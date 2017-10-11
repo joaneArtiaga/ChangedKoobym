@@ -24,6 +24,7 @@ import com.example.joane14.myapplication.Activities.SwapBookChooser;
 import com.example.joane14.myapplication.Adapters.SwapChooserAdapter;
 import com.example.joane14.myapplication.Model.SwapComment;
 import com.example.joane14.myapplication.Model.SwapDetail;
+import com.example.joane14.myapplication.Model.SwapHeader;
 import com.example.joane14.myapplication.R;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -39,6 +40,7 @@ public class SwapChooserFrag extends Fragment {
 
     SwapComment swapCommentModel;
     SwapDetail swapDetailModel;
+    SwapHeader swapHeaderModel;
     List<SwapDetail> suggested;
     private RecyclerView mRecyclerView;
     private RecyclerView.Adapter mAdapter;
@@ -71,6 +73,7 @@ public class SwapChooserFrag extends Fragment {
 
         this.swapCommentModel = (SwapComment) getArguments().getSerializable("swapComment");
         this.swapDetailModel = (SwapDetail) getArguments().getSerializable("swapDetail");
+        this.swapHeaderModel = (SwapHeader) getArguments().getSerializable("swapHeader");
 
         if(swapCommentModel==null){
             Log.d("SwapCommentModel", "is null");
@@ -88,7 +91,7 @@ public class SwapChooserFrag extends Fragment {
         mRecyclerView.setHasFixedSize(true);
         mLayoutManager = new LinearLayoutManager(getContext());
         mRecyclerView.setLayoutManager(mLayoutManager);
-        mAdapter = new SwapChooserAdapter(suggested,swapDetailModel);
+        mAdapter = new SwapChooserAdapter(suggested,swapHeaderModel);
         mRecyclerView.setAdapter(mAdapter);
 
 
