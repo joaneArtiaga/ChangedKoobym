@@ -190,6 +190,7 @@ public class ViewBookSwapActivity extends AppCompatActivity implements Navigatio
     }
 
     private void showInputDialog() {
+        swapCommentDetail = new SwapCommentDetail();
         AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(this);
         LayoutInflater inflater = this.getLayoutInflater();
         final View dialogView = inflater.inflate(R.layout.dialog_input_swap, null);
