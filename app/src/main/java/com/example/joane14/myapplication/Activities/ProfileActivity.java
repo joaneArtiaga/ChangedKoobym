@@ -40,6 +40,7 @@ import com.example.joane14.myapplication.Fragments.Genre;
 import com.example.joane14.myapplication.Fragments.ProfileFragment;
 import com.example.joane14.myapplication.Fragments.ShowBooksFrag;
 import com.example.joane14.myapplication.Model.Book;
+import com.example.joane14.myapplication.Model.BookOwnerModel;
 import com.example.joane14.myapplication.Model.User;
 import com.example.joane14.myapplication.R;
 import com.example.joane14.myapplication.Utilities.SPUtility;
@@ -56,6 +57,8 @@ import java.net.URLEncoder;
 public class ProfileActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, ProfileFragment.OnFragmentInteractionListener{
 
     FloatingActionButton mBtnAdd;
+    Book book;
+    BookOwnerModel bookOwner;
     Bundle mBundle, fragmentBundle;
     User userObj;
     ImageView profileImg;
@@ -94,6 +97,9 @@ public class ProfileActivity extends AppCompatActivity implements NavigationView
 
         Intent intent = getIntent();
 
+        book = new Book();
+        bookOwner = new BookOwnerModel();
+
 
             if(null!=intent.getBundleExtra("user")){
                 Log.d("User Login", "inside");
@@ -128,6 +134,55 @@ public class ProfileActivity extends AppCompatActivity implements NavigationView
 
     }
 
+    public void searchISBNPrice(String booktitle){
+
+        String query = booktitle;
+        try {
+            query = URLEncoder.encode(booktitle, "utf-8");
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
+        RequestQueue requestQueue = Volley.newRequestQueue(this);
+        String URL = String.format(Constants.ISBN_SEARCH_PRICES, query);
+
+        Log.d("BOOK URL", URL);
+
+        StringRequest stringRequest = new StringRequest(Request.Method.GET, URL, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                Log.d("ISBNPriceresponse", response);
+                try {
+                    JSONObject obj = new JSONObject(response);
+                    JSONArray items = obj.getJSONArray("data");
+                    if(items.length()!=0){
+                        Log.d("PriceSize", "not Empty");
+                    }else{
+                        Log.d("PriceSize", "Empty");
+                    }
+                    for(int init = 0; init< items.length(); init++){
+                        JSONObject arrayObject = items.getJSONObject(init);
+                        Log.d("PRICE",arrayObject.getString("price"));
+
+                        book.setBookOriginalPrice(Float.parseFloat(String.valueOf(arrayObject.get("price"))));
+//                        searchGoogleBook(arrayObject.getString("isbn13"));
+                    }
+
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.e("GOOGLE BOOK", error.toString());
+            }
+        });
+
+        requestQueue.add(stringRequest);
+
+
+    }
+
     public void searchISBN(String booktitle){
 
         String query = booktitle;
@@ -152,7 +207,7 @@ public class ProfileActivity extends AppCompatActivity implements NavigationView
                         JSONObject arrayObject = items.getJSONObject(init);
                         Log.d("ISBN",arrayObject.getString("isbn13"));
 
-                        searchGoogleBook(arrayObject.getString("isbn13"));
+//                        searchISBNPrice(arrayObject.getString("isbn13"));
                     }
 
                 } catch (JSONException e) {
@@ -172,7 +227,7 @@ public class ProfileActivity extends AppCompatActivity implements NavigationView
     }
 
 
-    public void searchGoogleBook(String booktitle) {
+    public void searchGoogleBook(final String booktitle) {
         String query = booktitle;
         try {
             query = URLEncoder.encode(booktitle, "utf-8");
@@ -205,6 +260,10 @@ public class ProfileActivity extends AppCompatActivity implements NavigationView
                     }else{
                         Log.d("ImageGoogle", obj.getJSONObject("volumeInfo").getJSONObject("imageLinks").getString("thumbnail"));
                     }
+
+
+
+//                    searchISBNPrice(booktitle);
 
 
 //                    fragmentManager = getSupportFragmentManager();
@@ -241,7 +300,7 @@ public class ProfileActivity extends AppCompatActivity implements NavigationView
         StringRequest stringRequest = new StringRequest(Request.Method.GET, URL, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
-                Log.d("SEARCH BOOK RES", response);
+                Log.d("GOOGLEBOOK", response);
                 try {
                     JSONObject obj = new JSONObject(response);
                     JSONArray items = obj.getJSONArray("items");
@@ -250,7 +309,15 @@ public class ProfileActivity extends AppCompatActivity implements NavigationView
                         Log.d("Title",arrayObject.getJSONObject("volumeInfo").getString("title"));
                         Log.d("VolumeInfo",arrayObject.getJSONObject("volumeInfo").toString());
 
+                        if(arrayObject.getJSONObject("saleInfo").getString("saleability").equals("NOT_FOR_SALE")){
+                            Log.d("googleBookPrice", "not for sale");
+                        }else if(arrayObject.getJSONObject("saleInfo").getString("saleability").equals("FOR_SALE")){
+                                String price = arrayObject.getJSONObject("saleInfo").getJSONObject("listPrice").getString("amount");
+                                Log.d("priceGoogle", price);
+                                Log.d("googleBookPrice", "not null");
+                        }
                     }
+
 
 
                         fragmentManager = getSupportFragmentManager();
@@ -355,6 +422,6 @@ public class ProfileActivity extends AppCompatActivity implements NavigationView
     @Override
     public void onAddBookSelected(String keyword) {
         searchBook(keyword);
-        searchISBN(keyword);
+//        searchISBN(keyword);
     }
 }

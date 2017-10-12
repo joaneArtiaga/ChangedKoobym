@@ -1,7 +1,9 @@
 package com.example.joane14.myapplication.Fragments;
 
+import android.app.DatePickerDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -13,6 +15,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
+import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.Toast;
@@ -25,6 +28,7 @@ import com.android.volley.VolleyError;
 import com.android.volley.VolleyLog;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+import com.example.joane14.myapplication.Activities.AddBookOwner;
 import com.example.joane14.myapplication.Activities.GsonDateDeserializer;
 import com.example.joane14.myapplication.Activities.ProfileActivity;
 import com.example.joane14.myapplication.Adapters.RecyclerAdapterShowBook;
@@ -41,10 +45,13 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.UnsupportedEncodingException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 public class ShowBooksFrag extends Fragment {
 
@@ -55,6 +62,8 @@ public class ShowBooksFrag extends Fragment {
     Book bookObject;
     User userObkect;
     String bookStatDes, bookDateBought;
+    private Calendar calendar;
+    DatePickerDialog.OnDateSetListener date;
 
 
     private OnFragmentInteractionListener mListener;
@@ -96,6 +105,7 @@ public class ShowBooksFrag extends Fragment {
 
         String resultString = getArguments().getString("searchResult");
         this.userObkect = (User) getArguments().getSerializable("userProfile");
+
 
         if(resultString.length()!=0){
             Log.d("searchResult", resultString);
@@ -140,8 +150,10 @@ public class ShowBooksFrag extends Fragment {
                         bookObject.setBookFilename("");
                     }
                     bookObject.setBookOriginalPrice(1.1f);
+
                     if(obj.has("publishedDate")) {
                         bookObject.setBookPublishedDate(obj.getString("publishedDate"));
+                        Log.d("publishedDate", obj.getString("publishedDate"));
                     }else{
                         bookObject.setBookPublishedDate("N/A");
                     }
@@ -149,7 +161,12 @@ public class ShowBooksFrag extends Fragment {
 //                    bookObject.setBookId(arrayObject.getJSONObject(""));
 
 //                    bookObject.setBookFilename(obj.getJSONObject("imageLinks").getString("thumbnail"));
-                    bookList.add(bookObject);
+
+                    if(arrayObject.getJSONObject("saleInfo").getString("saleability").equals("FOR_SALE")){
+                        String price = arrayObject.getJSONObject("saleInfo").getJSONObject("listPrice").getString("amount");
+                        bookObject.setBookOriginalPrice(Float.parseFloat(price));
+                        bookList.add(bookObject);
+                    }
 
                     Log.d("Title",arrayObject.getJSONObject("volumeInfo").getString("title"));
                 }
@@ -164,6 +181,7 @@ public class ShowBooksFrag extends Fragment {
 
         return view;
     }
+
 
     public void onButtonPressed(Uri uri) {
         if (mListener != null) {
@@ -189,65 +207,100 @@ public class ShowBooksFrag extends Fragment {
                 .MyClickListener() {
             @Override
             public void onItemClick(int position, View v) {
-                Toast.makeText(getContext() ,bookList.get(position).getBookTitle(), Toast.LENGTH_SHORT).show();
 
-                bookObject = bookList.get(position);
+                Intent intent = new Intent(getContext(), AddBookOwner.class);
+                Bundle bundle = new Bundle();
+                bundle.putSerializable("bookPass", bookList.get(position));
+                intent.putExtras(bundle);
+                startActivity(intent);
 
-                if(userObkect!=null){
-                    Log.d("userObject", "not null");
-                }else{
-                    Log.d("userObject", "null");
-                }
-
-                if(bookObject!=null){
-                    Log.d("bookObject", "not null");
-                }else{
-                    Log.d("bookObject", "null");
-                }
-
-                final AlertDialog.Builder alert = new AlertDialog.Builder(getContext());
-
-                LinearLayout layout = new LinearLayout(getContext());
-                layout.setOrientation(LinearLayout.VERTICAL);
-
-
-                final EditText statDescription = new EditText(getContext());
-                statDescription.setHint("Book State Description");
-                layout.addView(statDescription);
-
-                final EditText etBought = new EditText(getContext());
-                layout.addView(etBought);
-                etBought.setHint("Date Bought (YYYY-MM-DD)");
-                alert.setView(layout);
-
-                alert.setTitle("You chose "+bookList.get(position).getBookTitle());
-
-
-                alert.setPositiveButton("SUBMIT", new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int whichButton) {
-//                        //What ever you want to do with the value
-//                        Editable YouEditTextValue = edittext.getText();
-//                        //OR
-//                        String YouEditTextValue
-
-                        Log.d("Inside", "onClickPositiveButton");
-                        bookStatDes = statDescription.getText().toString();
-                        Log.d("Stat Description", bookStatDes);
-                        bookDateBought = etBought.getText().toString();
-                        Log.d("Date Bought", bookDateBought);
-                        addBook(userObkect, bookObject, bookStatDes, bookDateBought);
-
-                    }
-                });
-
-                alert.setNegativeButton("CANCEL", new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int whichButton) {
-                        Log.d("Inside", "onClickNegativeButton");
-                        dialog.dismiss();
-                    }
-                });
-
-                alert.show();
+//                Toast.makeText(getContext() ,bookList.get(position).getBookTitle(), Toast.LENGTH_SHORT).show();
+//
+//                bookObject = bookList.get(position);
+//
+//                if(userObkect!=null){
+//                    Log.d("userObject", "not null");
+//                }else{
+//                    Log.d("userObject", "null");
+//                }
+//
+//                if(bookObject!=null){
+//                    Log.d("bookObject", "not null");
+//                }else{
+//                    Log.d("bookObject", "null");
+//                }
+//
+//                final AlertDialog.Builder alert = new AlertDialog.Builder(getContext());
+//
+//                LinearLayout layout = new LinearLayout(getContext());
+//                layout.setOrientation(LinearLayout.VERTICAL);
+//
+//
+//                final EditText statDescription = new EditText(getContext());
+//                statDescription.setHint("Book State Description");
+//                layout.addView(statDescription);
+//
+//                final EditText etBought = new EditText(getContext());
+//                layout.addView(etBought);
+//
+//                date = new DatePickerDialog.OnDateSetListener() {
+//
+//                    @Override
+//                    public void onDateSet(DatePicker view, int year, int monthOfYear,
+//                                          int dayOfMonth) {
+//                        // TODO Auto-generated method stub
+//                        calendar.set(Calendar.YEAR, year);
+//                        calendar.set(Calendar.MONTH, monthOfYear);
+//                        calendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
+//                        String myFormat = "yyyy-MM-dd"; //In which you need put here
+//                        SimpleDateFormat sdf = new SimpleDateFormat(myFormat, Locale.US);
+//                        etBought.setText(sdf.format(calendar.getTime()));
+//                    }
+//
+//                };
+//
+//                etBought.setHint("Date Bought (YYYY-MM-DD)");
+//                etBought.setOnClickListener(new View.OnClickListener() {
+//                    @Override
+//                    public void onClick(View view) {
+//
+//                        new DatePickerDialog(getContext(), date, calendar
+//                                .get(Calendar.YEAR), calendar.get(Calendar.MONTH),
+//                                calendar.get(Calendar.DAY_OF_MONTH)).show();
+//
+//                    }
+//                });
+//
+//                alert.setView(layout);
+//
+//                alert.setTitle("You chose "+bookList.get(position).getBookTitle());
+//
+//
+//                alert.setPositiveButton("SUBMIT", new DialogInterface.OnClickListener() {
+//                    public void onClick(DialogInterface dialog, int whichButton) {
+////                        //What ever you want to do with the value
+////                        Editable YouEditTextValue = edittext.getText();
+////                        //OR
+////                        String YouEditTextValue
+//
+//                        Log.d("Inside", "onClickPositiveButton");
+//                        bookStatDes = statDescription.getText().toString();
+//                        Log.d("Stat Description", bookStatDes);
+//                        bookDateBought = etBought.getText().toString();
+//                        Log.d("Date Bought", bookDateBought);
+//                        addBook(userObkect, bookObject, bookStatDes, bookDateBought);
+//
+//                    }
+//                });
+//
+//                alert.setNegativeButton("CANCEL", new DialogInterface.OnClickListener() {
+//                    public void onClick(DialogInterface dialog, int whichButton) {
+//                        Log.d("Inside", "onClickNegativeButton");
+//                        dialog.dismiss();
+//                    }
+//                });
+//
+//                alert.show();
             }
         });
     }

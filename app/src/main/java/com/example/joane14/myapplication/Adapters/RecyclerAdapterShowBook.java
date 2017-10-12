@@ -109,6 +109,8 @@ public class RecyclerAdapterShowBook extends RecyclerView.Adapter<RecyclerAdapte
 
     }
 
+
+
     public void addItem(Book bookObj, int index) {
         mBookList.add(index, bookObj);
         notifyItemInserted(index);

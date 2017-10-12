@@ -13,9 +13,11 @@ public class Constants {
 
     public static final String RENT_BY_ID = "http://104.197.4.32:8080/Koobym/rentalDetail/rentById/";
 
-    public static final String GOOGLE_API_SEARCH_URL = "https://www.googleapis.com/books/v1/volumes?q=intitle:%s";
+    public static final String GOOGLE_API_SEARCH_URL = "https://www.googleapis.com/books/v1/volumes?q=%s";
 
     public static final String ISBN_SEARCH_URL = "http://isbndb.com/api/v2/json/IX7LA6KI/books?q=%s";
+
+    public static final String ISBN_SEARCH_PRICES = "http://isbndb.com/api/v2/json/IX7LA6KI/prices/%s";
 
     public static final String GOOGLE_API_SEARCH_URL_ISBN = "https://www.googleapis.com/books/v1/volumes?q=isbn:%s";
 
@@ -76,5 +78,11 @@ public class Constants {
     public static final String GET_BOOK_REVIEWS ="http://104.197.4.32:8080/Koobym/bookOwnerReview/getAllReviewOfBookOwner";
 
     public static final String GET_USER_REVIEWS ="http://104.197.4.32:8080/Koobym/userRating/getAllUserRatingsOf";
+
+    public static final String POST_RENTAL_DETAIL ="http://104.197.4.32:8080/Koobym/rentalDetail/add";
+
+    public static final String POST_SWAP_DETAIL ="http://104.197.4.32:8080/Koobym/swapDetail/add";
+
+    public static final String POST_BOOK_OWNER ="http://104.197.4.32:8080/Koobym/bookOwner/add";
 
 }

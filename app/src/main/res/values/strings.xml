@@ -37,4 +37,20 @@
         <item>9</item>
         <item>10</item>
     </string-array>
+
+    <string name="category_prompt">Choose book category</string>
+    <string-array name="book_category">
+        <item>Rent</item>
+        <item>Swap</item>
+        <item>Auction</item>
+    </string-array>
+
+    <string name="days_prompt">Choose book rental days range</string>
+    <string-array name="days_category">
+        <item>1</item>
+        <item>2</item>
+        <item>3</item>
+        <item>4</item>
+        <item>5</item>
+    </string-array>
 </resources>
