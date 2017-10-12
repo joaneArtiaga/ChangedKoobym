@@ -6,6 +6,8 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -31,14 +33,12 @@ public class ProfileFragment extends Fragment {
     private OnFragmentInteractionListener mListener;
 
     public ProfileFragment() {
-        // Required empty public constructor
     }
 
 
-    public static ProfileFragment newInstance() {
+    public static ProfileFragment newInstance(Bundle bundle) {
         ProfileFragment fragment = new ProfileFragment();
-        Bundle args = new Bundle();
-        fragment.setArguments(args);
+        fragment.setArguments(bundle);
         return fragment;
     }
 
@@ -47,9 +47,13 @@ public class ProfileFragment extends Fragment {
         super.onCreate(savedInstanceState);
 
         userObj = new User();
-            this.userObj = (User) getArguments().getSerializable("userDetails");
-            Log.d("onCreate profFrag", userObj.toString());
-        Log.d("inside", "onCreate profFrag");
+        userObj = (User) getArguments().getSerializable("userDetails");
+
+        if(userObj==null){
+            Log.d("userObj", "null");
+        }else{
+            Log.d("userObj", "not null");
+        }
     }
 
     @Override
@@ -63,26 +67,36 @@ public class ProfileFragment extends Fragment {
 
         TextView mName = (TextView) view.findViewById(R.id.tvName);
         TextView mEmail = (TextView) view.findViewById(R.id.tvEmailProfile);
-        TextView mAddress = (TextView) view.findViewById(R.id.tvAddress);
-        TextView mBirthDate = (TextView) view.findViewById(R.id.tvBirthDate);
-        TextView mPhone = (TextView) view.findViewById(R.id.tvPhoneNumber);
+//        TextView mAddress = (TextView) view.findViewById(R.id.tvAddress);
+//        TextView mBirthDate = (TextView) view.findViewById(R.id.tvBirthDate);
+//        TextView mPhone = (TextView) view.findViewById(R.id.tvPhoneNumber);
+
+        Bundle bundle = new Bundle();
+        bundle.putSerializable("user", userObj);
+        FragmentManager fragmentManager = getFragmentManager();
+        ProfileFrag mrbf = ProfileFrag.newInstance(bundle);
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+        fragmentTransaction.replace(R.id.fragment_container_prof, mrbf);
+        fragmentTransaction.commit();
 
         User userModel = new User();
 
-        userModel = (User) SPUtility.getSPUtil(getContext()).getObject("USER_OBJECT", User.class);
+//        userModel = (User) SPUtility.getSPUtil(getContext()).getObject("USER_OBJECT", User.class);
 
 
-        mEmail.setText(userModel.getEmail());
-        mPhone.setText(userModel.getPhoneNumber());
-        mBirthDate.setText(userModel.getBirthdate().toString());
-        mAddress.setText(userModel.getAddress());
-        ImageView profileImg = (ImageView) view.findViewById(R.id.profileDisplayPic);
+        mEmail.setText(userObj.getEmail());
+//        mPhone.setText(userModel.getPhoneNumber());
+//        mBirthDate.setText(userModel.getBirthdate().toString());
+//        mAddress.setText(userModel.getAddress());
+        ImageView profileImg = (ImageView) view.findViewById(R.id.profIvProf);
         mBtnAdd = (FloatingActionButton) view.findViewById(R.id.btnAdd);
 
-        mName.setText(userModel.getUserFname()+" "+ userModel.getUserLname());
+        mName.setText(userObj.getUserFname()+" "+ userObj.getUserLname());
+        Picasso.with(getContext()).load(String.format(Constants.IMAGE_URL, userObj.getImageFilename())).fit().into(profileImg);
+
 //        mEmail.setText();
 //        Picasso.with(getContext()).load(String.format(Constants.IMAGE_URL, userObj.getImageFilename())).fit().into(profileImg);
-        Glide.with(getContext()).load(userModel.getImageFilename()).centerCrop().into(profileImg);
+//        Glide.with(getContext()).load(userModel.getImageFilename()).centerCrop().into(profileImg);
 
 
         mBtnAdd.setOnClickListener(new View.OnClickListener() {
@@ -151,16 +165,7 @@ public class ProfileFragment extends Fragment {
         mListener = null;
     }
 
-    /**
-     * This interface must be implemented by activities that contain this
-     * fragment to allow an interaction in this fragment to be communicated
-     * to the activity and potentially other fragments contained in that
-     * activity.
-     * <p>
-     * See the Android Training lesson <a href=
-     * "http://developer.android.com/training/basics/fragments/communicating.html"
-     * >Communicating with Other Fragments</a> for more information.
-     */
+
     public interface OnFragmentInteractionListener {
 
         void onAddBookSelected(String keyword);

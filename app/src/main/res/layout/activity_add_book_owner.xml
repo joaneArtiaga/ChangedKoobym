@@ -34,10 +34,22 @@
                 android:orientation="vertical"
                 android:layout_marginLeft="5dp">
 
-                <TextView
+                <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:id="@+id/addBoTitle"/>
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="200dp"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/addBoTitle"/>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/addBoPrice"/>
+
+                </LinearLayout>
 
                 <TextView
                     android:layout_width="wrap_content"

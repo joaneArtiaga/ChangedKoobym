@@ -43,7 +43,7 @@ public class AddBookOwner extends AppCompatActivity {
 
     Book bookModel;
     BookOwnerModel bookOwnerModel;
-    TextView mBookTitle, mBookAuthor, mBookDescription;
+    TextView mBookTitle, mBookAuthor, mBookDescription, mPrice;
     ImageView mBookPic;
     EditText mBookCondition, mDate;
     Button mBtnAddBO;
@@ -83,6 +83,7 @@ public class AddBookOwner extends AppCompatActivity {
         user = new User();
         user = (User) SPUtility.getSPUtil(this).getObject("USER_OBJECT", User.class);
         mBookTitle = (TextView) findViewById(R.id.addBoTitle);
+        mPrice = (TextView) findViewById(R.id.addBoPrice);
         mBookAuthor = (TextView) findViewById(R.id.addBoAuthor);
         mBookDescription = (TextView) findViewById(R.id.addBoDescription);
 
@@ -120,7 +121,7 @@ public class AddBookOwner extends AppCompatActivity {
             Log.d("authorName if", author);
         }
         mBookAuthor.setText(author);
-
+        mPrice.setText(String.valueOf(calculatePrice()));
 
         mBtnAddBO.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -229,12 +230,16 @@ mSpinnerDays.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() 
 
         if(gap>=5){
             price = depPrice;
+            Log.d("calculatedPrice", String.valueOf(price));
         }else if(gap==0){
             price = bookModel.getBookOriginalPrice();
+            Log.d("calculatedPrice", String.valueOf(price));
         }else{
             price = bookModel.getBookOriginalPrice() - (depPrice*gap);
+            Log.d("calculatedPrice", String.valueOf(price));
         }
 
+        Log.d("calculatedPrice", String.valueOf(price));
         return price;
     }
 
@@ -255,8 +260,6 @@ mSpinnerDays.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() 
             public void onResponse(String response) {
                 Log.i("rentalDetailAddLog", response);
 
-
-                addSwapDetail();
 
             }
         }, new Response.ErrorListener() {

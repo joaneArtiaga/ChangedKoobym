@@ -35,8 +35,13 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+import com.example.joane14.myapplication.Fragments.AboutProfFrag;
 import com.example.joane14.myapplication.Fragments.Constants;
+import com.example.joane14.myapplication.Fragments.DisplayBookReview;
+import com.example.joane14.myapplication.Fragments.DisplayMyBooks;
+import com.example.joane14.myapplication.Fragments.DisplayUserReview;
 import com.example.joane14.myapplication.Fragments.Genre;
+import com.example.joane14.myapplication.Fragments.ProfileFrag;
 import com.example.joane14.myapplication.Fragments.ProfileFragment;
 import com.example.joane14.myapplication.Fragments.ShowBooksFrag;
 import com.example.joane14.myapplication.Model.Book;
@@ -54,7 +59,12 @@ import org.json.JSONObject;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 
-public class ProfileActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, ProfileFragment.OnFragmentInteractionListener{
+public class ProfileActivity extends AppCompatActivity implements
+        NavigationView.OnNavigationItemSelectedListener,
+        ProfileFragment.OnFragmentInteractionListener, ProfileFrag.OnProfileFragInteractionListener,
+        AboutProfFrag.OnAboutProfInteractionListener,
+        DisplayUserReview.OnUserReviewInteractionListener,
+        DisplayMyBooks.OnDisplayMyBooksInteractionListener{
 
     FloatingActionButton mBtnAdd;
     Book book;
@@ -99,14 +109,14 @@ public class ProfileActivity extends AppCompatActivity implements NavigationView
 
         book = new Book();
         bookOwner = new BookOwnerModel();
+        mBundle = new Bundle();
 
 
-            if(null!=intent.getBundleExtra("user")){
+            if(intent.getExtras().getSerializable("userModelPass")!=null){
                 Log.d("User Login", "inside");
 
 
-                mBundle = intent.getBundleExtra("user");
-                this.userObj = (User) mBundle.getSerializable("userModelPass");
+                this.userObj = (User) getIntent().getExtras().getSerializable("userModelPass");
 
                 Log.d("User filename", userObj.getImageFilename());
                 Log.d("User Id", String.valueOf(userObj.getUserId()));
@@ -115,17 +125,20 @@ public class ProfileActivity extends AppCompatActivity implements NavigationView
                 mName.setText(userObj.getUserFname()+" "+ userObj.getUserLname());
                 mEmail.setText(userObj.getEmail());
                 Picasso.with(ProfileActivity.this).load(String.format(Constants.IMAGE_URL, userObj.getImageFilename())).fit().into(profileImg);
-                Log.d("Fragment", "inside");
-                mBundle.putSerializable("userDetails", userObj);
-                Log.d("userDetails", userObj.toString());
 
-                fragmentManager = getSupportFragmentManager();
-                ProfileFragment profileModel = new ProfileFragment();
+
                 mBundle.putSerializable("userDetails", userObj);
-                profileModel.setArguments(mBundle);
-                FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-                fragmentTransaction.replace(R.id.fragment_container_books, profileModel, "profile fragment");
-                fragmentTransaction.commit();
+
+                if(userObj==null){
+                    Log.d("userObj", "null");
+                }else{
+                    fragmentManager = getSupportFragmentManager();
+                    ProfileFragment profileModel = ProfileFragment.newInstance(mBundle);
+                    FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+                    fragmentTransaction.replace(R.id.fragment_container_books, profileModel);
+                    fragmentTransaction.commit();
+                }
+
             }
 
 
@@ -423,5 +436,25 @@ public class ProfileActivity extends AppCompatActivity implements NavigationView
     public void onAddBookSelected(String keyword) {
         searchBook(keyword);
 //        searchISBN(keyword);
+    }
+
+    @Override
+    public void onAboutProfOnClick(Uri uri) {
+
+    }
+
+    @Override
+    public void onDisplayMyBooksOnClick(Uri uri) {
+
+    }
+
+    @Override
+    public void onProfileFragOnClick(Uri uri) {
+
+    }
+
+    @Override
+    public void onUserReviewOnClick(Uri uri) {
+
     }
 }

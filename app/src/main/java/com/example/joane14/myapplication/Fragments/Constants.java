@@ -79,6 +79,8 @@ public class Constants {
 
     public static final String GET_USER_REVIEWS ="http://104.197.4.32:8080/Koobym/userRating/getAllUserRatingsOf";
 
+    public static final String GET_MY_BOOKS ="http://104.197.4.32:8080/Koobym/bookOwner/myBooksById";
+
     public static final String POST_RENTAL_DETAIL ="http://104.197.4.32:8080/Koobym/rentalDetail/add";
 
     public static final String POST_SWAP_DETAIL ="http://104.197.4.32:8080/Koobym/swapDetail/add";

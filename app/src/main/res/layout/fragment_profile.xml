@@ -3,10 +3,39 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/colorMint"
-    android:backgroundTint="@color/colorMint"
     tools:context="com.example.joane14.myapplication.Fragments.ProfileFragment">
 
+    <LinearLayout
+        android:id="@+id/linearLayout"
+        android:layout_width="match_parent"
+        android:layout_height="150dp"
+        android:orientation="vertical"
+        android:gravity="center"
+        android:paddingBottom="10dp"
+        android:background="@color/colorDark">
+
+
+        <ImageView
+            android:id="@+id/profIvProf"
+            android:layout_width="wrap_content"
+            android:layout_height="70dp"
+            android:layout_weight="1"
+            app:srcCompat="@drawable/com_facebook_profile_picture_blank_square"
+            android:layout_marginTop="10dp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/tvName"
+            android:textColor="@color/colorMint"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/tvEmailProfile"
+            android:textColor="@color/colorMint"/>
+
+    </LinearLayout>
 
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/btnAdd"
@@ -21,93 +50,12 @@
         app:fabSize="normal"
         app:srcCompat="@android:drawable/ic_menu_add" />
 
-    <ImageView
-        android:id="@+id/profileDisplayPic"
-        android:layout_width="100dp"
-        android:layout_height="155dp"
-        android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true"
-        app:srcCompat="@mipmap/ic_launcher" />
-
-    <TextView
-        android:id="@+id/tvName"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentStart="true"
-        android:layout_below="@+id/profileDisplayPic"
-        android:text="Full Name"
-        android:textAlignment="center"
-        android:textColor="@color/com_facebook_button_background_color_pressed"
-        android:textSize="20sp"
-        android:textStyle="bold" />
-
-    <TextView
-        android:id="@+id/tvAddress"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentStart="true"
-        android:layout_centerVertical="true"
-        android:text="Address"
-        android:textColor="@color/colorPrimaryDark"
-        android:textSize="16sp"
-        android:textStyle="bold" />
-
-    <TextView
-        android:id="@+id/btnEditProfile"
+    <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/tvEmailProfile"
-        android:layout_marginLeft="143dp"
-        android:layout_marginStart="143dp"
-        android:layout_marginTop="23dp"
-        android:layout_toRightOf="@+id/tvPhoneNumber"
-        android:clickable="true"
-        android:text="Edit Profile"
-        android:textAlignment="textEnd"
-        android:textStyle="bold|italic" />
-
-    <TextView
-        android:id="@+id/tvBirthDate"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:layout_below="@+id/tvAddress"
-        android:text="Birth Date"
-        android:textColor="@color/colorPrimaryDark"
-        android:textSize="16sp"
-        android:textStyle="bold" />
-
-    <TextView
-        android:id="@+id/tvEmailProfile"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentRight="true"
-        android:layout_below="@+id/tvName"
-        android:text="Email Address"
-        android:textAlignment="center"
-        android:textColor="@color/colorPrimaryDark"
-        android:textSize="20sp"
-        android:textStyle="bold" />
-
-    <TextView
-        android:id="@+id/tvPhoneNumber"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:layout_below="@+id/tvBirthDate"
-        android:text="Phone Number"
-        android:textColor="@color/colorPrimaryDark"
-        android:textSize="16sp"
-        android:textStyle="bold" />
+        android:layout_height="200dp"
+        android:id="@+id/fragment_container_prof"
+        android:layout_below="@id/linearLayout"
+        android:layout_alignParentBottom="true" />
 
 
 </RelativeLayout>

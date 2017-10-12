@@ -76,7 +76,7 @@ public class UserReviewActivity extends AppCompatActivity implements DisplayUser
         if(getIntent().getExtras().getSerializable("rentalHeader")!=null){
             rentalHeader = (RentalHeader) getIntent().getExtras().getSerializable("rentalHeader");
             Bundle bundle = new Bundle();
-            bundle.putSerializable("rentalHeader", rentalHeader);
+            bundle.putSerializable("user", rentalHeader.getUserId());
             fragmentManager = getSupportFragmentManager();
             DisplayUserReview displayUserReview = DisplayUserReview.newInstance(bundle);
             FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();

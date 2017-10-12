@@ -290,7 +290,7 @@ public class LandingPage extends AppCompatActivity
 //            Log.d("User Id", String.valueOf(userModel.getUserId()));
 //            Log.d("User name", userModel.getUserFname()+" "+userModel.getUserLname());
             bundlePass.putSerializable("userModelPass", userModel);
-            intent.putExtra("user",bundlePass);
+            intent.putExtras(bundlePass);
             startActivity(intent);
         } else if (id == R.id.shelf) {
             Intent intent = new Intent(LandingPage.this, MyShelf.class);

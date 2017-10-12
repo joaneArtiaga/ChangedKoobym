@@ -5,12 +5,12 @@
     tools:context="com.example.joane14.myapplication.Fragments.DisplayUserReview">
 
 
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/my_recycler_view_user_reviews"
-        android:layout_width="match_parent"
-        android:layout_height="320dp"
-        android:layout_below="@id/brBtnPost"
-        android:layout_marginTop="5dp"
-        android:scrollbars="vertical" />
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/my_recycler_view_user_reviews"
+            android:layout_width="match_parent"
+            android:layout_height="320dp"
+            android:layout_below="@id/brBtnPost"
+            android:layout_marginTop="5dp"
+            android:scrollbars="vertical" />
 
 </FrameLayout>

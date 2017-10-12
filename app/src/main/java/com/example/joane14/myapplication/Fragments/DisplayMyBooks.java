@@ -20,9 +20,11 @@ import com.android.volley.VolleyLog;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.example.joane14.myapplication.Activities.GsonDateDeserializer;
-import com.example.joane14.myapplication.Adapters.ReviewAdapter;
+import com.example.joane14.myapplication.Adapters.BookOwnerAdapter;
+import com.example.joane14.myapplication.Adapters.LandingPageAdapter;
+import com.example.joane14.myapplication.Adapters.RecyclerAdapterShowBook;
 import com.example.joane14.myapplication.Adapters.UserReviewAdapter;
-import com.example.joane14.myapplication.Model.BookOwnerReview;
+import com.example.joane14.myapplication.Model.BookOwnerModel;
 import com.example.joane14.myapplication.Model.RentalHeader;
 import com.example.joane14.myapplication.Model.User;
 import com.example.joane14.myapplication.Model.UserRating;
@@ -37,24 +39,19 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
+public class DisplayMyBooks extends Fragment {
 
-public class DisplayUserReview extends Fragment {
-
-
-
+    private OnDisplayMyBooksInteractionListener mListener;
     User user;
-    List<UserRating> userRatingList;
+    List<BookOwnerModel> bookOwnerModelList;
     private RecyclerView mRecyclerView;
     private RecyclerView.Adapter mAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
-
-    private OnUserReviewInteractionListener mListener;
-
-    public DisplayUserReview() {
+    public DisplayMyBooks() {
     }
 
-    public static DisplayUserReview newInstance(Bundle bundle) {
-        DisplayUserReview fragment = new DisplayUserReview();
+    public static DisplayMyBooks newInstance(Bundle bundle) {
+        DisplayMyBooks fragment = new DisplayMyBooks();
         fragment.setArguments(bundle);
         return fragment;
     }
@@ -67,47 +64,47 @@ public class DisplayUserReview extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_display_user_review, container, false);
+        View view = inflater.inflate(R.layout.fragment_display_my_books, container, false);
 
         user = new User();
         user = (User) getArguments().getSerializable("user");
 
-        userRatingList = new ArrayList<UserRating>();
-        mRecyclerView = (RecyclerView) view.findViewById(R.id.my_recycler_view_user_reviews);
+        bookOwnerModelList = new ArrayList<BookOwnerModel>();
+        mRecyclerView = (RecyclerView) view.findViewById(R.id.my_recycler_view_my_books);
         mRecyclerView.setHasFixedSize(true);
         mLayoutManager = new LinearLayoutManager(getContext());
         mRecyclerView.setLayoutManager(mLayoutManager);
-        mAdapter = new UserReviewAdapter(userRatingList);
+        mAdapter = new BookOwnerAdapter(bookOwnerModelList);
         mRecyclerView.setAdapter(mAdapter);
 
-        getUserRating();
+
+        getMyBooks();
         return view;
     }
 
-    public void getUserRating(){
+    public void getMyBooks(){
         RequestQueue requestQueue = Volley.newRequestQueue(getContext());
 //        String URL = "http://104.197.4.32:8080/Koobym/user/add";
         User user = new User();
         user = (User) SPUtility.getSPUtil(getContext()).getObject("USER_OBJECT", User.class);
         Log.d("UserIdReceive", String.valueOf(user.getUserId()));
-        String URL = Constants.GET_USER_REVIEWS+"/"+user.getUserId();
+        String URL = Constants.GET_MY_BOOKS+"/"+user.getUserId();
 //        String URL = Constants.WEB_SERVICE_URL+"user/add";
 
         Log.d("UserReview URL", URL);
-        final RentalHeader rentalHeader =new RentalHeader();
 
         final Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd").registerTypeAdapter(Date.class, GsonDateDeserializer.getInstance()).create();
-        final String mRequestBody = gson.toJson(rentalHeader);
+        final String mRequestBody = gson.toJson(bookOwnerModelList);
 
 
         Log.d("LOG_VOLLEY", mRequestBody);
         StringRequest stringRequest = new StringRequest(Request.Method.GET, URL, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
-                Log.i("ResponseRequestReceived", response);
+                Log.i("displayMyBooks", response);
 //                RentalHeader rentalHeaderModel = gson.fromJson(response, RentalHeader.class);
-                userRatingList.clear();
-                userRatingList.addAll(Arrays.asList(gson.fromJson(response, UserRating[].class)));
+                bookOwnerModelList.clear();
+                bookOwnerModelList.addAll(Arrays.asList(gson.fromJson(response, BookOwnerModel[].class)));
                 mAdapter.notifyDataSetChanged();
             }
         }, new Response.ErrorListener() {
@@ -135,18 +132,17 @@ public class DisplayUserReview extends Fragment {
         requestQueue.add(stringRequest);
     }
 
-
     public void onButtonPressed(Uri uri) {
         if (mListener != null) {
-            mListener.onUserReviewOnClick(uri);
+            mListener.onDisplayMyBooksOnClick(uri);
         }
     }
 
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        if (context instanceof OnUserReviewInteractionListener) {
-            mListener = (OnUserReviewInteractionListener) context;
+        if (context instanceof OnDisplayMyBooksInteractionListener) {
+            mListener = (OnDisplayMyBooksInteractionListener) context;
         } else {
             throw new RuntimeException(context.toString()
                     + " must implement OnFragmentInteractionListener");
@@ -159,7 +155,7 @@ public class DisplayUserReview extends Fragment {
         mListener = null;
     }
 
-    public interface OnUserReviewInteractionListener {
-        void onUserReviewOnClick(Uri uri);
+    public interface OnDisplayMyBooksInteractionListener {
+        void onDisplayMyBooksOnClick(Uri uri);
     }
 }
