@@ -23,6 +23,7 @@ import com.android.volley.toolbox.Volley;
 import com.bumptech.glide.Glide;
 import com.example.joane14.myapplication.Activities.BookReviewActivity;
 import com.example.joane14.myapplication.Activities.GsonDateDeserializer;
+import com.example.joane14.myapplication.Activities.HistoryActivity;
 import com.example.joane14.myapplication.Activities.TransactionActivity;
 import com.example.joane14.myapplication.Fragments.Constants;
 import com.example.joane14.myapplication.Model.SwapHeader;
@@ -102,8 +103,14 @@ public class ToApproveSwapAdapter extends RecyclerView.Adapter<ToApproveSwapAdap
             @Override
             public void onClick(View v) {
                 swapHeader = bookList.get(position);
-                updateReceive(position);
+                updateReceive(position, true);
+            }
+        });
 
+        holder.mBtnRejected.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                updateReceive(position, false);
             }
         });
     }
@@ -116,7 +123,7 @@ public class ToApproveSwapAdapter extends RecyclerView.Adapter<ToApproveSwapAdap
     public class BookHolder extends RecyclerView.ViewHolder {
         TextView mRenter, mBookRented, mReminder, mPrice, mMU, mDaysRent, mMyBook;
         ImageView mIvRenter, mIvBookImg, mMyIvBookImg;
-        ImageView mBtnAccept;
+        ImageView mBtnAccept, mBtnRejected;
         SwapHeader swapHeaderObj;
         Context context;
 
@@ -126,6 +133,7 @@ public class ToApproveSwapAdapter extends RecyclerView.Adapter<ToApproveSwapAdap
 
             this.context = context;
             mBtnAccept = (ImageView) itemView.findViewById(R.id.btnApprove);
+            mBtnRejected = (ImageView) itemView.findViewById(R.id.brnRejected);
             mRenter = (TextView) itemView.findViewById(R.id.toReceiveRenter);
             mReminder = (TextView) itemView.findViewById(R.id.toReceiveReminder);
             mMU = (TextView) itemView.findViewById(R.id.toReceiveMU);
@@ -170,7 +178,7 @@ public class ToApproveSwapAdapter extends RecyclerView.Adapter<ToApproveSwapAdap
 //        }
     }
 
-    public void updateReceive(final int position){
+    public void updateReceive(final int position, final Boolean bool){
         RequestQueue requestQueue = Volley.newRequestQueue(context);
 //        String URL = "http://104.197.4.32:8080/Koobym/user/add";
 //        String URL = Constants.WEB_SERVICE_URL+"user/add";
@@ -180,9 +188,11 @@ public class ToApproveSwapAdapter extends RecyclerView.Adapter<ToApproveSwapAdap
         swapHeader = bookList.get(position);
         String status="";
         if(swapHeader.getStatus().equals("APPROVED_BY_REQUESTOR")){
-            status = "Approved";
-            Intent intent = new Intent(context, TransactionActivity.class);
-            context.startActivity(intent);
+            if(bool==true){
+                status = "Approved";
+            }else{
+                status = "Rejected";
+            }
         }
 
         String URL = Constants.UPDATE_SWAP_HEADER+"/"+status+"/"+swapHeader.getSwapHeaderId();
@@ -200,60 +210,14 @@ public class ToApproveSwapAdapter extends RecyclerView.Adapter<ToApproveSwapAdap
             @Override
             public void onResponse(String response) {
                 Log.i("RequestReceivedStatus", response);
-
-                updateBookOwner(position);
-            }
-        }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                Log.e("LOG_VOLLEY", error.toString());
-                error.printStackTrace();
-            }
-        }) {
-            @Override
-            public String getBodyContentType() {
-                return "application/json; charset=utf-8";
-            }
-
-            @Override
-            public byte[] getBody() throws AuthFailureError {
-                try {
-                    return mRequestBody == null ? null : mRequestBody.getBytes("utf-8");
-                } catch (UnsupportedEncodingException uee) {
-                    VolleyLog.wtf("Unsupported Encoding while trying to get the bytes of %s using %s", mRequestBody, "utf-8");
-                    return null;
+                if(bool==true){
+                    Intent intent = new Intent(context, TransactionActivity.class);
+                    context.startActivity(intent);
+                }else{
+                    Intent intent = new Intent(context, HistoryActivity.class);
+                    context.startActivity(intent);
                 }
-            }
-        };
 
-        requestQueue.add(stringRequest);
-    }
-
-    public void updateBookOwner(int position){
-        RequestQueue requestQueue = Volley.newRequestQueue(context);
-//        String URL = "http://104.197.4.32:8080/Koobym/user/add";
-//        String URL = Constants.WEB_SERVICE_URL+"user/add";
-
-        User user = new User();
-        user = (User) SPUtility.getSPUtil(context).getObject("USER_OBJECT", User.class);
-        swapHeader = bookList.get(position);
-        String status="";
-
-        String URL = Constants.UPDATE_BOOK_OWNER+"/"+swapHeader.getSwapDetail().getBookOwner().getBookOwnerId()+"/"+user.getUserId();
-
-        Log.d("Update SwapHeader URL", URL);
-
-
-        final Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd").registerTypeAdapter(Date.class, GsonDateDeserializer.getInstance()).create();
-        final String mRequestBody = gson.toJson(swapHeader);
-
-
-        Log.d("LOG_VOLLEY_swapHeaderUD", mRequestBody);
-        Log.d("LOG_VOLLEY rentalHeader", mRequestBody);
-        StringRequest stringRequest = new StringRequest(Request.Method.GET, URL, new Response.Listener<String>() {
-            @Override
-            public void onResponse(String response) {
-                Log.i("RequestReceivedStatus", response);
             }
         }, new Response.ErrorListener() {
             @Override

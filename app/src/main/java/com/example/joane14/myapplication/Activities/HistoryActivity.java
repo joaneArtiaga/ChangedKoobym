@@ -2,6 +2,7 @@ package com.example.joane14.myapplication.Activities;
 
 import android.content.Intent;
 import android.net.Uri;
+import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
@@ -24,19 +25,15 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
-import com.example.joane14.myapplication.Fragments.CompleteFrag;
-import com.example.joane14.myapplication.Fragments.CompleteSwapFrag;
+import com.example.joane14.myapplication.Fragments.CompletedHistory;
+import com.example.joane14.myapplication.Fragments.CompletedOwnerHistory;
+import com.example.joane14.myapplication.Fragments.CompletedRenterHistory;
 import com.example.joane14.myapplication.Fragments.Constants;
 import com.example.joane14.myapplication.Fragments.MyRequestFrag;
-import com.example.joane14.myapplication.Fragments.RentTransaction;
+import com.example.joane14.myapplication.Fragments.RejectedHistory;
+import com.example.joane14.myapplication.Fragments.RejectedOwnerHistory;
+import com.example.joane14.myapplication.Fragments.RejectedRenterHistory;
 import com.example.joane14.myapplication.Fragments.RequestReceivedFrag;
-import com.example.joane14.myapplication.Fragments.SwapTransaction;
-import com.example.joane14.myapplication.Fragments.ToApproveFrag;
-import com.example.joane14.myapplication.Fragments.ToDeliverFrag;
-import com.example.joane14.myapplication.Fragments.ToDeliverSwapFrag;
-import com.example.joane14.myapplication.Fragments.ToReceiveFrag;
-import com.example.joane14.myapplication.Fragments.ToReceiveSwapFrag;
-import com.example.joane14.myapplication.Fragments.ToReturnFrag;
 import com.example.joane14.myapplication.Model.User;
 import com.example.joane14.myapplication.R;
 import com.example.joane14.myapplication.Utilities.SPUtility;
@@ -46,76 +43,68 @@ import com.squareup.picasso.Picasso;
 import java.util.ArrayList;
 import java.util.List;
 
-public class TransactionActivity extends AppCompatActivity
+public class HistoryActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener,
-        ToDeliverFrag.OnToDeliverInteractionListener,
-        ToReturnFrag.OnToReturnInteractionListener,
-        ToReceiveFrag.OnToReceiveInteractionListener,
-        CompleteFrag.OnCompleteInteractionListener,
-        ToReceiveSwapFrag.OnToSwapReceiveInteractionListener,
-        RentTransaction.OnRentTransactionInteractionListener,
-        SwapTransaction.OnSwapTransactionInteractionListener,
-        ToDeliverSwapFrag.OnToDeliverSwapInteractionListener,
-        CompleteSwapFrag.OnCompleteSwapInteractionListener,
-        ToApproveFrag.OnToApproveInteractionListener{
+        CompletedHistory.OnCompletedHistoryInteractionListener,
+        RejectedHistory.OnRejectedHistoryInteractionListener,
+        CompletedRenterHistory.OnCompletedRenterHistoryInteractionListener,
+        CompletedOwnerHistory.OnCompletedOwnerHistoryInteractionListener,
+        RejectedOwnerHistory.OnRejectedOwnerHistoryInteractionListener,
+        RejectedRenterHistory.OnRejectedRenterHistoryInteractionListener{
 
-    ImageView profileImg;
+    User userModel;
     private TabLayout tabLayout;
     private ViewPager viewPager;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_transaction);
+        setContentView(R.layout.activity_history);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        Log.d("RequestActivity", "inside");
-
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout_transaction);
-        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
-                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
-        drawer.setDrawerListener(toggle);
-        toggle.syncState();
-
-
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-
-
+        userModel = new User();
         viewPager = (ViewPager) findViewById(R.id.viewpager);
         setupViewPager(viewPager);
 
         tabLayout = (TabLayout) findViewById(R.id.tabs);
         tabLayout.setupWithViewPager(viewPager);
 
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout_history);
+        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
+                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+        drawer.setDrawerListener(toggle);
+        toggle.syncState();
+
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
+
+        NavigationView navigationView1 = (NavigationView) findViewById(R.id.nav_view);
         View hView = navigationView.getHeaderView(0);
         TextView mName = (TextView) hView.findViewById(R.id.tvName);
         TextView mEmail = (TextView) hView.findViewById(R.id.tvEmail);
-        Log.d("Inside", "landing page");
-        profileImg = (ImageView) hView.findViewById(R.id.profPic);
+        ImageView profileImg = (ImageView) hView.findViewById(R.id.profPic);
 
         if(SPUtility.getSPUtil(this).contains("USER_OBJECT")){
             User userModel = new User();
             userModel = (User) SPUtility.getSPUtil(this).getObject("USER_OBJECT", User.class);
             mName.setText(userModel.getUserFname()+" "+userModel.getUserLname());
             mEmail.setText(userModel.getEmail());
-//            Glide.with(TransactionActivity.this).load(userModel.getImageFilename()).into(profileImg);
-            Picasso.with(TransactionActivity.this).load(String.format(Constants.IMAGE_URL, userModel.getImageFilename())).fit().into(profileImg);
+            Picasso.with(HistoryActivity.this).load(userModel.getImageFilename()).fit().into(profileImg);
         }
+
     }
 
     private void setupViewPager(ViewPager viewPager) {
-        TransactionActivity.ViewPagerAdapter adapter = new TransactionActivity.ViewPagerAdapter(getSupportFragmentManager());
-        adapter.addFragment(new RentTransaction(), "Rent");
-        adapter.addFragment(new SwapTransaction(), "Swap");
-//        adapter.addFragment(new ToReturnFrag(), "To Return");
-//        adapter.addFragment(new CompleteFrag(), "Complete");
+        HistoryActivity.ViewPagerAdapter adapter = new HistoryActivity.ViewPagerAdapter(getSupportFragmentManager());
+        adapter.addFragment(new CompletedHistory(), "Completed");
+        adapter.addFragment(new RejectedHistory(), "Rejected");
         viewPager.setAdapter(adapter);
     }
+
 
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
@@ -126,13 +115,13 @@ public class TransactionActivity extends AppCompatActivity
         int id = item.getItemId();
 
         if (id == R.id.home) {
-            Intent intent = new Intent(TransactionActivity.this, LandingPage.class);
+            Intent intent = new Intent(HistoryActivity.this, LandingPage.class);
             Bundle bundle = new Bundle();
             bundle.putBoolean("fromRegister", false);
             intent.putExtra("user", bundle);
             startActivity(intent);
         } else if (id == R.id.profile) {
-            Intent intent = new Intent(TransactionActivity.this, ProfileActivity.class);
+            Intent intent = new Intent(HistoryActivity.this, ProfileActivity.class);
 //            User user = userModel;
 //            Log.d("User Id", String.valueOf(userModel.getUserId()));
 //            Log.d("User name", userModel.getUserFname()+" "+userModel.getUserLname());
@@ -143,23 +132,24 @@ public class TransactionActivity extends AppCompatActivity
             intent.putExtras(bundlePass);
             startActivity(intent);
         } else if (id == R.id.shelf) {
-            Intent intent = new Intent(TransactionActivity.this, MyShelf.class);
+            Intent intent = new Intent(HistoryActivity.this, MyShelf.class);
             startActivity(intent);
         } else if (id == R.id.history) {
-            Intent intent = new Intent(TransactionActivity.this, HistoryActivity.class);
-            startActivity(intent);
-        } else if (id == R.id.transaction) {
 
+        } else if (id == R.id.transaction) {
+            Intent intent = new Intent(HistoryActivity.this, TransactionActivity.class);
+            startActivity(intent);
         } else if (id == R.id.request) {
-            Intent intent = new Intent(TransactionActivity.this, RequestActivity.class);
+            Intent intent = new Intent(HistoryActivity.this, RequestActivity.class);
             startActivity(intent);
         } else if (id == R.id.signOut) {
-            SPUtility.getSPUtil(TransactionActivity.this).clear();
+            SPUtility.getSPUtil(HistoryActivity.this).clear();
             LoginManager.getInstance().logOut();
-            Intent intent = new Intent(TransactionActivity.this, MainActivity.class);
+            Intent intent = new Intent(HistoryActivity.this, MainActivity.class);
             startActivity(intent);
         }
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout_transaction);
+
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout_history);
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }
@@ -177,54 +167,35 @@ public class TransactionActivity extends AppCompatActivity
     }
 
     @Override
-    public void onToDeliverOnClick(Uri uri) {
+    public void OnCompletedHistoryOnClick(Uri uri) {
 
     }
 
     @Override
-    public void onToReceiveOnClick(Uri uri) {
+    public void OnRejectedHistoryOnClick(Uri uri) {
 
     }
 
     @Override
-    public void onCompleteOnClick(Uri uri) {
+    public void OnCompletedRenterHistoryOnClick(Uri uri) {
 
     }
 
     @Override
-    public void onToReturnOnClick(Uri uri) {
+    public void OnCompletedOwnerHistory(Uri uri) {
 
     }
 
     @Override
-    public void onToSwapReceiveOnClick(Uri uri) {
+    public void OnRejectedOwnerHistoryOnClick(Uri uri) {
 
     }
 
     @Override
-    public void onRentTransactionOnClick(Uri uri) {
+    public void OnRejectedRenterHistoryOnClick(Uri uri) {
 
     }
 
-    @Override
-    public void onSwapTransasctionOnClick(Uri uri) {
-
-    }
-
-    @Override
-    public void onCompleteSwapOnClick(Uri uri) {
-
-    }
-
-    @Override
-    public void onToDeliverSwapOnClick(Uri uri) {
-
-    }
-
-    @Override
-    public void ontToApproveOnClick(Uri uri) {
-
-    }
 
     class ViewPagerAdapter extends FragmentPagerAdapter {
         private final List<Fragment> mFragmentList = new ArrayList<>();
@@ -254,5 +225,4 @@ public class TransactionActivity extends AppCompatActivity
             return mFragmentTitleList.get(position);
         }
     }
-
 }

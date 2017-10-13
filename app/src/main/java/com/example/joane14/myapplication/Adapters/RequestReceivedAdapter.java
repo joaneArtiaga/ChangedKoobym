@@ -22,6 +22,7 @@ import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.bumptech.glide.Glide;
 import com.example.joane14.myapplication.Activities.GsonDateDeserializer;
+import com.example.joane14.myapplication.Activities.HistoryActivity;
 import com.example.joane14.myapplication.Activities.RequestActivity;
 import com.example.joane14.myapplication.Activities.TimeDateChooser;
 import com.example.joane14.myapplication.Activities.TransactionActivity;
@@ -84,6 +85,13 @@ public class RequestReceivedAdapter extends RecyclerView.Adapter<RequestReceived
             public void onClick(View v) {
                 Log.d("ChangeStatusBTN", "nganong di musulod");
                 updateRequest(position);
+            }
+        });
+
+        holder.mBtnReject.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                updateRequestRejected(position, "Rejected");
             }
         });
     }
@@ -173,6 +181,57 @@ public class RequestReceivedAdapter extends RecyclerView.Adapter<RequestReceived
             @Override
             public void onResponse(String response) {
                 Log.i("RequestReceivedStatus", response);
+                Intent intent = new Intent(context, TransactionActivity.class);
+                context.startActivity(intent);
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.e("LOG_VOLLEY", error.toString());
+                error.printStackTrace();
+            }
+        }) {
+            @Override
+            public String getBodyContentType() {
+                return "application/json; charset=utf-8";
+            }
+
+            @Override
+            public byte[] getBody() throws AuthFailureError {
+                try {
+                    return mRequestBody == null ? null : mRequestBody.getBytes("utf-8");
+                } catch (UnsupportedEncodingException uee) {
+                    VolleyLog.wtf("Unsupported Encoding while trying to get the bytes of %s using %s", mRequestBody, "utf-8");
+                    return null;
+                }
+            }
+        };
+
+        requestQueue.add(stringRequest);
+    }
+
+    public void updateRequestRejected(int position, String status){
+        RequestQueue requestQueue = Volley.newRequestQueue(context);
+//        String URL = "http://104.197.4.32:8080/Koobym/user/add";
+//        String URL = Constants.WEB_SERVICE_URL+"user/add";
+
+        rentalHeader = bookList.get(position);
+
+        String URL = Constants.UPDATE_RENTAL_HEADER+"/"+rentalHeader.getRentalHeaderId()+"/"+status;
+
+
+        final Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd").registerTypeAdapter(Date.class, GsonDateDeserializer.getInstance()).create();
+        final String mRequestBody = gson.toJson(rentalHeader);
+
+
+        Log.d("LOG_VOLLEY", mRequestBody);
+        Log.d("LOG_VOLLEY rentalHeader", mRequestBody);
+        StringRequest stringRequest = new StringRequest(Request.Method.GET, URL, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                Log.i("RequestReceivedStatus", response);
+                Intent intent = new Intent(context, HistoryActivity.class);
+                context.startActivity(intent);
             }
         }, new Response.ErrorListener() {
             @Override

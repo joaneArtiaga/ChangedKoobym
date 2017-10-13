@@ -17,6 +17,7 @@ import com.android.volley.VolleyError;
 import com.android.volley.VolleyLog;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+import com.example.joane14.myapplication.Fragments.AddFbUser;
 import com.example.joane14.myapplication.Fragments.AddProfile;
 import com.example.joane14.myapplication.Fragments.AddTimeFrag;
 import com.example.joane14.myapplication.Fragments.Constants;
@@ -42,7 +43,8 @@ import java.util.List;
 public class SignUp extends AppCompatActivity implements
         Genre.OnFragmentInteractionListener,
         AddProfile.OnFragmentInteractionListener,
-        AddTimeFrag.OnAddTimeInteractionListener{
+        AddTimeFrag.OnAddTimeInteractionListener,
+        AddFbUser.OnAddFbUserInteractionListener{
 
     private List<GenreModel> genres;
     private List<LocationModel> locations;
@@ -112,8 +114,14 @@ public class SignUp extends AppCompatActivity implements
     public void onGenreSelected(List<GenreModel> genres) {
         this.genres = genres;
         Log.d("genreList", genres.toString());
-        AddProfile addProfileFrag = new AddProfile();
-        changeFragment(addProfileFrag);
+
+        if(SPUtility.getSPUtil(SignUp.this).contains("USER_OBJECT")){
+            AddFbUser addFbUser = AddFbUser.newInstance();
+            changeFragment(addFbUser);
+        }else{
+            AddProfile addProfileFrag = new AddProfile();
+            changeFragment(addProfileFrag);
+        }
     }
 
     @Override
@@ -154,6 +162,7 @@ public class SignUp extends AppCompatActivity implements
         user.setGenreArray(genres);
         user.setLocationArray(this.locations);
         user.setDayTimeModel(userDayTimeList);
+        user.setUserFbId(userModel.getUserFbId());
 
         for(int init=0; init<userDayTimeList.size(); init++){
             Log.d("SoneNull", userDayTimeList.get(init).toString());
@@ -172,7 +181,7 @@ public class SignUp extends AppCompatActivity implements
         StringRequest stringRequest = new StringRequest(Request.Method.POST, URL, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
-                Log.i("LOG_VOLLEY", response);
+                Log.i("userMode_LOG", response);
                 User user = gson.fromJson(response, User.class);
                 Log.i("LOG_VOLLEY", user.getEmail());
                 Log.i("LOG_VOLLEY", user.getUserFname());
@@ -224,5 +233,13 @@ public class SignUp extends AppCompatActivity implements
 
         Genre genreModel = new Genre();
         changeFragment(genreModel);
+    }
+
+    @Override
+    public void OnAddFbUser(User user) {
+
+        this.userModel = user;
+        register();
+
     }
 }

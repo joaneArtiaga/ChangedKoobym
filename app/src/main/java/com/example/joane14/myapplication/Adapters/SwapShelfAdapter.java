@@ -51,23 +51,22 @@ public class SwapShelfAdapter extends RecyclerView.Adapter<SwapShelfAdapter.Book
         holder.mBookTitle.setText(swapDetailList.get(position).getBookOwner().getBookObj().getBookTitle());
         holder.mBookPrice.setText(swapDetailList.get(position).getBookOwner().getBookObj().getBookOriginalPrice().toString());
         Log.d("libroShet",swapDetailList.get(position).getBookOwner().getBookObj().getBookOriginalPrice().toString());
-        String author = "No Author";
+        String author = "";
         Log.d("AuthorDisplay", author);
-        if(swapDetailList.get(position).getBookOwner().getBookObj().getBookAuthor()!=null) {
-            int size = swapDetailList.get(position).getBookOwner().getBookObj().getBookAuthor().size();
-
-            Log.d("inside", "author setTEXT");
-            if (size > 1) {
-                for (int i = 0; i < size; i++) {
-                    author += swapDetailList.get(position).getBookOwner().getBookObj().getBookAuthor().get(i).getAuthorFName();
-                    Log.d("authorLoop", swapDetailList.get(position).getBookOwner().getBookObj().getBookAuthor().get(i).getAuthorFName());
-                    if (size - 1 > i) {
-                        author += ", ";
+        if(swapDetailList.get(position).getBookOwner().getBookObj().getBookAuthor().size()!=0){
+            for(int init=0; init<swapDetailList.get(position).getBookOwner().getBookObj().getBookAuthor().size(); init++){
+                if(!(swapDetailList.get(position).getBookOwner().getBookObj().getBookAuthor().get(init).getAuthorFName().equals(""))){
+                    author+=swapDetailList.get(position).getBookOwner().getBookObj().getBookAuthor().get(init).getAuthorFName()+" ";
+                    if(!(swapDetailList.get(position).getBookOwner().getBookObj().getBookAuthor().get(init).getAuthorLName().equals(""))){
+                        author+=swapDetailList.get(position).getBookOwner().getBookObj().getBookAuthor().get(init).getAuthorLName();
+                        if(init+1<swapDetailList.get(position).getBookOwner().getBookObj().getBookAuthor().size()){
+                            author+=", ";
+                        }
                     }
                 }
             }
-            Log.d("authorName if", "inside");
-            Log.d("authorName if", author);
+        }else{
+            author="Unknown Author";
         }
         holder.mBookAuthor.setText(author);
         Log.d("libroPanga",swapDetailList.get(position).getBookOwner().getBookObj().getBookFilename());

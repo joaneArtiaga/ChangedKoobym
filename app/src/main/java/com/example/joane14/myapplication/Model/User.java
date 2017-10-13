@@ -52,9 +52,15 @@ public class User implements Serializable{
     @SerializedName("imageFilename")
     private String imageFilename;
 
-    @SerializedName("imageFilename")
     private String userFbId;
 
+    public String getUserFbId() {
+        return userFbId;
+    }
+
+    public void setUserFbId(String userFbId) {
+        this.userFbId = userFbId;
+    }
 
     public List<UserDayTime> getDayTimeModel() {
         return dayTimeModel;

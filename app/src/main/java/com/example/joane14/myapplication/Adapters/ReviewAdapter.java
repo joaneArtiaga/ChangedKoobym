@@ -71,7 +71,7 @@ public class ReviewAdapter extends RecyclerView.Adapter<ReviewAdapter.BookHolder
         holder.mName.setText(bookList.get(position).getUser().getUserFname()+" "+bookList.get(position).getUser().getUserLname());
         holder.mComment.setText(bookList.get(position).getComment());
         holder.mRate.setText("Rated blank out of 10");
-        Picasso.with(context).load(String.format(Constants.IMAGE_URL, bookList.get(position).getUser().getImageFilename())).fit().into(holder.mProfPic);
+        Picasso.with(context).load(bookList.get(position).getUser().getImageFilename()).fit().into(holder.mProfPic);
 
     }
 

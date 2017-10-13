@@ -74,28 +74,20 @@ public class SwapChooserAdapter extends RecyclerView.Adapter<SwapChooserAdapter.
 //        Log.d("displayImage", bookList.get(position).getBookOwner().getBookObj().getBookFilename());
         Glide.with(context).load(bookList.get(position).getBookOwner().getBookObj().getBookFilename()).centerCrop().into(holder.mBookPic);
 
-        if(bookList.get(position).getBookOwner().getBookObj().getBookAuthor().size()!=0) {
-            int size = bookList.get(position).getBookOwner().getBookObj().getBookAuthor().size();
-
-           /* for(int init=0; init<bookList.size(); init++ ){
-                author+= bookList.get(position).getBookOwner().getBookObj().getBookAuthor().get(init).getAuthorFName()+" "+
-                        bookList.get(position).getBookOwner().getBookObj().getBookAuthor().get(init).getAuthorLName();
-                if(init>0){
-                    author+=", ";
-                }
-            }
-            Log.d("inside", "author setTEXT");
-            if (size > 1) {
-                for (int i = 0; i < size; i++) {
-                    author += bookList.get(position).getBookOwner().getBookObj().getBookAuthor().get(i).getAuthorFName();
-                    Log.d("authorLoop", bookList.get(position).getBookOwner().getBookObj().getBookAuthor().get(i).getAuthorFName());
-                    if (size - 1 > i) {
-                        author += ", ";
+        if(bookList.get(position).getBookOwner().getBookObj().getBookAuthor().size()!=0){
+            for(int init=0; init<bookList.get(position).getBookOwner().getBookObj().getBookAuthor().size(); init++){
+                if(!(bookList.get(position).getBookOwner().getBookObj().getBookAuthor().get(init).getAuthorFName().equals(""))){
+                    author+=bookList.get(position).getBookOwner().getBookObj().getBookAuthor().get(init).getAuthorFName()+" ";
+                    if(!(bookList.get(position).getBookOwner().getBookObj().getBookAuthor().get(init).getAuthorLName().equals(""))){
+                        author+=bookList.get(position).getBookOwner().getBookObj().getBookAuthor().get(init).getAuthorLName();
+                        if(init+1<bookList.get(position).getBookOwner().getBookObj().getBookAuthor().size()){
+                            author+=", ";
+                        }
                     }
                 }
-            }*/
+            }
         }else{
-            author = "Unknown Author";
+            author="Unknown Author";
         }
 
         holder.mBookAuthor.setText(author);

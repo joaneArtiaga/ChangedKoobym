@@ -12,7 +12,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
-import com.example.joane14.myapplication.Fragments.Constants;
 import com.example.joane14.myapplication.Model.RentalHeader;
 import com.example.joane14.myapplication.R;
 import com.squareup.picasso.Picasso;
@@ -20,34 +19,34 @@ import com.squareup.picasso.Picasso;
 import java.util.List;
 
 /**
- * Created by Joane14 on 05/10/2017.
+ * Created by Joane14 on 14/10/2017.
  */
 
-public class CompleteAdapter extends RecyclerView.Adapter<CompleteAdapter.BookHolder> {
+public class CompleteOwnerAdapter extends RecyclerView.Adapter<CompleteOwnerAdapter.BookHolder> {
 
     public List<RentalHeader> bookList;
     public Activity context;
 
     @Override
-    public CompleteAdapter.BookHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public CompleteOwnerAdapter.BookHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.card_complete, parent, false);
 
         this.context = (Activity) parent.getContext();
         Log.d("LandingPAgeAdapter","inside");
-        CompleteAdapter.BookHolder dataObjectHolder = new CompleteAdapter.BookHolder(this.context, view);
+        CompleteOwnerAdapter.BookHolder dataObjectHolder = new CompleteOwnerAdapter.BookHolder(this.context, view);
 
 
         Log.d("RequestAdapter", String.valueOf(bookList.size()));
         return dataObjectHolder;
     }
 
-    public CompleteAdapter(List<RentalHeader> myDataset) {
+    public CompleteOwnerAdapter(List<RentalHeader> myDataset) {
         bookList = myDataset;
     }
 
     @Override
-    public void onBindViewHolder(CompleteAdapter.BookHolder holder, int position) {
+    public void onBindViewHolder(CompleteOwnerAdapter.BookHolder holder, int position) {
 
 
         holder.mBookRented.setText(bookList.get(position).getRentalDetail().getBookOwner().getBookObj().getBookTitle());
@@ -59,7 +58,7 @@ public class CompleteAdapter extends RecyclerView.Adapter<CompleteAdapter.BookHo
         }
 
 
-        Picasso.with(context).load(String.format(Constants.IMAGE_URL, bookList.get(position).getRentalDetail().getBookOwner().getUserObj().getImageFilename())).fit().into(holder.mIvRenter);
+        Picasso.with(context).load(bookList.get(position).getUserId().getImageFilename()).fit().into(holder.mIvRenter);
         Glide.with(context).load(bookList.get(position).getRentalDetail().getBookOwner().getBookObj().getBookFilename()).centerCrop().into(holder.mIvBookImg);
 
 //        Log.d("displayImage", bookList.get(position).getBookOwner().getBookObj().getBookFilename());
@@ -72,7 +71,7 @@ public class CompleteAdapter extends RecyclerView.Adapter<CompleteAdapter.BookHo
     }
 
     public class BookHolder extends RecyclerView.ViewHolder {
-        TextView mRenter, mBookRented, mReceiveDate, mReceiveTime, mReturnDate, mReturnTime , mPrice, mMU, mDaysRent;
+        TextView mRenter, mBookRented, mReceiveDate, mReceiveTime, mReturnDate, mReturnTime , mRenterText;
         ImageView mIvRenter, mIvBookImg;
         RentalHeader rentalHeaderObj;
         Context context;
@@ -82,6 +81,7 @@ public class CompleteAdapter extends RecyclerView.Adapter<CompleteAdapter.BookHo
 
             this.context = context;
             mRenter = (TextView) itemView.findViewById(R.id.completeRenter);
+            mRenterText = (TextView) itemView.findViewById(R.id.textRenter);
             mReceiveDate = (TextView) itemView.findViewById(R.id.receivedDate);
             mReceiveTime = (TextView) itemView.findViewById(R.id.receivedTime);
             mReturnDate = (TextView) itemView.findViewById(R.id.returnedDate);
@@ -100,7 +100,7 @@ public class CompleteAdapter extends RecyclerView.Adapter<CompleteAdapter.BookHo
                     int position = getAdapterPosition();
                     Log.d("AdapterPosition", "inside "+Integer.toString(position));
 //                    Intent intent = new Intent(LandingPageAdapter.this.context, ViewBookActivity.class);
-                    rentalHeaderObj = CompleteAdapter.this.bookList.get(position);
+                    rentalHeaderObj = CompleteOwnerAdapter.this.bookList.get(position);
                     if(rentalHeaderObj==null){
                         Log.d("rentalHeaderAdapter", "is null");
                     }else{

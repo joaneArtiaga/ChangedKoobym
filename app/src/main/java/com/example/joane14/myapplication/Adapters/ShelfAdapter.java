@@ -49,23 +49,21 @@ public class ShelfAdapter extends RecyclerView.Adapter<ShelfAdapter.BookHolder> 
         holder.mBookTitle.setText(rentalDetailList.get(position).getBookOwner().getBookObj().getBookTitle());
         holder.mBookPrice.setText(rentalDetailList.get(position).getBookOwner().getBookObj().getBookOriginalPrice().toString());
         Log.d("libroShet",rentalDetailList.get(position).getBookOwner().getBookObj().getBookOriginalPrice().toString());
-        String author = "No Author";
-        Log.d("AuthorDisplay", author);
-        if(rentalDetailList.get(position).getBookOwner().getBookObj().getBookAuthor()!=null) {
-            int size = rentalDetailList.get(position).getBookOwner().getBookObj().getBookAuthor().size();
-
-            Log.d("inside", "author setTEXT");
-            if (size > 1) {
-                for (int i = 0; i < size; i++) {
-                    author += rentalDetailList.get(position).getBookOwner().getBookObj().getBookAuthor().get(i).getAuthorFName();
-                    Log.d("authorLoop", rentalDetailList.get(position).getBookOwner().getBookObj().getBookAuthor().get(i).getAuthorFName());
-                    if (size - 1 > i) {
-                        author += ", ";
+        String author = "";
+        if(rentalDetailList.get(position).getBookOwner().getBookObj().getBookAuthor().size()!=0){
+            for(int init=0; init<rentalDetailList.get(position).getBookOwner().getBookObj().getBookAuthor().size(); init++){
+                if(!(rentalDetailList.get(position).getBookOwner().getBookObj().getBookAuthor().get(init).getAuthorFName().equals(""))){
+                    author+=rentalDetailList.get(position).getBookOwner().getBookObj().getBookAuthor().get(init).getAuthorFName()+" ";
+                    if(!(rentalDetailList.get(position).getBookOwner().getBookObj().getBookAuthor().get(init).getAuthorLName().equals(""))){
+                        author+=rentalDetailList.get(position).getBookOwner().getBookObj().getBookAuthor().get(init).getAuthorLName();
+                        if(init+1<rentalDetailList.get(position).getBookOwner().getBookObj().getBookAuthor().size()){
+                            author+=", ";
+                        }
                     }
                 }
             }
-            Log.d("authorName if", "inside");
-            Log.d("authorName if", author);
+        }else{
+            author="Unknown Author";
         }
         holder.mBookAuthor.setText(author);
         Log.d("libroPanga",rentalDetailList.get(position).getBookOwner().getBookObj().getBookFilename());

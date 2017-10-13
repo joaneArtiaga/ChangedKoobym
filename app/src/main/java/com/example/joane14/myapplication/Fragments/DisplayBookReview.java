@@ -23,6 +23,7 @@ import com.example.joane14.myapplication.Activities.GsonDateDeserializer;
 import com.example.joane14.myapplication.Adapters.ReviewAdapter;
 import com.example.joane14.myapplication.Adapters.ToReceiveAdapter;
 import com.example.joane14.myapplication.Model.BookOwnerReview;
+import com.example.joane14.myapplication.Model.RentalDetail;
 import com.example.joane14.myapplication.Model.RentalHeader;
 import com.example.joane14.myapplication.Model.User;
 import com.example.joane14.myapplication.R;
@@ -41,7 +42,8 @@ public class DisplayBookReview extends Fragment {
 
     private OnDisplayBookReviewInteractionListener mListener;
 
-    RentalHeader rentalHeader;
+
+    RentalDetail rentalDetail;
     List<BookOwnerReview> bookOwnerReviewList;
     private RecyclerView mRecyclerView;
     private RecyclerView.Adapter mAdapter;
@@ -68,7 +70,7 @@ public class DisplayBookReview extends Fragment {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_display_book_review, container, false);
 
-        rentalHeader = (RentalHeader) getArguments().getSerializable("rentalHeader");
+        rentalDetail = (RentalDetail) getArguments().getSerializable("rentalDetail");
 
         bookOwnerReviewList = new ArrayList<BookOwnerReview>();
         mRecyclerView = (RecyclerView) view.findViewById(R.id.my_recycler_view_book_reviews);
@@ -91,7 +93,7 @@ public class DisplayBookReview extends Fragment {
         User user = new User();
         user = (User) SPUtility.getSPUtil(getContext()).getObject("USER_OBJECT", User.class);
         Log.d("UserIdReceive", String.valueOf(user.getUserId()));
-        String URL = Constants.GET_BOOK_REVIEWS+"/"+rentalHeader.getRentalDetail().getBookOwner().getBookOwnerId();
+        String URL = Constants.GET_BOOK_REVIEWS+"/"+rentalDetail.getBookOwner().getBookOwnerId();
 //        String URL = Constants.WEB_SERVICE_URL+"user/add";
 
         final RentalHeader rentalHeader =new RentalHeader();

@@ -135,7 +135,8 @@ public class RequestActivity extends AppCompatActivity
             Intent intent = new Intent(RequestActivity.this, MyShelf.class);
             startActivity(intent);
         } else if (id == R.id.history) {
-
+            Intent intent = new Intent(RequestActivity.this, HistoryActivity.class);
+            startActivity(intent);
         } else if (id == R.id.transaction) {
             Intent intent = new Intent(RequestActivity.this, TransactionActivity.class);
             startActivity(intent);

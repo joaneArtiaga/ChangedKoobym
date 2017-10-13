@@ -2,8 +2,11 @@ package com.example.joane14.myapplication.Activities;
 
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -22,21 +25,38 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.android.volley.AuthFailureError;
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.VolleyLog;
+import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
 import com.bumptech.glide.Glide;
+import com.example.joane14.myapplication.Fragments.Constants;
+import com.example.joane14.myapplication.Fragments.DisplayBookReview;
 import com.example.joane14.myapplication.Model.RentalDetail;
 import com.example.joane14.myapplication.Model.User;
 import com.example.joane14.myapplication.R;
 import com.example.joane14.myapplication.Utilities.SPUtility;
 import com.facebook.login.LoginManager;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 
-public class ViewBookActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
+import java.io.UnsupportedEncodingException;
+import java.util.Date;
+
+public class ViewBookActivity extends AppCompatActivity implements
+        NavigationView.OnNavigationItemSelectedListener,
+        DisplayBookReview.OnDisplayBookReviewInteractionListener {
 
     Bundle bundle;
     RentalDetail rentalDetail;
-    TextView mBookTitle;
+    TextView mBookTitle, mOwnerName;
     TextView mBookAuthor;
     TextView mBookDescription;
-    ImageView imageView, mViewMeetUp;
+    ImageView imageView, mViewMeetUp, mRatings, mGenres, mRenters, mOwnerImg;
     ImageButton mBtnRequest;
 
 
@@ -76,12 +96,26 @@ public class ViewBookActivity extends AppCompatActivity implements NavigationVie
         }
 
 
-
+        mOwnerImg = (ImageView) findViewById(R.id.ownerImg);
+        mOwnerName = (TextView) findViewById(R.id.ownerName);
         imageView = (ImageView) findViewById(R.id.vbBookImg);
+        mRatings = (ImageView) findViewById(R.id.ivVbViewRating);
+        mGenres = (ImageView) findViewById(R.id.ivVbViewGenre);
+        mRenters = (ImageView) findViewById(R.id.ivVbViewRenters);
+
         mBookAuthor = (TextView) findViewById(R.id.vbBookAuthor);
         mBookDescription = (TextView) findViewById(R.id.vbBookDescription);
 
         mBtnRequest = (ImageButton) findViewById(R.id.vbBtnRequest);
+
+
+
+        mRatings.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                getBookRating();
+            }
+        });
 
 
 
@@ -97,7 +131,7 @@ public class ViewBookActivity extends AppCompatActivity implements NavigationVie
             Log.d("mBookDescription", "is not null");
         }
         rentalDetail = new RentalDetail();
-        String author = "Author not found.";
+        String author = "";
 
         mBookTitle = (TextView) findViewById(R.id.vbBookTitle);
         if(getIntent().getExtras()!=null){
@@ -108,14 +142,31 @@ public class ViewBookActivity extends AppCompatActivity implements NavigationVie
                 Log.d("rentalDetail", "is empty");
 
             }else{
+
+                Bundle bundle = new Bundle();
+                bundle.putSerializable("rentalDetail", rentalDetail);
+                FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+                ft.replace(R.id.fragment_container_reviews, DisplayBookReview.newInstance(bundle));
+                ft.commit();
                 Log.d("bundle", "is not empty");
                 Log.d("RentalBookTitle", rentalDetail.getBookOwner().getBookObj().getBookTitle());
                 mBookTitle.setText(rentalDetail.getBookOwner().getBookObj().getBookTitle());
-                if(rentalDetail.getBookOwner().getBookObj().getBookAuthor().isEmpty()){
-                        author="Unknown Author";
+                mOwnerName.setText(rentalDetail.getBookOwner().getUserObj().getUserFname()+" "+rentalDetail.getBookOwner().getUserObj().getUserLname());
+                Glide.with(ViewBookActivity.this).load(rentalDetail.getBookOwner().getUserObj().getImageFilename()).fitCenter().into(mOwnerImg);
+                if(rentalDetail.getBookOwner().getBookObj().getBookAuthor().size()!=0){
+                        for(int init=0; init<rentalDetail.getBookOwner().getBookObj().getBookAuthor().size(); init++){
+                            if(!(rentalDetail.getBookOwner().getBookObj().getBookAuthor().get(init).getAuthorFName().equals(""))){
+                                author+=rentalDetail.getBookOwner().getBookObj().getBookAuthor().get(init).getAuthorFName()+" ";
+                                if(!(rentalDetail.getBookOwner().getBookObj().getBookAuthor().get(init).getAuthorLName().equals(""))){
+                                    author+=rentalDetail.getBookOwner().getBookObj().getBookAuthor().get(init).getAuthorLName();
+                                    if(init+1<rentalDetail.getBookOwner().getBookObj().getBookAuthor().size()){
+                                        author+=", ";
+                                    }
+                                }
+                            }
+                        }
                 }else{
-                    Log.d("RentalBookAuthor", String.valueOf(rentalDetail.getBookOwner().getBookObj().getBookAuthor().get(0).getAuthorFName()));
-                    author=rentalDetail.getBookOwner().getBookObj().getBookAuthor().get(0).getAuthorFName();
+                    author="Unknown Author";
                 }
                 Log.d("RentalAuthor", author);
                 mBookAuthor.setText(author);
@@ -173,6 +224,35 @@ public class ViewBookActivity extends AppCompatActivity implements NavigationVie
             }
         });
 
+        mGenres.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String message = "";
+
+                if(rentalDetail.getBookOwner().getBookObj().getBookGenre().size()>1){
+                    for(int init=0; init<rentalDetail.getBookOwner().getBookObj().getBookGenre().size()-1; init++){
+                        message+=rentalDetail.getBookOwner().getBookObj().getBookGenre().get(init).getGenreName() + " ";
+                    }
+                }else{
+                    message = rentalDetail.getBookOwner().getBookObj().getBookGenre().get(0).getGenreName();
+                }
+
+                AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(ViewBookActivity.this);
+                alertDialogBuilder.setTitle("Genre");
+                alertDialogBuilder.setMessage("This book "+rentalDetail.getBookOwner().getBookObj().getBookTitle()
+                        +"is a <b>"+message+"</b> book.");
+                alertDialogBuilder.setPositiveButton("Okay",
+                        new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface arg0, int arg1) {
+                                finish();
+                            }
+                        });
+
+                AlertDialog alertDialog = alertDialogBuilder.create();
+                alertDialog.show();
+            }
+        });
         mViewMeetUp.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -183,6 +263,65 @@ public class ViewBookActivity extends AppCompatActivity implements NavigationVie
                 startActivity(intent);
             }
         });
+    }
+
+    private void getBookRating() {
+        RequestQueue requestQueue = Volley.newRequestQueue(this);
+//        String URL = "http://104.197.4.32:8080/Koobym/user/add";
+        String URL = Constants.GET_BOOK_RATING+"/"+rentalDetail.getBookOwner().getBookOwnerId();
+
+
+//        user.setDayTimeModel();
+        final Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd").registerTypeAdapter(Date.class, GsonDateDeserializer.getInstance()).create();
+        final String mRequestBody = gson.toJson(rentalDetail);
+
+
+        Log.d("LOG_VOLLEY_RequestBody", mRequestBody);
+        StringRequest stringRequest = new StringRequest(Request.Method.GET, URL, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+
+
+
+                final AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(ViewBookActivity.this);
+                alertDialogBuilder.setTitle("Rating");
+                alertDialogBuilder.setMessage("This book "+rentalDetail.getBookOwner().getBookObj().getBookTitle()
+                        +"has an average rating of "+"<b>"+response+"</b>");
+                alertDialogBuilder.setPositiveButton("Okay",
+                        new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface arg0, int arg1) {
+                                finish();
+                            }
+                        });
+
+                AlertDialog alertDialog = alertDialogBuilder.create();
+                alertDialog.show();
+
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.e("LOG_VOLLEY", error.toString());
+            }
+        }) {
+            @Override
+            public String getBodyContentType() {
+                return "application/json; charset=utf-8";
+            }
+
+            @Override
+            public byte[] getBody() throws AuthFailureError {
+                try {
+                    return mRequestBody == null ? null : mRequestBody.getBytes("utf-8");
+                } catch (UnsupportedEncodingException uee) {
+                    VolleyLog.wtf("Unsupported Encoding while trying to get the bytes of %s using %s", mRequestBody, "utf-8");
+                    return null;
+                }
+            }
+        };
+
+        requestQueue.add(stringRequest);
     }
 
     public void showWarning(){
@@ -231,9 +370,11 @@ public class ViewBookActivity extends AppCompatActivity implements NavigationVie
             Intent intent = new Intent(ViewBookActivity.this, MyShelf.class);
             startActivity(intent);
         } else if (id == R.id.history) {
-
+            Intent intent = new Intent(ViewBookActivity.this, HistoryActivity.class);
+            startActivity(intent);
         } else if (id == R.id.transaction) {
-
+            Intent intent = new Intent(ViewBookActivity.this, TransactionActivity.class);
+            startActivity(intent);
         } else if (id == R.id.request) {
             Intent intent = new Intent(ViewBookActivity.this, RequestActivity.class);
             startActivity(intent);
@@ -261,4 +402,8 @@ public class ViewBookActivity extends AppCompatActivity implements NavigationVie
         return super.onCreateOptionsMenu(menu);
     }
 
+    @Override
+    public void onDisplayBookReviewOnClick(Uri uri) {
+
+    }
 }

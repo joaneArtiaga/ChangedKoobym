@@ -329,7 +329,8 @@ public class ViewBookSwapActivity extends AppCompatActivity implements Navigatio
             Intent intent = new Intent(ViewBookSwapActivity.this, MyShelf.class);
             startActivity(intent);
         } else if (id == R.id.history) {
-
+            Intent intent = new Intent(ViewBookSwapActivity.this, HistoryActivity.class);
+            startActivity(intent);
         } else if (id == R.id.transaction) {
             Intent intent = new Intent(ViewBookSwapActivity.this, TransactionActivity.class);
             startActivity(intent);

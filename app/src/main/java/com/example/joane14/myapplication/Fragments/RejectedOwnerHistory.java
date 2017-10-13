@@ -10,7 +10,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 
 import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
@@ -21,6 +20,7 @@ import com.android.volley.VolleyLog;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.example.joane14.myapplication.Activities.GsonDateDeserializer;
+import com.example.joane14.myapplication.Adapters.CompleteOwnerAdapter;
 import com.example.joane14.myapplication.Adapters.CompleteRenterAdapter;
 import com.example.joane14.myapplication.Model.RentalHeader;
 import com.example.joane14.myapplication.Model.User;
@@ -35,21 +35,23 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
-public class CompleteFrag extends Fragment {
+public class RejectedOwnerHistory extends Fragment {
 
-    private OnCompleteInteractionListener mListener;
+
+    private OnRejectedOwnerHistoryInteractionListener mListener;
+
     List<RentalHeader> rentalHeaderList;
     private RecyclerView mRecyclerView;
     private RecyclerView.Adapter mAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
-    Button mBtnCompleteRenter, mBtnCompleteOwner;
+    
 
-
-    public CompleteFrag() {
+    public RejectedOwnerHistory() {
     }
 
-    public static CompleteFrag newInstance(String param1, String param2) {
-        CompleteFrag fragment = new CompleteFrag();
+
+    public static RejectedOwnerHistory newInstance() {
+        RejectedOwnerHistory fragment = new RejectedOwnerHistory();
         return fragment;
     }
 
@@ -61,49 +63,27 @@ public class CompleteFrag extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_complete, container, false);
-
-        mBtnCompleteRenter = (Button) view.findViewById(R.id.completeBtnRenter);
-        mBtnCompleteOwner = (Button) view.findViewById(R.id.completeBtnOwner);
-
+        View view = inflater.inflate(R.layout.fragment_rejected_owner_history, container, false);
 
         rentalHeaderList = new ArrayList<RentalHeader>();
-        mRecyclerView = (RecyclerView) view.findViewById(R.id.my_recycler_view_complete);
+        mRecyclerView = (RecyclerView) view.findViewById(R.id.my_recycler_view_rejected_owner_history);
         mRecyclerView.setHasFixedSize(true);
         mLayoutManager = new LinearLayoutManager(getContext());
         mRecyclerView.setLayoutManager(mLayoutManager);
-        mAdapter = new CompleteRenterAdapter(rentalHeaderList);
+        mAdapter = new CompleteOwnerAdapter(rentalHeaderList);
         mRecyclerView.setAdapter(mAdapter);
-        Log.d("inside", "Click Listenr");
 
-        getCompleteRenter();
+        getRejectedOwner();
 
-
-        mBtnCompleteRenter.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Log.d("btnRenterReceive", "Click Listenr");
-                getCompleteRenter();
-            }
-        });
-
-        mBtnCompleteOwner.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Log.d("btnRenterReceive", "Click Listenr");
-                getCompleteOwner();
-
-            }
-        });
         return view;
     }
 
-    public void getCompleteOwner(){
+    public void getRejectedOwner(){
         RequestQueue requestQueue = Volley.newRequestQueue(getContext());
 //        String URL = "http://104.197.4.32:8080/Koobym/user/add";
         User user = new User();
         user = (User) SPUtility.getSPUtil(getContext()).getObject("USER_OBJECT", User.class);
-        String URL = Constants.GET_TRANSACTION_COMPLETE_OWNER+"/"+user.getUserId();
+        String URL = Constants.GET_REJECTED_BY_OWNER+"/"+user.getUserId();
 //        String URL = Constants.WEB_SERVICE_URL+"user/add";
 
         final RentalHeader rentalHeader =new RentalHeader();
@@ -147,18 +127,17 @@ public class CompleteFrag extends Fragment {
         requestQueue.add(stringRequest);
     }
 
-
     public void onButtonPressed(Uri uri) {
         if (mListener != null) {
-            mListener.onCompleteOnClick(uri);
+            mListener.OnRejectedOwnerHistoryOnClick(uri);
         }
     }
 
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        if (context instanceof OnCompleteInteractionListener) {
-            mListener = (OnCompleteInteractionListener) context;
+        if (context instanceof OnRejectedOwnerHistoryInteractionListener) {
+            mListener = (OnRejectedOwnerHistoryInteractionListener) context;
         } else {
             throw new RuntimeException(context.toString()
                     + " must implement OnFragmentInteractionListener");
@@ -172,56 +151,7 @@ public class CompleteFrag extends Fragment {
     }
 
 
-    public interface OnCompleteInteractionListener {
-        void onCompleteOnClick(Uri uri);
-    }
-
-    public void getCompleteRenter(){
-        RequestQueue requestQueue = Volley.newRequestQueue(getContext());
-//        String URL = "http://104.197.4.32:8080/Koobym/user/add";
-        User user = new User();
-        user = (User) SPUtility.getSPUtil(getContext()).getObject("USER_OBJECT", User.class);
-        String URL = Constants.GET_TRANSACTION_COMPLETE_RENTER+user.getUserId();
-//        String URL = Constants.WEB_SERVICE_URL+"user/add";
-
-        final RentalHeader rentalHeader =new RentalHeader();
-
-        final Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd").registerTypeAdapter(Date.class, GsonDateDeserializer.getInstance()).create();
-        final String mRequestBody = gson.toJson(rentalHeader);
-
-
-        Log.d("LOG_VOLLEY", mRequestBody);
-        StringRequest stringRequest = new StringRequest(Request.Method.GET, URL, new Response.Listener<String>() {
-            @Override
-            public void onResponse(String response) {
-                Log.i("ResponseRentalHeader", response);
-//                RentalHeader rentalHeaderModel = gson.fromJson(response, RentalHeader.class);
-                rentalHeaderList.clear();
-                rentalHeaderList.addAll(Arrays.asList(gson.fromJson(response, RentalHeader[].class)));
-                mAdapter.notifyDataSetChanged();
-            }
-        }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                Log.e("LOG_VOLLEY", error.toString());
-            }
-        }) {
-            @Override
-            public String getBodyContentType() {
-                return "application/json; charset=utf-8";
-            }
-
-            @Override
-            public byte[] getBody() throws AuthFailureError {
-                try {
-                    return mRequestBody == null ? null : mRequestBody.getBytes("utf-8");
-                } catch (UnsupportedEncodingException uee) {
-                    VolleyLog.wtf("Unsupported Encoding while trying to get the bytes of %s using %s", mRequestBody, "utf-8");
-                    return null;
-                }
-            }
-        };
-
-        requestQueue.add(stringRequest);
+    public interface OnRejectedOwnerHistoryInteractionListener {
+        void OnRejectedOwnerHistoryOnClick(Uri uri);
     }
 }

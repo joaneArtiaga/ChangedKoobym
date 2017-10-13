@@ -355,6 +355,8 @@ mSpinnerDays.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() 
             @Override
             public void onResponse(String response) {
                 Log.i("swapDetailAddLog", response);
+                Intent inten = new Intent(AddBookOwner.this, MyShelf.class);
+                startActivity(inten);
             }
         }, new Response.ErrorListener() {
             @Override

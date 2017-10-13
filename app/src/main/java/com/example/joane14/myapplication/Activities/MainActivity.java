@@ -159,12 +159,30 @@ public class MainActivity extends AppCompatActivity {
                                     @Override
                                     public void onCompleted(JSONObject user, GraphResponse response) {
                                         Log.d("FbUser", "check");
+                                        User userMod = new User();
+                                        String lname = "", fname = "", name = "";
 
                                         try {
-                                            checkFB(user.getString("id").toString());
+                                            userMod.setUserFbId(user.getString("id"));
+                                            userMod.setEmail(user.getString("email"));
+
+                                            name = user.getString("name");
+
+                                            if(name.split("\\w+").length>1){
+                                                lname = name.substring(name.lastIndexOf(" ")+1);
+                                                fname = name.substring(0, name.lastIndexOf(' '));
+                                            }else{
+                                                fname = name;
+                                                lname = " ";
+                                            }
+
+                                            userMod.setUserFname(fname);
+                                            userMod.setUserLname(lname);
                                         } catch (JSONException e) {
                                             e.printStackTrace();
                                         }
+
+                                        checkFB(userMod);
 //                                        Log.d("fbLogin", response.toString());
 //                                        Log.d("User Data", response.toString());
 //                                        Log.d("User json object", user.toString());
@@ -227,10 +245,10 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    public void checkFB(String user) {
+    public void checkFB(final User user) {
         RequestQueue requestQueue = Volley.newRequestQueue(this);
 //        String URL = "http://104.197.4.32:8080/Koobym/user/login";
-        String URL = Constants.CHECK_FB_USER +"/"+user;
+        String URL = Constants.CHECK_FB_USER +"/"+user.getUserFbId();
 
         final Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd").registerTypeAdapter(Date.class, GsonDateDeserializer.getInstance()).create();
         final String mRequestBody = gson.toJson(user);
@@ -238,9 +256,18 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onResponse(String response) {
                 if(response == null || response.length() == 0){
-
+                    Log.d("fbResponse", response);
+                    SPUtility.getSPUtil(MainActivity.this).putObject("USER_OBJECT", user);
+                    Intent intent = new Intent(MainActivity.this, LocationChooser.class);
+                    startActivity(intent);
                 }else{
                     Log.d("FBUser", "exist");
+                    User user = gson.fromJson(response, User.class);
+                    SPUtility.getSPUtil(MainActivity.this).putObject("USER_OBJECT", user);
+                    Intent intent = new Intent(MainActivity.this, LandingPage.class);
+                    Bundle bundle = new Bundle();
+                    bundle.putBoolean("fromRegister", false);
+                    startActivity(intent);
                 }
 
             }

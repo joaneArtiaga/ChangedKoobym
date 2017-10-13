@@ -23,6 +23,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.example.joane14.myapplication.Fragments.Constants;
@@ -83,6 +84,7 @@ public class LandingPage extends AppCompatActivity
             Log.d("bottomNavView", "is not null");
         }
 
+
         bottomNavigationView.setOnNavigationItemSelectedListener
                 (new BottomNavigationView.OnNavigationItemSelectedListener() {
                     @Override
@@ -90,15 +92,18 @@ public class LandingPage extends AppCompatActivity
                         Fragment selectedFragment = null;
                         switch (item.getItemId()) {
                             case R.id.navigation_rent:
-                                if(mBundleLogin.getBoolean("fromRegister")==true){
+                                if (mBundleLogin.getBoolean("fromRegister") == true) {
                                     Log.d("inside", "TRUEfromRegister");
 //                                    fragmentManager = getSupportFragmentManager();
                                     selectedFragment = MostRentedBookFrag.newInstance();
 //                                    FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
 //                                    fragmentTransaction.replace(R.id.fragment_landing_container, MostRentedBookFrag.newInstance(), mrbf.getTag());
 //                                    fragmentTransaction.commit();
-                                }else{
-                                    Log.d("PrefFrag","else inside");
+                                    FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+                                    transaction.replace(R.id.fragment_landing_container, selectedFragment);
+                                    transaction.commit();
+                                } else {
+                                    Log.d("PrefFrag", "else inside");
                                     bundlePass.putSerializable("userModelPass", userModel);
                                     Log.d("userModelPass1st", userModel.toString());
 //                                    fragmentManager = getSupportFragmentManager();
@@ -106,20 +111,29 @@ public class LandingPage extends AppCompatActivity
 //                                    FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
 //                                    fragmentTransaction.replace(R.id.fragment_landing_container, prefFrag, prefFrag.getTag());
 //                                    fragmentTransaction.commit();
+                                    FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+                                    transaction.replace(R.id.fragment_landing_container, selectedFragment);
+                                    transaction.commit();
+
 
                                 }
                                 break;
                             case R.id.navigation_swap:
                                 selectedFragment = SwapLandingPageFrag.newInstance();
-                                break;
+                                FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+                                transaction.replace(R.id.fragment_landing_container, selectedFragment);
+                                transaction.commit();
+
+                            break;
                             case R.id.navigation_auction:
+                                Toast.makeText(LandingPage.this, "Auction not yet implemented", Toast.LENGTH_SHORT).show();
 //                                selectedFragment = AuctionShelfFragment.newInstance();
+
                                 break;
                         }
-                        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-                        transaction.replace(R.id.fragment_landing_container, selectedFragment);
-                        transaction.commit();
+
                         return true;
+
                     }
                 });
 
@@ -175,8 +189,8 @@ public class LandingPage extends AppCompatActivity
             mName.setText(userModel.getUserFname()+" "+ userModel.getUserLname());
             mEmail.setText(userModel.getEmail());
             Log.d("moaatay",userModel.getImageFilename());
-//            Glide.with(LandingPage.this).load(userModel.getImageFilename()).into(profileImg);
-            Picasso.with(LandingPage.this).load(String.format(Constants.IMAGE_URL, userModel.getImageFilename())).fit().into(profileImg);
+            Glide.with(LandingPage.this).load(userModel.getImageFilename()).into(profileImg);
+            Picasso.with(LandingPage.this).load( userModel.getImageFilename()).fit().into(profileImg);
 
 
             if(mBundleLogin.getBoolean("fromRegister")==true){
@@ -296,7 +310,7 @@ public class LandingPage extends AppCompatActivity
             Intent intent = new Intent(LandingPage.this, MyShelf.class);
             startActivity(intent);
         } else if (id == R.id.history) {
-            Intent intent = new Intent(LandingPage.this, UserReviewActivity.class);
+            Intent intent = new Intent(LandingPage.this, HistoryActivity.class);
             startActivity(intent);
         } else if (id == R.id.transaction) {
             Intent intent = new Intent(LandingPage.this, TransactionActivity.class);
@@ -309,7 +323,6 @@ public class LandingPage extends AppCompatActivity
             LoginManager.getInstance().logOut();
             Intent intent = new Intent(LandingPage.this, MainActivity.class);
             startActivity(intent);
-        } else if (id == R.id.shelf) {
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout_landingPage);

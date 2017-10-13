@@ -54,21 +54,20 @@ public class BookOwnerAdapter extends RecyclerView.Adapter<BookOwnerAdapter.Book
         holder.mBookDescription.setText(bookList.get(position).getBookObj().getBookDescription());
         Log.d("libroShet",bookList.get(position).getBookObj().getBookOriginalPrice().toString());
         String author = " ";
-        if(bookList.get(position).getBookObj().getBookAuthor()!=null) {
-            int size = bookList.get(position).getBookObj().getBookAuthor().size();
-
-            Log.d("inside", "author setTEXT");
-            if (size > 1) {
-                for (int i = 0; i < size; i++) {
-                    author += bookList.get(position).getBookObj().getBookAuthor().get(i).getAuthorFName();
-                    Log.d("authorLoop", bookList.get(position).getBookObj().getBookAuthor().get(i).getAuthorFName());
-                    if (size - 1 > i) {
-                        author += ", ";
+        if(bookList.get(position).getBookObj().getBookAuthor().size()!=0){
+            for(int init=0; init<bookList.get(position).getBookObj().getBookAuthor().size(); init++){
+                if(!(bookList.get(position).getBookObj().getBookAuthor().get(init).getAuthorFName().equals(""))){
+                    author+=bookList.get(position).getBookObj().getBookAuthor().get(init).getAuthorFName()+" ";
+                    if(!(bookList.get(position).getBookObj().getBookAuthor().get(init).getAuthorLName().equals(""))){
+                        author+=bookList.get(position).getBookObj().getBookAuthor().get(init).getAuthorLName();
+                        if(init+1<bookList.get(position).getBookObj().getBookAuthor().size()){
+                            author+=", ";
+                        }
                     }
                 }
             }
-            Log.d("authorName if", "inside");
-            Log.d("authorName if", author);
+        }else{
+            author="Unknown Author";
         }
         holder.mBookAuthor.setText(author);
         Log.d("libroPanga",bookList.get(position).getBookObj().getBookFilename());

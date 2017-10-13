@@ -84,25 +84,20 @@ public class RecyclerAdapterShowBook extends RecyclerView.Adapter<RecyclerAdapte
             holder.mBookImg.setImageResource(R.drawable.com_facebook_profile_picture_blank_square);
         }
 
-        if(mBookList.get(position).getBookAuthor()!=null) {
-            int size = mBookList.get(position).getBookAuthor().size();
-
-            if (size > 1) {
-                for (int i = 0; i < size; i++) {
-                    author += mBookList.get(position).getBookAuthor().get(i).getAuthorFName();
-                    if (size - 1 > i) {
-                        author += ", ";
+        if(mBookList.get(position).getBookAuthor().size()!=0){
+            for(int init=0; init<mBookList.get(position).getBookAuthor().size(); init++){
+                if(!(mBookList.get(position).getBookAuthor().get(init).getAuthorFName().equals(""))){
+                    author+=mBookList.get(position).getBookAuthor().get(init).getAuthorFName()+" ";
+                    if(!(mBookList.get(position).getBookAuthor().get(init).getAuthorLName().equals(""))){
+                        author+=mBookList.get(position).getBookAuthor().get(init).getAuthorLName();
+                        if(init+1<mBookList.get(position).getBookAuthor().size()){
+                            author+=", ";
+                        }
                     }
                 }
             }
         }else{
-            author = "No Author";
-        }
-
-        if(author.isEmpty()){
-            Log.d("author", "empty");
-        }else{
-            Log.d("author", "not empty");
+            author="Unknown Author";
         }
 
         holder.mBookAuthor.setText(author);

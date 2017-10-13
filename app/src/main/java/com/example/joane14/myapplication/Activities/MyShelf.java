@@ -149,7 +149,8 @@ public class MyShelf extends AppCompatActivity implements
         } else if (id == R.id.shelf) {
 
         } else if (id == R.id.history) {
-
+            Intent intent = new Intent(MyShelf.this, HistoryActivity.class);
+            startActivity(intent);
         } else if (id == R.id.transaction) {
             Intent intent = new Intent(MyShelf.this, TransactionActivity.class);
             startActivity(intent);
@@ -161,7 +162,6 @@ public class MyShelf extends AppCompatActivity implements
             LoginManager.getInstance().logOut();
             Intent intent = new Intent(MyShelf.this, MainActivity.class);
             startActivity(intent);
-        } else if (id == R.id.shelf) {
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout_shelf);

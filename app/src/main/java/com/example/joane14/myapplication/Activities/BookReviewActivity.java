@@ -81,7 +81,7 @@ public class BookReviewActivity extends AppCompatActivity implements DisplayBook
         if(getIntent().getExtras().getSerializable("rentalHeader")!=null){
             rentalHeader = (RentalHeader) getIntent().getExtras().getSerializable("rentalHeader");
             Bundle bundle = new Bundle();
-            bundle.putSerializable("rentalHeader", rentalHeader);
+            bundle.putSerializable("rentalDetail", rentalHeader.getRentalDetail());
             fragmentManager = getSupportFragmentManager();
             DisplayBookReview displayBookReview = DisplayBookReview.newInstance(bundle);
             FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
@@ -191,6 +191,10 @@ public class BookReviewActivity extends AppCompatActivity implements DisplayBook
             @Override
             public void onResponse(String response) {
                 Log.i("bookOwnerRatingAdd", response);
+                Intent intent = new Intent(BookReviewActivity.this, ViewBookActivity.class);
+                Bundle bundle = new Bundle();
+                bundle.putSerializable("View", rentalHeader);
+                startActivity(intent);
             }
         }, new Response.ErrorListener() {
             @Override

@@ -124,7 +124,7 @@ public class ProfileActivity extends AppCompatActivity implements
                 Log.d("User Login", userObj.getUserFname());
                 mName.setText(userObj.getUserFname()+" "+ userObj.getUserLname());
                 mEmail.setText(userObj.getEmail());
-                Picasso.with(ProfileActivity.this).load(String.format(Constants.IMAGE_URL, userObj.getImageFilename())).fit().into(profileImg);
+                Picasso.with(ProfileActivity.this).load(userObj.getImageFilename()).fit().into(profileImg);
 
 
                 mBundle.putSerializable("userDetails", userObj);
@@ -385,7 +385,8 @@ public class ProfileActivity extends AppCompatActivity implements
             Intent intent = new Intent(ProfileActivity.this, MyShelf.class);
             startActivity(intent);
         } else if (id == R.id.history) {
-
+            Intent intent = new Intent(ProfileActivity.this, HistoryActivity.class);
+            startActivity(intent);
         } else if (id == R.id.transaction) {
             Intent intent = new Intent(ProfileActivity.this, TransactionActivity.class);
             startActivity(intent);
@@ -396,7 +397,6 @@ public class ProfileActivity extends AppCompatActivity implements
             LoginManager.getInstance().logOut();
             Intent intent = new Intent(ProfileActivity.this, MainActivity.class);
             startActivity(intent);
-        } else if (id == R.id.shelf) {
         }
 
         if(flag == false){

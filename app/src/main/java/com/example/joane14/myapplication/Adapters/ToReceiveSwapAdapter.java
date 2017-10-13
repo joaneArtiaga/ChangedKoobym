@@ -2,6 +2,7 @@ package com.example.joane14.myapplication.Adapters;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -21,6 +22,8 @@ import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.bumptech.glide.Glide;
 import com.example.joane14.myapplication.Activities.GsonDateDeserializer;
+import com.example.joane14.myapplication.Activities.HistoryActivity;
+import com.example.joane14.myapplication.Activities.MyShelf;
 import com.example.joane14.myapplication.Fragments.Constants;
 import com.example.joane14.myapplication.Model.SwapHeader;
 import com.example.joane14.myapplication.Model.User;
@@ -99,8 +102,15 @@ public class ToReceiveSwapAdapter extends RecyclerView.Adapter<ToReceiveSwapAdap
             @Override
             public void onClick(View v) {
                 swapHeader = bookList.get(position);
-                updateReceive(position);
+                updateReceive(position, true);
 
+            }
+        });
+
+        holder.mBtnRejected.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                updateReceive(position,false);
             }
         });
     }
@@ -113,7 +123,7 @@ public class ToReceiveSwapAdapter extends RecyclerView.Adapter<ToReceiveSwapAdap
     public class BookHolder extends RecyclerView.ViewHolder {
         TextView mRenter, mBookRented, mReminder, mPrice, mMU, mMyBook;
         ImageView mIvRenter, mIvBookImg, mMyIvBookImg;
-        ImageView mBtnAccept;
+        ImageView mBtnAccept, mBtnRejected;
         SwapHeader swapHeaderObj;
         Context context;
 
@@ -123,6 +133,7 @@ public class ToReceiveSwapAdapter extends RecyclerView.Adapter<ToReceiveSwapAdap
 
             this.context = context;
             mBtnAccept = (ImageView) itemView.findViewById(R.id.btnApprove);
+            mBtnRejected = (ImageView) itemView.findViewById(R.id.brnRejected);
             mRenter = (TextView) itemView.findViewById(R.id.toReceiveRenter);
             mReminder = (TextView) itemView.findViewById(R.id.toReceiveReminder);
             mMU = (TextView) itemView.findViewById(R.id.toReceiveMU);
@@ -167,7 +178,7 @@ public class ToReceiveSwapAdapter extends RecyclerView.Adapter<ToReceiveSwapAdap
 //        }
     }
 
-    public void updateReceive(final int position){
+    public void updateReceive(final int position, final Boolean bool){
         RequestQueue requestQueue = Volley.newRequestQueue(context);
 //        String URL = "http://104.197.4.32:8080/Koobym/user/add";
 //        String URL = Constants.WEB_SERVICE_URL+"user/add";
@@ -177,7 +188,11 @@ public class ToReceiveSwapAdapter extends RecyclerView.Adapter<ToReceiveSwapAdap
         swapHeader = bookList.get(position);
         String status="";
         if(swapHeader.getStatus().equals("Approved")){
-            status = "Complete";
+            if(bool==true){
+                status = "Complete";
+            }else{
+                status = "Rejected";
+            }
         }
 
         String URL = Constants.UPDATE_SWAP_HEADER+"/"+status+"/"+swapHeader.getSwapHeaderId();
@@ -196,7 +211,13 @@ public class ToReceiveSwapAdapter extends RecyclerView.Adapter<ToReceiveSwapAdap
             public void onResponse(String response) {
                 Log.i("RequestReceivedStatus", response);
 
-                updateBookOwner(position);
+                if(bool==true){
+                    updateBookOwner(position);
+                }else{
+                    Intent intent = new Intent(context, HistoryActivity.class);
+                    context.startActivity(intent);
+                }
+
             }
         }, new Response.ErrorListener() {
             @Override
@@ -224,6 +245,8 @@ public class ToReceiveSwapAdapter extends RecyclerView.Adapter<ToReceiveSwapAdap
         requestQueue.add(stringRequest);
     }
 
+
+
     public void updateBookOwner(int position){
         RequestQueue requestQueue = Volley.newRequestQueue(context);
 //        String URL = "http://104.197.4.32:8080/Koobym/user/add";
@@ -249,6 +272,8 @@ public class ToReceiveSwapAdapter extends RecyclerView.Adapter<ToReceiveSwapAdap
             @Override
             public void onResponse(String response) {
                 Log.i("RequestReceivedStatus", response);
+                Intent intent = new Intent(context, MyShelf.class);
+                context.startActivity(intent);
             }
         }, new Response.ErrorListener() {
             @Override

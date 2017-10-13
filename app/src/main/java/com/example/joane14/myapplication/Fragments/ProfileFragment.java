@@ -92,7 +92,7 @@ public class ProfileFragment extends Fragment {
         mBtnAdd = (FloatingActionButton) view.findViewById(R.id.btnAdd);
 
         mName.setText(userObj.getUserFname()+" "+ userObj.getUserLname());
-        Picasso.with(getContext()).load(String.format(Constants.IMAGE_URL, userObj.getImageFilename())).fit().into(profileImg);
+        Picasso.with(getContext()).load(userObj.getImageFilename()).fit().into(profileImg);
 
 //        mEmail.setText();
 //        Picasso.with(getContext()).load(String.format(Constants.IMAGE_URL, userObj.getImageFilename())).fit().into(profileImg);

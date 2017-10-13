@@ -89,6 +89,12 @@ public class Constants {
 
     public static final String GET_USER_RATING ="http://104.197.4.32:8080/Koobym/userRating/getAverageRatingOfUser";
 
+    public static final String GET_BOOK_RATING ="http://104.197.4.32:8080/Koobym/bookOwnerRating/getAverageRatingOfBookOwner";
+
     public static final String CHECK_FB_USER ="http://104.197.4.32:8080/Koobym/user/checkFbUser";
+
+    public static final String GET_REJECTED_BY_OWNER ="http://104.197.4.32:8080/Koobym/rentalHeader/rejectedByIdOwner";
+
+    public static final String GET_REJECTED_BY_RENTER ="http://104.197.4.32:8080/Koobym/rentalHeader/rejectedByIdRenter";
 
 }

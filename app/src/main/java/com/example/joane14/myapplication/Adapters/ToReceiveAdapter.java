@@ -23,6 +23,8 @@ import com.android.volley.toolbox.Volley;
 import com.bumptech.glide.Glide;
 import com.example.joane14.myapplication.Activities.BookReviewActivity;
 import com.example.joane14.myapplication.Activities.GsonDateDeserializer;
+import com.example.joane14.myapplication.Activities.HistoryActivity;
+import com.example.joane14.myapplication.Activities.TransactionActivity;
 import com.example.joane14.myapplication.Activities.UserReviewActivity;
 import com.example.joane14.myapplication.Fragments.Constants;
 import com.example.joane14.myapplication.Model.RentalHeader;
@@ -93,8 +95,15 @@ public class ToReceiveAdapter extends RecyclerView.Adapter<ToReceiveAdapter.Book
                 rentalHeader = bookList.get(position);
 
                 Log.d("ApproveStat", rentalHeader.getStatus());
-                updateReceive(position);
+                updateReceive(position, true);
 
+            }
+        });
+
+        holder.mBtnRejected.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                updateReceive(position, false);
             }
         });
     }
@@ -107,7 +116,7 @@ public class ToReceiveAdapter extends RecyclerView.Adapter<ToReceiveAdapter.Book
     public class BookHolder extends RecyclerView.ViewHolder {
         TextView mRenter, mBookRented, mReminder, mPrice, mMU, mDaysRent;
         ImageView mIvRenter, mIvBookImg;
-        ImageView mBtnAccept;
+        ImageView mBtnAccept, mBtnRejected;
         RentalHeader rentalHeaderObj;
         Context context;
 
@@ -117,6 +126,7 @@ public class ToReceiveAdapter extends RecyclerView.Adapter<ToReceiveAdapter.Book
 
             this.context = context;
             mBtnAccept = (ImageView) itemView.findViewById(R.id.btnApprove);
+            mBtnRejected = (ImageView) itemView.findViewById(R.id.brnRejected);
             mRenter = (TextView) itemView.findViewById(R.id.toReceiveRenter);
             mReminder = (TextView) itemView.findViewById(R.id.toReceiveReminder);
             mMU = (TextView) itemView.findViewById(R.id.toReceiveMU);
@@ -160,7 +170,7 @@ public class ToReceiveAdapter extends RecyclerView.Adapter<ToReceiveAdapter.Book
 //        }
     }
 
-    public void updateReceive(int position){
+    public void updateReceive(int position, Boolean bool){
         RequestQueue requestQueue = Volley.newRequestQueue(context);
 //        String URL = "http://104.197.4.32:8080/Koobym/user/add";
 //        String URL = Constants.WEB_SERVICE_URL+"user/add";
@@ -168,21 +178,24 @@ public class ToReceiveAdapter extends RecyclerView.Adapter<ToReceiveAdapter.Book
         rentalHeader = bookList.get(position);
         String status="";
         if(rentalHeader.getStatus().equals("Confirmation")){
-            status = "Approved";
+            if(bool==true){
+                status = "Approved";
+            }else{
+                status = "Rejected";
+            }
         }else if(rentalHeader.getStatus().equals("Approved")){
-            status = "Received";
-            Intent intent = new Intent(context, BookReviewActivity.class);
-            Bundle bundle = new Bundle();
-            bundle.putSerializable("rentalHeader", rentalHeader);
-            intent.putExtras(bundle);
-            context.startActivity(intent);
+            if(bool==true){
+                status = "Received";
+            }else{
+                status = "Rejected";
+            }
         }else{
-            status = "Complete";
-            Intent intent = new Intent(context, UserReviewActivity.class);
-            Bundle bundle = new Bundle();
-            bundle.putSerializable("rentalHeader", rentalHeader);
-            intent.putExtras(bundle);
-            context.startActivity(intent);
+            if(bool==true){
+                status = "Complete";
+            }else{
+                status = "Rejected";
+            }
+
         }
 
         String URL = Constants.UPDATE_RENTAL_HEADER+"/"+rentalHeader.getRentalHeaderId()+"/"+status;
@@ -194,11 +207,31 @@ public class ToReceiveAdapter extends RecyclerView.Adapter<ToReceiveAdapter.Book
 
         Log.d("LOG_VOLLEY", mRequestBody);
         Log.d("LOG_VOLLEY rentalHeader", mRequestBody);
+        final String finalStatus = status;
         StringRequest stringRequest = new StringRequest(Request.Method.GET, URL, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
                 Log.i("RequestReceivedStatus", response);
                 RentalHeader rentalHeaderModel = new RentalHeader();
+                if(finalStatus.equals("Complete")){
+                    Intent intent = new Intent(context, UserReviewActivity.class);
+                    Bundle bundle = new Bundle();
+                    bundle.putSerializable("rentalHeader", rentalHeader);
+                    intent.putExtras(bundle);
+                    context.startActivity(intent);
+                }else if(finalStatus.equals("Received")){
+                    Intent intent = new Intent(context, BookReviewActivity.class);
+                    Bundle bundle = new Bundle();
+                    bundle.putSerializable("rentalHeader", rentalHeader);
+                    intent.putExtras(bundle);
+                    context.startActivity(intent);
+                }else if(finalStatus.equals("Approved")){
+                    Intent intent = new Intent(context, TransactionActivity.class);
+                    context.startActivity(intent);
+                }else{
+                    Intent intent = new Intent(context, HistoryActivity.class);
+                    context.startActivity(intent);
+                }
 
             }
         }, new Response.ErrorListener() {
