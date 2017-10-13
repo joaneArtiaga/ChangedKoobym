@@ -323,7 +323,7 @@ public class ViewBookSwapActivity extends AppCompatActivity implements Navigatio
             User userModel = new User();
             userModel = (User) SPUtility.getSPUtil(ViewBookSwapActivity.this).getObject("USER_OBJECT", User.class);
             bundlePass.putSerializable("userModelPass", userModel);
-            intent.putExtra("user",bundlePass);
+            intent.putExtras(bundlePass);
             startActivity(intent);
         } else if (id == R.id.shelf) {
             Intent intent = new Intent(ViewBookSwapActivity.this, MyShelf.class);

@@ -4,7 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:padding="5dp">
 
     <TextView
         android:id="@+id/textView_genreName"
@@ -14,6 +15,8 @@
         android:background="@drawable/label_bg"
         android:textAlignment="center"
         android:gravity="center"
-        android:textColor="@color/colorDark" />
+        android:textColor="@color/colorDark"
+        android:textSize="15dp"
+        android:padding="5dp"/>
 
 </LinearLayout>

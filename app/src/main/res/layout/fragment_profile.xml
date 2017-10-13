@@ -12,12 +12,13 @@
         android:orientation="vertical"
         android:gravity="center"
         android:paddingBottom="10dp"
-        android:background="@color/colorDark">
+        android:background="@color/colorDark"
+        android:padding="10dp">
 
 
         <ImageView
             android:id="@+id/profIvProf"
-            android:layout_width="wrap_content"
+            android:layout_width="80dp"
             android:layout_height="70dp"
             android:layout_weight="1"
             app:srcCompat="@drawable/com_facebook_profile_picture_blank_square"

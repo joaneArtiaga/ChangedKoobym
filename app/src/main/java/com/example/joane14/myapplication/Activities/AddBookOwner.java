@@ -260,7 +260,8 @@ mSpinnerDays.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() 
             public void onResponse(String response) {
                 Log.i("rentalDetailAddLog", response);
 
-
+                Intent intent = new Intent(AddBookOwner.this, MyShelf.class);
+                startActivity(intent);
             }
         }, new Response.ErrorListener() {
             @Override

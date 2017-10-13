@@ -1,21 +1,41 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
 
-    <Spinner
-        android:id="@+id/spinner"
-        android:layout_width="150dp"
-        android:layout_height="wrap_content"/>
-
     <EditText
-        android:id="@+id/timeChooser"
+        android:id="@+id/tcFrom"
         android:layout_width="200dp"
         android:layout_height="25dp"
         android:layout_gravity="center"
-        android:layout_marginTop="10dp"
+        android:layout_marginTop="17dp"
+        android:background="@drawable/rounded_edittext"
+        android:backgroundTint="#f0aaa0"
+        android:clickable="true"
+        android:focusable="false"
+        android:gravity="center"
+        android:hint="Choose Time"
+        android:inputType="datetime"
+        android:textSize="15sp"
+        android:layout_below="@+id/tcTo"
+        android:layout_alignRight="@+id/tcTo"
+        android:layout_alignEnd="@+id/tcTo"
+        android:layout_alignLeft="@+id/tcTo"
+        android:layout_alignStart="@+id/tcTo" />
+
+    <EditText
+        android:id="@+id/tcTo"
+        android:layout_width="200dp"
+        android:layout_height="25dp"
+        android:layout_alignEnd="@+id/spinnerDay"
+        android:layout_alignLeft="@+id/spinnerDay"
+        android:layout_alignRight="@+id/spinnerDay"
+        android:layout_alignStart="@+id/spinnerDay"
+        android:layout_below="@+id/spinnerDay"
+        android:layout_gravity="center"
+        android:layout_marginTop="13dp"
         android:background="@drawable/rounded_edittext"
         android:backgroundTint="#f0aaa0"
         android:clickable="true"
@@ -25,5 +45,76 @@
         android:inputType="datetime"
         android:textSize="15sp" />
 
+    <Spinner
+        android:id="@+id/spinnerDay"
+        android:layout_width="150dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="25dp"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginRight="15dp"
+        android:layout_marginEnd="15dp" />
 
-</LinearLayout>
+    <TextView
+        android:id="@+id/textView7"
+        android:layout_width="50dp"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@+id/tcFrom"
+        android:layout_alignBottom="@+id/tcFrom"
+        android:layout_alignLeft="@+id/textView9"
+        android:layout_alignStart="@+id/textView9"
+        android:layout_toLeftOf="@+id/tcFrom"
+        android:layout_toStartOf="@+id/tcFrom"
+        android:text="Pick Time(Until)" />
+
+    <TextView
+        android:id="@+id/textView9"
+        android:layout_width="50dp"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@+id/tcTo"
+        android:layout_alignBottom="@+id/tcTo"
+        android:layout_alignLeft="@+id/textView8"
+        android:layout_alignStart="@+id/textView8"
+        android:layout_toLeftOf="@+id/tcTo"
+        android:layout_toStartOf="@+id/tcTo"
+        android:text="Pick Time(From)" />
+
+    <TextView
+        android:id="@+id/textView8"
+        android:layout_width="50dp"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_alignTop="@+id/spinnerDay"
+        android:layout_marginLeft="11dp"
+        android:layout_marginStart="11dp"
+        android:layout_toLeftOf="@+id/spinnerDay"
+        android:layout_toStartOf="@+id/spinnerDay"
+        android:text="Choose Day" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginTop="11dp"
+        android:layout_below="@+id/tcFrom"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:gravity="center_horizontal">
+
+        <Button
+            android:id="@+id/btnOkay"
+            android:layout_width="150dp"
+            android:layout_height="wrap_content"
+            android:text="Okay" />
+
+        <Button
+            android:id="@+id/btnCancel"
+            android:layout_width="150dp"
+            android:layout_height="wrap_content"
+            android:text="Cancel" />
+
+    </LinearLayout>
+
+</RelativeLayout>

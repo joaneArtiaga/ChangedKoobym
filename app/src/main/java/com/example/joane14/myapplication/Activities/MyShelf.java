@@ -138,15 +138,13 @@ public class MyShelf extends AppCompatActivity implements
             intent.putExtra("user", bundle);
             startActivity(intent);
         } else if (id == R.id.profile) {
+            Log.d("InsideProfile", "inside");
             Intent intent = new Intent(MyShelf.this, ProfileActivity.class);
             User userModel = new User();
             userModel = (User) SPUtility.getSPUtil(this).getObject("USER_OBJECT", User.class);
             Bundle bundlePass = new Bundle();
-//            User user = userModel;
-//            Log.d("User Id", String.valueOf(userModel.getUserId()));
-//            Log.d("User name", userModel.getUserFname()+" "+userModel.getUserLname());
             bundlePass.putSerializable("userModelPass", userModel);
-            intent.putExtra("user",bundlePass);
+            intent.putExtras(bundlePass);
             startActivity(intent);
         } else if (id == R.id.shelf) {
 

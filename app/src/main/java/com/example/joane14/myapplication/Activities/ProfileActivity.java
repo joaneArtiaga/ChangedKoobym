@@ -139,6 +139,8 @@ public class ProfileActivity extends AppCompatActivity implements
                     fragmentTransaction.commit();
                 }
 
+            }else{
+                Log.d("null oi", "mao white screen");
             }
 
 
@@ -371,6 +373,7 @@ public class ProfileActivity extends AppCompatActivity implements
         boolean flag=true;
 
         if (id == R.id.home) {
+            Log.d("HomeFrom", "Profile");
             Intent intent = new Intent(ProfileActivity.this, LandingPage.class);
             Bundle bundle = new Bundle();
             bundle.putBoolean("fromRegister", false);

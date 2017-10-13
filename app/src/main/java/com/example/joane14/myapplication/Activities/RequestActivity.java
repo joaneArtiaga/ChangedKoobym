@@ -129,7 +129,7 @@ public class RequestActivity extends AppCompatActivity
             User userModel = new User();
             userModel = (User) SPUtility.getSPUtil(this).getObject("USER_OBJECT", User.class);
             bundlePass.putSerializable("userModelPass", userModel);
-            intent.putExtra("user",bundlePass);
+            intent.putExtras(bundlePass);
             startActivity(intent);
         } else if (id == R.id.shelf) {
             Intent intent = new Intent(RequestActivity.this, MyShelf.class);

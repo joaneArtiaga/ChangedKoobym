@@ -214,35 +214,14 @@ public class SignUp extends AppCompatActivity implements
 
 
     @Override
-    public void onAddTimeClickListener(List<DayTimeModel> listDayTimeModel) {
+    public void onAddTimeClickListener(List<UserDayTime> listDayTimeModel) {
         Log.d("addTimeClickListerner", "inside");
-        this.dayTimeList = listDayTimeModel;
+        this.userDayTimeList= listDayTimeModel;
 
         userDayTime = new UserDayTime();
         dayModel = new DayModel();
         timeModel = new TimeModel();
 
-        for(int init=0; init<dayTimeList.size(); init++){
-            for (int initialize = 0; initialize<dayTimeList.get(init).getTime().size(); initialize++){
-                dayModel.setStrDay(dayTimeList.get(init).getDay());
-                timeModel.setStrTime(dayTimeList.get(init).getTime().get(initialize));
-
-                userDayTime.setDay(dayModel);
-                userDayTime.setTime(timeModel);
-                Log.d("userDayTimeDay", dayModel.getStrDay());
-                Log.d("userDayTimeTime", timeModel.getStrTime());
-
-                this.userDayTimeList.add(userDayTime);
-            }
-        }
-
-        if(userDayTimeList.size() == 0){
-            Log.d("FvckNull", "true");
-        }else{
-            Log.d("FvckNull", "false");
-            for(int init=0; init<userDayTimeList.size(); init++)
-            Log.d("FvckNull", userDayTimeList.get(init).toString());
-        }
         Genre genreModel = new Genre();
         changeFragment(genreModel);
     }

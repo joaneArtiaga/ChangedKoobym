@@ -20,6 +20,7 @@ import com.android.volley.VolleyError;
 import com.android.volley.VolleyLog;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+import com.example.joane14.myapplication.Fragments.Constants;
 import com.example.joane14.myapplication.Model.FbUSer;
 import com.example.joane14.myapplication.Model.User;
 import com.example.joane14.myapplication.R;
@@ -129,10 +130,14 @@ public class MainActivity extends AppCompatActivity {
             FbUSer userFB;
             PrefUtil prefUtil = PrefUtil.getPrefUtilInstance(this);
             userFB = prefUtil.getLoggedInFacebookUserDetails();
+
+            userFB.getUserId();
+
             mbundle.putString("email", userFB.getEmail());
             mbundle.putString("name", userFB.getName());
             mbundle.putString("userId", userFB.getUserId());
             mbundle.putString("gender", userFB.getGender());
+
             Intent intent = new Intent(MainActivity.this, LandingPage.class);
             intent.putExtra("ProfileBundle", mbundle);
             startActivity(intent);
@@ -153,45 +158,51 @@ public class MainActivity extends AppCompatActivity {
                                 new GraphRequest.GraphJSONObjectCallback() {
                                     @Override
                                     public void onCompleted(JSONObject user, GraphResponse response) {
-                                        Log.d("fbLogin", response.toString());
+                                        Log.d("FbUser", "check");
 
-                                        Log.d("User Data", response.toString());
-                                        Log.d("User json object", user.toString());
                                         try {
-                                            Log.d("User id", user.getString("id").toString());
+                                            checkFB(user.getString("id").toString());
                                         } catch (JSONException e) {
                                             e.printStackTrace();
                                         }
-
-                                        try {
-                                            Log.d("inside try ctch", "");
-
-                                            email = user.getString("email").toString();
-                                            name = user.getString("name").toString();
-                                            userId = user.getString("id").toString();
-                                            gender = user.getString("gender").toString();
-
-                                            Log.d("name", name);
-                                            Log.d("gender", gender);
-                                            Log.d("email", email);
-                                            Log.d("userId", userId);
-
-                                            mbundle.putString("email", email);
-                                            mbundle.putString("name", name);
-                                            mbundle.putString("userId", userId);
-                                            mbundle.putString("gender", gender);
-
-                                            PrefUtil.getPrefUtilInstance(MainActivity.this)
-                                                    .saveFacebookUserInfo(name, email, gender, userId);
-
-                                            SPUtility.getSPUtil(MainActivity.this).putObject("USER_OBJECT", user);
-
-                                            Intent intent = new Intent(MainActivity.this, LandingPage.class);
-                                            intent.putExtra("ProfileBundle", mbundle);
-                                            startActivity(intent);
-                                        } catch (JSONException e) {
-                                            e.printStackTrace();
-                                        }
+//                                        Log.d("fbLogin", response.toString());
+//                                        Log.d("User Data", response.toString());
+//                                        Log.d("User json object", user.toString());
+//                                        try {
+//                                            Log.d("User id", user.getString("id").toString());
+//                                        } catch (JSONException e) {
+//                                            e.printStackTrace();
+//                                        }
+//
+//                                        try {
+//                                            Log.d("inside try ctch", "");
+//
+//                                            email = user.getString("email").toString();
+//                                            name = user.getString("name").toString();
+//                                            userId = user.getString("id").toString();
+//                                            gender = user.getString("gender").toString();
+//
+//                                            Log.d("name", name);
+//                                            Log.d("gender", gender);
+//                                            Log.d("email", email);
+//                                            Log.d("userId", userId);
+//
+//                                            mbundle.putString("email", email);
+//                                            mbundle.putString("name", name);
+//                                            mbundle.putString("userId", userId);
+//                                            mbundle.putString("gender", gender);
+//
+//                                            PrefUtil.getPrefUtilInstance(MainActivity.this)
+//                                                    .saveFacebookUserInfo(name, email, gender, userId);
+//
+//                                            SPUtility.getSPUtil(MainActivity.this).putObject("USER_OBJECT", user);
+//
+//                                            Intent intent = new Intent(MainActivity.this, LandingPage.class);
+//                                            intent.putExtra("ProfileBundle", mbundle);
+//                                            startActivity(intent);
+//                                        } catch (JSONException e) {
+//                                            e.printStackTrace();
+//                                        }
                                     }
                                 });
                         Bundle parameters = new Bundle();
@@ -216,6 +227,51 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
+    public void checkFB(String user) {
+        RequestQueue requestQueue = Volley.newRequestQueue(this);
+//        String URL = "http://104.197.4.32:8080/Koobym/user/login";
+        String URL = Constants.CHECK_FB_USER +"/"+user;
+
+        final Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd").registerTypeAdapter(Date.class, GsonDateDeserializer.getInstance()).create();
+        final String mRequestBody = gson.toJson(user);
+        StringRequest stringRequest = new StringRequest(Request.Method.GET, URL, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                if(response == null || response.length() == 0){
+
+                }else{
+                    Log.d("FBUser", "exist");
+                }
+
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.e("LOG_VOLLEY", error.toString());
+            }
+        }) {
+            @Override
+            public String getBodyContentType() {
+                return "application/json; charset=utf-8";
+            }
+
+            @Override
+            public byte[] getBody() throws AuthFailureError {
+                try {
+                    return mRequestBody == null ? null : mRequestBody.getBytes("utf-8");
+                } catch (UnsupportedEncodingException uee) {
+                    VolleyLog.wtf("Unsupported Encoding while trying to get the bytes of %s using %s", mRequestBody, "utf-8");
+                    return null;
+                }
+            }
+        };
+        stringRequest.setRetryPolicy(new DefaultRetryPolicy(
+                30000,
+                DefaultRetryPolicy.DEFAULT_MAX_RETRIES,
+                DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+        requestQueue.add(stringRequest);
+
+    }
 
     public void login(View view) {
         RequestQueue requestQueue = Volley.newRequestQueue(this);

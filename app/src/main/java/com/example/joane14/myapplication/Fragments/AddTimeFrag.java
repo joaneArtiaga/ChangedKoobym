@@ -3,8 +3,6 @@ package com.example.joane14.myapplication.Fragments;
 import android.app.Dialog;
 import android.app.TimePickerDialog;
 import android.content.Context;
-import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.DefaultItemAnimator;
@@ -14,14 +12,13 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ListView;
-import android.widget.TextView;
+import android.widget.Spinner;
 import android.widget.TimePicker;
 
-import com.example.joane14.myapplication.Activities.SignUp;
-import com.example.joane14.myapplication.Activities.TimeDateChooser;
 import com.example.joane14.myapplication.Adapters.TimeDayAdapter;
 import com.example.joane14.myapplication.Model.DayModel;
 import com.example.joane14.myapplication.Model.DayTimeModel;
@@ -41,13 +38,14 @@ public class AddTimeFrag extends Fragment{
     ArrayList<String> selectedDays;
     ArrayList<DayTimeModel> dayTimeModelArrayList;
     List<UserDayTime> userDayTimeList;
-    private static RecyclerView.Adapter adapter;
+    private static RecyclerView.Adapter mAdapter;
     private RecyclerView.LayoutManager layoutManager;
     private static RecyclerView recyclerView;
     Button mNext, mAddTime;
     DayModel dayModel;
     TimeModel timeModel;
     UserDayTime userDayTime;
+    EditText etTimeFrom, etTimeTo;
 
     public AddTimeFrag() {
     }
@@ -105,9 +103,7 @@ public class AddTimeFrag extends Fragment{
         mNext.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mListener.onAddTimeClickListener(dayTimeModelArrayList);
-                Log.d("dayTimeModelArrayList", dayTimeModelArrayList.toString());
-                Log.d("inside onclickListener", "mNext Button");
+                mListener.onAddTimeClickListener(userDayTimeList);
             }
         });
 
@@ -125,15 +121,8 @@ public class AddTimeFrag extends Fragment{
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setItemAnimator(new DefaultItemAnimator());
 
-        if(dayTimeModelArrayList.isEmpty()){
-            Log.d("dayTimeModelArrayList", "first is empty");
-        }else{
-            Log.d("dayTimeModelArrayList", "first is not empty");
-
-        }
-
-        adapter = new TimeDayAdapter(dayTimeModelArrayList, getContext());
-        recyclerView.setAdapter(adapter);
+        mAdapter = new TimeDayAdapter(userDayTimeList);
+        recyclerView.setAdapter(mAdapter);
 
         Log.d("selectedDays", selectedDays.toString());
         return view;
@@ -144,22 +133,75 @@ public class AddTimeFrag extends Fragment{
         final Dialog dialog = new Dialog(getContext());
         dialog.setContentView(R.layout.time_date_dialog);
         dialog.setTitle("Choose Time and Day");
+        final DayModel day;
+        final TimeModel time;
+
+
+        day = new DayModel();
+        time = new TimeModel();
 
         // set the custom dialog components - text, image and button
-        TextView text = (TextView) dialog.findViewById(R.id.text);
-        text.setText("Android custom dialog example!");
+        etTimeFrom = (EditText) dialog.findViewById(R.id.tcFrom);
+        etTimeTo = (EditText) dialog.findViewById(R.id.tcTo);
+        Button mBtnOkay = (Button) dialog.findViewById(R.id.btnOkay);
+        Button mBtnCancel = (Button) dialog.findViewById(R.id.btnCancel);
+        Spinner mSpinnerDay = (Spinner) dialog.findViewById(R.id.spinnerDay);
 
-        EditText etTime = (EditText) dialog.findViewById(R.id.timeChooser);
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(getContext(), android.R.layout.simple_dropdown_item_1line, selectedDays);
+        adapter.setDropDownViewResource(R.layout.support_simple_spinner_dropdown_item);
+        if(adapter==null){
+            Log.d("apater", "is null");
+        }else{
+            Log.d("apater", "is not null");
+        }
+        mSpinnerDay.setAdapter(adapter);
 
-        etTime.setOnClickListener(new View.OnClickListener() {
+        mSpinnerDay.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
-            public void onClick(View v) {
-                CreateTimePicker();
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                day.setStrDay(selectedDays.get(position));
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
             }
         });
+        etTimeFrom.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                CreateTimePicker(0);
+            }
+        });
+        etTimeTo.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                CreateTimePicker(1);
+            }
+        });
+
+        mBtnOkay.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                time.setStrTime(etTimeFrom.getText().toString()+" - "+etTimeTo.getText().toString());
+                userDayTime.setDay(day);
+                userDayTime.setTime(time);
+                userDayTimeList.add(userDayTime);
+                mAdapter.notifyDataSetChanged();
+                dialog.cancel();
+            }
+        });
+
+        mBtnCancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.cancel();
+            }
+        });
+        dialog.show();
     }
 
-    public void CreateTimePicker(){
+    public void CreateTimePicker(final int pos){
 
         userDayTime = new UserDayTime();
 
@@ -174,10 +216,40 @@ public class AddTimeFrag extends Fragment{
                     @Override
                     public void onTimeSet(TimePicker view, int hourOfDay,
                                           int minute) {
+                        int hour = hourOfDay;
+                        int minutes = minute;
+                        String timeSet = "";
+                        if (hour > 12) {
+                            hour -= 12;
+                            timeSet = "PM";
+                        } else if (hour == 0) {
+                            hour += 12;
+                            timeSet = "AM";
+                        } else if (hour == 12){
+                            timeSet = "PM";
+                        }else{
+                            timeSet = "AM";
+                        }
+
+                        String min = "";
+                        if (minutes < 10)
+                            min = "0" + minutes ;
+                        else
+                            min = String.valueOf(minutes);
+
+                        // Append in a StringBuilder
+                        String aTime = new StringBuilder().append(hour).append(':')
+                                .append(min ).append(" ").append(timeSet).toString();
+
                         String timeGiven = "";
                         timeGiven = hourOfDay + ":" + minute;
                         Log.d("time selected", timeGiven);
 
+                        if(pos==0){
+                            etTimeFrom.setText(aTime);
+                        }else{
+                            etTimeTo.setText(aTime);
+                        }
 
                     }
                 }, mHour, mMinute, false);
@@ -185,7 +257,7 @@ public class AddTimeFrag extends Fragment{
     }
 
 
-    public void onButtonPressed(List<DayTimeModel> listDayTimeModel) {
+    public void onButtonPressed(List<UserDayTime> listDayTimeModel) {
         if (mListener != null) {
             mListener.onAddTimeClickListener(listDayTimeModel);
         }
@@ -209,6 +281,6 @@ public class AddTimeFrag extends Fragment{
     }
 
     public interface OnAddTimeInteractionListener {
-        void onAddTimeClickListener(List<DayTimeModel> listDayTimeModel);
+        void onAddTimeClickListener(List<UserDayTime> userDayTimeList);
     }
 }
