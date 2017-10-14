@@ -193,7 +193,13 @@ public class BookReviewActivity extends AppCompatActivity implements DisplayBook
                 Log.i("bookOwnerRatingAdd", response);
                 Intent intent = new Intent(BookReviewActivity.this, ViewBookActivity.class);
                 Bundle bundle = new Bundle();
-                bundle.putSerializable("View", rentalHeader);
+                bundle.putSerializable("View", rentalHeader.getRentalDetail());
+                if(rentalHeader==null){
+                    Log.d("rentalHeader", "is null");
+                }else{
+                    Log.d("rentalHeader", "is not null");
+                }
+                intent.putExtras(bundle);
                 startActivity(intent);
             }
         }, new Response.ErrorListener() {

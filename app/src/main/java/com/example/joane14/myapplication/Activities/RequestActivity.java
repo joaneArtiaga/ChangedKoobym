@@ -92,8 +92,7 @@ public class RequestActivity extends AppCompatActivity
             userModel = (User) SPUtility.getSPUtil(this).getObject("USER_OBJECT", User.class);
             mName.setText(userModel.getUserFname()+" "+userModel.getUserLname());
             mEmail.setText(userModel.getEmail());
-            Glide.with(RequestActivity.this).load(userModel.getImageFilename()).into(profileImg);
-            Picasso.with(RequestActivity.this).load(String.format(Constants.IMAGE_URL, userModel.getImageFilename())).fit().into(profileImg);
+            Picasso.with(RequestActivity.this).load(userModel.getImageFilename()).fit().into(profileImg);
         }
 
     }

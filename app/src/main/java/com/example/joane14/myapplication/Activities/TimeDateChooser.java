@@ -255,7 +255,7 @@ public class TimeDateChooser extends AppCompatActivity {
                             rentalHeader.setStatus("Confirmation");
                             rentalHeader.setRentalDetail(rentalDetail);
                             rentalHeader.setUserId(user);
-                            rentalHeader.setRentalTimeStamp(nextDateStr);
+                            rentalHeader.setRentalTimeStamp(nextDateStr+" "+userDayTimeList.get(position).getTime().getStrTime());
                             rentalHeader.setTotalPrice((float) rentalDetail.getCalculatedPrice());
                             rentalHeader.setLocation(locationChosen);
 

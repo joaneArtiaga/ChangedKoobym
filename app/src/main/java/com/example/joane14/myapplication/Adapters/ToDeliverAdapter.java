@@ -1,7 +1,9 @@
 package com.example.joane14.myapplication.Adapters;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
+import android.icu.util.Calendar;
 import android.os.Bundle;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -17,6 +19,10 @@ import com.example.joane14.myapplication.Model.RentalHeader;
 import com.example.joane14.myapplication.R;
 import com.squareup.picasso.Picasso;
 
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -46,6 +52,7 @@ public class ToDeliverAdapter extends RecyclerView.Adapter<ToDeliverAdapter.Book
         bookList = myDataset;
     }
 
+    @SuppressLint("NewApi")
     @Override
     public void onBindViewHolder(ToDeliverAdapter.BookHolder holder, int position) {
 
@@ -61,10 +68,24 @@ public class ToDeliverAdapter extends RecyclerView.Adapter<ToDeliverAdapter.Book
             holder.mRenter.setText(bookList.get(position).getUserId().getUserFname()+" "+bookList.get(position).getUserId().getUserLname());
         }
 
-        holder.mReminder.setText("Return book and receive by DATE.");
+        holder.mReminder.setText("Deliver book "+bookList.get(position).getRentalTimeStamp());
 
+        DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
+        Date date = null;
+        String newDate="";
+        try {
+            date = df.parse(bookList.get(position).getRentalTimeStamp());
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        @SuppressLint({"NewApi", "LocalSuppress"})
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(date);
+        calendar.add(calendar.DATE, bookList.get(position).getRentalDetail().getDaysForRent());
+        newDate = df.format(calendar.getTime());
 
-        Picasso.with(context).load(String.format(Constants.IMAGE_URL, bookList.get(position).getUserId().getImageFilename())).fit().into(holder.mIvRenter);
+        holder.mDaysRent.setText("Due date of book will be on "+newDate);
+        Picasso.with(context).load(bookList.get(position).getUserId().getImageFilename()).fit().into(holder.mIvRenter);
         Glide.with(context).load(bookList.get(position).getRentalDetail().getBookOwner().getBookObj().getBookFilename()).centerCrop().into(holder.mIvBookImg);
 
 //        Log.d("displayImage", bookList.get(position).getBookOwner().getBookObj().getBookFilename());

@@ -134,9 +134,9 @@ public class ViewBookActivity extends AppCompatActivity implements
         String author = "";
 
         mBookTitle = (TextView) findViewById(R.id.vbBookTitle);
-        if(getIntent().getExtras()!=null){
+        if(getIntent().getExtras().getSerializable("View")!=null){
             bundle = getIntent().getExtras();
-            rentalDetail = (RentalDetail) bundle.getSerializable("View" );
+            rentalDetail = (RentalDetail) getIntent().getExtras().getSerializable("View" );
 
             if(rentalDetail==null){
                 Log.d("rentalDetail", "is empty");
@@ -240,12 +240,12 @@ public class ViewBookActivity extends AppCompatActivity implements
                 AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(ViewBookActivity.this);
                 alertDialogBuilder.setTitle("Genre");
                 alertDialogBuilder.setMessage("This book "+rentalDetail.getBookOwner().getBookObj().getBookTitle()
-                        +"is a <b>"+message+"</b> book.");
+                        +" is a "+message+" book.");
                 alertDialogBuilder.setPositiveButton("Okay",
                         new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface arg0, int arg1) {
-                                finish();
+
                             }
                         });
 
@@ -286,12 +286,11 @@ public class ViewBookActivity extends AppCompatActivity implements
                 final AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(ViewBookActivity.this);
                 alertDialogBuilder.setTitle("Rating");
                 alertDialogBuilder.setMessage("This book "+rentalDetail.getBookOwner().getBookObj().getBookTitle()
-                        +"has an average rating of "+"<b>"+response+"</b>");
+                        +" has an average rating of "+response);
                 alertDialogBuilder.setPositiveButton("Okay",
                         new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface arg0, int arg1) {
-                                finish();
                             }
                         });
 

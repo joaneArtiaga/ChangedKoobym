@@ -134,7 +134,7 @@ public class AddBookOwner extends AppCompatActivity {
                     rentalDetail.setBookOwner(bookOwnerModel);
                     rentalDetail.setDaysForRent(daysForRent);
                     rentalDetail.setCalculatedPrice(calculatePrice());
-                    addRentalDetail();
+                    addBook(true);
                 }else if(catPos==1){
                     swapDetail.setBookOwner(bookOwnerModel);
                     swapDetail.setSwapDescription(mBookCondition.getText().toString());
@@ -142,7 +142,7 @@ public class AddBookOwner extends AppCompatActivity {
                     @SuppressLint({"NewApi", "LocalSuppress"})
                     String date = new android.icu.text.SimpleDateFormat("yyyy-MM-dd").format(new Date());
                     swapDetail.setSwapTimeStamp(date);
-                    addBookOwner();
+                    addBook(false);
                 }
             }
         });
@@ -243,12 +243,66 @@ mSpinnerDays.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() 
         return price;
     }
 
-    private void addRentalDetail() {
+    private void addBook(final Boolean bool) {
+        RequestQueue requestQueue = Volley.newRequestQueue(this);
+//        String URL = "http://104.197.4.32:8080/Koobym/user/add";
+        String URL = Constants.POST_BOOK;
+
+
+        Log.d("bookDate", bookOwnerModel.getDateBought());
+//        user.setDayTimeModel();
+        final Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd").registerTypeAdapter(Date.class, GsonDateDeserializer.getInstance()).create();
+        final String mRequestBody = gson.toJson(bookOwnerModel.getBookObj());
+
+
+        Log.d("LOG_VOLLEY_RequestBody", mRequestBody);
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, URL, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                Log.i("swapDetailAddLog", response);
+
+                Book book = gson.fromJson(response, Book.class);
+
+                if(bool==true){
+                    addRentalDetail(book);
+                }else{
+                    addBookOwner(book);
+                }
+
+
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.e("LOG_VOLLEY", error.toString());
+            }
+        }) {
+            @Override
+            public String getBodyContentType() {
+                return "application/json; charset=utf-8";
+            }
+
+            @Override
+            public byte[] getBody() throws AuthFailureError {
+                try {
+                    return mRequestBody == null ? null : mRequestBody.getBytes("utf-8");
+                } catch (UnsupportedEncodingException uee) {
+                    VolleyLog.wtf("Unsupported Encoding while trying to get the bytes of %s using %s", mRequestBody, "utf-8");
+                    return null;
+                }
+            }
+        };
+
+        requestQueue.add(stringRequest);
+    }
+
+
+    private void addRentalDetail(Book bookId) {
         RequestQueue requestQueue = Volley.newRequestQueue(this);
 //        String URL = "http://104.197.4.32:8080/Koobym/user/add";
         String URL = Constants.POST_RENTAL_DETAIL;
 
-
+        rentalDetail.getBookOwner().setBookObj(bookId);
 //        user.setDayTimeModel();
         final Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd").registerTypeAdapter(Date.class, GsonDateDeserializer.getInstance()).create();
         final String mRequestBody = gson.toJson(rentalDetail);
@@ -288,12 +342,14 @@ mSpinnerDays.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() 
         requestQueue.add(stringRequest);
     }
 
-    private void addBookOwner() {
+
+    private void addBookOwner(Book book) {
         RequestQueue requestQueue = Volley.newRequestQueue(this);
 //        String URL = "http://104.197.4.32:8080/Koobym/user/add";
         String URL = Constants.POST_BOOK_OWNER;
 
 
+        bookOwnerModel.setBookObj(book);
         Log.d("bookDate", bookOwnerModel.getDateBought());
 //        user.setDayTimeModel();
         final Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd").registerTypeAdapter(Date.class, GsonDateDeserializer.getInstance()).create();
@@ -312,7 +368,7 @@ mSpinnerDays.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() 
 
                 Log.d("bookOwnerAdd", "");
 
-                addSwapDetail();
+                addSwapDetail(swapDetail);
             }
         }, new Response.ErrorListener() {
             @Override
@@ -339,7 +395,7 @@ mSpinnerDays.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() 
         requestQueue.add(stringRequest);
     }
 
-    private void addSwapDetail() {
+    private void addSwapDetail(SwapDetail swapDetailModel) {
         RequestQueue requestQueue = Volley.newRequestQueue(this);
 //        String URL = "http://104.197.4.32:8080/Koobym/user/add";
         String URL = Constants.POST_SWAP_DETAIL;
@@ -347,7 +403,7 @@ mSpinnerDays.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() 
 
 //        user.setDayTimeModel();
         final Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd").registerTypeAdapter(Date.class, GsonDateDeserializer.getInstance()).create();
-        final String mRequestBody = gson.toJson(swapDetail);
+        final String mRequestBody = gson.toJson(swapDetailModel);
 
 
         Log.d("LOG_VOLLEY_RequestBody", mRequestBody);
