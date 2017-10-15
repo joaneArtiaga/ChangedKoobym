@@ -162,18 +162,20 @@ public class ViewBookSwapActivity extends AppCompatActivity implements Navigatio
 
                 Log.d("RentalBookTitle", swapDetailObj.getBookOwner().getBookObj().getBookTitle());
                 mBookTitle.setText(swapDetailObj.getBookOwner().getBookObj().getBookTitle());
-                if(swapDetailObj.getBookOwner().getBookObj().getBookAuthor().get(0).getAuthorFName()==null){
-                    if(swapDetailObj.getBookOwner().getBookObj().getBookAuthor().get(0).getAuthorLName()==null){
-                        author="Unknown Author";
+                if(swapDetailObj.getBookOwner().getBookObj().getBookAuthor().size()!=0){
+                    for(int init=0; init<swapDetailObj.getBookOwner().getBookObj().getBookAuthor().size(); init++){
+                        if(!(swapDetailObj.getBookOwner().getBookObj().getBookAuthor().get(init).getAuthorFName().equals(""))){
+                            author+=swapDetailObj.getBookOwner().getBookObj().getBookAuthor().get(init).getAuthorFName()+" ";
+                            if(!(swapDetailObj.getBookOwner().getBookObj().getBookAuthor().get(init).getAuthorLName().equals(""))){
+                                author+=swapDetailObj.getBookOwner().getBookObj().getBookAuthor().get(init).getAuthorLName();
+                                if(init+1<swapDetailObj.getBookOwner().getBookObj().getBookAuthor().size()){
+                                    author+=", ";
+                                }
+                            }
+                        }
                     }
-
-                    Log.d("SwapAdapter", swapDetailObj.toString());
-
-
-                    Log.d("SwapComments", "inside");
                 }else{
-                    Log.d("RentalBookAuthor", String.valueOf(swapDetailObj.getBookOwner().getBookObj().getBookAuthor().get(0).getAuthorFName()));
-                    author=swapDetailObj.getBookOwner().getBookObj().getBookAuthor().get(0).getAuthorFName();
+                    author="Unknown Author";
                 }
                 Log.d("RentalAuthor", author);
                 mAuthor.setText(author);

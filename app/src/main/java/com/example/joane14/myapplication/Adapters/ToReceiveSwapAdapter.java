@@ -83,7 +83,6 @@ public class ToReceiveSwapAdapter extends RecyclerView.Adapter<ToReceiveSwapAdap
             holder.mBookRented.setText(bookList.get(position).getRequestedSwapDetail().getBookOwner().getBookObj().getBookTitle());
         }
         holder.mMU.setText(bookList.get(position).getLocation().getLocationName());
-        holder.mPrice.setText(String.valueOf(bookList.get(position).getSwapDetail().getSwapPrice()));
 
         if(bookList.get(position).getUser()==null){
             holder.mRenter.setText("Renter not Found");

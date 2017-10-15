@@ -70,32 +70,25 @@ public class ToApproveSwapAdapter extends RecyclerView.Adapter<ToApproveSwapAdap
     public void onBindViewHolder(ToApproveSwapAdapter.BookHolder holder, final int position) {
 
 
-        User user = new User();
-        user = (User) SPUtility.getSPUtil(context).getObject("USER_OBJECT", User.class);
-        if(bookList.get(position).getRequestedSwapDetail().getBookOwner().getUserObj().getUserId()==user.getUserId()){
-            holder.mMyBook.setText(bookList.get(position).getRequestedSwapDetail().getBookOwner().getBookObj().getBookTitle());
-            Glide.with(context).load(bookList.get(position).getRequestedSwapDetail().getBookOwner().getBookObj().getBookFilename()).centerCrop().into(holder.mMyIvBookImg);
-            Glide.with(context).load(bookList.get(position).getSwapDetail().getBookOwner().getBookObj().getBookFilename()).centerCrop().into(holder.mIvBookImg);
-            holder.mBookRented.setText(bookList.get(position).getSwapDetail().getBookOwner().getBookObj().getBookTitle());
-        }else{
-            holder.mMyBook.setText(bookList.get(position).getSwapDetail().getBookOwner().getBookObj().getBookTitle());
-            Glide.with(context).load(bookList.get(position).getSwapDetail().getBookOwner().getBookObj().getBookFilename()).centerCrop().into(holder.mMyIvBookImg);
-            Glide.with(context).load(bookList.get(position).getRequestedSwapDetail().getBookOwner().getBookObj().getBookFilename()).centerCrop().into(holder.mIvBookImg);
-            holder.mBookRented.setText(bookList.get(position).getRequestedSwapDetail().getBookOwner().getBookObj().getBookTitle());
-        }
+        holder.mMyBook.setText(bookList.get(position).getSwapDetail().getBookOwner().getBookObj().getBookTitle());
+        holder.mBookRented.setText(bookList.get(position).getRequestedSwapDetail().getBookOwner().getBookObj().getBookTitle());
+        Glide.with(context).load(bookList.get(position).getSwapDetail().getBookOwner().getBookObj().getBookFilename()).centerCrop().into(holder.mMyIvBookImg);
+        Glide.with(context).load(bookList.get(position).getRequestedSwapDetail().getBookOwner().getBookObj().getBookFilename()).centerCrop().into(holder.mIvBookImg);
         holder.mMU.setText(bookList.get(position).getLocation().getLocationName());
-        holder.mPrice.setText(String.valueOf(bookList.get(position).getSwapDetail().getSwapPrice()));
+
+        Log.d("PossibleSwap", bookList.get(position).getSwapDetail().getBookOwner().getUserObj().getUserFname());
+        Log.d("PossibleSwap", bookList.get(position).getRequestedSwapDetail().getBookOwner().getUserObj().getUserFname());
 
         if(bookList.get(position).getUser()==null){
             holder.mRenter.setText("Renter not Found");
         }else{
-            holder.mRenter.setText(bookList.get(position).getUser().getUserFname()+" "+bookList.get(position).getUser().getUserLname());
+            holder.mRenter.setText(bookList.get(position).getSwapDetail().getBookOwner().getUserObj().getUserFname()+" "+bookList.get(position).getSwapDetail().getBookOwner().getUserObj().getUserLname());
         }
 
-        holder.mReminder.setText("Receive book on "+ bookList.get(position).getDateTimeStamp());
+        holder.mReminder.setText("Receive book on "+ bookList.get(position).getDateTimeStamp()+" at "+bookList.get(position).getUserDayTime().getDay().getStrDay()+", "+bookList.get(position).getUserDayTime().getTime().getStrTime());
 
 
-        Picasso.with(context).load(String.format(Constants.IMAGE_URL, bookList.get(position).getUser().getImageFilename())).fit().into(holder.mIvRenter);
+        Picasso.with(context).load(bookList.get(position).getSwapDetail().getBookOwner().getUserObj().getImageFilename()).fit().into(holder.mIvRenter);
 
 //        Log.d("displayImage", bookList.get(position).getBookOwner().getBookObj().getBookFilename());
 
