@@ -92,6 +92,7 @@ public class SwapChooserAdapter extends RecyclerView.Adapter<SwapChooserAdapter.
 
         holder.mBookAuthor.setText(author);
 
+
     }
 
     @Override
@@ -140,7 +141,7 @@ public class SwapChooserAdapter extends RecyclerView.Adapter<SwapChooserAdapter.
 
     }
 
-    public void showConfirmation(int position){
+    public void showConfirmation(final int position){
         AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(context);
         alertDialogBuilder.setTitle("Meet Up Summary");
         alertDialogBuilder.setMessage("Are you sure you want to swap your book "+swapHeader.getSwapDetail().getBookOwner().getBookObj().getBookTitle()+" " +
@@ -155,6 +156,7 @@ public class SwapChooserAdapter extends RecyclerView.Adapter<SwapChooserAdapter.
                         Intent intent = new Intent(context, SwapMeetUpChooser.class);
                         Bundle bundle = new Bundle();
                         bundle.putSerializable("swapHeader", swapHeader);
+                        bundle.putSerializable("swapDetail", bookList.get(position));
                         intent.putExtras(bundle);
                         context.startActivity(intent);
 

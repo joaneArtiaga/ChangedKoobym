@@ -93,6 +93,9 @@ public class TimeDateChooser extends AppCompatActivity {
             if(getIntent().getExtras().getSerializable("swapHeader")!=null){
                 userDayTimeModel = new UserDayTime();
                 swapHeader = (SwapHeader) getIntent().getSerializableExtra("swapHeader");
+                swapDetail = (SwapDetail) getIntent().getExtras().getSerializable("swapDetail");
+                Log.d("SwapFreakinHeader", swapHeader.getUser().getUserFname());
+                Log.d("SwapFreakinHeader", swapHeader.getSwapDetail().getBookOwner().getBookObj().getBookTitle());
                 for(int init=0; init<swapHeader.getRequestedSwapDetail().getBookOwner().getUserObj().getDayTimeModel().size(); init++){
                     userDayTimeModel = swapHeader.getRequestedSwapDetail().getBookOwner().getUserObj().getDayTimeModel().get(init);
                     userDayTimeList.add(userDayTimeModel);
@@ -293,11 +296,11 @@ public class TimeDateChooser extends AppCompatActivity {
 
         SwapHeader swapToPost = new SwapHeader();
         swapToPost.setUser(new User());
-        swapToPost.getUser().setUserId(swapHeader.getUser().getUserId());
+        swapToPost.getUser().setUserId(swapDetail.getBookOwner().getUserObj().getUserId());
         swapToPost.setSwapDetail(new SwapDetail());
-        swapToPost.getSwapDetail().setSwapDetailId(swapHeader.getSwapDetail().getSwapDetailId());
+        swapToPost.setSwapDetail(swapHeader.getSwapDetail());
         swapToPost.setRequestedSwapDetail(new SwapDetail());
-        swapToPost.setRequestedSwapDetail(swapHeader.getSwapDetail());
+        swapToPost.setRequestedSwapDetail(swapDetail);
         swapToPost.setUserDayTime(new UserDayTime());
         swapToPost.getUserDayTime().setUserDayTimeId(swapHeader.getUserDayTime().getUserDayTimeId());
         swapToPost.setLocation(swapHeader.getLocation());

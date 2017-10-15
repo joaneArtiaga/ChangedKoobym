@@ -30,6 +30,7 @@ public class SwapMeetUpChooser extends FragmentActivity implements OnMapReadyCal
     private HashMap<Marker, Integer> mHashMap = new HashMap<Marker, Integer>();
     List<LocationModel> locationModelList;
     SwapHeader swapHeader;
+    SwapDetail swapDetail;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,6 +49,10 @@ public class SwapMeetUpChooser extends FragmentActivity implements OnMapReadyCal
             locationModelList = swapHeader.getRequestedSwapDetail().getBookOwner().getUserObj().getLocationArray();
             for(int init = 0; init<locationModelList.size(); init++){
                 Log.d("MeetUpChooser Location", locationModelList.get(init).getLocationName());
+            }
+
+            if(getIntent().getExtras().getSerializable("swapDetail")!=null){
+                swapDetail = (SwapDetail) getIntent().getExtras().getSerializable("swapDetail");
             }
         }
     }
@@ -101,6 +106,7 @@ public class SwapMeetUpChooser extends FragmentActivity implements OnMapReadyCal
                                 Intent intent = new Intent(SwapMeetUpChooser.this,TimeDateChooser.class);
                                 Bundle mBundle = new Bundle();
                                 mBundle.putSerializable("swapHeader", swapHeader);
+                                mBundle.putSerializable("swapDetail", swapDetail);
                                 mBundle.putBoolean("fromSwap", true);
                                 mBundle.putSerializable("locationChose", locationModelList.get(position));
                                 intent.putExtra("confirm", mBundle);

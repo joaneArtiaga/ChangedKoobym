@@ -66,6 +66,7 @@ public class SwapBookChooser extends AppCompatActivity {
         }
         if(getIntent().getExtras().getSerializable("swapHeader")!=null){
             swapHeader = (SwapHeader) getIntent().getSerializableExtra("swapHeader");
+            swapHeader.setUser(swapDetailModel.getBookOwner().getUserObj());
             Log.d("SwapHeaderDisplay", swapHeader.getSwapDetail().toString());
             Log.d("SwapHeaderDisplay", swapHeader.getUser().toString());
         }

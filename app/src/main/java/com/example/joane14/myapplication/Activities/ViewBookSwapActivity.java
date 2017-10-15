@@ -137,9 +137,10 @@ public class ViewBookSwapActivity extends AppCompatActivity implements Navigatio
                 user = (User) SPUtility.getSPUtil(ViewBookSwapActivity.this).getObject("USER_OBJECT", User.class);
 
                 if(user.getUserId()==swapDetailObj.getBookOwner().getUserObj().getUserId()){
-
-                }else
+                    showWarning();
+                }else{
                     showInputDialog();
+                }
             }
         });
 
@@ -187,6 +188,21 @@ public class ViewBookSwapActivity extends AppCompatActivity implements Navigatio
         }else{
             Log.d("bundle", "is empty");
         }
+    }
+    public void showWarning(){
+        android.support.v7.app.AlertDialog.Builder alertDialogBuilder = new android.support.v7.app.AlertDialog.Builder(ViewBookSwapActivity.this);
+        alertDialogBuilder.setTitle("!!!");
+        alertDialogBuilder.setMessage("You can't swap your own book.");
+        alertDialogBuilder.setPositiveButton("Okay",
+                new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface arg0, int arg1) {
+
+                    }
+                });
+
+        android.support.v7.app.AlertDialog alertDialog = alertDialogBuilder.create();
+        alertDialog.show();
     }
 
     private void showInputDialog() {
