@@ -18,9 +18,11 @@ import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageView;
 
+import com.example.joane14.myapplication.Activities.HistoryActivity;
 import com.example.joane14.myapplication.Model.User;
 import com.example.joane14.myapplication.R;
 import com.example.joane14.myapplication.Utilities.SPUtility;
+import com.squareup.picasso.Picasso;
 
 import java.util.Locale;
 
@@ -83,6 +85,8 @@ public class AddFbUser extends Fragment {
         mEmail = (EditText) view.findViewById(R.id.email);
         mContactNumber = (EditText) view.findViewById(R.id.contactNumber);
         this.mBirthdate = (EditText) view.findViewById(R.id.birthDate);
+
+        Picasso.with(getContext()).load(userModel.getImageFilename()).fit().into(slctImage);
 
         mFirstName.setEnabled(false);
         mFirstName.setText(userModel.getUserFname());
@@ -163,7 +167,6 @@ public class AddFbUser extends Fragment {
                     userModel.setAddress(mAddress.getText().toString());
                     userModel.setEmail(mEmail.getText().toString());
                     userModel.setPhoneNumber(mContactNumber.getText().toString());
-                    userModel.setImageFilename("https://104.197.4.32:8080/Koobym/images/fbFilename.jpg");
                     userModel.setPassword(" ");
                     SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
                     String date = mBirthdate.getText().toString();

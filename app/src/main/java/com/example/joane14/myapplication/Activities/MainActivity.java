@@ -158,9 +158,17 @@ public class MainActivity extends AppCompatActivity {
                                 new GraphRequest.GraphJSONObjectCallback() {
                                     @Override
                                     public void onCompleted(JSONObject user, GraphResponse response) {
+                                        Log.d("FbResponse", response.toString());
                                         Log.d("FbUser", "check");
                                         User userMod = new User();
                                         String lname = "", fname = "", name = "";
+                                        try {
+                                            String profUrl = user.getJSONObject("picture").getJSONObject("data").getString("url");
+                                            Log.d("profUrl", profUrl);
+                                            userMod.setImageFilename(profUrl);
+                                        } catch (JSONException e) {
+                                            e.printStackTrace();
+                                        }
 
                                         try {
                                             userMod.setUserFbId(user.getString("id"));
@@ -224,7 +232,7 @@ public class MainActivity extends AppCompatActivity {
                                     }
                                 });
                         Bundle parameters = new Bundle();
-                        parameters.putString("fields", "id, name, email, gender, birthday");
+                        parameters.putString("fields", "id, name, email, gender, picture.type(large)");
                         request.setParameters(parameters);
                         request.executeAsync();
                     }
