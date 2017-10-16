@@ -188,38 +188,7 @@ public class ViewBookActivity extends AppCompatActivity implements
                 if(user.getUserId()==rentalDetail.getBookOwner().getUserObj().getUserId()){
                     showWarning();
                 }else{
-
-                    AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(ViewBookActivity.this);
-                    alertDialogBuilder.setTitle("Terms and Condition");
-                    alertDialogBuilder.setMessage("\n\n1.\tThis book must be returned on time.\n" +
-                            "2.\tThis book should be returned in the same condition it was provided.\n" +
-                            "3.\tThe renter will compensate for the damages that the book may incur during the duration of his/her usage.\n" +
-                            "4.\tA fee of 50 pesos per day will be incurred to the renter if the book is not returned on or before the due date.");
-                    alertDialogBuilder.setPositiveButton("Agree",
-                            new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface arg0, int arg1) {
-                                    Toast.makeText(ViewBookActivity.this, "You agreed to the terms and condition.", Toast.LENGTH_SHORT).show();
-                                    Intent intent = new Intent(ViewBookActivity.this, MeetUpChooser.class);
-                                    Bundle mbundle = new Bundle();
-                                    mbundle.putSerializable("rentalDetail", rentalDetail);
-                                    intent.putExtras(mbundle);
-                                    startActivity(intent);
-                                }
-                            });
-
-                    alertDialogBuilder.setNegativeButton("Disagree",new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            Toast.makeText(ViewBookActivity.this, "You disagreed to the terms and condition.", Toast.LENGTH_SHORT).show();
-                            finish();
-                        }
-                    });
-
-                    AlertDialog alertDialog = alertDialogBuilder.create();
-                    alertDialog.show();
-
-
+                    checkIfExist(user.getUserId(), rentalDetail.getRental_detailId());
                 }
             }
         });
@@ -263,6 +232,95 @@ public class ViewBookActivity extends AppCompatActivity implements
                 startActivity(intent);
             }
         });
+    }
+
+    private void checkIfExist(int userId, int rentalDetailId) {
+        RequestQueue requestQueue = Volley.newRequestQueue(this);
+//        String URL = "http://104.197.4.32:8080/Koobym/user/add";
+        String URL = Constants.CHECK_EXIST+"/"+userId+"/"+rentalDetailId;
+
+
+        final Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd").registerTypeAdapter(Date.class, GsonDateDeserializer.getInstance()).create();
+        final String mRequestBody = gson.toJson(rentalDetail);
+
+
+        Log.d("LOG_VOLLEY_RequestBody", mRequestBody);
+        StringRequest stringRequest = new StringRequest(Request.Method.GET, URL, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+
+
+
+                if(response==null){
+                    AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(ViewBookActivity.this);
+                    alertDialogBuilder.setTitle("Terms and Condition");
+                    alertDialogBuilder.setMessage("\n\n1.\tThis book must be returned on time.\n" +
+                            "2.\tThis book should be returned in the same condition it was provided.\n" +
+                            "3.\tThe renter will compensate for the damages that the book may incur during the duration of his/her usage.\n" +
+                            "4.\tA fee of 50 pesos per day will be incurred to the renter if the book is not returned on or before the due date.");
+                    alertDialogBuilder.setPositiveButton("Agree",
+                            new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface arg0, int arg1) {
+                                    Toast.makeText(ViewBookActivity.this, "You agreed to the terms and condition.", Toast.LENGTH_SHORT).show();
+                                    Intent intent = new Intent(ViewBookActivity.this, MeetUpChooser.class);
+                                    Bundle mbundle = new Bundle();
+                                    mbundle.putSerializable("rentalDetail", rentalDetail);
+                                    intent.putExtras(mbundle);
+                                    startActivity(intent);
+                                }
+                            });
+
+                    alertDialogBuilder.setNegativeButton("Disagree",new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            Toast.makeText(ViewBookActivity.this, "You disagreed to the terms and condition.", Toast.LENGTH_SHORT).show();
+                            finish();
+                        }
+                    });
+
+                    AlertDialog alertDialog = alertDialogBuilder.create();
+                    alertDialog.show();
+                }else{
+                    android.support.v7.app.AlertDialog.Builder alertDialogBuilder = new android.support.v7.app.AlertDialog.Builder(ViewBookActivity.this);
+                    alertDialogBuilder.setTitle("!!!");
+                    alertDialogBuilder.setMessage("You already requested for this book. You can't request again.");
+                    alertDialogBuilder.setPositiveButton("Okay",
+                            new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface arg0, int arg1) {
+
+                                }
+                            });
+
+                    android.support.v7.app.AlertDialog alertDialog = alertDialogBuilder.create();
+                    alertDialog.show();
+                }
+
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.e("LOG_VOLLEY", error.toString());
+            }
+        }) {
+            @Override
+            public String getBodyContentType() {
+                return "application/json; charset=utf-8";
+            }
+
+            @Override
+            public byte[] getBody() throws AuthFailureError {
+                try {
+                    return mRequestBody == null ? null : mRequestBody.getBytes("utf-8");
+                } catch (UnsupportedEncodingException uee) {
+                    VolleyLog.wtf("Unsupported Encoding while trying to get the bytes of %s using %s", mRequestBody, "utf-8");
+                    return null;
+                }
+            }
+        };
+
+        requestQueue.add(stringRequest);
     }
 
     private void getBookRating() {

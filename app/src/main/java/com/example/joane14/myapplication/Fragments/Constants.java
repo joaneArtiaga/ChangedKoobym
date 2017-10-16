@@ -99,4 +99,6 @@ public class Constants {
 
     public static final String GET_REJECTED_BY_RENTER ="http://104.197.4.32:8080/Koobym/rentalHeader/rejectedByIdRenter";
 
+    public static final String CHECK_EXIST ="http://104.197.4.32:8080/Koobym/rentalHeader/checkExist";
+
 }
