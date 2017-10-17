@@ -183,7 +183,7 @@ public class AddTimeFrag extends Fragment{
         mBtnOkay.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                time.setStrTime(etTimeFrom.getText().toString()+" - "+etTimeTo.getText().toString());
+                time.setStrTime(etTimeTo.getText().toString()+" - "+etTimeFrom.getText().toString());
                 userDayTime.setDay(day);
                 userDayTime.setTime(time);
                 userDayTimeList.add(userDayTime);

@@ -71,6 +71,8 @@ public class ToDeliverSwapFrag extends Fragment {
         mAdapter = new CompleteSwapAdapter(swapHeaderList);
         mRecyclerView.setAdapter(mAdapter);
 
+        getDeliveries();
+
         return view;
     }
 
@@ -81,6 +83,7 @@ public class ToDeliverSwapFrag extends Fragment {
         user = (User) SPUtility.getSPUtil(getContext()).getObject("USER_OBJECT", User.class);
         Log.d("UserIdReceive", String.valueOf(user.getUserId()));
         String URL = Constants.GET_TO_DELIVER_SWAP+"/"+user.getUserId();
+        Log.d("UserIdURL", URL);
 //        String URL = Constants.WEB_SERVICE_URL+"user/add";
 
         final RentalHeader rentalHeader =new RentalHeader();

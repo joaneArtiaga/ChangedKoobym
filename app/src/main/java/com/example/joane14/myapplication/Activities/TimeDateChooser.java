@@ -296,7 +296,7 @@ public class TimeDateChooser extends AppCompatActivity {
 
         SwapHeader swapToPost = new SwapHeader();
         swapToPost.setUser(new User());
-        swapToPost.getUser().setUserId(swapDetail.getBookOwner().getUserObj().getUserId());
+        swapToPost.getUser().setUserId(swapHeader.getSwapDetail().getBookOwner().getUserObj().getUserId());
         swapToPost.setSwapDetail(new SwapDetail());
         swapToPost.setSwapDetail(swapHeader.getSwapDetail());
         swapToPost.setRequestedSwapDetail(new SwapDetail());

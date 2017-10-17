@@ -3,12 +3,12 @@
 
     <item
         android:id="@+id/navigation_rent"
-        android:icon="@drawable/ic_home_black_24dp"
+        android:icon="@drawable/rentbook"
         android:title="Rent" />
 
     <item
         android:id="@+id/navigation_swap"
-        android:icon="@drawable/ic_dashboard_black_24dp"
+        android:icon="@drawable/swap_icon"
         android:title="Swap" />
 
     <!--<item-->
