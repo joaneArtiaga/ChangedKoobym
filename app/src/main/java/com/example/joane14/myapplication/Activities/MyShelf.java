@@ -95,9 +95,9 @@ public class MyShelf extends AppCompatActivity implements
                             case R.id.navigation_swap:
                                 selectedFragment = SwapShelfFragment.newInstance();
                                 break;
-                            case R.id.navigation_auction:
-                                selectedFragment = AuctionShelfFragment.newInstance();
-                                break;
+//                            case R.id.navigation_auction:
+//                                selectedFragment = AuctionShelfFragment.newInstance();
+//                                break;
                         }
                         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
                         transaction.replace(R.id.fragment_container_shelf, selectedFragment);

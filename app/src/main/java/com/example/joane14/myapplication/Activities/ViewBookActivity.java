@@ -1,5 +1,7 @@
 package com.example.joane14.myapplication.Activities;
 
+import android.app.Dialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
@@ -13,15 +15,19 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -34,18 +40,25 @@ import com.android.volley.VolleyLog;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.bumptech.glide.Glide;
+import com.example.joane14.myapplication.Adapters.LandingPageAdapter;
+import com.example.joane14.myapplication.Adapters.RentersAdapter;
 import com.example.joane14.myapplication.Fragments.Constants;
 import com.example.joane14.myapplication.Fragments.DisplayBookReview;
 import com.example.joane14.myapplication.Model.RentalDetail;
+import com.example.joane14.myapplication.Model.RentalHeader;
 import com.example.joane14.myapplication.Model.User;
 import com.example.joane14.myapplication.R;
 import com.example.joane14.myapplication.Utilities.SPUtility;
 import com.facebook.login.LoginManager;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.squareup.picasso.Picasso;
 
 import java.io.UnsupportedEncodingException;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
+import java.util.List;
 
 public class ViewBookActivity extends AppCompatActivity implements
         NavigationView.OnNavigationItemSelectedListener,
@@ -53,11 +66,16 @@ public class ViewBookActivity extends AppCompatActivity implements
 
     Bundle bundle;
     RentalDetail rentalDetail;
+    List<RentalHeader> rentalHeaderList;
     TextView mBookTitle, mOwnerName;
     TextView mBookAuthor;
     TextView mBookDescription;
     ImageView imageView, mViewMeetUp, mRatings, mGenres, mRenters, mOwnerImg;
     ImageButton mBtnRequest;
+    Dialog listDialog;
+    private RecyclerView mRecyclerView;
+    private RecyclerView.Adapter mAdapter;
+    private RecyclerView.LayoutManager mLayoutManager;
 
 
     @Override
@@ -80,6 +98,7 @@ public class ViewBookActivity extends AppCompatActivity implements
 
         NavigationView navigationView1 = (NavigationView) findViewById(R.id.nav_view);
 
+        rentalHeaderList = new ArrayList<RentalHeader>();
 
         View hView = navigationView.getHeaderView(0);
         TextView mName = (TextView) hView.findViewById(R.id.tvName);
@@ -93,6 +112,7 @@ public class ViewBookActivity extends AppCompatActivity implements
             userModel = (User) SPUtility.getSPUtil(this).getObject("USER_OBJECT", User.class);
             mName.setText(userModel.getUserFname()+" "+userModel.getUserLname());
             mEmail.setText(userModel.getEmail());
+            Picasso.with(ViewBookActivity.this).load( userModel.getImageFilename()).fit().into(profileImg);
         }
 
 
@@ -109,6 +129,12 @@ public class ViewBookActivity extends AppCompatActivity implements
         mBtnRequest = (ImageButton) findViewById(R.id.vbBtnRequest);
 
 
+        mRenters.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showDialog();
+            }
+        });
 
         mRatings.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -232,6 +258,70 @@ public class ViewBookActivity extends AppCompatActivity implements
                 startActivity(intent);
             }
         });
+    }
+
+    private void showDialog(){
+        listDialog = new Dialog(this);
+        listDialog.setTitle("Renters:");
+        LayoutInflater li = (LayoutInflater) this.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        View view = li.inflate(R.layout.dialog_layout_renters, null, false);
+        listDialog.setContentView(view);
+        listDialog.setCancelable(true);
+
+        mRecyclerView = (RecyclerView) view.findViewById(R.id.recycler_view_renters);
+        mRecyclerView.setHasFixedSize(true);
+        mLayoutManager = new LinearLayoutManager(this);
+        mRecyclerView.setLayoutManager(mLayoutManager);
+        mAdapter = new RentersAdapter(rentalHeaderList);
+        mRecyclerView.setAdapter(mAdapter);
+
+        getRenters(rentalDetail.getRental_detailId());
+
+        listDialog.show();
+    }
+
+    private void getRenters(int rentalDetailId) {
+        RequestQueue requestQueue = Volley.newRequestQueue(this);
+//        String URL = "http://104.197.4.32:8080/Koobym/user/add";
+        String URL = Constants.CHECK_EXIST+"/"+rentalDetailId;
+
+
+        final Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd").registerTypeAdapter(Date.class, GsonDateDeserializer.getInstance()).create();
+        final String mRequestBody = gson.toJson(rentalDetail);
+
+
+        Log.d("LOG_VOLLEY_RequestBody", mRequestBody);
+        StringRequest stringRequest = new StringRequest(Request.Method.GET, URL, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd").registerTypeAdapter(Date.class, GsonDateDeserializer.getInstance()).create();
+                rentalHeaderList.clear();
+                rentalHeaderList.addAll(Arrays.asList(gson.fromJson(response, RentalHeader[].class)));
+                mAdapter.notifyDataSetChanged();
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.e("LOG_VOLLEY", error.toString());
+            }
+        }) {
+            @Override
+            public String getBodyContentType() {
+                return "application/json; charset=utf-8";
+            }
+
+            @Override
+            public byte[] getBody() throws AuthFailureError {
+                try {
+                    return mRequestBody == null ? null : mRequestBody.getBytes("utf-8");
+                } catch (UnsupportedEncodingException uee) {
+                    VolleyLog.wtf("Unsupported Encoding while trying to get the bytes of %s using %s", mRequestBody, "utf-8");
+                    return null;
+                }
+            }
+        };
+
+        requestQueue.add(stringRequest);
     }
 
     private void checkIfExist(int userId, int rentalDetailId) {

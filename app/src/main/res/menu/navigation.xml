@@ -11,9 +11,9 @@
         android:icon="@drawable/ic_dashboard_black_24dp"
         android:title="Swap" />
 
-    <item
-        android:id="@+id/navigation_auction"
-        android:icon="@drawable/ic_notifications_black_24dp"
-        android:title="Auction" />
+    <!--<item-->
+        <!--android:id="@+id/navigation_auction"-->
+        <!--android:icon="@drawable/ic_notifications_black_24dp"-->
+        <!--android:title="Auction" />-->
 
 </menu>

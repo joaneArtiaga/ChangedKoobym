@@ -101,4 +101,6 @@ public class Constants {
 
     public static final String CHECK_EXIST ="http://104.197.4.32:8080/Koobym/rentalHeader/checkExist";
 
+    public static final String GET_RENTERS ="http://104.197.4.32:8080/Koobym/rentalHeader/getRentalDetail";
+
 }

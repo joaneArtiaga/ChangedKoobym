@@ -74,9 +74,10 @@ public class LandingPage extends AppCompatActivity
         TextView mEmail = (TextView) hView.findViewById(R.id.tvEmail);
         profileImg = (ImageView) hView.findViewById(R.id.profPic);
 
+        final TextView mTitle = (TextView) findViewById(R.id.lpTitle);
 
         BottomNavigationView bottomNavigationView = (BottomNavigationView)
-                findViewById(R.id.navigation);
+                findViewById(R.id.lpnavigation);
 
         if(bottomNavigationView==null){
             Log.d("bottomNavView", "is null");
@@ -94,6 +95,7 @@ public class LandingPage extends AppCompatActivity
                             case R.id.navigation_rent:
                                 if (mBundleLogin.getBoolean("fromRegister") == true) {
                                     Log.d("inside", "TRUEfromRegister");
+                                    mTitle.setText("Most Rented Books");
 //                                    fragmentManager = getSupportFragmentManager();
                                     selectedFragment = MostRentedBookFrag.newInstance();
 //                                    FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
@@ -103,6 +105,7 @@ public class LandingPage extends AppCompatActivity
                                     transaction.replace(R.id.fragment_landing_container, selectedFragment);
                                     transaction.commit();
                                 } else {
+                                    mTitle.setText("Suggested Books");
                                     Log.d("PrefFrag", "else inside");
                                     bundlePass.putSerializable("userModelPass", userModel);
                                     Log.d("userModelPass1st", userModel.toString());
@@ -119,17 +122,18 @@ public class LandingPage extends AppCompatActivity
                                 }
                                 break;
                             case R.id.navigation_swap:
+                                mTitle.setText("Books for Swap");
                                 selectedFragment = SwapLandingPageFrag.newInstance();
                                 FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
                                 transaction.replace(R.id.fragment_landing_container, selectedFragment);
                                 transaction.commit();
 
                             break;
-                            case R.id.navigation_auction:
-                                Toast.makeText(LandingPage.this, "Auction not yet implemented", Toast.LENGTH_SHORT).show();
-//                                selectedFragment = AuctionShelfFragment.newInstance();
-
-                                break;
+//                            case R.id.navigation_auction:
+//                                Toast.makeText(LandingPage.this, "Auction not yet implemented", Toast.LENGTH_SHORT).show();
+////                                selectedFragment = AuctionShelfFragment.newInstance();
+//
+//                                break;
                         }
 
                         return true;
@@ -195,6 +199,7 @@ public class LandingPage extends AppCompatActivity
 
             if(mBundleLogin.getBoolean("fromRegister")==true){
                 Log.d("inside", "TRUEfromRegister");
+                mTitle.setText("Most Rented Books");
                 fragmentManager = getSupportFragmentManager();
                 MostRentedBookFrag mrbf = MostRentedBookFrag.newInstance();
                 FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
@@ -202,6 +207,7 @@ public class LandingPage extends AppCompatActivity
                 fragmentTransaction.commit();
             }else{
                 Log.d("PrefFrag","else inside");
+                mTitle.setText("Suggested Books");
                 bundlePass.putSerializable("userModelPass", userModel);
                 Log.d("userModelPass1st", userModel.toString());
                 fragmentManager = getSupportFragmentManager();
