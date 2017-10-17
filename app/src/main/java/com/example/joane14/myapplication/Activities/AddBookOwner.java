@@ -222,21 +222,23 @@ mSpinnerDays.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() 
 
         try {
             date = (formate).parse(bookModel.getBookPublishedDate());
+            Log.d("datePila", String.valueOf(date));
             calendar.setTime(date);
         } catch (ParseException e) {
             e.printStackTrace();
         }
-        int gap = calendar.get(Calendar.YEAR) - calendar.get(Calendar.YEAR);
+        int gap = Calendar.getInstance().get(Calendar.YEAR) - calendar.get(Calendar.YEAR);
 
+        Log.d("gapPila", String.valueOf(Calendar.getInstance().get(Calendar.YEAR)));
         if(gap>=5){
             price = depPrice;
-            Log.d("calculatedPrice", String.valueOf(price));
+            Log.d("calculatedPric depPrice", String.valueOf(price));
         }else if(gap==0){
             price = bookModel.getBookOriginalPrice();
-            Log.d("calculatedPrice", String.valueOf(price));
+            Log.d("calculatedPric OrgPri", String.valueOf(price));
         }else{
             price = bookModel.getBookOriginalPrice() - (depPrice*gap);
-            Log.d("calculatedPrice", String.valueOf(price));
+            Log.d("calculatedPrice dep*gap", String.valueOf(price));
         }
 
         Log.d("calculatedPrice", String.valueOf(price));
