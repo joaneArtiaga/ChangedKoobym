@@ -265,6 +265,8 @@ public class MainActivity extends AppCompatActivity {
         StringRequest stringRequest = new StringRequest(Request.Method.GET, URL, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
+
+                Log.d("responseFB", response);
                 if(response == null || response.length() == 0){
                     Log.d("fbResponse", response);
                     SPUtility.getSPUtil(MainActivity.this).putObject("USER_OBJECT", user);

@@ -258,7 +258,8 @@ public class TimeDateChooser extends AppCompatActivity {
                             rentalHeader.setStatus("Confirmation");
                             rentalHeader.setRentalDetail(rentalDetail);
                             rentalHeader.setUserId(user);
-                            rentalHeader.setRentalTimeStamp(nextDateStr+" "+userDayTimeList.get(position).getTime().getStrTime());
+                            rentalHeader.setRentalTimeStamp(nextDateStr);
+                            rentalHeader.setUserDayTime(userDayTimeList.get(position));
                             rentalHeader.setTotalPrice((float) rentalDetail.getCalculatedPrice());
                             rentalHeader.setLocation(locationChosen);
 
@@ -367,7 +368,8 @@ public class TimeDateChooser extends AppCompatActivity {
         Log.d("RentalHeaderAdd", rentalHeader.toString());
 
 
-        Log.d("LOG_VOLLEY", mRequestBody);
+        Log.v("LOG_VOLLEY", mRequestBody);
+        d("RentalHeaderVolley", mRequestBody);
         StringRequest stringRequest = new StringRequest(Request.Method.POST, URL, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {

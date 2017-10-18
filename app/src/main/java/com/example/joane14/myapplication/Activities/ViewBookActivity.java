@@ -345,7 +345,7 @@ public class ViewBookActivity extends AppCompatActivity implements
 
 
 
-                if(response!=null){
+                if(response==null||response.isEmpty()){
                     AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(ViewBookActivity.this);
                     alertDialogBuilder.setTitle("Terms and Condition");
                     alertDialogBuilder.setMessage("\n\n1.\tThis book must be returned on time.\n" +

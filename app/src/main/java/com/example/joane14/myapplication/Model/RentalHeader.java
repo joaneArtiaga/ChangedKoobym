@@ -33,6 +33,16 @@ public class RentalHeader implements Serializable {
     @SerializedName("rentalDetail")
     RentalDetail rentalDetail;
 
+    UserDayTime userDayTime;
+
+    public UserDayTime getUserDayTime() {
+        return userDayTime;
+    }
+
+    public void setUserDayTime(UserDayTime userDayTime) {
+        this.userDayTime = userDayTime;
+    }
+
     public String getStatus() {
         return status;
     }
