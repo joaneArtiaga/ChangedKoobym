@@ -66,19 +66,20 @@ public class CompleteSwapAdapter extends RecyclerView.Adapter<CompleteSwapAdapte
             Glide.with(context).load(bookList.get(position).getRequestedSwapDetail().getBookOwner().getBookObj().getBookFilename()).centerCrop().into(holder.mIvBookImg);
             holder.mBookRented.setText(bookList.get(position).getRequestedSwapDetail().getBookOwner().getBookObj().getBookTitle());
         }
+
         holder.mMU.setText(bookList.get(position).getLocation().getLocationName());
         holder.mPrice.setText(String.valueOf(bookList.get(position).getSwapDetail().getSwapPrice()));
 
-        if(bookList.get(position).getUser()==null){
-            holder.mRenter.setText("Renter not Found");
-        }else{
-            holder.mRenter.setText(bookList.get(position).getUser().getUserFname()+" "+bookList.get(position).getUser().getUserLname());
-        }
+//        if(bookList.get(position).getUser()==null){
+//            holder.mRenter.setText("Renter not Found");
+//        }else{
+//            holder.mRenter.setText(bookList.get(position).getUser().getUserFname()+" "+bookList.get(position).getUser().getUserLname());
+//        }
 
         holder.mReminder.setText("Receive book on "+ bookList.get(position).getDateTimeStamp());
 
 
-        Picasso.with(context).load(String.format(Constants.IMAGE_URL, bookList.get(position).getUser().getImageFilename())).fit().into(holder.mIvRenter);
+//        Picasso.with(context).load(String.format(Constants.IMAGE_URL, bookList.get(position).getUser().getImageFilename())).fit().into(holder.mIvRenter);
 
 //        Log.d("displayImage", bookList.get(position).getBookOwner().getBookObj().getBookFilename());
 
@@ -100,13 +101,13 @@ public class CompleteSwapAdapter extends RecyclerView.Adapter<CompleteSwapAdapte
             super(itemView);
 
             this.context = context;
-            mRenter = (TextView) itemView.findViewById(R.id.toReceiveRenter);
+//            mRenter = (TextView) itemView.findViewById(R.id.toReceiveRenter);
             mReminder = (TextView) itemView.findViewById(R.id.toReceiveReminder);
             mMU = (TextView) itemView.findViewById(R.id.toReceiveMU);
             mPrice = (TextView) itemView.findViewById(R.id.toReceivePrice);
             mBookRented = (TextView) itemView.findViewById(R.id.toReceiveBook);
             mMyBook = (TextView) itemView.findViewById(R.id.toReceiveMyBook);
-            mIvRenter = (ImageView) itemView.findViewById(R.id.toReceiveRenterImage);
+//            mIvRenter = (ImageView) itemView.findViewById(R.id.toReceiveRenterImage);
             mIvBookImg = (ImageView) itemView.findViewById(R.id.toReceiveBookImage);
             mMyIvBookImg = (ImageView) itemView.findViewById(R.id.toReceiveMyBookImage);
 //            itemView.setOnClickListener(this);

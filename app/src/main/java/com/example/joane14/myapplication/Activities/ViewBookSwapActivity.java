@@ -139,7 +139,7 @@ public class ViewBookSwapActivity extends AppCompatActivity implements Navigatio
                 if(user.getUserId()==swapDetailObj.getBookOwner().getUserObj().getUserId()){
                     showWarning();
                 }else{
-                    showInputDialog();
+                    getRecommendSwap();
                 }
             }
         });
@@ -179,10 +179,10 @@ public class ViewBookSwapActivity extends AppCompatActivity implements Navigatio
                 }
                 Log.d("RentalAuthor", author);
                 mAuthor.setText(author);
-                mPrice.setText(String.valueOf(swapDetailObj.getSwapPrice()));
+                mPrice.setText(swapDetailObj.getBookOwner().getBookObj().getBookOriginalPrice().toString());
                 Log.d("SwapDetail Id", String.valueOf(swapDetailObj.getSwapDetailId()));
                 Glide.with(ViewBookSwapActivity.this).load(swapDetailObj.getBookOwner().getBookObj().getBookFilename()).fitCenter().into(mBookImg);
-                Picasso.with(ViewBookSwapActivity.this).load(String.format(Constants.IMAGE_URL, swapDetailObj.getBookOwner().getUserObj().getImageFilename())).fit().into(mBookOwnerImg);
+                Picasso.with(ViewBookSwapActivity.this).load(swapDetailObj.getBookOwner().getUserObj().getImageFilename()).fit().into(mBookOwnerImg);
                 mBookOwner.setText(swapDetailObj.getBookOwner().getUserObj().getUserFname()+" "+swapDetailObj.getBookOwner().getUserObj().getUserLname());
             }
 
@@ -248,6 +248,74 @@ public class ViewBookSwapActivity extends AppCompatActivity implements Navigatio
         b.show();
     }
 
+    public void getRecommendSwap(){
+        RequestQueue requestQueue = Volley.newRequestQueue(ViewBookSwapActivity.this);
+//        String URL = "http://104.197.4.32:8080/Koobym/user/add";
+        User user = (User) SPUtility.getSPUtil(this).getObject("USER_OBJECT", User.class);
+        String URL = Constants.RECOMMEND_SWAP_BOOK+swapDetailObj.getBookOwner().getUserObj().getUserId()+"/"+swapDetailObj.getBookOwner().getBookObj().getBookOriginalPrice();
+
+//        String URL = Constants.RECOMMEND_SWAP_BOOK+"/"+swapComment.getUser().getUserId()+"/"+swapDetailObj.getSwapPrice();
+
+        Log.d("URLprice", URL);
+        final Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd").registerTypeAdapter(Date.class, GsonDateDeserializer.getInstance()).create();
+        final String mRequestBody = gson.toJson(swapDetailObj);
+
+
+        Log.d("LOG_VOLLEY", mRequestBody);
+        Log.d("LOG_VOLLEY rentalHeader", mRequestBody);
+        StringRequest stringRequest = new StringRequest(Request.Method.GET, URL, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                Log.i("SwapDetailResponse", response);
+                if(response.equals("")){
+                    Log.i("SwapDetailResponse", "null");
+                }else{
+                    Log.i("SwapDetailResponse", "not null");
+                }
+                if(response==null){
+                    android.support.v7.app.AlertDialog.Builder alertDialogBuilder = new android.support.v7.app.AlertDialog.Builder(ViewBookSwapActivity.this);
+                    alertDialogBuilder.setTitle("!!!");
+                    alertDialogBuilder.setMessage("You have no books available for swap that has the same or is around the price of this book.");
+                    alertDialogBuilder.setPositiveButton("Okay",
+                            new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface arg0, int arg1) {
+
+                                }
+                            });
+
+                    android.support.v7.app.AlertDialog alertDialog = alertDialogBuilder.create();
+                    alertDialog.show();
+                }else{
+                    showInputDialog();
+                }
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.e("LOG_VOLLEY", error.toString());
+                error.printStackTrace();
+            }
+        }) {
+            @Override
+            public String getBodyContentType() {
+                return "application/json; charset=utf-8";
+            }
+
+            @Override
+            public byte[] getBody() throws AuthFailureError {
+                try {
+                    return mRequestBody == null ? null : mRequestBody.getBytes("utf-8");
+                } catch (UnsupportedEncodingException uee) {
+                    VolleyLog.wtf("Unsupported Encoding while trying to get the bytes of %s using %s", mRequestBody, "utf-8");
+                    return null;
+                }
+            }
+        };
+
+        requestQueue.add(stringRequest);
+    }
+
     public void addSwapComment(){
         RequestQueue requestQueue = Volley.newRequestQueue(this);
 //        String URL = "http://192.168.1.6:8080/Koobym/swapHeader/add";
@@ -271,7 +339,7 @@ public class ViewBookSwapActivity extends AppCompatActivity implements Navigatio
             public void onResponse(String response) {
                 Log.d("onResponse addSwapC", "inside");
                 Log.i("addSwapComment", response);
-                Intent intent = new Intent(ViewBookSwapActivity.this, RequestActivity.class);
+                Intent intent = new Intent(ViewBookSwapActivity.this, MyShelf.class);
                 startActivity(intent);
 
             }

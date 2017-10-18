@@ -258,6 +258,8 @@ public class MainActivity extends AppCompatActivity {
 //        String URL = "http://104.197.4.32:8080/Koobym/user/login";
         String URL = Constants.CHECK_FB_USER +"/"+user.getUserFbId();
 
+        Log.d("UserFb", URL);
+
         final Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd").registerTypeAdapter(Date.class, GsonDateDeserializer.getInstance()).create();
         final String mRequestBody = gson.toJson(user);
         StringRequest stringRequest = new StringRequest(Request.Method.GET, URL, new Response.Listener<String>() {

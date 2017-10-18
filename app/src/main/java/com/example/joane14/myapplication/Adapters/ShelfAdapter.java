@@ -47,8 +47,8 @@ public class ShelfAdapter extends RecyclerView.Adapter<ShelfAdapter.BookHolder> 
     public void onBindViewHolder(ShelfAdapter.BookHolder holder, int position) {
 
         holder.mBookTitle.setText(rentalDetailList.get(position).getBookOwner().getBookObj().getBookTitle());
-        holder.mBookPrice.setText(rentalDetailList.get(position).getBookOwner().getBookObj().getBookOriginalPrice().toString());
-        Log.d("libroShet",rentalDetailList.get(position).getBookOwner().getBookObj().getBookOriginalPrice().toString());
+        holder.mBookPrice.setText(String.valueOf(rentalDetailList.get(position).getCalculatedPrice()));
+        Log.d("libroShet",String.valueOf(rentalDetailList.get(position).getCalculatedPrice()));
         String author = "";
         if(rentalDetailList.get(position).getBookOwner().getBookObj().getBookAuthor().size()!=0){
             for(int init=0; init<rentalDetailList.get(position).getBookOwner().getBookObj().getBookAuthor().size(); init++){

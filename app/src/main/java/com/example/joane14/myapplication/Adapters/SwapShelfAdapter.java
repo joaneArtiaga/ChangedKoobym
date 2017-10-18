@@ -50,7 +50,7 @@ public class SwapShelfAdapter extends RecyclerView.Adapter<SwapShelfAdapter.Book
 
         holder.mBookTitle.setText(swapDetailList.get(position).getBookOwner().getBookObj().getBookTitle());
         holder.mBookPrice.setText(swapDetailList.get(position).getBookOwner().getBookObj().getBookOriginalPrice().toString());
-        Log.d("libroShet",swapDetailList.get(position).getBookOwner().getBookObj().getBookOriginalPrice().toString());
+        Log.d("libroShet",String.valueOf(swapDetailList.get(position).getSwapPrice()));
         String author = "";
         Log.d("AuthorDisplay", author);
         if(swapDetailList.get(position).getBookOwner().getBookObj().getBookAuthor().size()!=0){

@@ -69,7 +69,7 @@ public class SwapChooserAdapter extends RecyclerView.Adapter<SwapChooserAdapter.
         swapHeader.setRequestedSwapDetail(bookList.get(position));
         String author = "";
         holder.mBookTitle.setText(bookList.get(position).getBookOwner().getBookObj().getBookTitle());
-        holder.mBookPrice.setText(String.valueOf(bookList.get(position).getSwapPrice()));
+        holder.mBookPrice.setText(bookList.get(position).getBookOwner().getBookObj().getBookOriginalPrice().toString());
 //        Picasso.with(context).load(String.format(Constants.IMAGE_URL, bookList.get(position).getUser().getImageFilename())).fit().into(holder.mSwapCommenterImg);
 //        Log.d("displayImage", bookList.get(position).getBookOwner().getBookObj().getBookFilename());
         Glide.with(context).load(bookList.get(position).getBookOwner().getBookObj().getBookFilename()).centerCrop().into(holder.mBookPic);

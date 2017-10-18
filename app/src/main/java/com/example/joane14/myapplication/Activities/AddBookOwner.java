@@ -80,6 +80,7 @@ public class AddBookOwner extends AppCompatActivity {
 
 
 
+
         user = new User();
         user = (User) SPUtility.getSPUtil(this).getObject("USER_OBJECT", User.class);
         mBookTitle = (TextView) findViewById(R.id.addBoTitle);

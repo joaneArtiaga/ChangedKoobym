@@ -329,19 +329,23 @@ public class ViewBookActivity extends AppCompatActivity implements
 //        String URL = "http://104.197.4.32:8080/Koobym/user/add";
         String URL = Constants.CHECK_EXIST+"/"+userId+"/"+rentalDetailId;
 
+        Log.d("CheckURL", URL);
 
         final Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd").registerTypeAdapter(Date.class, GsonDateDeserializer.getInstance()).create();
         final String mRequestBody = gson.toJson(rentalDetail);
 
+        Log.d("CheckIfExist", "inside");
 
         Log.d("LOG_VOLLEY_RequestBody", mRequestBody);
         StringRequest stringRequest = new StringRequest(Request.Method.GET, URL, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
 
+                Log.d("Response", response);
 
 
-                if(response==null){
+
+                if(response!=null){
                     AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(ViewBookActivity.this);
                     alertDialogBuilder.setTitle("Terms and Condition");
                     alertDialogBuilder.setMessage("\n\n1.\tThis book must be returned on time.\n" +
@@ -372,6 +376,7 @@ public class ViewBookActivity extends AppCompatActivity implements
                     AlertDialog alertDialog = alertDialogBuilder.create();
                     alertDialog.show();
                 }else{
+
                     android.support.v7.app.AlertDialog.Builder alertDialogBuilder = new android.support.v7.app.AlertDialog.Builder(ViewBookActivity.this);
                     alertDialogBuilder.setTitle("!!!");
                     alertDialogBuilder.setMessage("You already requested for this book. You can't request again.");

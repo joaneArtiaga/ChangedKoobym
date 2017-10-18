@@ -22,6 +22,7 @@ import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.example.joane14.myapplication.Activities.GsonDateDeserializer;
 import com.example.joane14.myapplication.Adapters.ToDeliverAdapter;
+import com.example.joane14.myapplication.Adapters.ToReturnAdapter;
 import com.example.joane14.myapplication.Model.RentalHeader;
 import com.example.joane14.myapplication.Model.User;
 import com.example.joane14.myapplication.R;
@@ -67,7 +68,7 @@ public class ToReturnFrag extends Fragment {
         mRecyclerView.setHasFixedSize(true);
         mLayoutManager = new LinearLayoutManager(getContext());
         mRecyclerView.setLayoutManager(mLayoutManager);
-        mAdapter = new ToDeliverAdapter(rentalHeaderList);
+        mAdapter = new ToReturnAdapter(rentalHeaderList);
         mRecyclerView.setAdapter(mAdapter);
         getToReturnRenter();
 

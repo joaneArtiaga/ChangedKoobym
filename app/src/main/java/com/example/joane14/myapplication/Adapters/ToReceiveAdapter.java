@@ -67,7 +67,7 @@ public class ToReceiveAdapter extends RecyclerView.Adapter<ToReceiveAdapter.Book
         return dataObjectHolder;
     }
 
-    public ToReceiveAdapter(List<RentalHeader> myDataset) {
+    public  ToReceiveAdapter(List<RentalHeader> myDataset) {
         bookList = myDataset;
     }
 
@@ -81,11 +81,11 @@ public class ToReceiveAdapter extends RecyclerView.Adapter<ToReceiveAdapter.Book
         holder.mMU.setText(bookList.get(position).getLocation().getLocationName());
         holder.mPrice.setText(String.valueOf(bookList.get(position).getRentalDetail().getCalculatedPrice()));
 
-        if(bookList.get(position).getUserId()==null){
-            holder.mRenter.setText("Renter not Found");
-        }else{
-            holder.mRenter.setText(bookList.get(position).getUserId().getUserFname()+" "+bookList.get(position).getUserId().getUserLname());
-        }
+//        if(bookList.get(position).getUserId()==null){
+//            holder.mRenter.setText("Renter not Found");
+//        }else{
+//            holder.mRenter.setText(bookList.get(position).getUserId().getUserFname()+" "+bookList.get(position).getUserId().getUserLname());
+//        }
 
         holder.mReminder.setText("Receive book on "+ bookList.get(position).getRentalTimeStamp());
 
@@ -105,7 +105,7 @@ public class ToReceiveAdapter extends RecyclerView.Adapter<ToReceiveAdapter.Book
 
         holder.mDaysRent.setText("This book should be returned on "+newDate);
 
-        Picasso.with(context).load(String.format(Constants.IMAGE_URL, bookList.get(position).getUserId().getImageFilename())).fit().into(holder.mIvRenter);
+//        Picasso.with(context).load(String.format(Constants.IMAGE_URL, bookList.get(position).getUserId().getImageFilename())).fit().into(holder.mIvRenter);
         Glide.with(context).load(bookList.get(position).getRentalDetail().getBookOwner().getBookObj().getBookFilename()).centerCrop().into(holder.mIvBookImg);
 
 //        Log.d("displayImage", bookList.get(position).getBookOwner().getBookObj().getBookFilename());

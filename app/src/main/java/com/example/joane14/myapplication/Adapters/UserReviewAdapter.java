@@ -54,7 +54,7 @@ public class UserReviewAdapter extends RecyclerView.Adapter<UserReviewAdapter.Bo
 
         holder.mName.setText(bookList.get(position).getUserRater().getUserFname()+" "+bookList.get(position).getUserRater().getUserLname());
         holder.mComment.setText(bookList.get(position).getComment());
-        holder.mRate.setText("Rated "+String.valueOf(bookList.get(position).getRate().getRateNumber())+" out of 10");
+        holder.mRate.setText("Rated "+String.valueOf(bookList.get(position).getRate().getRateNumber())+" out of 5");
         Picasso.with(context).load(String.format(Constants.IMAGE_URL, bookList.get(position).getUserRater().getImageFilename())).fit().into(holder.mProfPic);
 
     }

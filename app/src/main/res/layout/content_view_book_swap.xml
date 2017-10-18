@@ -19,7 +19,8 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="260dp"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:id="@+id/linearLayout3">
 
         <ImageView
             android:id="@+id/vbsBookImg"
@@ -71,6 +72,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="3dp"
             android:background="@color/colorDark"
+            android:id="@+id/linearLayoutH"
             android:orientation="horizontal">
 
             <ImageView
@@ -120,11 +122,11 @@
     <FrameLayout
         android:id="@+id/fragement_display_comment"
         android:layout_width="match_parent"
-        android:layout_height="310dp"
-        android:layout_alignParentBottom="true">
-
-    </FrameLayout>
-
+        android:layout_height="360dp"
+        tools:ignore="NotSibling"
+        android:layout_below="@+id/linearLayout3"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
 
 
 </RelativeLayout>

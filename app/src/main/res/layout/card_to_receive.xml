@@ -11,7 +11,8 @@
         android:layout_gravity="center"
         android:layout_marginLeft="5dp"
         android:layout_margin="5dp"
-        app:cardBackgroundColor="@color/colorMint">
+        app:cardBackgroundColor="@color/colorMint"
+        app:contentPadding="7dp">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -19,45 +20,45 @@
             android:orientation="vertical">
 
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="60dp"
-                android:orientation="horizontal">
+            <!--<LinearLayout-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="60dp"-->
+                <!--android:orientation="horizontal">-->
 
-                <ImageView
-                    android:id="@+id/toReceiveRenterImage"
-                    android:layout_width="50dp"
-                    android:layout_height="match_parent"
-                    app:srcCompat="@drawable/com_facebook_profile_picture_blank_square" />
+                <!--<ImageView-->
+                    <!--android:id="@+id/toReceiveRenterImage"-->
+                    <!--android:layout_width="50dp"-->
+                    <!--android:layout_height="match_parent"-->
+                    <!--app:srcCompat="@drawable/com_facebook_profile_picture_blank_square" />-->
 
-                <LinearLayout
-                    android:layout_marginTop="5dp"
-                    android:layout_width="300dp"
-                    android:layout_height="match_parent"
-                    android:orientation="vertical">
+                <!--<LinearLayout-->
+                    <!--android:layout_marginTop="5dp"-->
+                    <!--android:layout_width="300dp"-->
+                    <!--android:layout_height="match_parent"-->
+                    <!--android:orientation="vertical">-->
 
-                    <TextView
-                        android:id="@+id/toReceiveRenter"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="TextView"
-                        android:textColor="@color/colorPrimaryDark" />
+                    <!--<TextView-->
+                        <!--android:id="@+id/toReceiveRenter"-->
+                        <!--android:layout_width="match_parent"-->
+                        <!--android:layout_height="wrap_content"-->
+                        <!--android:text="TextView"-->
+                        <!--android:textColor="@color/colorPrimaryDark" />-->
 
-                    <TextView
-                        android:id="@+id/userType"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="RENTER"
-                        android:textColor="@color/colorPrimaryDark" />
+                    <!--<TextView-->
+                        <!--android:id="@+id/userType"-->
+                        <!--android:layout_width="match_parent"-->
+                        <!--android:layout_height="wrap_content"-->
+                        <!--android:text="RENTER"-->
+                        <!--android:textColor="@color/colorPrimaryDark" />-->
 
-                </LinearLayout>
+                <!--</LinearLayout>-->
 
-            </LinearLayout>
+            <!--</LinearLayout>-->
 
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:background="@color/colorOrange"/>
+            <!--<View-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="1dp"-->
+                <!--android:background="@color/colorOrange"/>-->
 
 
             <LinearLayout
@@ -175,7 +176,7 @@
             android:layout_width="50dp"
             android:layout_height="50dp"
             android:layout_weight="1"
-            app:srcCompat="@drawable/gapprove"
+            app:srcCompat="@drawable/received_button"
             android:clickable="true"/>
 
         <ImageView
@@ -183,7 +184,8 @@
             android:layout_width="50dp"
             android:layout_height="50dp"
             android:layout_weight="1"
-            app:srcCompat="@drawable/greject" />
+            android:clickable="true"
+            app:srcCompat="@drawable/not_received_button" />
 
     </LinearLayout>
 </RelativeLayout>

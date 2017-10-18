@@ -87,6 +87,7 @@ public class SwapChooserFrag extends Fragment {
             Log.d("SwapDetailModel", "is not null");
         }
 
+        Log.d("SwapChooserFrag","inside");
         mRecyclerView = (RecyclerView) view.findViewById(R.id.my_recycler_view_swap_chooser);
         mRecyclerView.setHasFixedSize(true);
         mLayoutManager = new LinearLayoutManager(getContext());

@@ -35,6 +35,7 @@ import com.example.joane14.myapplication.Adapters.RecyclerAdapterShowBook;
 import com.example.joane14.myapplication.Model.Author;
 import com.example.joane14.myapplication.Model.Book;
 import com.example.joane14.myapplication.Model.BookOwnerModel;
+import com.example.joane14.myapplication.Model.GenreModel;
 import com.example.joane14.myapplication.Model.User;
 import com.example.joane14.myapplication.R;
 import com.google.gson.Gson;
@@ -141,6 +142,23 @@ public class ShowBooksFrag extends Fragment {
                         bookObject.setBookAuthor(arr);
                     }else{
                         bookObject.setBookAuthor(new ArrayList<Author>());
+                    }
+
+                    if(obj.has("categories")){
+                        Log.d("There's", "a genre");
+                        JSONArray arrGenre = obj.getJSONArray("categories");
+                        List<GenreModel> genres = new ArrayList<GenreModel>();
+                        GenreModel genre;
+                        for(int i=0; i < arrGenre.length(); i++){
+                            genre = new GenreModel();
+                            genre.setGenreName(arrGenre.getString(i));
+                            genres.add(genre);
+                        }
+
+                        bookObject.setBookGenre(genres);
+                    }else{
+                        Log.d("There's", "no genre");
+                        bookObject.setBookGenre(new ArrayList<GenreModel>());
                     }
 
                     if(obj.has("imageLinks")){

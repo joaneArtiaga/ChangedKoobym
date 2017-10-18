@@ -300,9 +300,9 @@ public class LocationChooser extends FragmentActivity implements
             public void onMapClick(LatLng latLng) {
                 double latLat, latLong;
 
-                if(recyclerAdapter.getItemCount()==5){
+                if(recyclerAdapter.getItemCount()==3){
                     AlertDialog.Builder builder1 = new AlertDialog.Builder(LocationChooser.this);
-                    builder1.setMessage("Only 5 locations are available. You cannot choose more than 5 or less than 5.");
+                    builder1.setMessage("Only 3 locations are available. You cannot choose more than 3 or less than 3.");
                     builder1.setCancelable(true);
 
                     builder1.setPositiveButton(

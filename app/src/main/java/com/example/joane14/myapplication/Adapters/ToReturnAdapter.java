@@ -14,10 +14,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
-import com.example.joane14.myapplication.Fragments.Constants;
 import com.example.joane14.myapplication.Model.RentalHeader;
 import com.example.joane14.myapplication.R;
-import com.squareup.picasso.Picasso;
 
 import java.text.DateFormat;
 import java.text.ParseException;
@@ -29,38 +27,40 @@ import java.util.List;
  * Created by Joane14 on 05/10/2017.
  */
 
-public class ToDeliverAdapter extends RecyclerView.Adapter<ToDeliverAdapter.BookHolder>{
+public class ToReturnAdapter extends RecyclerView.Adapter<ToReturnAdapter.BookHolder>{
 
     public List<RentalHeader> bookList;
     public Activity context;
 
     @Override
-    public ToDeliverAdapter.BookHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public ToReturnAdapter.BookHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.card_to_deliver, parent, false);
 
         this.context = (Activity) parent.getContext();
         Log.d("LandingPAgeAdapter","inside");
-        ToDeliverAdapter.BookHolder dataObjectHolder = new ToDeliverAdapter.BookHolder(this.context, view);
+        ToReturnAdapter.BookHolder dataObjectHolder = new ToReturnAdapter.BookHolder(this.context, view);
 
 
         Log.d("RequestAdapter", String.valueOf(bookList.size()));
         return dataObjectHolder;
     }
 
-    public ToDeliverAdapter(List<RentalHeader> myDataset) {
+    public ToReturnAdapter(List<RentalHeader> myDataset) {
         bookList = myDataset;
     }
 
     @SuppressLint("NewApi")
     @Override
-    public void onBindViewHolder(ToDeliverAdapter.BookHolder holder, int position) {
+    public void onBindViewHolder(ToReturnAdapter.BookHolder holder, int position) {
 
 
         holder.mBookRented.setText(bookList.get(position).getRentalDetail().getBookOwner().getBookObj().getBookTitle());
         holder.mDaysRent.setText("Available "+bookList.get(position).getRentalDetail().getDaysForRent()+" days for rent.");
         holder.mMU.setText(bookList.get(position).getLocation().getLocationName());
         holder.mPrice.setText(String.valueOf(bookList.get(position).getRentalDetail().getCalculatedPrice()));
+
+
 
 //        if(bookList.get(position).getUserId()==null){
 //            holder.mRenter.setText("Renter not Found");
@@ -89,6 +89,25 @@ public class ToDeliverAdapter extends RecyclerView.Adapter<ToDeliverAdapter.Book
         Glide.with(context).load(bookList.get(position).getRentalDetail().getBookOwner().getBookObj().getBookFilename()).centerCrop().into(holder.mIvBookImg);
 
 //        Log.d("displayImage", bookList.get(position).getBookOwner().getBookObj().getBookFilename());
+
+        Calendar c = Calendar.getInstance();
+        SimpleDateFormat datef = new SimpleDateFormat("yyyy-MM-dd");
+        String currDate = datef.format(c.getTime());
+        Date d = null, d2 = null;
+        try {
+            d = datef.parse(newDate);
+            d2 = datef.parse(currDate);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
+        long diff = d2.getTime() - d.getTime();
+        long seconds = diff / 1000;
+        long minutes = seconds /60;
+        long hours = minutes / 60;
+        long days = hours /24;
+
+        Log.d("daysAvailable", String.valueOf(days));
 
     }
 
@@ -126,7 +145,7 @@ public class ToDeliverAdapter extends RecyclerView.Adapter<ToDeliverAdapter.Book
                     int position = getAdapterPosition();
                     Log.d("AdapterPosition", "inside "+Integer.toString(position));
 //                    Intent intent = new Intent(LandingPageAdapter.this.context, ViewBookActivity.class);
-                    rentalHeaderObj = ToDeliverAdapter.this.bookList.get(position);
+                    rentalHeaderObj = ToReturnAdapter.this.bookList.get(position);
                     if(rentalHeaderObj==null){
                         Log.d("rentalHeaderAdapter", "is null");
                     }else{

@@ -83,9 +83,10 @@ public class SwapBookChooser extends AppCompatActivity {
     public void getRecommendSwap(){
         RequestQueue requestQueue = Volley.newRequestQueue(SwapBookChooser.this);
 //        String URL = "http://104.197.4.32:8080/Koobym/user/add";
-        String URL = Constants.GET_MY_SWAP+swapCommentModel.getUser().getUserId();
+//        String URL = Constants.RECOMMEND_SWAP_BOOK+swapCommentModel.getUser().getUserId()+"/"+swapDetailModel.getBookOwner().getBookObj().getBookOriginalPrice();
 
-//        String URL = Constants.RECOMMEND_SWAP_BOOK+"/"+swapCommentModel.getUser().getUserId()+"/"+swapDetailModel.getSwapPrice();
+
+        String URL = Constants.GET_MY_SWAP+"/"+swapCommentModel.getUser().getUserId();
 
         Log.d("SwapURL", URL);
         Log.d("SwapPrice", String.valueOf(swapDetailModel.getSwapPrice()));
