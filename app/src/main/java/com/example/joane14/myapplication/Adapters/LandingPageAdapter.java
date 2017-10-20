@@ -50,7 +50,7 @@ public class LandingPageAdapter extends RecyclerView.Adapter<LandingPageAdapter.
     public void onBindViewHolder(LandingPageAdapter.BookHolder holder, int position) {
 
         holder.mBookTitle.setText(bookList.get(position).getBookOwner().getBookObj().getBookTitle());
-        holder.mBookPrice.setText(String.valueOf(bookList.get(position).getCalculatedPrice()));
+        holder.mBookPrice.setText(String.format("%.2f", bookList.get(position).getCalculatedPrice()));
         Log.d("libroShet",bookList.get(position).getBookOwner().getBookObj().getBookOriginalPrice().toString());
         String author = " ";
         if(bookList.get(position).getBookOwner().getBookObj().getBookAuthor().size()!=0){

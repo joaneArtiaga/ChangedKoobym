@@ -1,0 +1,16 @@
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.example.joane14.myapplication.Fragments.RejectedSwapHistory">
+
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/my_recycler_view_swap_history_rejected"
+        android:layout_width="match_parent"
+        android:layout_height="460dp"
+        android:layout_alignParentBottom="true"
+        android:scrollbars="vertical"/>
+
+
+</FrameLayout>

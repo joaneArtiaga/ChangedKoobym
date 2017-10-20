@@ -65,6 +65,8 @@ public class Constants {
 
     public static final String GET_TO_APPROVE ="http://104.197.4.32:8080/Koobym/swapHeader/toApproveById";
 
+    public static final String GET_TO_APPROVED ="http://104.197.4.32:8080/Koobym/swapHeader/approvedById/";
+
     public static final String GET_COMPLETE_SWAP ="http://104.197.4.32:8080/Koobym/swapHeader/completeById";
 
     public static final String GET_TO_DELIVER_SWAP ="http://104.197.4.32:8080/Koobym/swapHeader/toDeliverById";
@@ -99,8 +101,15 @@ public class Constants {
 
     public static final String GET_REJECTED_BY_RENTER ="http://104.197.4.32:8080/Koobym/rentalHeader/rejectedByIdRenter";
 
+    public static final String GET_REJECTED_BY_SWAP ="http://104.197.4.32:8080/Koobym/swapHeader/rejectedOwner";
+
     public static final String CHECK_EXIST ="http://104.197.4.32:8080/Koobym/rentalHeader/checkExist";
 
     public static final String GET_RENTERS ="http://104.197.4.32:8080/Koobym/rentalHeader/getRentalDetail";
+
+    public static final String INCREMENT_BOOK_OWNER = "http://104.197.4.32:8080/Koobym/bookOwner/increment";
+
+    public static final String GET_COMPLETE_SWAP_HEADER = "http://104.197.4.32:8080/Koobym/swapHeader/completeById/";
+
 
 }

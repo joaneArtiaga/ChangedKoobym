@@ -15,7 +15,9 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.example.joane14.myapplication.Model.RentalHeader;
+import com.example.joane14.myapplication.Model.User;
 import com.example.joane14.myapplication.R;
+import com.example.joane14.myapplication.Utilities.SPUtility;
 import com.squareup.picasso.Picasso;
 
 import java.text.DateFormat;
@@ -57,13 +59,13 @@ public class CompleteRenterAdapter extends RecyclerView.Adapter<CompleteRenterAd
 
 
         holder.mBookRented.setText(bookList.get(position).getRentalDetail().getBookOwner().getBookObj().getBookTitle());
-        holder.mRenterText.setText("Owner");
+//        holder.mRenterText.setText("Renter");
 
-        if(bookList.get(position).getUserId()==null){
-            holder.mRenter.setText("Renter not Found");
-        }else{
-            holder.mRenter.setText(bookList.get(position).getRentalDetail().getBookOwner().getUserObj().getUserFname()+" "+bookList.get(position).getRentalDetail().getBookOwner().getUserObj().getUserLname());
-        }
+//        if(bookList.get(position).getUserId()==null){
+//            holder.mRenter.setText("Renter not Found");
+//        }else{
+//            holder.mRenter.setText(bookList.get(position).getUserId().getUserFname()+" "+bookList.get(position).getUserId().getUserLname());
+//        }
 
         holder.mReceiveDate.setText(bookList.get(position).getRentalTimeStamp());
 
@@ -83,9 +85,11 @@ public class CompleteRenterAdapter extends RecyclerView.Adapter<CompleteRenterAd
         holder.mReturnDate.setText(newDate);
 
 
-        Picasso.with(context).load(bookList.get(position).getRentalDetail().getBookOwner().getUserObj().getImageFilename()).fit().into(holder.mIvRenter);
+//        Picasso.with(context).load(bookList.get(position).getRentalDetail().getBookOwner().getUserObj().getImageFilename()).fit().into(holder.mIvRenter);
         Glide.with(context).load(bookList.get(position).getRentalDetail().getBookOwner().getBookObj().getBookFilename()).centerCrop().into(holder.mIvBookImg);
 
+        holder.mReceiveTime.setText(bookList.get(position).getUserDayTime().getDay().getStrDay()+", "+bookList.get(position).getUserDayTime().getTime().getStrTime());
+        holder.mReturnTime.setText(bookList.get(position).getUserDayTime().getDay().getStrDay()+", "+bookList.get(position).getUserDayTime().getTime().getStrTime());
 
     }
 
@@ -104,14 +108,14 @@ public class CompleteRenterAdapter extends RecyclerView.Adapter<CompleteRenterAd
             super(itemView);
 
             this.context = context;
-            mRenter = (TextView) itemView.findViewById(R.id.completeRenter);
-            mRenterText = (TextView) itemView.findViewById(R.id.textRenter);
+//            mRenter = (TextView) itemView.findViewById(R.id.completeRenter);
+//            mRenterText = (TextView) itemView.findViewById(R.id.textRenter);
             mReceiveDate = (TextView) itemView.findViewById(R.id.receivedDate);
             mReceiveTime = (TextView) itemView.findViewById(R.id.receivedTime);
             mReturnDate = (TextView) itemView.findViewById(R.id.returnedDate);
             mReturnTime = (TextView) itemView.findViewById(R.id.returnedTime);
             mBookRented = (TextView) itemView.findViewById(R.id.completeBook);
-            mIvRenter = (ImageView) itemView.findViewById(R.id.completeRenterImage);
+//            mIvRenter = (ImageView) itemView.findViewById(R.id.completeRenterImage);
             mIvBookImg = (ImageView) itemView.findViewById(R.id.completeBookImage);
 //            itemView.setOnClickListener(this);
 

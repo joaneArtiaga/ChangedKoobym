@@ -51,7 +51,7 @@ public class ToApproveSwapAdapter extends RecyclerView.Adapter<ToApproveSwapAdap
     @Override
     public ToApproveSwapAdapter.BookHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.card_to_receive_swap, parent, false);
+                .inflate(R.layout.card_to_approve, parent, false);
 
         this.context = (Activity) parent.getContext();
         swapHeader = new SwapHeader();
@@ -79,16 +79,16 @@ public class ToApproveSwapAdapter extends RecyclerView.Adapter<ToApproveSwapAdap
         Log.d("PossibleSwap", bookList.get(position).getSwapDetail().getBookOwner().getUserObj().getUserFname());
         Log.d("PossibleSwap", bookList.get(position).getRequestedSwapDetail().getBookOwner().getUserObj().getUserFname());
 
-        if(bookList.get(position).getUser()==null){
-            holder.mRenter.setText("Renter not Found");
-        }else{
-            holder.mRenter.setText(bookList.get(position).getSwapDetail().getBookOwner().getUserObj().getUserFname()+" "+bookList.get(position).getSwapDetail().getBookOwner().getUserObj().getUserLname());
-        }
+//        if(bookList.get(position).getUser()==null){
+//            holder.mRenter.setText("Renter not Found");
+//        }else{
+//            holder.mRenter.setText(bookList.get(position).getSwapDetail().getBookOwner().getUserObj().getUserFname()+" "+bookList.get(position).getSwapDetail().getBookOwner().getUserObj().getUserLname());
+//        }
 
         holder.mReminder.setText("Receive book on "+ bookList.get(position).getDateTimeStamp()+" at "+bookList.get(position).getUserDayTime().getDay().getStrDay()+", "+bookList.get(position).getUserDayTime().getTime().getStrTime());
 
 
-        Picasso.with(context).load(bookList.get(position).getSwapDetail().getBookOwner().getUserObj().getImageFilename()).fit().into(holder.mIvRenter);
+//        Picasso.with(context).load(bookList.get(position).getSwapDetail().getBookOwner().getUserObj().getImageFilename()).fit().into(holder.mIvRenter);
 
 //        Log.d("displayImage", bookList.get(position).getBookOwner().getBookObj().getBookFilename());
 
@@ -127,12 +127,12 @@ public class ToApproveSwapAdapter extends RecyclerView.Adapter<ToApproveSwapAdap
             this.context = context;
             mBtnAccept = (ImageView) itemView.findViewById(R.id.btnApprove);
             mBtnRejected = (ImageView) itemView.findViewById(R.id.brnRejected);
-            mRenter = (TextView) itemView.findViewById(R.id.toReceiveRenter);
-            mReminder = (TextView) itemView.findViewById(R.id.toReceiveReminder);
+//            mRenter = (TextView) itemView.findViewById(R.id.toReceiveRenter);
+            mReminder = (TextView) itemView.findViewById(R.id.toSwapReminder);
             mMU = (TextView) itemView.findViewById(R.id.toReceiveMU);
             mPrice = (TextView) itemView.findViewById(R.id.toReceivePrice);
             mBookRented = (TextView) itemView.findViewById(R.id.toReceiveBook);
-            mIvRenter = (ImageView) itemView.findViewById(R.id.toReceiveRenterImage);
+//            mIvRenter = (ImageView) itemView.findViewById(R.id.toReceiveRenterImage);
             mIvBookImg = (ImageView) itemView.findViewById(R.id.toReceiveBookImage);
             mMyIvBookImg = (ImageView) itemView.findViewById(R.id.toReceiveMyBookImage);
             mMyBook = (TextView) itemView.findViewById(R.id.toReceiveMyBook);

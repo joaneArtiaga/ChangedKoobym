@@ -33,7 +33,7 @@ public class UserReviewAdapter extends RecyclerView.Adapter<UserReviewAdapter.Bo
     @Override
     public UserReviewAdapter.BookHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.card_reviews, parent, false);
+                .inflate(R.layout.card_user_reviews, parent, false);
 
         this.context = (Activity) parent.getContext();
         userRating = new UserRating();
@@ -55,7 +55,7 @@ public class UserReviewAdapter extends RecyclerView.Adapter<UserReviewAdapter.Bo
         holder.mName.setText(bookList.get(position).getUserRater().getUserFname()+" "+bookList.get(position).getUserRater().getUserLname());
         holder.mComment.setText(bookList.get(position).getComment());
         holder.mRate.setText("Rated "+String.valueOf(bookList.get(position).getRate().getRateNumber())+" out of 5");
-        Picasso.with(context).load(String.format(Constants.IMAGE_URL, bookList.get(position).getUserRater().getImageFilename())).fit().into(holder.mProfPic);
+        Picasso.with(context).load(bookList.get(position).getUserRater().getImageFilename()).fit().into(holder.mProfPic);
 
     }
 

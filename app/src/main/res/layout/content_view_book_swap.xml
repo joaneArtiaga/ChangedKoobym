@@ -86,7 +86,7 @@
 
             <LinearLayout
                 android:layout_width="300dp"
-                android:layout_height="match_parent"
+                android:layout_height="wrap_content"
                 android:layout_marginLeft="10dp"
                 android:orientation="vertical">
 
@@ -106,6 +106,14 @@
                     android:text="Book Owner"
                     android:textColor="@color/colorLightOrange"
                     android:textStyle="italic" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Book Description"
+                    android:id="@+id/swapBookDesc"
+                    android:textColor="@color/colorLightOrange"
+                    android:textStyle="italic" />
             </LinearLayout>
 
         </LinearLayout>
@@ -122,11 +130,11 @@
     <FrameLayout
         android:id="@+id/fragement_display_comment"
         android:layout_width="match_parent"
-        android:layout_height="360dp"
-        tools:ignore="NotSibling"
-        android:layout_below="@+id/linearLayout3"
+        android:layout_height="270dp"
         android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true" />
+        android:layout_alignParentStart="true"
+        android:layout_below="@+id/linearLayout3"
+        tools:ignore="NotSibling" />
 
 
 </RelativeLayout>

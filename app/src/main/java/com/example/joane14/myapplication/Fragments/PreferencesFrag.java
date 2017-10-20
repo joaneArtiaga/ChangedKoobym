@@ -10,6 +10,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.GridView;
 
 import com.android.volley.Request;
 import com.android.volley.Response;
@@ -17,6 +18,7 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.example.joane14.myapplication.Activities.GsonDateDeserializer;
 import com.example.joane14.myapplication.Adapters.LandingPageAdapter;
+import com.example.joane14.myapplication.Adapters.PrefferedAdapter;
 import com.example.joane14.myapplication.Model.RentalDetail;
 import com.example.joane14.myapplication.Model.User;
 import com.example.joane14.myapplication.R;
@@ -31,8 +33,8 @@ import java.util.List;
 public class PreferencesFrag extends Fragment {
 
     List<RentalDetail> suggested;
-    private RecyclerView mRecyclerView;
-    private RecyclerView.Adapter mAdapter;
+    private GridView mGridView;
+    private PrefferedAdapter mAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
     User userObj;
 
@@ -64,12 +66,8 @@ public class PreferencesFrag extends Fragment {
         Log.d("userModelPass PreFrag", userObj.toString());
         suggested = new ArrayList<RentalDetail>();
 
-        mRecyclerView = (RecyclerView) view.findViewById(R.id.my_recycler_view_preferences);
-        mRecyclerView.setHasFixedSize(true);
-        mLayoutManager = new LinearLayoutManager(getContext());
-        mRecyclerView.setLayoutManager(mLayoutManager);
-        mAdapter = new LandingPageAdapter(suggested);
-        mRecyclerView.setAdapter(mAdapter);
+        mGridView = (GridView) view.findViewById(R.id.preffered_gridview);
+        mAdapter = new PrefferedAdapter(getContext(), suggested);
         Log.d("userId$#23", String.valueOf(userObj.getUserId()));
         getSuggested(userObj.getUserId());
 

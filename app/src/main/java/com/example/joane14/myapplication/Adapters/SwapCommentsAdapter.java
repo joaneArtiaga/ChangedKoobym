@@ -69,7 +69,7 @@ public class SwapCommentsAdapter extends RecyclerView.Adapter<SwapCommentsAdapte
         holder.mSwapCommenterComment.setText(bookList.get(position).getSwapComment());
         holder.mSwapCommenterName.setText(bookList.get(position).getUser().getUserFname()+" "+bookList.get(position).getUser().getUserLname());
 
-        Picasso.with(context).load(String.format(Constants.IMAGE_URL, bookList.get(position).getUser().getImageFilename())).fit().into(holder.mSwapCommenterImg);
+        Picasso.with(context).load(bookList.get(position).getUser().getImageFilename()).fit().into(holder.mSwapCommenterImg);
 //        Log.d("displayImage", bookList.get(position).getBookOwner().getBookObj().getBookFilename());
         holder.mBtnSwapSeeShelf.setOnClickListener(new View.OnClickListener() {
             @Override

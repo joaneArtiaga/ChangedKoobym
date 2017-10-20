@@ -84,16 +84,16 @@ public class ToReceiveSwapAdapter extends RecyclerView.Adapter<ToReceiveSwapAdap
         }
         holder.mMU.setText(bookList.get(position).getLocation().getLocationName());
 
-        if(bookList.get(position).getUser()==null){
-            holder.mRenter.setText("Renter not Found");
-        }else{
-            holder.mRenter.setText(bookList.get(position).getUser().getUserFname()+" "+bookList.get(position).getUser().getUserLname());
-        }
+//        if(bookList.get(position).getUser()==null){
+//            holder.mRenter.setText("Renter not Found");
+//        }else{
+//            holder.mRenter.setText(bookList.get(position).getUser().getUserFname()+" "+bookList.get(position).getUser().getUserLname());
+//        }
 
         holder.mReminder.setText("Receive book on "+ bookList.get(position).getDateTimeStamp());
 
 
-        Picasso.with(context).load(String.format(Constants.IMAGE_URL, bookList.get(position).getUser().getImageFilename())).fit().into(holder.mIvRenter);
+//        Picasso.with(context).load(String.format(Constants.IMAGE_URL, bookList.get(position).getUser().getImageFilename())).fit().into(holder.mIvRenter);
 
 //        Log.d("displayImage", bookList.get(position).getBookOwner().getBookObj().getBookFilename());
 
@@ -133,13 +133,13 @@ public class ToReceiveSwapAdapter extends RecyclerView.Adapter<ToReceiveSwapAdap
             this.context = context;
             mBtnAccept = (ImageView) itemView.findViewById(R.id.btnApprove);
             mBtnRejected = (ImageView) itemView.findViewById(R.id.brnRejected);
-            mRenter = (TextView) itemView.findViewById(R.id.toReceiveRenter);
+//            mRenter = (TextView) itemView.findViewById(R.id.toReceiveRenter);
             mReminder = (TextView) itemView.findViewById(R.id.toReceiveReminder);
             mMU = (TextView) itemView.findViewById(R.id.toReceiveMU);
             mPrice = (TextView) itemView.findViewById(R.id.toReceivePrice);
             mBookRented = (TextView) itemView.findViewById(R.id.toReceiveBook);
             mMyBook = (TextView) itemView.findViewById(R.id.toReceiveMyBook);
-            mIvRenter = (ImageView) itemView.findViewById(R.id.toReceiveRenterImage);
+//            mIvRenter = (ImageView) itemView.findViewById(R.id.toReceiveRenterImage);
             mIvBookImg = (ImageView) itemView.findViewById(R.id.toReceiveBookImage);
             mMyIvBookImg = (ImageView) itemView.findViewById(R.id.toReceiveMyBookImage);
 //            itemView.setOnClickListener(this);
@@ -211,7 +211,8 @@ public class ToReceiveSwapAdapter extends RecyclerView.Adapter<ToReceiveSwapAdap
                 Log.i("RequestReceivedStatus", response);
 
                 if(bool==true){
-                    updateBookOwner(position);
+                    updateBookOwner(position, true);
+                    updateBookOwner(position, false);
                 }else{
                     Intent intent = new Intent(context, HistoryActivity.class);
                     context.startActivity(intent);
@@ -246,7 +247,7 @@ public class ToReceiveSwapAdapter extends RecyclerView.Adapter<ToReceiveSwapAdap
 
 
 
-    public void updateBookOwner(int position){
+    public void updateBookOwner(int position, final boolean bool){
         RequestQueue requestQueue = Volley.newRequestQueue(context);
 //        String URL = "http://104.197.4.32:8080/Koobym/user/add";
 //        String URL = Constants.WEB_SERVICE_URL+"user/add";
@@ -254,9 +255,13 @@ public class ToReceiveSwapAdapter extends RecyclerView.Adapter<ToReceiveSwapAdap
         User user = new User();
         user = (User) SPUtility.getSPUtil(context).getObject("USER_OBJECT", User.class);
         swapHeader = bookList.get(position);
-        String status="";
+        String status="", URL = "";
 
-        String URL = Constants.UPDATE_BOOK_OWNER+"/"+swapHeader.getSwapDetail().getBookOwner().getBookOwnerId()+"/"+user.getUserId();
+        if(bool==true){
+            URL = Constants.UPDATE_BOOK_OWNER+"/"+swapHeader.getSwapDetail().getBookOwner().getBookOwnerId()+"/"+swapHeader.getRequestedSwapDetail().getBookOwner().getUserObj().getUserId();
+        }else{
+            URL = Constants.UPDATE_BOOK_OWNER+"/"+swapHeader.getRequestedSwapDetail().getBookOwner().getBookOwnerId()+"/"+swapHeader.getSwapDetail().getBookOwner().getUserObj().getUserId();
+        }
 
         Log.d("Update SwapHeader URL", URL);
 
@@ -271,8 +276,10 @@ public class ToReceiveSwapAdapter extends RecyclerView.Adapter<ToReceiveSwapAdap
             @Override
             public void onResponse(String response) {
                 Log.i("RequestReceivedStatus", response);
-                Intent intent = new Intent(context, MyShelf.class);
-                context.startActivity(intent);
+                if(bool==false){
+                    Intent intent = new Intent(context, MyShelf.class);
+                    context.startActivity(intent);
+                }
             }
         }, new Response.ErrorListener() {
             @Override

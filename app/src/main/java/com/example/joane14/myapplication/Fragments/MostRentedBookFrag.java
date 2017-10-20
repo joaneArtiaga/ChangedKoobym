@@ -10,6 +10,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.GridView;
 
 import com.android.volley.Request;
 import com.android.volley.Response;
@@ -17,6 +18,7 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.example.joane14.myapplication.Activities.GsonDateDeserializer;
 import com.example.joane14.myapplication.Adapters.LandingPageAdapter;
+import com.example.joane14.myapplication.Adapters.MostRentedAdapter;
 import com.example.joane14.myapplication.Model.RentalDetail;
 import com.example.joane14.myapplication.R;
 import com.google.gson.Gson;
@@ -29,8 +31,8 @@ import java.util.List;
 
 public class MostRentedBookFrag extends Fragment {
 
-    private RecyclerView mRecyclerView;
-    private RecyclerView.Adapter mAdapter;
+    private GridView mGridView;
+    private MostRentedAdapter mAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
     private static String LOG_TAG = "CardViewActivity";
     List<RentalDetail> forRents;
@@ -44,8 +46,6 @@ public class MostRentedBookFrag extends Fragment {
 
     public static MostRentedBookFrag newInstance() {
         MostRentedBookFrag fragment = new MostRentedBookFrag();
-        Bundle args = new Bundle();
-        fragment.setArguments(args);
         return fragment;
     }
 
@@ -86,12 +86,9 @@ public class MostRentedBookFrag extends Fragment {
 
         forRents = new ArrayList<RentalDetail>();
 
-        mRecyclerView = (RecyclerView) view.findViewById(R.id.my_recycler_view_rentedBooks);
-        mRecyclerView.setHasFixedSize(true);
-        mLayoutManager = new LinearLayoutManager(getContext());
-        mRecyclerView.setLayoutManager(mLayoutManager);
-        mAdapter = new LandingPageAdapter(forRents);
-        mRecyclerView.setAdapter(mAdapter);
+        mGridView = (GridView) view.findViewById(R.id.most_rented_gridview);
+        mAdapter = new MostRentedAdapter(getContext(), forRents);
+        mGridView.setAdapter(mAdapter);
         getMostRented();
 
         return view;

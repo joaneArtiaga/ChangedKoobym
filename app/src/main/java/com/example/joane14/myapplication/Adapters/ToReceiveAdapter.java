@@ -29,6 +29,7 @@ import com.example.joane14.myapplication.Activities.HistoryActivity;
 import com.example.joane14.myapplication.Activities.TransactionActivity;
 import com.example.joane14.myapplication.Activities.UserReviewActivity;
 import com.example.joane14.myapplication.Fragments.Constants;
+import com.example.joane14.myapplication.Model.BookOwnerModel;
 import com.example.joane14.myapplication.Model.RentalHeader;
 import com.example.joane14.myapplication.Model.User;
 import com.example.joane14.myapplication.R;
@@ -148,12 +149,12 @@ public class ToReceiveAdapter extends RecyclerView.Adapter<ToReceiveAdapter.Book
             this.context = context;
             mBtnAccept = (ImageView) itemView.findViewById(R.id.btnApprove);
             mBtnRejected = (ImageView) itemView.findViewById(R.id.brnRejected);
-            mRenter = (TextView) itemView.findViewById(R.id.toReceiveRenter);
+//            mRenter = (TextView) itemView.findViewById(R.id.toReceiveRenter);
             mReminder = (TextView) itemView.findViewById(R.id.toReceiveReminder);
             mMU = (TextView) itemView.findViewById(R.id.toReceiveMU);
             mPrice = (TextView) itemView.findViewById(R.id.toReceivePrice);
             mBookRented = (TextView) itemView.findViewById(R.id.toReceiveBook);
-            mIvRenter = (ImageView) itemView.findViewById(R.id.toReceiveRenterImage);
+//            mIvRenter = (ImageView) itemView.findViewById(R.id.toReceiveRenterImage);
             mIvBookImg = (ImageView) itemView.findViewById(R.id.toReceiveBookImage);
             mDaysRent = (TextView) itemView.findViewById(R.id.toReceiveDaysForRent);
 //            itemView.setOnClickListener(this);
@@ -213,6 +214,7 @@ public class ToReceiveAdapter extends RecyclerView.Adapter<ToReceiveAdapter.Book
         }else{
             if(bool==true){
                 status = "Complete";
+
             }else{
                 status = "Rejected";
             }
@@ -235,11 +237,7 @@ public class ToReceiveAdapter extends RecyclerView.Adapter<ToReceiveAdapter.Book
                 Log.i("RequestReceivedStatus", response);
                 RentalHeader rentalHeaderModel = new RentalHeader();
                 if(finalStatus.equals("Complete")){
-                    Intent intent = new Intent(context, UserReviewActivity.class);
-                    Bundle bundle = new Bundle();
-                    bundle.putSerializable("rentalHeader", rentalHeader);
-                    intent.putExtras(bundle);
-                    context.startActivity(intent);
+                    incrementRenters(rentalHeader.getRentalDetail().getBookOwner());
                 }else if(finalStatus.equals("Received")){
                     Intent intent = new Intent(context, BookReviewActivity.class);
                     Bundle bundle = new Bundle();
@@ -281,6 +279,55 @@ public class ToReceiveAdapter extends RecyclerView.Adapter<ToReceiveAdapter.Book
         requestQueue.add(stringRequest);
     }
 
+    public void incrementRenters(BookOwnerModel bookOwnerModel){
+        RequestQueue requestQueue = Volley.newRequestQueue(context);
+//        String URL = "http://104.197.4.32:8080/Koobym/user/add";
+//        String URL = Constants.WEB_SERVICE_URL+"user/add";
+
+        String URL = Constants.INCREMENT_BOOK_OWNER+"/"+bookOwnerModel.getBookOwnerId();
+
+
+        final Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd").registerTypeAdapter(Date.class, GsonDateDeserializer.getInstance()).create();
+        final String mRequestBody = gson.toJson(bookOwnerModel);
+
+
+        Log.d("LOG_VOLLEY", mRequestBody);
+        Log.d("LOG_VOLLEY rentalHeader", mRequestBody);
+        StringRequest stringRequest = new StringRequest(Request.Method.GET, URL, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                Log.i("RequestReceivedStatus", response);
+                Intent intent = new Intent(context, UserReviewActivity.class);
+                Bundle bundle = new Bundle();
+                bundle.putSerializable("rentalHeader", rentalHeader);
+                intent.putExtras(bundle);
+                context.startActivity(intent);
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.e("LOG_VOLLEY", error.toString());
+                error.printStackTrace();
+            }
+        }) {
+            @Override
+            public String getBodyContentType() {
+                return "application/json; charset=utf-8";
+            }
+
+            @Override
+            public byte[] getBody() throws AuthFailureError {
+                try {
+                    return mRequestBody == null ? null : mRequestBody.getBytes("utf-8");
+                } catch (UnsupportedEncodingException uee) {
+                    VolleyLog.wtf("Unsupported Encoding while trying to get the bytes of %s using %s", mRequestBody, "utf-8");
+                    return null;
+                }
+            }
+        };
+
+        requestQueue.add(stringRequest);
+    }
 
 
 }

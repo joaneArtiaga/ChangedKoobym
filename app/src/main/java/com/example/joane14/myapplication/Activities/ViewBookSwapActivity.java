@@ -70,7 +70,7 @@ public class ViewBookSwapActivity extends AppCompatActivity implements Navigatio
     SwapDetail swapDetailObj;
     SwapCommentDetail swapCommentDetail;
     Bundle bundle;
-    TextView mBookTitle, mAuthor, mPrice, mBookOwner;
+    TextView mBookTitle, mAuthor, mPrice, mBookOwner, mDes;
     Button mBookSwap;
     ImageView mBookImg, mBookOwnerImg;
     List<SwapComment> swapCommentList;
@@ -113,13 +113,14 @@ public class ViewBookSwapActivity extends AppCompatActivity implements Navigatio
             userModel = (User) SPUtility.getSPUtil(this).getObject("USER_OBJECT", User.class);
             mName.setText(userModel.getUserFname()+" "+userModel.getUserLname());
             mEmail.setText(userModel.getEmail());
-            Picasso.with(ViewBookSwapActivity.this).load(String.format(Constants.IMAGE_URL, userModel.getImageFilename())).fit().into(profileImg);
+            Picasso.with(ViewBookSwapActivity.this).load(userModel.getImageFilename()).fit().into(profileImg);
         }
 
 
         mBookTitle = (TextView) findViewById(R.id.vbsBookTitle);
         mAuthor = (TextView) findViewById(R.id.vbsBookAuthor);
         mPrice = (TextView) findViewById(R.id.vbsBookPrice);
+        mDes = (TextView) findViewById(R.id.swapBookDesc);
 
         mBookSwap = (Button) findViewById(R.id.btnSwap);
 
@@ -177,6 +178,7 @@ public class ViewBookSwapActivity extends AppCompatActivity implements Navigatio
                 }else{
                     author="Unknown Author";
                 }
+                mDes.setText(swapDetailObj.getSwapDescription());
                 Log.d("RentalAuthor", author);
                 mAuthor.setText(author);
                 mPrice.setText(swapDetailObj.getBookOwner().getBookObj().getBookOriginalPrice().toString());
@@ -219,7 +221,7 @@ public class ViewBookSwapActivity extends AppCompatActivity implements Navigatio
 
         tv.setText(swapDetailObj.getBookOwner().getBookObj().getBookTitle());
 
-        dialogBuilder.setTitle("Swap Commnet Input");
+        dialogBuilder.setTitle("Leave Message");
         dialogBuilder.setPositiveButton("Swap", new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int whichButton) {
                 Log.d("InsideSwap", "dialog");

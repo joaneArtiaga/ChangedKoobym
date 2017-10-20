@@ -4,23 +4,26 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/colorTuftBrush"
+    android:background="@color/colorDark"
     tools:context="com.example.joane14.myapplication.Activities.BookReviewActivity">
 
     <TextView
         android:id="@+id/textViewTitle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="User Review"
+        android:text="Renter Review"
         android:textColor="@color/colorLightOrange"
         android:textSize="30dp"
         android:textStyle="bold"
-        android:gravity="center_horizontal"
-        android:layout_marginTop="20dp"
+        android:gravity="center"
         android:paddingLeft="5dp"
         android:paddingBottom="5dp"
         android:paddingRight="5dp"
-        android:paddingTop="5dp"/>
+        android:paddingTop="5dp"
+        android:layout_marginTop="96dp"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
 
     <EditText
         android:id="@+id/brComment"

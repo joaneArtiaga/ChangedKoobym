@@ -15,7 +15,7 @@
         android:background="@drawable/label_bg"
         android:textAlignment="center"
         android:gravity="center"
-        android:textColor="@color/colorDark"
+        android:textColor="#FFFF"
         android:textSize="15dp"
         android:padding="5dp"/>
 

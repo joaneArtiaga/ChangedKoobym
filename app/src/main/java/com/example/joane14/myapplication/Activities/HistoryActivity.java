@@ -28,12 +28,16 @@ import com.bumptech.glide.Glide;
 import com.example.joane14.myapplication.Fragments.CompletedHistory;
 import com.example.joane14.myapplication.Fragments.CompletedOwnerHistory;
 import com.example.joane14.myapplication.Fragments.CompletedRenterHistory;
+import com.example.joane14.myapplication.Fragments.CompletedSwapHistory;
 import com.example.joane14.myapplication.Fragments.Constants;
 import com.example.joane14.myapplication.Fragments.MyRequestFrag;
 import com.example.joane14.myapplication.Fragments.RejectedHistory;
 import com.example.joane14.myapplication.Fragments.RejectedOwnerHistory;
 import com.example.joane14.myapplication.Fragments.RejectedRenterHistory;
+import com.example.joane14.myapplication.Fragments.RejectedSwapHistory;
+import com.example.joane14.myapplication.Fragments.RentHistoryFrag;
 import com.example.joane14.myapplication.Fragments.RequestReceivedFrag;
+import com.example.joane14.myapplication.Fragments.SwapHistory;
 import com.example.joane14.myapplication.Model.User;
 import com.example.joane14.myapplication.R;
 import com.example.joane14.myapplication.Utilities.SPUtility;
@@ -50,7 +54,11 @@ public class HistoryActivity extends AppCompatActivity
         CompletedRenterHistory.OnCompletedRenterHistoryInteractionListener,
         CompletedOwnerHistory.OnCompletedOwnerHistoryInteractionListener,
         RejectedOwnerHistory.OnRejectedOwnerHistoryInteractionListener,
-        RejectedRenterHistory.OnRejectedRenterHistoryInteractionListener{
+        RejectedRenterHistory.OnRejectedRenterHistoryInteractionListener,
+        RentHistoryFrag.OnRentHistoryInteractionListener,
+        SwapHistory.OnSwapHistoryInteractionListener,
+        CompletedSwapHistory.OnCompletedSwapHistoryInteractionListener,
+        RejectedSwapHistory.OnRejectedSwapHistoryInteractionListener{
 
     User userModel;
     private TabLayout tabLayout;
@@ -100,8 +108,8 @@ public class HistoryActivity extends AppCompatActivity
 
     private void setupViewPager(ViewPager viewPager) {
         HistoryActivity.ViewPagerAdapter adapter = new HistoryActivity.ViewPagerAdapter(getSupportFragmentManager());
-        adapter.addFragment(new CompletedHistory(), "Completed");
-        adapter.addFragment(new RejectedHistory(), "Rejected");
+        adapter.addFragment(new RentHistoryFrag(), "Rent");
+        adapter.addFragment(new SwapHistory(), "Swap");
         viewPager.setAdapter(adapter);
     }
 
@@ -193,6 +201,26 @@ public class HistoryActivity extends AppCompatActivity
 
     @Override
     public void OnRejectedRenterHistoryOnClick(Uri uri) {
+
+    }
+
+    @Override
+    public void OnCompletedSwapHistoryOnClick(Uri uri) {
+
+    }
+
+    @Override
+    public void OnSwapHistoryOnClick(Uri uri) {
+
+    }
+
+    @Override
+    public void OnRentHistoryOnClick(Uri uri) {
+
+    }
+
+    @Override
+    public void OnRejectedSwapHistoryOnClick(Uri uri) {
 
     }
 

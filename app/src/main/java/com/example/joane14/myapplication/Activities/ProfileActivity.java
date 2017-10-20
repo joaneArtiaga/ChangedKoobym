@@ -310,9 +310,11 @@ public class ProfileActivity extends AppCompatActivity implements
         RequestQueue requestQueue = Volley.newRequestQueue(this);
         String URL = String.format(Constants.GOOGLE_API_SEARCH_URL, query);
 
-        Log.d("BOOK URL", URL);
+        String URL1 = URL+"&maxResults=40";
+        Log.d("BOOKURL", URL1);
 
-        StringRequest stringRequest = new StringRequest(Request.Method.GET, URL, new Response.Listener<String>() {
+
+        StringRequest stringRequest = new StringRequest(Request.Method.GET, URL1, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
                 Log.d("GOOGLEBOOK", response);

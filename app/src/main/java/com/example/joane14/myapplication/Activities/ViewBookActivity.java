@@ -67,9 +67,9 @@ public class ViewBookActivity extends AppCompatActivity implements
     Bundle bundle;
     RentalDetail rentalDetail;
     List<RentalHeader> rentalHeaderList;
-    TextView mBookTitle, mOwnerName;
+    TextView mBookTitle, mOwnerName, mCondition;
     TextView mBookAuthor;
-    TextView mBookDescription;
+    TextView mBookDescription, mPrice, mLockIn;
     ImageView imageView, mViewMeetUp, mRatings, mGenres, mRenters, mOwnerImg;
     ImageButton mBtnRequest;
     Dialog listDialog;
@@ -118,6 +118,9 @@ public class ViewBookActivity extends AppCompatActivity implements
 
         mOwnerImg = (ImageView) findViewById(R.id.ownerImg);
         mOwnerName = (TextView) findViewById(R.id.ownerName);
+        mPrice = (TextView) findViewById(R.id.bookPrice);
+        mLockIn = (TextView) findViewById(R.id.lockInPrice);
+        mCondition = (TextView) findViewById(R.id.condition);
         imageView = (ImageView) findViewById(R.id.vbBookImg);
         mRatings = (ImageView) findViewById(R.id.ivVbViewRating);
         mGenres = (ImageView) findViewById(R.id.ivVbViewGenre);
@@ -194,7 +197,10 @@ public class ViewBookActivity extends AppCompatActivity implements
                 }else{
                     author="Unknown Author";
                 }
+                mPrice.setText(String.format("%.2f",rentalDetail.getCalculatedPrice()));
+                mLockIn.setText(String.format("%.2f",rentalDetail.getCalculatedPrice()/2));
                 Log.d("RentalAuthor", author);
+                mCondition.setText(rentalDetail.getBookOwner().getStatusDescription());
                 mBookAuthor.setText(author);
                 Log.d("RentalBookDescription", rentalDetail.getBookOwner().getBookObj().getBookDescription().toString());
                 mBookDescription.setText((rentalDetail.getBookOwner().getBookObj().getBookDescription().toString()));

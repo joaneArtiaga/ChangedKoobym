@@ -137,6 +137,7 @@ public class AddBookOwner extends AppCompatActivity {
                     rentalDetail.setCalculatedPrice(calculatePrice());
                     addBook(true);
                 }else if(catPos==1){
+                    mSpinnerDays.setEnabled(false);
                     swapDetail.setBookOwner(bookOwnerModel);
                     swapDetail.setSwapDescription(mBookCondition.getText().toString());
                     swapDetail.setSwapPrice(calculatePrice());

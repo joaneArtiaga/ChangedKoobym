@@ -53,7 +53,6 @@ public class SwapTransaction extends Fragment {
 
 
         RentTransaction.Adapter adapter = new RentTransaction.Adapter(getChildFragmentManager());
-        adapter.addFragment(new ToApproveFrag(), "To Approve");
         adapter.addFragment(new ToDeliverSwapFrag(), "To Deliver");
         adapter.addFragment(new ToReceiveSwapFrag(), "To Receive");
         adapter.addFragment(new CompleteSwapFrag(), "Complete");

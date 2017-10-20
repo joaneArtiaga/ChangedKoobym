@@ -275,10 +275,12 @@ public class MainActivity extends AppCompatActivity {
                 }else{
                     Log.d("FBUser", "exist");
                     User user = gson.fromJson(response, User.class);
+                    Log.d("Fbuser", user.toString());
                     SPUtility.getSPUtil(MainActivity.this).putObject("USER_OBJECT", user);
                     Intent intent = new Intent(MainActivity.this, LandingPage.class);
                     Bundle bundle = new Bundle();
                     bundle.putBoolean("fromRegister", false);
+                    intent.putExtra("user", bundle);
                     startActivity(intent);
                 }
 

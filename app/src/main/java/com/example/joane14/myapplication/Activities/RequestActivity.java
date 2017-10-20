@@ -27,9 +27,13 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.example.joane14.myapplication.Fragments.ApprovedSwapFrag;
 import com.example.joane14.myapplication.Fragments.Constants;
 import com.example.joane14.myapplication.Fragments.MyRequestFrag;
+import com.example.joane14.myapplication.Fragments.RequestFrag;
 import com.example.joane14.myapplication.Fragments.RequestReceivedFrag;
+import com.example.joane14.myapplication.Fragments.SwapRequestFrag;
+import com.example.joane14.myapplication.Fragments.ToApproveFrag;
 import com.example.joane14.myapplication.Model.User;
 import com.example.joane14.myapplication.R;
 import com.example.joane14.myapplication.Utilities.SPUtility;
@@ -42,7 +46,11 @@ import java.util.List;
 public class RequestActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener,
         MyRequestFrag.OnMyRequestInteractionListener,
-        RequestReceivedFrag.OnRequestReceivedInteractionListener{
+        RequestReceivedFrag.OnRequestReceivedInteractionListener,
+        SwapRequestFrag.OnSwapRequestInteractionListener,
+        RequestFrag.OnRequestFragInteractionListener,
+        ApprovedSwapFrag.OnApprovedSwapInteractionListener,
+        ToApproveFrag.OnToApproveInteractionListener{
 
 
     ImageView profileImg;
@@ -97,12 +105,12 @@ public class RequestActivity extends AppCompatActivity
 
     }
 
-    private void setupViewPager(ViewPager viewPager) {
-        ViewPagerAdapter adapter = new ViewPagerAdapter(getSupportFragmentManager());
-        adapter.addFragment(new MyRequestFrag(), "My Requests");
-        adapter.addFragment(new RequestReceivedFrag(), "Requests Received");
-        viewPager.setAdapter(adapter);
-    }
+        private void setupViewPager(ViewPager viewPager) {
+            ViewPagerAdapter adapter = new ViewPagerAdapter(getSupportFragmentManager());
+            adapter.addFragment(new RequestFrag(), "Rent");
+            adapter.addFragment(new SwapRequestFrag(), "Swap");
+            viewPager.setAdapter(adapter);
+        }
 
 
     @SuppressWarnings("StatementWithEmptyBody")
@@ -173,6 +181,26 @@ public class RequestActivity extends AppCompatActivity
 
     @Override
     public void onRequestReceivedOnClick(Uri uri) {
+
+    }
+
+    @Override
+    public void OnSwapRequestOnClick(Uri uri) {
+
+    }
+
+    @Override
+    public void OnRequestFragOnClick(Uri uri) {
+
+    }
+
+    @Override
+    public void OnApprovedSwapOnCllick(Uri uri) {
+
+    }
+
+    @Override
+    public void ontToApproveOnClick(Uri uri) {
 
     }
 

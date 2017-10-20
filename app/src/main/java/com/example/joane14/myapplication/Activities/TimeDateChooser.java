@@ -317,7 +317,7 @@ public class TimeDateChooser extends AppCompatActivity {
             public void onResponse(String response) {
                 Log.d("onResponse addSwapH", "inside");
                 Log.i("AddSwapHeader", response);
-                Intent intent = new Intent(TimeDateChooser.this, RequestActivity.class);
+                Intent intent = new Intent(TimeDateChooser.this, MyShelf.class);
                 startActivity(intent);
 
             }

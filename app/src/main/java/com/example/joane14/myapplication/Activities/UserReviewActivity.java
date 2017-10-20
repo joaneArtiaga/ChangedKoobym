@@ -1,6 +1,7 @@
 package com.example.joane14.myapplication.Activities;
 
 import android.annotation.SuppressLint;
+import android.content.Intent;
 import android.icu.text.SimpleDateFormat;
 import android.net.Uri;
 import android.support.v4.app.FragmentManager;
@@ -92,8 +93,8 @@ public class UserReviewActivity extends AppCompatActivity implements DisplayUser
                 Log.d("SelectedRate", mSelected);
                 rate.setRateNumber(Integer.parseInt(mSelected));
                 rate.setRateTimeStamp(date);
-                userRating.setUser(rentalHeader.getRentalDetail().getBookOwner().getUserObj());
-                userRating.setUserRater(user);
+                userRating.setUser(user);
+                userRating.setUserRater(rentalHeader.getRentalDetail().getBookOwner().getUserObj());
                 userRating.setRate(rate);
             }
 
@@ -134,6 +135,13 @@ public class UserReviewActivity extends AppCompatActivity implements DisplayUser
             @Override
             public void onResponse(String response) {
                 Log.i("bookOwnerReviewAdd", response);
+
+                Intent intent = new Intent(UserReviewActivity.this, ProfileActivity.class);
+                Bundle bundlePass = new Bundle();
+                bundlePass.putSerializable("userModelPass", rentalHeader.getRentalDetail().getBookOwner().getUserObj());
+                startActivity(intent);
+
+
             }
         }, new Response.ErrorListener() {
             @Override

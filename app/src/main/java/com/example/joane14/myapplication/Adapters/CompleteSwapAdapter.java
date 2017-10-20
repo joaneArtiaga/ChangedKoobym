@@ -68,7 +68,7 @@ public class CompleteSwapAdapter extends RecyclerView.Adapter<CompleteSwapAdapte
         }
 
         holder.mMU.setText(bookList.get(position).getLocation().getLocationName());
-        holder.mPrice.setText(String.valueOf(bookList.get(position).getSwapDetail().getSwapPrice()));
+        holder.mPrice.setText(String.format("%.2f", bookList.get(position).getSwapDetail().getBookOwner().getBookObj().getBookOriginalPrice()));
 
 //        if(bookList.get(position).getUser()==null){
 //            holder.mRenter.setText("Renter not Found");
@@ -76,7 +76,7 @@ public class CompleteSwapAdapter extends RecyclerView.Adapter<CompleteSwapAdapte
 //            holder.mRenter.setText(bookList.get(position).getUser().getUserFname()+" "+bookList.get(position).getUser().getUserLname());
 //        }
 
-        holder.mReminder.setText("Receive book on "+ bookList.get(position).getDateTimeStamp());
+        holder.mReminder.setText("Receive book on "+ bookList.get(position).getDateTimeStamp()+", "+bookList.get(position).getUserDayTime().getDay().getStrDay()+" at "+bookList.get(position).getUserDayTime().getTime().getStrTime());
 
 
 //        Picasso.with(context).load(String.format(Constants.IMAGE_URL, bookList.get(position).getUser().getImageFilename())).fit().into(holder.mIvRenter);

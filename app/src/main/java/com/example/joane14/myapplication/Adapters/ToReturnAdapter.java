@@ -68,7 +68,8 @@ public class ToReturnAdapter extends RecyclerView.Adapter<ToReturnAdapter.BookHo
 //            holder.mRenter.setText(bookList.get(position).getUserId().getUserFname()+" "+bookList.get(position).getUserId().getUserLname());
 //        }
 
-        holder.mReminder.setText("Deliver book "+bookList.get(position).getRentalTimeStamp());
+        holder.mReminder.setText("Deliver book "+bookList.get(position).getRentalTimeStamp()+", "+bookList.get(position).getUserDayTime().getDay().getStrDay()+" at "+bookList.get(position).getUserDayTime().getTime().getStrTime());
+
 
         DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
         Date date = null;
