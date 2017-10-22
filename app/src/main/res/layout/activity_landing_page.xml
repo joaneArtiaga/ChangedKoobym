@@ -4,20 +4,11 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/background"
+    android:background="@color/colorDark"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
     tools:context="com.example.joane14.myapplication.Activities.LandingPage"
     tools:showIn="@layout/app_bar_landing_page">
 
-    <android.support.design.widget.BottomNavigationView
-        android:id="@+id/lpnavigation"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:background="@color/colorDark"
-        app:itemIconTint="@color/colorLightOrange"
-        app:itemTextColor="@color/colorLightOrange"
-        app:menu="@menu/navigation"/>
 
     <android.support.v4.widget.DrawerLayout xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"

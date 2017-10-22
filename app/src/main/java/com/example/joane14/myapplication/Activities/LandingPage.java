@@ -76,70 +76,70 @@ public class LandingPage extends AppCompatActivity
 
         final TextView mTitle = (TextView) findViewById(R.id.lpTitle);
 
-        BottomNavigationView bottomNavigationView = (BottomNavigationView)
-                findViewById(R.id.lpnavigation);
-
-        if(bottomNavigationView==null){
-            Log.d("bottomNavView", "is null");
-        }else{
-            Log.d("bottomNavView", "is not null");
-        }
-
-
-        bottomNavigationView.setOnNavigationItemSelectedListener
-                (new BottomNavigationView.OnNavigationItemSelectedListener() {
-                    @Override
-                    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-                        Fragment selectedFragment = null;
-                        switch (item.getItemId()) {
-                            case R.id.navigation_rent:
-                                if (mBundleLogin.getBoolean("fromRegister") == true) {
-                                    Log.d("inside", "TRUEfromRegister");
-                                    mTitle.setText("Most Rented Books");
-//                                    fragmentManager = getSupportFragmentManager();
-                                    selectedFragment = MostRentedBookFrag.newInstance();
-//                                    FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-//                                    fragmentTransaction.replace(R.id.fragment_landing_container, MostRentedBookFrag.newInstance(), mrbf.getTag());
-//                                    fragmentTransaction.commit();
-                                    FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-                                    transaction.replace(R.id.fragment_landing_container, selectedFragment);
-                                    transaction.commit();
-                                } else {
-                                    mTitle.setText("Suggested Books");
-                                    Log.d("PrefFrag", "else inside");
-                                    bundlePass.putSerializable("userModelPass", userModel);
-                                    Log.d("userModelPass1st", userModel.toString());
-//                                    fragmentManager = getSupportFragmentManager();
-                                    selectedFragment = PreferencesFrag.newInstance(bundlePass);
-//                                    FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-//                                    fragmentTransaction.replace(R.id.fragment_landing_container, prefFrag, prefFrag.getTag());
-//                                    fragmentTransaction.commit();
-                                    FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-                                    transaction.replace(R.id.fragment_landing_container, selectedFragment);
-                                    transaction.commit();
-
-
-                                }
-                                break;
-                            case R.id.navigation_swap:
-                                mTitle.setText("Books for Swap");
-                                selectedFragment = SwapLandingPageFrag.newInstance();
-                                FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-                                transaction.replace(R.id.fragment_landing_container, selectedFragment);
-                                transaction.commit();
-
-                            break;
-//                            case R.id.navigation_auction:
-//                                Toast.makeText(LandingPage.this, "Auction not yet implemented", Toast.LENGTH_SHORT).show();
-////                                selectedFragment = AuctionShelfFragment.newInstance();
+//        BottomNavigationView bottomNavigationView = (BottomNavigationView)
+//                findViewById(R.id.lpnavigation);
 //
+//        if(bottomNavigationView==null){
+//            Log.d("bottomNavView", "is null");
+//        }else{
+//            Log.d("bottomNavView", "is not null");
+//        }
+//
+//
+//        bottomNavigationView.setOnNavigationItemSelectedListener
+//                (new BottomNavigationView.OnNavigationItemSelectedListener() {
+//                    @Override
+//                    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+//                        Fragment selectedFragment = null;
+//                        switch (item.getItemId()) {
+//                            case R.id.navigation_rent:
+//                                if (mBundleLogin.getBoolean("fromRegister") == true) {
+//                                    Log.d("inside", "TRUEfromRegister");
+//                                    mTitle.setText("Most Rented Books");
+////                                    fragmentManager = getSupportFragmentManager();
+//                                    selectedFragment = MostRentedBookFrag.newInstance();
+////                                    FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+////                                    fragmentTransaction.replace(R.id.fragment_landing_container, MostRentedBookFrag.newInstance(), mrbf.getTag());
+////                                    fragmentTransaction.commit();
+//                                    FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+//                                    transaction.replace(R.id.fragment_landing_container, selectedFragment);
+//                                    transaction.commit();
+//                                } else {
+//                                    mTitle.setText("Suggested Books");
+//                                    Log.d("PrefFrag", "else inside");
+//                                    bundlePass.putSerializable("userModelPass", userModel);
+//                                    Log.d("userModelPass1st", userModel.toString());
+////                                    fragmentManager = getSupportFragmentManager();
+//                                    selectedFragment = PreferencesFrag.newInstance(bundlePass);
+////                                    FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+////                                    fragmentTransaction.replace(R.id.fragment_landing_container, prefFrag, prefFrag.getTag());
+////                                    fragmentTransaction.commit();
+//                                    FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+//                                    transaction.replace(R.id.fragment_landing_container, selectedFragment);
+//                                    transaction.commit();
+//
+//
+//                                }
 //                                break;
-                        }
-
-                        return true;
-
-                    }
-                });
+//                            case R.id.navigation_swap:
+//                                mTitle.setText("Books for Swap");
+//                                selectedFragment = SwapLandingPageFrag.newInstance();
+//                                FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+//                                transaction.replace(R.id.fragment_landing_container, selectedFragment);
+//                                transaction.commit();
+//
+//                            break;
+////                            case R.id.navigation_auction:
+////                                Toast.makeText(LandingPage.this, "Auction not yet implemented", Toast.LENGTH_SHORT).show();
+//////                                selectedFragment = AuctionShelfFragment.newInstance();
+////
+////                                break;
+//                        }
+//
+//                        return true;
+//
+//                    }
+//                });
 
         Log.d("Inside", "landing page");
 

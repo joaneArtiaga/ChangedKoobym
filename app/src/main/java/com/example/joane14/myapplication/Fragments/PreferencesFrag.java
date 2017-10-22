@@ -19,6 +19,7 @@ import com.android.volley.toolbox.StringRequest;
 import com.example.joane14.myapplication.Activities.GsonDateDeserializer;
 import com.example.joane14.myapplication.Adapters.LandingPageAdapter;
 import com.example.joane14.myapplication.Adapters.PrefferedAdapter;
+import com.example.joane14.myapplication.Model.GenreModel;
 import com.example.joane14.myapplication.Model.RentalDetail;
 import com.example.joane14.myapplication.Model.User;
 import com.example.joane14.myapplication.R;
@@ -68,6 +69,7 @@ public class PreferencesFrag extends Fragment {
 
         mGridView = (GridView) view.findViewById(R.id.preffered_gridview);
         mAdapter = new PrefferedAdapter(getContext(), suggested);
+        mGridView.setAdapter(mAdapter);
         Log.d("userId$#23", String.valueOf(userObj.getUserId()));
         getSuggested(userObj.getUserId());
 
@@ -84,8 +86,8 @@ public class PreferencesFrag extends Fragment {
             public void onResponse(String response) {
                 Log.d("Inside get suggested", response);
                 Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd").registerTypeAdapter(Date.class, GsonDateDeserializer.getInstance()).create();
-                suggested.clear();
-                suggested.addAll(Arrays.asList(gson.fromJson(response, RentalDetail[].class)));
+                RentalDetail[] rentalDetails = gson.fromJson(response, RentalDetail[].class);
+                suggested.addAll(Arrays.asList(rentalDetails));
                 mAdapter.notifyDataSetChanged();
             }
         }, new Response.ErrorListener() {

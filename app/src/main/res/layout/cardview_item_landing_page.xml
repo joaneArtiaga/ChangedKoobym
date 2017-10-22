@@ -1,55 +1,64 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:gravity="center"
-            android:orientation="vertical">
+    android:layout_height="250dp"
+    android:background="#FFFF"
+    android:orientation="vertical"
+    android:padding="10dp">
 
 
-            <ImageView
-                android:id="@+id/displayBookPic"
-                android:layout_width="50dp"
-                android:layout_height="70dp"
-                android:layout_alignParentLeft="true"
-                android:layout_alignParentStart="true"
-                android:layout_alignParentTop="true"
-                app:srcCompat="@mipmap/ic_launcher" />
+    <ImageView
+        android:id="@+id/displayBookPic"
+        android:layout_width="50dp"
+        android:layout_height="70dp"
+        android:layout_alignParentTop="true"
+        android:layout_gravity="center_horizontal"
+        app:srcCompat="@mipmap/ic_launcher" />
 
 
-                <TextView
-                    android:id="@+id/lpBookTitle"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="Book Title"
-                    android:textColor="@color/colorOrange"
-                    android:textSize="18sp"
-                    android:textStyle="bold"
-                    android:gravity="center"/>
+    <TextView
+        android:id="@+id/lpBookTitle"
+        android:layout_width="150dp"
+        android:layout_height="wrap_content"
+        android:gravity="center_horizontal"
+        android:lines="1"
+        android:text="Book Title"
+        android:textColor="@color/colorOrange"
+        android:textSize="16sp"
+        android:textStyle="bold"
+        android:layout_marginTop="3dp"/>
 
-                <TextView
-                    android:id="@+id/lpAuthor"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="Book Author"
-                    android:textColor="@color/colorDark"
-                    android:textSize="17sp"
-                    android:textStyle="italic"
-                    android:gravity="center"/>
+    <TextView
+        android:id="@+id/lpAuthor"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_horizontal"
+        android:lines="1"
+        android:text="Book Author"
+        android:textColor="@color/colorDark"
+        android:textSize="14sp"
+        android:textStyle="italic" />
 
-                <TextView
-                    android:id="@+id/lpBookPrice"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="Book Price"
-                    android:textColor="@color/colorDark"
-                    android:textSize="17sp"
-                    android:gravity="center"/>
+    <TextView
+        android:id="@+id/lpBookPrice"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_horizontal"
+        android:text="Book Price"
+        android:textColor="@color/colorDark"
+        android:textSize="14sp" />
 
-            </LinearLayout>
-</RelativeLayout>
+    <RatingBar
+        android:id="@+id/rating_bookRating"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:isIndicator="true"
+        android:numStars="5"
+        android:stepSize="0.2"
+        android:theme="@style/RatingBar"
+        style="?android:attr/ratingBarStyleSmall"
+        android:progressTint="@color/colorLightOrange"/>
+
+</LinearLayout>
