@@ -111,5 +111,8 @@ public class Constants {
 
     public static final String GET_COMPLETE_SWAP_HEADER = "http://104.197.4.32:8080/Koobym/swapHeader/completeById/";
 
+    public static final String GET_RATINGS = "http://104.197.4.32:8080/Koobym/bookOwnerReview/getAverageRatingOfBookOwner/";
+
+    public static final String GET_COUNT = "http://104.197.4.32:8080/Koobym/rentalHeader/getCount/";
 
 }

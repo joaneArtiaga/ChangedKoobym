@@ -15,6 +15,7 @@
         android:id="@+id/lpTitle"
         android:layout_marginTop="15dp"
         android:gravity="center_horizontal"
+        android:textColor="@color/colorLightOrange"
         android:textSize="30dp"/>
 
     <FrameLayout

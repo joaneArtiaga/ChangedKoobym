@@ -94,7 +94,9 @@
             android:name=".Activities.SwapMeetUpChooser"
             android:label="@string/title_activity_swap_meet_up_chooser" />
         <activity android:name=".Activities.AddBookOwner" />
-        <activity android:name=".Activities.HistoryActivity"></activity>
+        <activity android:name=".Activities.HistoryActivity" />
+        <activity android:name=".Activities.ViewBookAct"
+            android:theme="@style/AppTheme.NoActionBar"></activity>
     </application>
 
 </manifest>
