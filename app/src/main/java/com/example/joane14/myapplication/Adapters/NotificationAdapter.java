@@ -85,10 +85,12 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
         UserNotification userNotification = userNotificationList.get(position);
 
         String message = "";
-        if(userNotificationList.get(position).getActionStatus().equals("Request")){
+        if(userNotificationList.get(position).getActionStatus().equals("request")||userNotificationList.get(position).getActionStatus().equals("Request")){
             message = userNotification.getUserPerformer().getUserFname()+" "+userNotification.getUserPerformer().getUserLname()+" "+userNotification.getActionStatus()+"ed your book "+userNotification.getBookActionPerformedOn().getBookObj().getBookTitle();
         }else if(userNotification.getActionStatus().equals("Approved")){
             message = userNotification.getUserPerformer().getUserFname()+" "+userNotification.getUserPerformer().getUserLname()+" "+userNotification.getActionStatus()+" your request of the book "+userNotification.getBookActionPerformedOn().getBookObj().getBookTitle();
+        }else if(userNotification.getActionStatus().equals("Confirm")){
+            message = userNotification.getUserPerformer().getUserFname()+" "+userNotification.getUserPerformer().getUserLname()+" "+userNotification.getActionStatus()+" the meet up location and time with the book "+userNotification.getBookActionPerformedOn().getBookObj().getBookTitle();
         }
 
         holder.mMessage.setText(message);
@@ -365,7 +367,6 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
 
         requestQueue.add(stringRequest);
     }
-
 
 
 }

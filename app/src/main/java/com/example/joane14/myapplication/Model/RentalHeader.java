@@ -35,9 +35,33 @@ public class RentalHeader implements Serializable {
 
     UserDayTime userDayTime;
 
-    String dateApproved;
+    String dateApproved, dateConfirmed, rentalEndDate, dateDeliver;
 
     MeetUp meetUp;
+
+    public String getDateDeliver() {
+        return dateDeliver;
+    }
+
+    public void setDateDeliver(String dateDeliver) {
+        this.dateDeliver = dateDeliver;
+    }
+
+    public String getRentalEndDate() {
+        return rentalEndDate;
+    }
+
+    public void setRentalEndDate(String rentalEndDate) {
+        this.rentalEndDate = rentalEndDate;
+    }
+
+    public String getDateConfirmed() {
+        return dateConfirmed;
+    }
+
+    public void setDateConfirmed(String dateConfirmed) {
+        this.dateConfirmed = dateConfirmed;
+    }
 
     public MeetUp getMeetUp() {
         return meetUp;

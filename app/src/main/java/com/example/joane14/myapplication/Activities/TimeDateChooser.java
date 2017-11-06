@@ -39,9 +39,12 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
 import java.io.UnsupportedEncodingException;
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+
+import static android.util.Log.d;
 
 public class TimeDateChooser extends AppCompatActivity {
 
@@ -260,6 +263,8 @@ public class TimeDateChooser extends AppCompatActivity {
 
                         if(fromWhere.equals("rent")){
 
+                            rentalHeader.setDateDeliver(nextDateStr);
+
                             rentalHeaderModel.setStatus("Confirmation");
                             rentalHeaderModel.setRentalDetail(rentalHeader.getRentalDetail());
                             rentalHeaderModel.setUserId(user);
@@ -424,10 +429,42 @@ public class TimeDateChooser extends AppCompatActivity {
         Log.v("LOG_VOLLEY", mRequestBody);
         d("RentalHeaderVolley", mRequestBody);
         StringRequest stringRequest = new StringRequest(Request.Method.POST, URL, new Response.Listener<String>() {
+            @SuppressLint("NewApi")
             @Override
             public void onResponse(String response) {
                 Log.d("MeetUpResponse", "inside");
                 Log.i("MeetUpResponse", response);
+                MeetUp meetUp = gson.fromJson(response, MeetUp.class);
+                rentalHeader.setMeetUp(meetUp);
+
+                @SuppressLint({"NewApi", "LocalSuppress"})
+                Calendar c = Calendar.getInstance();
+
+                @SuppressLint({"NewApi", "LocalSuppress"})
+                String date = new SimpleDateFormat("yyyy-MM-dd").format(new Date());
+
+                Log.d("CurrDate", date);
+                rentalHeader.setDateConfirmed(date);
+                rentalHeader.setStatus("Confirm");
+
+                java.text.DateFormat df = new java.text.SimpleDateFormat("yyyy-MM-dd");
+                Date date1 = null;
+                String newDate="";
+                try {
+                    date1 = df.parse(rentalHeader.getDateDeliver());
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                }
+                @SuppressLint({"NewApi", "LocalSuppress"})
+                Calendar calendar = Calendar.getInstance();
+                calendar.setTime(date1);
+                calendar.add(calendar.DATE, rentalHeader.getRentalDetail().getDaysForRent());
+                newDate = df.format(calendar.getTime());
+
+                rentalHeader.setRentalEndDate(newDate);
+
+                updateRentalHeader(rentalHeader);
+
 
             }
         }, new Response.ErrorListener() {
@@ -455,5 +492,56 @@ public class TimeDateChooser extends AppCompatActivity {
 
         requestQueue.add(stringRequest);
     }
+
+    public void updateRentalHeader(RentalHeader rentHeader){
+        RequestQueue requestQueue = Volley.newRequestQueue(this);
+//        String URL = "http://104.197.4.32:8080/Koobym/user/add";
+        User user = new User();
+        user = (User) SPUtility.getSPUtil(this).getObject("USER_OBJECT", User.class);
+
+        String URL = Constants.PUT_RENTAL_HEADER;
+
+        d("putRentalHeader", URL);
+//        String URL = Constants.WEB_SERVICE_URL+"user/add";
+
+
+        final Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd").registerTypeAdapter(Date.class, GsonDateDeserializer.getInstance()).create();
+        final String mRequestBody = gson.toJson(rentHeader);
+
+
+        d("LOG_VOLLEY", mRequestBody);
+        final User finalUser = user;
+        StringRequest stringRequest = new StringRequest(Request.Method.PUT, URL, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                d("rentalHeaderResponseUD", response);
+                RentalHeader rentalHeaderMod = gson.fromJson(response, RentalHeader.class);
+
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.e("LOG_VOLLEY", error.toString());
+            }
+        }) {
+            @Override
+            public String getBodyContentType() {
+                return "application/json; charset=utf-8";
+            }
+
+            @Override
+            public byte[] getBody() throws AuthFailureError {
+                try {
+                    return mRequestBody == null ? null : mRequestBody.getBytes("utf-8");
+                } catch (UnsupportedEncodingException uee) {
+                    VolleyLog.wtf("Unsupported Encoding while trying to get the bytes of %s using %s", mRequestBody, "utf-8");
+                    return null;
+                }
+            }
+        };
+
+        requestQueue.add(stringRequest);
+    }
+
 
 }

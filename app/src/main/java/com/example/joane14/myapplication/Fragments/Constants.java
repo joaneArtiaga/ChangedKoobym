@@ -7,7 +7,7 @@ package com.example.joane14.myapplication.Fragments;
 public class Constants {
 
 
-    public static final String WEB_SERVICE_URL = "http://192.168.1.8:8080/Koobym/";
+    public static final String WEB_SERVICE_URL = "http://104.198.152.85/Koobym/";
 
     public static final String IMAGE_URL = WEB_SERVICE_URL + "image/%s";
 
@@ -126,5 +126,7 @@ public class Constants {
     public static final String GET_BOOK_OWNER_SWAP_DETAIL = WEB_SERVICE_URL + "swapDetail/getSwapDetail/";
 
     public static final String GET_RECOMMENDATION = WEB_SERVICE_URL + "bookOwner/suggestedBooks/";
+
+    public static final String PUT_RENTAL_HEADER = WEB_SERVICE_URL + "rentalHeader/update";
 
 }

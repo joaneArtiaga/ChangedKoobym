@@ -155,7 +155,8 @@ public class ViewBookAct extends AppCompatActivity implements
             mContent.setText(rentalDetailModel.getBookOwner().getBookObj().getBookDescription());
             mCondition.setText(rentalDetailModel.getBookOwner().getStatusDescription());
 
-            getRatings();
+            mRating.setRating(Float.parseFloat(String.valueOf(rentalDetailModel.getBookOwner().getRate())));
+
             getCount();
 
             Bundle bundle = new Bundle();
@@ -187,6 +188,8 @@ public class ViewBookAct extends AppCompatActivity implements
             swapDetail = (SwapDetail) getIntent().getExtras().getSerializable("swapBook");
 
             mTitle.setText(swapDetail.getBookOwner().getBookObj().getBookTitle());
+
+            mRating.setRating(Float.parseFloat(String.valueOf(swapDetail.getBookOwner().getRate())));
 
 //            mLPrice.setText(String.valueOf(swapDetail.getSwapPrice()));
 //            mRPrice.setText(String.valueOf(swapDetail.getSwapPrice()/2));
