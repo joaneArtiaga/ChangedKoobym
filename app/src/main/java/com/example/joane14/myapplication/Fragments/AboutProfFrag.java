@@ -5,6 +5,8 @@ import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -70,9 +72,19 @@ public class AboutProfFrag extends Fragment {
         mAddress.setText(user.getAddress());
         mPhone.setText(user.getPhoneNumber());
 
+
         @SuppressLint({"NewApi", "LocalSuppress"})
         android.icu.text.DateFormat dateFormat = android.icu.text.DateFormat.getDateInstance();
         mBirth.setText(dateFormat.format(user.getBirthdate()));
+
+        Bundle bundle = new Bundle();
+        bundle.putSerializable("user", user);
+        FragmentManager fragmentManager = getFragmentManager();
+        DisplayUserReview mrbf = DisplayUserReview.newInstance(bundle);
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+        fragmentTransaction.replace(R.id.fragment_container_userReview, mrbf);
+        fragmentTransaction.commit();
+
         return view;
     }
 

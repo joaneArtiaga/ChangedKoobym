@@ -20,12 +20,12 @@ import com.android.volley.VolleyLog;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.example.joane14.myapplication.Activities.GsonDateDeserializer;
-import com.example.joane14.myapplication.Adapters.ReviewAdapter;
-import com.example.joane14.myapplication.Adapters.UserReviewAdapter;
-import com.example.joane14.myapplication.Model.BookOwnerReview;
+import com.example.joane14.myapplication.Adapters.CompleteSwapAdapter;
+import com.example.joane14.myapplication.Adapters.NotificationAdapter;
 import com.example.joane14.myapplication.Model.RentalHeader;
+import com.example.joane14.myapplication.Model.SwapHeader;
 import com.example.joane14.myapplication.Model.User;
-import com.example.joane14.myapplication.Model.UserRating;
+import com.example.joane14.myapplication.Model.UserNotification;
 import com.example.joane14.myapplication.R;
 import com.example.joane14.myapplication.Utilities.SPUtility;
 import com.google.gson.Gson;
@@ -37,25 +37,20 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
+public class NotificationFrag extends Fragment {
 
-public class DisplayUserReview extends Fragment {
-
-
-
-    User user;
-    List<UserRating> userRatingList;
+    List<UserNotification> userNotificationList;
     private RecyclerView mRecyclerView;
     private RecyclerView.Adapter mAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
 
-    private OnUserReviewInteractionListener mListener;
+    private OnNotificationInteractionListener mListener;
 
-    public DisplayUserReview() {
+    public NotificationFrag() {
     }
 
-    public static DisplayUserReview newInstance(Bundle bundle) {
-        DisplayUserReview fragment = new DisplayUserReview();
-        fragment.setArguments(bundle);
+    public static NotificationFrag newInstance() {
+        NotificationFrag fragment = new NotificationFrag();
         return fragment;
     }
 
@@ -67,47 +62,47 @@ public class DisplayUserReview extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_display_user_review, container, false);
+        View view = inflater.inflate(R.layout.fragment_notification, container, false);
 
-        user = new User();
-        user = (User) getArguments().getSerializable("user");
-
-        userRatingList = new ArrayList<UserRating>();
-        mRecyclerView = (RecyclerView) view.findViewById(R.id.my_recycler_view_user_reviews);
+        userNotificationList = new ArrayList<UserNotification>();
+        mRecyclerView = (RecyclerView) view.findViewById(R.id.my_recycler_view_notification);
         mRecyclerView.setHasFixedSize(true);
         mLayoutManager = new LinearLayoutManager(getContext());
         mRecyclerView.setLayoutManager(mLayoutManager);
-        mAdapter = new UserReviewAdapter(userRatingList);
+        mAdapter = new NotificationAdapter(userNotificationList);
         mRecyclerView.setAdapter(mAdapter);
 
-        getUserRating();
+        getNotification();
+
         return view;
+
     }
 
-    public void getUserRating(){
+    public void getNotification(){
         RequestQueue requestQueue = Volley.newRequestQueue(getContext());
 //        String URL = "http://104.197.4.32:8080/Koobym/user/add";
-//        User user = new User();
-//        user = (User) SPUtility.getSPUtil(getContext()).getObject("USER_OBJECT", User.class);
+        User user = new User();
+        user = (User) SPUtility.getSPUtil(getContext()).getObject("USER_OBJECT", User.class);
         Log.d("UserIdReceive", String.valueOf(user.getUserId()));
-        String URL = Constants.GET_USER_REVIEWS+"/"+user.getUserId();
+        String URL = Constants.GET_USER_NOTIFICATION+user.getUserId();
 //        String URL = Constants.WEB_SERVICE_URL+"user/add";
 
-        Log.d("UserReview URL", URL);
+        Log.d("getUserNotif", URL);
+
         final RentalHeader rentalHeader =new RentalHeader();
 
         final Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd").registerTypeAdapter(Date.class, GsonDateDeserializer.getInstance()).create();
         final String mRequestBody = gson.toJson(rentalHeader);
 
 
-        Log.d("LOG_VOLLEY", mRequestBody);
+        Log.d("completeSwap_VOLLEY", mRequestBody);
         StringRequest stringRequest = new StringRequest(Request.Method.GET, URL, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
                 Log.i("ResponseRequestReceived", response);
 //                RentalHeader rentalHeaderModel = gson.fromJson(response, RentalHeader.class);
-                userRatingList.clear();
-                userRatingList.addAll(Arrays.asList(gson.fromJson(response, UserRating[].class)));
+                userNotificationList.clear();
+                userNotificationList.addAll(Arrays.asList(gson.fromJson(response, UserNotification[].class)));
                 mAdapter.notifyDataSetChanged();
             }
         }, new Response.ErrorListener() {
@@ -135,18 +130,17 @@ public class DisplayUserReview extends Fragment {
         requestQueue.add(stringRequest);
     }
 
-
     public void onButtonPressed(Uri uri) {
         if (mListener != null) {
-            mListener.onUserReviewOnClick(uri);
+            mListener.OnNotificationOnClick(uri);
         }
     }
 
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        if (context instanceof OnUserReviewInteractionListener) {
-            mListener = (OnUserReviewInteractionListener) context;
+        if (context instanceof OnNotificationInteractionListener) {
+            mListener = (OnNotificationInteractionListener) context;
         } else {
             throw new RuntimeException(context.toString()
                     + " must implement OnFragmentInteractionListener");
@@ -159,7 +153,9 @@ public class DisplayUserReview extends Fragment {
         mListener = null;
     }
 
-    public interface OnUserReviewInteractionListener {
-        void onUserReviewOnClick(Uri uri);
+
+    public interface OnNotificationInteractionListener {
+        // TODO: Update argument type and name
+        void OnNotificationOnClick(Uri uri);
     }
 }

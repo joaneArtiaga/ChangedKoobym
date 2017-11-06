@@ -10,6 +10,8 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.GridView;
 
 import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
@@ -21,6 +23,7 @@ import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.example.joane14.myapplication.Activities.GsonDateDeserializer;
 import com.example.joane14.myapplication.Adapters.BookOwnerAdapter;
+import com.example.joane14.myapplication.Adapters.DisplayBooksAdapter;
 import com.example.joane14.myapplication.Adapters.LandingPageAdapter;
 import com.example.joane14.myapplication.Adapters.RecyclerAdapterShowBook;
 import com.example.joane14.myapplication.Adapters.UserReviewAdapter;
@@ -44,8 +47,8 @@ public class DisplayMyBooks extends Fragment {
     private OnDisplayMyBooksInteractionListener mListener;
     User user;
     List<BookOwnerModel> bookOwnerModelList;
-    private RecyclerView mRecyclerView;
-    private RecyclerView.Adapter mAdapter;
+    private GridView mGridView;
+    private DisplayBooksAdapter mAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
     public DisplayMyBooks() {
     }
@@ -70,13 +73,17 @@ public class DisplayMyBooks extends Fragment {
         user = (User) getArguments().getSerializable("user");
 
         bookOwnerModelList = new ArrayList<BookOwnerModel>();
-        mRecyclerView = (RecyclerView) view.findViewById(R.id.my_recycler_view_my_books);
-        mRecyclerView.setHasFixedSize(true);
+        mGridView = (GridView) view.findViewById(R.id.display_books_gridview);
         mLayoutManager = new LinearLayoutManager(getContext());
-        mRecyclerView.setLayoutManager(mLayoutManager);
-        mAdapter = new BookOwnerAdapter(bookOwnerModelList);
-        mRecyclerView.setAdapter(mAdapter);
+        mAdapter = new DisplayBooksAdapter(getContext(), bookOwnerModelList);
+        mGridView.setAdapter(mAdapter);
 
+        mGridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Log.d("DisplayGrid", bookOwnerModelList.get(position).getBookObj().getBookTitle());
+            }
+        });
 
         getMyBooks();
         return view;
@@ -85,8 +92,8 @@ public class DisplayMyBooks extends Fragment {
     public void getMyBooks(){
         RequestQueue requestQueue = Volley.newRequestQueue(getContext());
 //        String URL = "http://104.197.4.32:8080/Koobym/user/add";
-        User user = new User();
-        user = (User) SPUtility.getSPUtil(getContext()).getObject("USER_OBJECT", User.class);
+//        User user = new User();
+//        user = (User) SPUtility.getSPUtil(getContext()).getObject("USER_OBJECT", User.class);
         Log.d("UserIdReceive", String.valueOf(user.getUserId()));
         String URL = Constants.GET_MY_BOOKS+"/"+user.getUserId();
 //        String URL = Constants.WEB_SERVICE_URL+"user/add";

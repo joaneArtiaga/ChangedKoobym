@@ -9,5 +9,8 @@
     <color name="colorOrange">#080808</color>
     <color name="colorLightOrange">#ffae39</color>
     <color name="colorTuftBrush">#f2d2c3</color>
+    <color name="colorRent">#53CC04</color>
+    <color name="colorSwap">#ffae39</color>
+    <color name="colorWhite">#FFFF</color>
 
 </resources>

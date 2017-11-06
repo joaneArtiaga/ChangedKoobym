@@ -59,6 +59,16 @@
                     android:layout_height="wrap_content"
                     android:textStyle="italic"/>
 
+                <RatingBar
+                    android:id="@+id/urRating"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:isIndicator="true"
+                    android:numStars="5"
+                    android:stepSize="0.2"
+                    android:theme="@style/RatingBar"
+                    style="?android:attr/ratingBarStyleSmall"
+                    android:progressTint="@color/colorLightOrange"/>
 
             </LinearLayout>
 

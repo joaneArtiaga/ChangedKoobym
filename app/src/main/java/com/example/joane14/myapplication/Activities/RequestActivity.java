@@ -171,6 +171,17 @@ public class RequestActivity extends AppCompatActivity
         SearchView searchView = (SearchView) MenuItemCompat.getActionView(menu.findItem(R.id.action_search));
         MenuItem item = menu.findItem(R.id.action_notifications);
         // searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
+        item.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem item) {
+
+                Intent intent = new Intent(RequestActivity.this, NotificationAct.class);
+                startActivity(intent);
+
+
+                return false;
+            }
+        });
         return super.onCreateOptionsMenu(menu);
     }
 

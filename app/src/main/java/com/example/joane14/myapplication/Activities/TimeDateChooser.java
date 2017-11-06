@@ -26,6 +26,7 @@ import com.android.volley.toolbox.Volley;
 import com.example.joane14.myapplication.Adapters.TimeDateAdapter;
 import com.example.joane14.myapplication.Fragments.Constants;
 import com.example.joane14.myapplication.Model.LocationModel;
+import com.example.joane14.myapplication.Model.MeetUp;
 import com.example.joane14.myapplication.Model.RentalDetail;
 import com.example.joane14.myapplication.Model.RentalHeader;
 import com.example.joane14.myapplication.Model.SwapDetail;
@@ -47,13 +48,14 @@ public class TimeDateChooser extends AppCompatActivity {
     RentalDetail rentalDetail;
     List<UserDayTime> userDayTimeList;
     UserDayTime userDayTimeModel;
-    RentalHeader rentalHeader;
+    RentalHeader rentalHeader, rentalHeaderModel;
     SwapDetail swapDetail;
     SwapHeader swapHeader;
     LocationModel locationChosen;
     User user;
     String nextDateStr, fromWhere;
     Date nextDate;
+    MeetUp meetUp;
 
 
     @SuppressLint("NewApi")
@@ -69,15 +71,18 @@ public class TimeDateChooser extends AppCompatActivity {
 
         userDayTimeList = new ArrayList<UserDayTime>();
         rentalHeader = new RentalHeader();
+        rentalHeaderModel = new RentalHeader();
         locationChosen = new LocationModel();
         user = new User();
+        meetUp = new MeetUp();
         nextDateStr = "";
 
         user = (User) SPUtility.getSPUtil(TimeDateChooser.this).getObject("USER_OBJECT", User.class);
 
 
 
-        if(getIntent().getSerializableExtra("locationChose")!=null){
+        if(getIntent().getSerializableExtra("MeetUp")!=null){
+            meetUp = (MeetUp) getIntent().getExtras().getSerializable("MeetUp");
             locationChosen = (LocationModel) getIntent().getSerializableExtra("locationChose");
             Log.d("LocationChosen", locationChosen.getLocationName());
             Log.d("ChosenLat" + locationChosen.getLatitude(), "ChosenLong"+locationChosen.getLongitude());
@@ -106,15 +111,15 @@ public class TimeDateChooser extends AppCompatActivity {
         if(getIntent().getBundleExtra("confirm").getBoolean("fromRent")== true){
             Log.d("So this ", "is rent");
             fromWhere = "rent";
-            rentalDetail = new RentalDetail();
-            if(getIntent().getExtras().getSerializable("rentDetail")!=null){
+            rentalHeader = new RentalHeader();
+            if(getIntent().getExtras().getSerializable("rentHeader")!=null){
                 userDayTimeModel = new UserDayTime();
-                rentalDetail = (RentalDetail) getIntent().getExtras().getSerializable("rentDetail");
-                Log.d("TimeDateChooser", rentalDetail.getBookOwner().getUserObj().getDayTimeModel().toString());
+                rentalHeader = (RentalHeader) getIntent().getExtras().getSerializable("rentHeader");
+                Log.d("TimeDateChooser", rentalHeader.getRentalDetail().getBookOwner().getUserObj().getDayTimeModel().toString());
 
 
-                for(int init=0; init<rentalDetail.getBookOwner().getUserObj().getDayTimeModel().size(); init++){
-                    userDayTimeModel = (UserDayTime) rentalDetail.getBookOwner().getUserObj().getDayTimeModel().get(init);
+                for(int init=0; init<rentalHeader.getRentalDetail().getBookOwner().getUserObj().getDayTimeModel().size(); init++){
+                    userDayTimeModel = (UserDayTime) rentalHeader.getRentalDetail().getBookOwner().getUserObj().getDayTimeModel().get(init);
                     userDayTimeList.add(userDayTimeModel);
                 }
 
@@ -255,22 +260,22 @@ public class TimeDateChooser extends AppCompatActivity {
 
                         if(fromWhere.equals("rent")){
 
-                            rentalHeader.setStatus("Confirmation");
-                            rentalHeader.setRentalDetail(rentalDetail);
-                            rentalHeader.setUserId(user);
-                            rentalHeader.setRentalTimeStamp(nextDateStr);
-                            rentalHeader.setUserDayTime(userDayTimeList.get(position));
-                            rentalHeader.setTotalPrice((float) rentalDetail.getCalculatedPrice());
-                            rentalHeader.setLocation(locationChosen);
+                            rentalHeaderModel.setStatus("Confirmation");
+                            rentalHeaderModel.setRentalDetail(rentalHeader.getRentalDetail());
+                            rentalHeaderModel.setUserId(user);
+                            rentalHeaderModel.setRentalTimeStamp(nextDateStr);
+                            rentalHeaderModel.setUserDayTime(userDayTimeList.get(position));
+                            rentalHeaderModel.setTotalPrice(Float.parseFloat(String.valueOf(rentalHeader.getRentalDetail().getCalculatedPrice())));
+                            rentalHeaderModel.setLocation(locationChosen);
+                            meetUp.setUserDayTime(userDayTimeList.get(position));
+                            rentalHeaderModel.setMeetUp(meetUp);
 
 //
                             Log.d("ONClickTime", "inside");
                             Log.d("RentalHeaderRent", rentalHeader.toString());
 
 
-                            addRentalHeader();
-                            Intent intent = new Intent(TimeDateChooser.this, RequestActivity.class);
-                            startActivity(intent);
+                            addMeetUp();
                         }else{
                             swapHeader.setStatus("Approved");
                             swapHeader.setDateTimeStamp(nextDateStr);
@@ -404,4 +409,51 @@ public class TimeDateChooser extends AppCompatActivity {
 
         requestQueue.add(stringRequest);
     }
+
+    public void addMeetUp(){
+        RequestQueue requestQueue = Volley.newRequestQueue(this);
+//        String URL = "http://104.197.4.32:8080/Koobym/user/add";
+        String URL = Constants.POST_MEET_UP;
+
+        final Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd").registerTypeAdapter(Date.class, GsonDateDeserializer.getInstance()).create();
+        final String mRequestBody = gson.toJson(meetUp);
+
+        Log.d("RentalHeaderAdd", rentalHeader.toString());
+
+
+        Log.v("LOG_VOLLEY", mRequestBody);
+        d("RentalHeaderVolley", mRequestBody);
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, URL, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                Log.d("MeetUpResponse", "inside");
+                Log.i("MeetUpResponse", response);
+
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.e("LOG_VOLLEY", error.toString());
+                error.printStackTrace();
+            }
+        }) {
+            @Override
+            public String getBodyContentType() {
+                return "application/json; charset=utf-8";
+            }
+
+            @Override
+            public byte[] getBody() throws AuthFailureError {
+                try {
+                    return mRequestBody == null ? null : mRequestBody.getBytes("utf-8");
+                } catch (UnsupportedEncodingException uee) {
+                    VolleyLog.wtf("Unsupported Encoding while trying to get the bytes of %s using %s", mRequestBody, "utf-8");
+                    return null;
+                }
+            }
+        };
+
+        requestQueue.add(stringRequest);
+    }
+
 }

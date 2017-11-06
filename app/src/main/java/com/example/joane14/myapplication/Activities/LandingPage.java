@@ -1,6 +1,9 @@
 package com.example.joane14.myapplication.Activities;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -34,6 +37,10 @@ import com.example.joane14.myapplication.Model.User;
 import com.example.joane14.myapplication.R;
 import com.example.joane14.myapplication.Utilities.SPUtility;
 import com.facebook.login.LoginManager;
+import com.pusher.client.Pusher;
+import com.pusher.client.PusherOptions;
+import com.pusher.client.channel.Channel;
+import com.pusher.client.channel.SubscriptionEventListener;
 import com.squareup.picasso.Picasso;
 
 public class LandingPage extends AppCompatActivity
@@ -76,77 +83,15 @@ public class LandingPage extends AppCompatActivity
 
         final TextView mTitle = (TextView) findViewById(R.id.lpTitle);
 
-//        BottomNavigationView bottomNavigationView = (BottomNavigationView)
-//                findViewById(R.id.lpnavigation);
-//
-//        if(bottomNavigationView==null){
-//            Log.d("bottomNavView", "is null");
-//        }else{
-//            Log.d("bottomNavView", "is not null");
-//        }
-//
-//
-//        bottomNavigationView.setOnNavigationItemSelectedListener
-//                (new BottomNavigationView.OnNavigationItemSelectedListener() {
-//                    @Override
-//                    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-//                        Fragment selectedFragment = null;
-//                        switch (item.getItemId()) {
-//                            case R.id.navigation_rent:
-//                                if (mBundleLogin.getBoolean("fromRegister") == true) {
-//                                    Log.d("inside", "TRUEfromRegister");
-//                                    mTitle.setText("Most Rented Books");
-////                                    fragmentManager = getSupportFragmentManager();
-//                                    selectedFragment = MostRentedBookFrag.newInstance();
-////                                    FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-////                                    fragmentTransaction.replace(R.id.fragment_landing_container, MostRentedBookFrag.newInstance(), mrbf.getTag());
-////                                    fragmentTransaction.commit();
-//                                    FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-//                                    transaction.replace(R.id.fragment_landing_container, selectedFragment);
-//                                    transaction.commit();
-//                                } else {
-//                                    mTitle.setText("Suggested Books");
-//                                    Log.d("PrefFrag", "else inside");
-//                                    bundlePass.putSerializable("userModelPass", userModel);
-//                                    Log.d("userModelPass1st", userModel.toString());
-////                                    fragmentManager = getSupportFragmentManager();
-//                                    selectedFragment = PreferencesFrag.newInstance(bundlePass);
-////                                    FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-////                                    fragmentTransaction.replace(R.id.fragment_landing_container, prefFrag, prefFrag.getTag());
-////                                    fragmentTransaction.commit();
-//                                    FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-//                                    transaction.replace(R.id.fragment_landing_container, selectedFragment);
-//                                    transaction.commit();
-//
-//
-//                                }
-//                                break;
-//                            case R.id.navigation_swap:
-//                                mTitle.setText("Books for Swap");
-//                                selectedFragment = SwapLandingPageFrag.newInstance();
-//                                FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-//                                transaction.replace(R.id.fragment_landing_container, selectedFragment);
-//                                transaction.commit();
-//
-//                            break;
-////                            case R.id.navigation_auction:
-////                                Toast.makeText(LandingPage.this, "Auction not yet implemented", Toast.LENGTH_SHORT).show();
-//////                                selectedFragment = AuctionShelfFragment.newInstance();
-////
-////                                break;
-//                        }
-//
-//                        return true;
-//
-//                    }
-//                });
-
         Log.d("Inside", "landing page");
 
 
         bundlePass = new Bundle();
 
         Intent intent = getIntent();
+        User userMod = (User) SPUtility.getSPUtil(this).getObject("USER_OBJECT", User.class);
+        Log.d("toInitializePusher", "");
+        initializePusherNotification(Integer.toString(userMod.getUserId()));
 
         if(null!=intent.getBundleExtra("ProfileBundle")){
             mBundle = intent.getBundleExtra("ProfileBundle");
@@ -165,7 +110,6 @@ public class LandingPage extends AppCompatActivity
 
             mName.setText(name);
             mEmail.setText(email);
-
 //            ProfilePictureView mProfPic = (ProfilePictureView) hView.findViewById(R.id.profPic);
 //            mProfPic.setProfileId(userId);
         }
@@ -199,7 +143,7 @@ public class LandingPage extends AppCompatActivity
 
             if(mBundleLogin.getBoolean("fromRegister")==true){
                 Log.d("inside", "TRUEfromRegister");
-                mTitle.setText("Most Rented Books");
+                mTitle.setText("Books you might like");
                 fragmentManager = getSupportFragmentManager();
                 MostRentedBookFrag mrbf = MostRentedBookFrag.newInstance();
                 FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
@@ -207,7 +151,7 @@ public class LandingPage extends AppCompatActivity
                 fragmentTransaction.commit();
             }else{
                 Log.d("PrefFrag","else inside");
-                mTitle.setText("Suggested Books");
+                mTitle.setText("Books you might like");
                 bundlePass.putSerializable("userModelPass", userModel);
                 Log.d("userModelPass1st", userModel.toString());
                 fragmentManager = getSupportFragmentManager();
@@ -276,11 +220,17 @@ public class LandingPage extends AppCompatActivity
 
     }
 
+    @Override
+    protected void onStart() {
+        super.onStart();
+        registerReceiver(notificationReceivedReceiver, new IntentFilter("NOTIFICATION_RECEIVED"));
+    }
 
-
-
-
-
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        unregisterReceiver(notificationReceivedReceiver);
+    }
 
     @Override
     public void onBackPressed() {
@@ -345,6 +295,17 @@ public class LandingPage extends AppCompatActivity
         SearchView searchView = (SearchView) MenuItemCompat.getActionView(menu.findItem(R.id.action_search));
         MenuItem item = menu.findItem(R.id.action_notifications);
         // searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
+        item.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem item) {
+
+                Intent intent = new Intent(LandingPage.this, NotificationAct.class);
+                startActivity(intent);
+
+
+                return false;
+            }
+        });
         return super.onCreateOptionsMenu(menu);
     }
 
@@ -362,4 +323,36 @@ public class LandingPage extends AppCompatActivity
     public void onSwapLPInteraction(Uri uri) {
 
     }
+
+
+    private void initializePusherNotification(String userId){
+        Log.d("USER ID BAI", userId);
+        PusherOptions options = new PusherOptions();
+        options.setCluster("ap1");
+        Pusher pusher = new Pusher("0aa2ef5ad16d9caba80a", options);
+
+        Channel channel = pusher.subscribe(userId);
+        Log.d("USER ID BAI", userId);
+
+        channel.bind("notification-event", new SubscriptionEventListener(){
+           @Override
+            public void onEvent(String channelName, String eventName, final String data){
+               Log.d("RECEIVED SOMETHING", data);
+                Intent i = new Intent();
+               i.putExtra("data", data);
+               i.setAction("NOTIFICATION_RECEIVED");
+               getApplicationContext().sendBroadcast(i);
+           }
+        });
+
+        pusher.connect();
+    }
+
+
+    BroadcastReceiver notificationReceivedReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            Toast.makeText(getApplicationContext(), intent.getStringExtra("data"), Toast.LENGTH_SHORT).show();
+        }
+    };
 }

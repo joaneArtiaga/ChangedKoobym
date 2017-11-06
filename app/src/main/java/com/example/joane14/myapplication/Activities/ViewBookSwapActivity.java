@@ -148,7 +148,7 @@ public class ViewBookSwapActivity extends AppCompatActivity implements Navigatio
         String author = "";
         if(getIntent().getExtras()!=null){
             bundle = getIntent().getExtras();
-            swapDetailObj = (SwapDetail) bundle.getSerializable("ViewSwap" );
+            swapDetailObj = (SwapDetail) bundle.getSerializable("ViewSwap");
 
             if(swapDetailObj==null){
                 Log.d("rentalDetail", "is empty");

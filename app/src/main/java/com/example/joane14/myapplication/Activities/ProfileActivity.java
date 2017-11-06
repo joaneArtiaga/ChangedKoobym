@@ -117,14 +117,16 @@ public class ProfileActivity extends AppCompatActivity implements
 
 
                 this.userObj = (User) getIntent().getExtras().getSerializable("userModelPass");
+                User userMod = (User) SPUtility.getSPUtil(this).getObject("USER_OBJECT", User.class);
+
 
                 Log.d("User filename", userObj.getImageFilename());
                 Log.d("User Id", String.valueOf(userObj.getUserId()));
 
                 Log.d("User Login", userObj.getUserFname());
-                mName.setText(userObj.getUserFname()+" "+ userObj.getUserLname());
-                mEmail.setText(userObj.getEmail());
-                Picasso.with(ProfileActivity.this).load(userObj.getImageFilename()).fit().into(profileImg);
+                mName.setText(userMod.getUserFname()+" "+ userMod.getUserLname());
+                mEmail.setText(userMod.getEmail());
+                Picasso.with(ProfileActivity.this).load(userMod.getImageFilename()).fit().into(profileImg);
 
 
                 mBundle.putSerializable("userDetails", userObj);
@@ -421,6 +423,17 @@ public class ProfileActivity extends AppCompatActivity implements
         SearchView searchView = (SearchView) MenuItemCompat.getActionView(menu.findItem(R.id.action_search));
         MenuItem item = menu.findItem(R.id.action_notifications);
         // searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
+        item.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem item) {
+
+                Intent intent = new Intent(ProfileActivity.this, NotificationAct.class);
+                startActivity(intent);
+
+
+                return false;
+            }
+        });
         return super.onCreateOptionsMenu(menu);
     }
 

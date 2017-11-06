@@ -21,7 +21,8 @@
         android:id="@+id/lpBookTitle"
         android:layout_width="150dp"
         android:layout_height="wrap_content"
-        android:gravity="center_horizontal"
+        android:layout_gravity="center_horizontal"
+        android:gravity="center"
         android:lines="1"
         android:text="Book Title"
         android:textColor="@color/colorOrange"
@@ -40,14 +41,6 @@
         android:textSize="14sp"
         android:textStyle="italic" />
 
-    <TextView
-        android:id="@+id/lpBookPrice"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="center_horizontal"
-        android:text="Book Price"
-        android:textColor="@color/colorDark"
-        android:textSize="14sp" />
 
     <RatingBar
         android:id="@+id/rating_bookRating"
@@ -61,7 +54,17 @@
         style="?android:attr/ratingBarStyleSmall"
         android:progressTint="@color/colorLightOrange"/>
 
+    <LinearLayout
+        android:layout_width="100dp"
+        android:layout_height="wrap_content"
+        android:id="@+id/status_ll"
+        android:orientation="vertical">
 
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/ratingStatusBook"/>
 
+    </LinearLayout>
 
 </LinearLayout>

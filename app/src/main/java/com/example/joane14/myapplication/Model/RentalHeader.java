@@ -35,6 +35,26 @@ public class RentalHeader implements Serializable {
 
     UserDayTime userDayTime;
 
+    String dateApproved;
+
+    MeetUp meetUp;
+
+    public MeetUp getMeetUp() {
+        return meetUp;
+    }
+
+    public void setMeetUp(MeetUp meetUp) {
+        this.meetUp = meetUp;
+    }
+
+    public String getDateApproved() {
+        return dateApproved;
+    }
+
+    public void setDateApproved(String dateApproved) {
+        this.dateApproved = dateApproved;
+    }
+
     public UserDayTime getUserDayTime() {
         return userDayTime;
     }

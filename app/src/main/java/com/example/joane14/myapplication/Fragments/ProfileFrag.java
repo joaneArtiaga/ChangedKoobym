@@ -64,9 +64,8 @@ public class ProfileFrag extends Fragment {
         Bundle bundle = new Bundle();
         bundle.putSerializable("user", user);
         RentTransaction.Adapter adapter = new RentTransaction.Adapter(getChildFragmentManager());
-        adapter.addFragment(AboutProfFrag.newInstance(bundle), "About");
-        adapter.addFragment(DisplayUserReview.newInstance(bundle), "Reviews");
-        adapter.addFragment(DisplayMyBooks.newInstance(bundle), "Books");
+        adapter.addFragment(AboutProfFrag.newInstance(bundle), "User Profile");
+        adapter.addFragment(DisplayMyBooks.newInstance(bundle), "Shelf");
         viewPager.setAdapter(adapter);
 
 

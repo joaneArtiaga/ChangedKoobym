@@ -4,11 +4,12 @@
     android:layout_height="match_parent"
     tools:context="com.example.joane14.myapplication.Fragments.DisplayMyBooks">
 
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/my_recycler_view_my_books"
+    <GridView
+        android:id="@+id/display_books_gridview"
         android:layout_width="match_parent"
-        android:layout_height="320dp"
-        android:layout_below="@id/brBtnPost"
-        android:layout_marginTop="5dp"
-        android:scrollbars="vertical" />
+        android:layout_height="match_parent"
+        android:numColumns="2"
+        android:horizontalSpacing="10dp"
+        android:verticalSpacing="10dp"
+        android:padding="10dp"/>
 </FrameLayout>

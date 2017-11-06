@@ -7,11 +7,11 @@ package com.example.joane14.myapplication.Fragments;
 public class Constants {
 
 
-    public static final String WEB_SERVICE_URL = "http://104.197.4.32:8080/Koobym/";
+    public static final String WEB_SERVICE_URL = "http://192.168.1.8:8080/Koobym/";
 
-    public static final String IMAGE_URL = "http://104.197.4.32:8080/Koobym/image/%s";
+    public static final String IMAGE_URL = WEB_SERVICE_URL + "image/%s";
 
-    public static final String RENT_BY_ID = "http://104.197.4.32:8080/Koobym/rentalDetail/rentById/";
+    public static final String RENT_BY_ID = WEB_SERVICE_URL + "rentalDetail/rentById/";
 
     public static final String GOOGLE_API_SEARCH_URL = "https://www.googleapis.com/books/v1/volumes?q=%s";
 
@@ -21,98 +21,110 @@ public class Constants {
 
     public static final String GOOGLE_API_SEARCH_URL_ISBN = "https://www.googleapis.com/books/v1/volumes?q=isbn:%s";
 
-    public static final String POST_RENTAL_HEADER = "http://104.197.4.32:8080/Koobym/rentalHeader/add";
+    public static final String POST_RENTAL_HEADER = WEB_SERVICE_URL + "rentalHeader/add";
 
-    public static final String POST_SWAP_HEADER = "http://104.197.4.32:8080/Koobym/swapHeader/add";
+    public static final String POST_MEET_UP = WEB_SERVICE_URL + "meetUp/add";
 
-    public static final String GET_RENTAL_HEADER = "http://104.197.4.32:8080/Koobym/rentalHeader/all";
+    public static final String POST_SWAP_HEADER = WEB_SERVICE_URL + "swapHeader/add";
 
-    public static final String GET_RENTAL_HEADER_BY_ID = "http://104.197.4.32:8080/Koobym/rentalHeader/rentalById/";
+    public static final String GET_RENTAL_HEADER_MY_REQUEST = WEB_SERVICE_URL + "rentalHeader/myRequestById/";
 
-    public static final String GET_RENTAL_HEADER_MY_REQUEST = "http://104.197.4.32:8080/Koobym/rentalHeader/myRequestById/";
+    public static final String GET_TRANSACTION_TO_RETURN_RENTER = WEB_SERVICE_URL + "rentalHeader/toReturnByIdRenter/";
 
-    public static final String GET_TRANSACTION_TO_RETURN_RENTER = "http://104.197.4.32:8080/Koobym/rentalHeader/toReturnByIdRenter/";
+    public static final String GET_TRANSACTION_TO_RECEIVE_RENTER = WEB_SERVICE_URL + "rentalHeader/toReceiveByIdRenter/";
 
-    public static final String GET_TRANSACTION_TO_RECEIVE_RENTER = "http://104.197.4.32:8080/Koobym/rentalHeader/toReceiveByIdRenter/";
+    public static final String GET_TRANSACTION_TO_RECEIVE_SWAP = WEB_SERVICE_URL + "swapHeader/toReceiveById/";
 
-    public static final String GET_TRANSACTION_TO_RECEIVE_SWAP = "http://104.197.4.32:8080/Koobym/swapHeader/toReceiveById/";
+    public static final String GET_TRANSACTION_TO_RECEIVE_OWNER = WEB_SERVICE_URL + "rentalHeader/toReceiveByIdOwner/";
 
-    public static final String GET_TRANSACTION_TO_RECEIVE_OWNER = "http://104.197.4.32:8080/Koobym/rentalHeader/toReceiveByIdOwner/";
+    public static final String GET_TRANSACTION_COMPLETE_RENTER = WEB_SERVICE_URL + "rentalHeader/completeByIdRenter/";
 
-    public static final String GET_TRANSACTION_COMPLETE_RENTER = "http://104.197.4.32:8080/Koobym/rentalHeader/completeByIdRenter/";
+    public static final String GET_TRANSACTION_COMPLETE_OWNER = WEB_SERVICE_URL + "rentalHeader/completeByIdOwner/";
 
-    public static final String GET_TRANSACTION_COMPLETE_OWNER = "http://104.197.4.32:8080/Koobym/rentalHeader/completeByIdOwner/";
+    public static final String GET_TRANSACTION_TO_DELIVER = WEB_SERVICE_URL + "rentalHeader/toDeliverById/";
 
-    public static final String GET_TRANSACTION_TO_DELIVER= "http://104.197.4.32:8080/Koobym/rentalHeader/toDeliverById/";
+    public static final String UPDATE_RENTAL_HEADER = WEB_SERVICE_URL + "rentalHeader/updateStatus";
 
-    public static final String UPDATE_RENTAL_HEADER= "http://104.197.4.32:8080/Koobym/rentalHeader/updateStatus";
+    public static final String UPDATE_BOOK_OWNER = WEB_SERVICE_URL + "bookOwner/updateBookOwner";
 
-    public static final String UPDATE_BOOK_OWNER= "http://104.197.4.32:8080/Koobym/bookOwner/updateBookOwner";
+    public static final String UPDATE_SWAP_HEADER = WEB_SERVICE_URL + "swapHeader/updateStatus";
 
-    public static final String UPDATE_SWAP_HEADER= "http://104.197.4.32:8080/Koobym/swapHeader/updateStatus";
+    public static final String GET_SWAP_DETAILS_ALL = WEB_SERVICE_URL + "swapDetail/getAllSwap";
 
-    public static final String GET_SWAP_DETAILS_ALL= "http://104.197.4.32:8080/Koobym/swapDetail/getAllSwap";
+    public static final String GET_REQUEST_RECEIVED = WEB_SERVICE_URL + "rentalHeader/requestReceivedById/";
 
-    public static final String GET_REQUEST_RECEIVED = "http://104.197.4.32:8080/Koobym/rentalHeader/requestReceivedById/";
+    public static final String GET_MY_SWAP = WEB_SERVICE_URL + "swapDetail/mySwapBooks/";
 
-    public static final String GET_MY_SWAP = "http://104.197.4.32:8080/Koobym/swapDetail/mySwapBooks/";
+    public static final String RECOMMEND_SWAP_BOOK = WEB_SERVICE_URL + "swapDetail/mySwapBooksPrice/";
 
-    public static final String RECOMMEND_SWAP_BOOK = "http://104.197.4.32:8080/Koobym/swapDetail/mySwapBooksPrice/";
+    public static final String UPLOAD_IMAGE = WEB_SERVICE_URL + "image/upload";
 
-    public static final String UPLOAD_IMAGE = "http://104.197.4.32:8080/Koobym/image/upload";
+    public static final String POST_SWAP_COMMENT_DETAIL = WEB_SERVICE_URL + "swapCommentDetail/add";
 
-    public static final String POST_SWAP_COMMENT_DETAIL ="http://104.197.4.32:8080/Koobym/swapCommentDetail/add";
+    public static final String GET_TO_APPROVE = WEB_SERVICE_URL + "swapHeader/toApproveById";
 
-    public static final String GET_TO_APPROVE ="http://104.197.4.32:8080/Koobym/swapHeader/toApproveById";
+    public static final String GET_TO_APPROVED = WEB_SERVICE_URL + "swapHeader/approvedById/";
 
-    public static final String GET_TO_APPROVED ="http://104.197.4.32:8080/Koobym/swapHeader/approvedById/";
+    public static final String GET_COMPLETE_SWAP = WEB_SERVICE_URL + "swapHeader/completeById";
 
-    public static final String GET_COMPLETE_SWAP ="http://104.197.4.32:8080/Koobym/swapHeader/completeById";
+    public static final String GET_TO_DELIVER_SWAP = WEB_SERVICE_URL + "swapHeader/toDeliverById";
 
-    public static final String GET_TO_DELIVER_SWAP ="http://104.197.4.32:8080/Koobym/swapHeader/toDeliverById";
+    public static final String POST_BOOK_OWNER_REVIEW = WEB_SERVICE_URL + "bookOwnerReview/add";
 
-    public static final String POST_BOOK_OWNER_REVIEW ="http://104.197.4.32:8080/Koobym/bookOwnerReview/add";
+    public static final String POST_BOOK_OWNER_RATE = WEB_SERVICE_URL + "bookOwnerRating/add";
 
-    public static final String POST_BOOK_OWNER_RATE ="http://104.197.4.32:8080/Koobym/bookOwnerRating/add";
+    public static final String POST_USER_RATE = WEB_SERVICE_URL + "userRating/add";
 
-    public static final String POST_USER_RATE ="http://104.197.4.32:8080/Koobym/userRating/add";
+    public static final String GET_BOOK_REVIEWS = WEB_SERVICE_URL + "bookOwnerReview/getAllReviewOfBookOwner";
 
-    public static final String GET_BOOK_REVIEWS ="http://104.197.4.32:8080/Koobym/bookOwnerReview/getAllReviewOfBookOwner";
+    public static final String GET_USER_REVIEWS = WEB_SERVICE_URL + "userRating/getAllUserRatingsOf";
 
-    public static final String GET_USER_REVIEWS ="http://104.197.4.32:8080/Koobym/userRating/getAllUserRatingsOf";
+    public static final String GET_MY_BOOKS = WEB_SERVICE_URL + "bookOwner/myBooksById";
 
-    public static final String GET_MY_BOOKS ="http://104.197.4.32:8080/Koobym/bookOwner/myBooksById";
+    public static final String POST_RENTAL_DETAIL = WEB_SERVICE_URL + "rentalDetail/add";
 
-    public static final String POST_RENTAL_DETAIL ="http://104.197.4.32:8080/Koobym/rentalDetail/add";
+    public static final String POST_SWAP_DETAIL = WEB_SERVICE_URL + "swapDetail/add";
 
-    public static final String POST_SWAP_DETAIL ="http://104.197.4.32:8080/Koobym/swapDetail/add";
+    public static final String POST_BOOK_OWNER = WEB_SERVICE_URL + "bookOwner/add";
 
-    public static final String POST_BOOK_OWNER ="http://104.197.4.32:8080/Koobym/bookOwner/add";
+    public static final String POST_BOOK = WEB_SERVICE_URL + "book/addNewBook";
 
-    public static final String POST_BOOK ="http://104.197.4.32:8080/Koobym/book/addNewBook";
+    public static final String GET_USER_RATING = WEB_SERVICE_URL + "userRating/getAverageRatingOfUser";
 
-    public static final String GET_USER_RATING ="http://104.197.4.32:8080/Koobym/userRating/getAverageRatingOfUser";
+    public static final String GET_BOOK_RATING = WEB_SERVICE_URL + "bookOwnerRating/getAverageRatingOfBookOwner";
 
-    public static final String GET_BOOK_RATING ="http://104.197.4.32:8080/Koobym/bookOwnerRating/getAverageRatingOfBookOwner";
+    public static final String CHECK_FB_USER = WEB_SERVICE_URL + "user/checkFbUser";
 
-    public static final String CHECK_FB_USER ="http://104.197.4.32:8080/Koobym/user/checkFbUser";
+    public static final String GET_REJECTED_BY_OWNER = WEB_SERVICE_URL + "rentalHeader/rejectedByIdOwner";
 
-    public static final String GET_REJECTED_BY_OWNER ="http://104.197.4.32:8080/Koobym/rentalHeader/rejectedByIdOwner";
+    public static final String GET_REJECTED_BY_RENTER = WEB_SERVICE_URL + "rentalHeader/rejectedByIdRenter";
 
-    public static final String GET_REJECTED_BY_RENTER ="http://104.197.4.32:8080/Koobym/rentalHeader/rejectedByIdRenter";
+    public static final String GET_REJECTED_BY_SWAP = WEB_SERVICE_URL + "swapHeader/rejectedOwner";
 
-    public static final String GET_REJECTED_BY_SWAP ="http://104.197.4.32:8080/Koobym/swapHeader/rejectedOwner";
+    public static final String CHECK_EXIST = WEB_SERVICE_URL + "rentalHeader/checkExist";
 
-    public static final String CHECK_EXIST ="http://104.197.4.32:8080/Koobym/rentalHeader/checkExist";
+    public static final String GET_RENTERS = WEB_SERVICE_URL + "rentalHeader/getRentalDetail";
 
-    public static final String GET_RENTERS ="http://104.197.4.32:8080/Koobym/rentalHeader/getRentalDetail";
+    public static final String INCREMENT_BOOK_OWNER = WEB_SERVICE_URL + "bookOwner/increment";
 
-    public static final String INCREMENT_BOOK_OWNER = "http://104.197.4.32:8080/Koobym/bookOwner/increment";
+    public static final String GET_COMPLETE_SWAP_HEADER = WEB_SERVICE_URL + "swapHeader/completeById/";
 
-    public static final String GET_COMPLETE_SWAP_HEADER = "http://104.197.4.32:8080/Koobym/swapHeader/completeById/";
+    public static final String GET_RATINGS = WEB_SERVICE_URL + "bookOwnerReview/getAverageRatingOfBookOwner/";
 
-    public static final String GET_RATINGS = "http://104.197.4.32:8080/Koobym/bookOwnerReview/getAverageRatingOfBookOwner/";
+    public static final String GET_COUNT = WEB_SERVICE_URL + "rentalHeader/getCount/";
 
-    public static final String GET_COUNT = "http://104.197.4.32:8080/Koobym/rentalHeader/getCount/";
+    public static final String GET_USER_NOTIFICATION = WEB_SERVICE_URL + "userNotification/notificationForUser/";
+
+    public static final String PUT_USER_READ = WEB_SERVICE_URL + "userNotification/notificationRead/";
+
+    public static final String GET_RENTAL_DETAIL = WEB_SERVICE_URL + "rentalHeader/get/";
+
+    public static final String GET_ALL_BOOK_OWNER = WEB_SERVICE_URL + "bookOwner/all/";
+
+    public static final String GET_BOOK_OWNER_RENTAL_DETAIL = WEB_SERVICE_URL + "rentalDetail/getRentalDetail/";
+
+    public static final String GET_BOOK_OWNER_SWAP_DETAIL = WEB_SERVICE_URL + "swapDetail/getSwapDetail/";
+
+    public static final String GET_RECOMMENDATION = WEB_SERVICE_URL + "bookOwner/suggestedBooks/";
 
 }

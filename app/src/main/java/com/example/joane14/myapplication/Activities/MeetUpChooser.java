@@ -9,7 +9,9 @@ import android.util.Log;
 import android.widget.Toast;
 
 import com.example.joane14.myapplication.Model.LocationModel;
+import com.example.joane14.myapplication.Model.MeetUp;
 import com.example.joane14.myapplication.Model.RentalDetail;
+import com.example.joane14.myapplication.Model.RentalHeader;
 import com.example.joane14.myapplication.R;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -27,7 +29,8 @@ public class MeetUpChooser extends FragmentActivity implements OnMapReadyCallbac
     private GoogleMap mMap;
     private HashMap<Marker, Integer> mHashMap = new HashMap<Marker, Integer>();
     List<LocationModel> locationModelList;
-    RentalDetail rentalDetailModel;
+    RentalHeader rentalHeader;
+    MeetUp meetUp;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,12 +40,13 @@ public class MeetUpChooser extends FragmentActivity implements OnMapReadyCallbac
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
 
-        rentalDetailModel = new RentalDetail();
+        rentalHeader = new RentalHeader();
+        meetUp = new MeetUp();
 
-        if(getIntent().getExtras().getSerializable("rentalDetail")!=null){
-            rentalDetailModel = (RentalDetail) getIntent().getExtras().getSerializable("rentalDetail");
-            Log.d("MeetUpChooser", String.valueOf(rentalDetailModel.getBookOwner().getUserObj().getUserId()));
-            locationModelList = rentalDetailModel.getBookOwner().getUserObj().getLocationArray();
+        if(getIntent().getExtras().getSerializable("rentalHeader")!=null){
+            rentalHeader = (RentalHeader) getIntent().getExtras().getSerializable("rentalHeader");
+            Log.d("MeetUpChooser", String.valueOf(rentalHeader.getRentalDetail().getBookOwner().getUserObj().getUserId()));
+            locationModelList = rentalHeader.getRentalDetail().getBookOwner().getUserObj().getLocationArray();
             for(int init = 0; init<locationModelList.size(); init++){
                 Log.d("MeetUpChooser Location", locationModelList.get(init).getLocationName());
             }
@@ -97,10 +101,12 @@ public class MeetUpChooser extends FragmentActivity implements OnMapReadyCallbac
                                 Log.d("MarkerPosition", String.valueOf(position));
                                 Intent intent = new Intent(MeetUpChooser.this,TimeDateChooser.class);
                                 Bundle mBundle = new Bundle();
-                                mBundle.putSerializable("rentDetail", rentalDetailModel);
+                                mBundle.putSerializable("rentHeader", rentalHeader);
                                 mBundle.putBoolean("fromRent", true);
                                 mBundle.putSerializable("locationChose", locationModelList.get(position));
                                 intent.putExtra("confirm", mBundle);
+                                meetUp.setLocation(locationModelList.get(position));
+                                mBundle.putSerializable("MeetUp", meetUp);
                                 intent.putExtras(mBundle);
                                 startActivity(intent);
 
