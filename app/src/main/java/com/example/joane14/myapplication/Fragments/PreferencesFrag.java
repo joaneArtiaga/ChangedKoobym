@@ -41,7 +41,7 @@ public class PreferencesFrag extends Fragment {
 
     List<BookOwnerModel> bookOwnerModelList;
     private GridView mGridView;
-    private DisplayBooksAdapter mAdapter;
+    private PrefferedAdapter mAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
     User userObj;
 
@@ -74,7 +74,7 @@ public class PreferencesFrag extends Fragment {
         bookOwnerModelList = new ArrayList<BookOwnerModel>();
 
         mGridView = (GridView) view.findViewById(R.id.preffered_gridview);
-        mAdapter = new DisplayBooksAdapter(getContext(), bookOwnerModelList);
+        mAdapter = new PrefferedAdapter(getContext(), bookOwnerModelList);
         mGridView.setAdapter(mAdapter);
         Log.d("userId$#23", String.valueOf(userObj.getUserId()));
         getSuggested(userObj.getUserId());

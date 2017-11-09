@@ -1,18 +1,33 @@
 package com.example.joane14.myapplication.Activities;
 
+import android.annotation.SuppressLint;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.icu.text.DateFormat;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import android.widget.Toast;
 
+import com.android.volley.AuthFailureError;
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.VolleyLog;
+import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
+import com.example.joane14.myapplication.Fragments.Constants;
 import com.example.joane14.myapplication.Model.LocationModel;
+import com.example.joane14.myapplication.Model.MeetUp;
+import com.example.joane14.myapplication.Model.MeetUpModel;
 import com.example.joane14.myapplication.Model.RentalDetail;
 import com.example.joane14.myapplication.Model.SwapDetail;
 import com.example.joane14.myapplication.Model.SwapHeader;
+import com.example.joane14.myapplication.Model.User;
 import com.example.joane14.myapplication.R;
+import com.example.joane14.myapplication.Utilities.SPUtility;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -20,7 +35,12 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 
+import java.io.UnsupportedEncodingException;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
@@ -31,6 +51,7 @@ public class SwapMeetUpChooser extends FragmentActivity implements OnMapReadyCal
     List<LocationModel> locationModelList;
     SwapHeader swapHeader;
     SwapDetail swapDetail;
+    MeetUp meetUpModel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,6 +63,7 @@ public class SwapMeetUpChooser extends FragmentActivity implements OnMapReadyCal
         mapFragment.getMapAsync(this);
 
         swapHeader = new SwapHeader();
+        meetUpModel = new MeetUp();
 
         if(getIntent().getExtras().getSerializable("swapHeader")!=null){
             swapHeader = (SwapHeader) getIntent().getExtras().getSerializable("swapHeader");
@@ -49,10 +71,6 @@ public class SwapMeetUpChooser extends FragmentActivity implements OnMapReadyCal
             locationModelList = swapHeader.getRequestedSwapDetail().getBookOwner().getUserObj().getLocationArray();
             for(int init = 0; init<locationModelList.size(); init++){
                 Log.d("MeetUpChooser Location", locationModelList.get(init).getLocationName());
-            }
-
-            if(getIntent().getExtras().getSerializable("swapDetail")!=null){
-                swapDetail = (SwapDetail) getIntent().getExtras().getSerializable("swapDetail");
             }
         }
     }
@@ -106,9 +124,11 @@ public class SwapMeetUpChooser extends FragmentActivity implements OnMapReadyCal
                                 Intent intent = new Intent(SwapMeetUpChooser.this,TimeDateChooser.class);
                                 Bundle mBundle = new Bundle();
                                 mBundle.putSerializable("swapHeader", swapHeader);
-                                mBundle.putSerializable("swapDetail", swapDetail);
                                 mBundle.putBoolean("fromSwap", true);
                                 mBundle.putSerializable("locationChose", locationModelList.get(position));
+                                Log.d("LocationChose", locationModelList.get(position).getLocationName());
+                                meetUpModel.setLocation(locationModelList.get(position));
+                                mBundle.putSerializable("meetUp", meetUpModel);
                                 intent.putExtra("confirm", mBundle);
                                 intent.putExtras(mBundle);
                                 startActivity(intent);
@@ -128,4 +148,5 @@ public class SwapMeetUpChooser extends FragmentActivity implements OnMapReadyCal
             }
         });
     }
+
 }

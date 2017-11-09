@@ -1,6 +1,7 @@
 package com.example.joane14.myapplication.Fragments;
 
 import android.content.Context;
+import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -22,13 +23,17 @@ import com.android.volley.VolleyLog;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.example.joane14.myapplication.Activities.GsonDateDeserializer;
+import com.example.joane14.myapplication.Activities.ViewBookAct;
+import com.example.joane14.myapplication.Activities.ViewOwnBookAct;
 import com.example.joane14.myapplication.Adapters.BookOwnerAdapter;
 import com.example.joane14.myapplication.Adapters.DisplayBooksAdapter;
 import com.example.joane14.myapplication.Adapters.LandingPageAdapter;
 import com.example.joane14.myapplication.Adapters.RecyclerAdapterShowBook;
 import com.example.joane14.myapplication.Adapters.UserReviewAdapter;
 import com.example.joane14.myapplication.Model.BookOwnerModel;
+import com.example.joane14.myapplication.Model.RentalDetail;
 import com.example.joane14.myapplication.Model.RentalHeader;
+import com.example.joane14.myapplication.Model.SwapDetail;
 import com.example.joane14.myapplication.Model.User;
 import com.example.joane14.myapplication.Model.UserRating;
 import com.example.joane14.myapplication.R;
@@ -82,11 +87,85 @@ public class DisplayMyBooks extends Fragment {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Log.d("DisplayGrid", bookOwnerModelList.get(position).getBookObj().getBookTitle());
+                if(bookOwnerModelList.get(position).getStatus().equals("Rent")){
+                    getRentalDetail(bookOwnerModelList.get(position).getBookOwnerId());
+                }else if(bookOwnerModelList.get(position).getStatus().endsWith("Swap")) {
+                    getSwapDetail(bookOwnerModelList.get(position).getBookOwnerId());
+                }else{
+                    Intent intent = new Intent(getContext(), ViewOwnBookAct.class);
+                    Bundle bundle = new Bundle();
+                    bundle.putSerializable("notAdBook",bookOwnerModelList.get(position));
+                    intent.putExtras(bundle);
+                    startActivity(intent);
+                }
             }
         });
 
         getMyBooks();
         return view;
+    }
+
+    private void getSwapDetail(int bookOwnerId){
+//        String URL = "http://104.198.152.85/Koobym/rentalDetail/suggested/%d";
+//        String URL = Constants.WEB_SERVICE_URL+"rentalDetail/suggested/%d";
+//        String URL = Constants.GET_BOOK_OWNER_SWAP_DETAIL+bookOwnerId;
+        String URL = Constants.GET_BOOK_OWNER_SWAP_DETAIL+bookOwnerId;
+//        URL = String.format(URL, userId);
+        Log.d("PreferenceURL", URL);
+        StringRequest stringRequest = new StringRequest(Request.Method.GET, URL, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                Log.d("SwapDetailResponse", response);
+                Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd").registerTypeAdapter(Date.class, GsonDateDeserializer.getInstance()).create();
+                SwapDetail swapDetails = gson.fromJson(response, SwapDetail.class);
+                Intent intent = new Intent(getContext(), ViewOwnBookAct.class);
+                Bundle bundle = new Bundle();
+                bundle.putSerializable("swapBook",swapDetails);
+                intent.putExtras(bundle);
+                startActivity(intent);
+//                Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd").registerTypeAdapter(Date.class, GsonDateDeserializer.getInstance()).create();
+//                BookOwnerModel[] bookOwnerModels = gson.fromJson(response, BookOwnerModel[].class);
+//                bookOwnerModelList.addAll(Arrays.asList(bookOwnerModels));
+//                mAdapter.notifyDataSetChanged();
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.e("LOG_VOLLEY", error.toString());
+            }
+        }) ;
+        VolleyUtil.volleyRQInstance(getContext()).add(stringRequest);
+    }
+
+    private void getRentalDetail(int bookOwnerId){
+//        String URL = "http://104.198.152.85/Koobym/rentalDetail/suggested/%d";
+//        String URL = Constants.WEB_SERVICE_URL+"rentalDetail/suggested/%d";
+        String URL = Constants.GET_BOOK_OWNER_RENTAL_DETAIL+bookOwnerId;
+//        URL = String.format(URL, userId);
+        Log.d("PreferenceURL", URL);
+        StringRequest stringRequest = new StringRequest(Request.Method.GET, URL, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                Log.d("RentalDetailResponse", response);
+                Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd").registerTypeAdapter(Date.class, GsonDateDeserializer.getInstance()).create();
+                RentalDetail rentalDetails = gson.fromJson(response, RentalDetail.class);
+                Intent intent = new Intent(getContext(), ViewOwnBookAct.class);
+                Bundle bundle = new Bundle();
+                bundle.putSerializable("viewBook",rentalDetails);
+                intent.putExtras(bundle);
+                startActivity(intent);
+//                Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd").registerTypeAdapter(Date.class, GsonDateDeserializer.getInstance()).create();
+//                BookOwnerModel[] bookOwnerModels = gson.fromJson(response, BookOwnerModel[].class);
+//                bookOwnerModelList.addAll(Arrays.asList(bookOwnerModels));
+//                mAdapter.notifyDataSetChanged();
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.e("LOG_VOLLEY", error.toString());
+            }
+        }) ;
+        VolleyUtil.volleyRQInstance(getContext()).add(stringRequest);
     }
 
     public void getMyBooks(){

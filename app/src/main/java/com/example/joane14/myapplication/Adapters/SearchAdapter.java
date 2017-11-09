@@ -1,18 +1,12 @@
 package com.example.joane14.myapplication.Adapters;
 
 import android.content.Context;
-import android.net.Uri;
-import android.os.Build;
-import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
-import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
-import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RatingBar;
@@ -29,13 +23,8 @@ import com.android.volley.toolbox.Volley;
 import com.bumptech.glide.Glide;
 import com.example.joane14.myapplication.Activities.GsonDateDeserializer;
 import com.example.joane14.myapplication.Fragments.Constants;
-import com.example.joane14.myapplication.Fragments.MostRentedBookFrag;
-import com.example.joane14.myapplication.Fragments.VolleyUtil;
 import com.example.joane14.myapplication.Model.BookOwnerModel;
-import com.example.joane14.myapplication.Model.GenreModel;
-import com.example.joane14.myapplication.Model.RentalDetail;
 import com.example.joane14.myapplication.Model.RentalHeader;
-import com.example.joane14.myapplication.Model.SwapHeader;
 import com.example.joane14.myapplication.Model.User;
 import com.example.joane14.myapplication.R;
 import com.example.joane14.myapplication.Utilities.SPUtility;
@@ -43,8 +32,6 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
 import java.io.UnsupportedEncodingException;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
@@ -52,7 +39,7 @@ import java.util.List;
  * Created by Joane14 on 20/10/2017.
  */
 
-public class PrefferedAdapter extends BaseAdapter {
+public class SearchAdapter extends BaseAdapter {
 
     private Context context;
     List<BookOwnerModel> bookOwnerModelList;
@@ -62,7 +49,7 @@ public class PrefferedAdapter extends BaseAdapter {
     Float retFloat;
 
 
-    public PrefferedAdapter(Context context, List<BookOwnerModel> bookOwnerModelList){
+    public SearchAdapter(Context context, List<BookOwnerModel> bookOwnerModelList){
         this.context = context;
         this.bookOwnerModelList = bookOwnerModelList;
         mInflater = LayoutInflater.from(context);
@@ -110,6 +97,7 @@ public class PrefferedAdapter extends BaseAdapter {
         }else if(bookOwnerModel.getStatus().equals("Swap")){
             statusLinear.setBackgroundColor(ContextCompat.getColor(context, R.color.colorSwap));
         }else{
+            statusBook.setText("Not Advertised");
             statusLinear.setBackgroundColor(ContextCompat.getColor(context, R.color.colorGray));
         }
 
@@ -133,11 +121,10 @@ public class PrefferedAdapter extends BaseAdapter {
 
         Glide.with(context).load(bookOwnerModel.getBookObj().getBookFilename()).centerCrop().into(bookPic);
 
-        //getRatings();
+//        getRatings();
 
         mRating.setRating(Float.parseFloat(String.valueOf(bookOwnerModel.getRate())));
-
-
+        Log.d("getRateDisplayAdap", String.valueOf(bookOwnerModel.getRate()));
 
         return convertView;
     }

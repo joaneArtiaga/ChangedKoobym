@@ -84,8 +84,8 @@ public class TimeDateChooser extends AppCompatActivity {
 
 
 
-        if(getIntent().getSerializableExtra("MeetUp")!=null){
-            meetUp = (MeetUp) getIntent().getExtras().getSerializable("MeetUp");
+        if(getIntent().getExtras().getSerializable("meetUp")!=null){
+            meetUp = (MeetUp) getIntent().getExtras().getSerializable("meetUp");
             locationChosen = (LocationModel) getIntent().getSerializableExtra("locationChose");
             Log.d("LocationChosen", locationChosen.getLocationName());
             Log.d("ChosenLat" + locationChosen.getLatitude(), "ChosenLong"+locationChosen.getLongitude());
@@ -101,7 +101,6 @@ public class TimeDateChooser extends AppCompatActivity {
             if(getIntent().getExtras().getSerializable("swapHeader")!=null){
                 userDayTimeModel = new UserDayTime();
                 swapHeader = (SwapHeader) getIntent().getSerializableExtra("swapHeader");
-                swapDetail = (SwapDetail) getIntent().getExtras().getSerializable("swapDetail");
                 Log.d("SwapFreakinHeader", swapHeader.getUser().getUserFname());
                 Log.d("SwapFreakinHeader", swapHeader.getSwapDetail().getBookOwner().getBookObj().getBookTitle());
                 for(int init=0; init<swapHeader.getRequestedSwapDetail().getBookOwner().getUserObj().getDayTimeModel().size(); init++){
@@ -274,21 +273,22 @@ public class TimeDateChooser extends AppCompatActivity {
                             rentalHeaderModel.setLocation(locationChosen);
                             meetUp.setUserDayTime(userDayTimeList.get(position));
                             rentalHeaderModel.setMeetUp(meetUp);
-
 //
                             Log.d("ONClickTime", "inside");
                             Log.d("RentalHeaderRent", rentalHeader.toString());
 
-
                             addMeetUp();
                         }else{
-                            swapHeader.setStatus("Approved");
                             swapHeader.setDateTimeStamp(nextDateStr);
                             swapHeader.setLocation(locationChosen);
                             swapHeader.setUserDayTime(userDayTimeList.get(position));
+                            meetUp.setUserDayTime(userDayTimeList.get(position));
+                            swapHeader.setMeetUp(meetUp);
 
-                            addSwapHeader();
+                            addMeetUp();
                             Log.d("SwapHeader dialog", "inside");
+                            Intent intent = new Intent(TimeDateChooser.this, NotificationAct.class);
+                            startActivity(intent);
                         }
 
                     }
@@ -423,7 +423,7 @@ public class TimeDateChooser extends AppCompatActivity {
         final Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd").registerTypeAdapter(Date.class, GsonDateDeserializer.getInstance()).create();
         final String mRequestBody = gson.toJson(meetUp);
 
-        Log.d("RentalHeaderAdd", rentalHeader.toString());
+//        Log.d("RentalHeaderAdd", rentalHeader.toString());
 
 
         Log.v("LOG_VOLLEY", mRequestBody);
@@ -435,37 +435,106 @@ public class TimeDateChooser extends AppCompatActivity {
                 Log.d("MeetUpResponse", "inside");
                 Log.i("MeetUpResponse", response);
                 MeetUp meetUp = gson.fromJson(response, MeetUp.class);
-                rentalHeader.setMeetUp(meetUp);
+                if(fromWhere.equals("rent")){
+                    rentalHeader.setMeetUp(meetUp);
+                    @SuppressLint({"NewApi", "LocalSuppress"})
+                    Calendar c = Calendar.getInstance();
 
-                @SuppressLint({"NewApi", "LocalSuppress"})
-                Calendar c = Calendar.getInstance();
+                    @SuppressLint({"NewApi", "LocalSuppress"})
+                    String date = new SimpleDateFormat("yyyy-MM-dd").format(new Date());
 
-                @SuppressLint({"NewApi", "LocalSuppress"})
-                String date = new SimpleDateFormat("yyyy-MM-dd").format(new Date());
+                    Log.d("CurrDate", date);
+                    rentalHeader.setDateConfirmed(date);
+                    rentalHeader.setStatus("Confirm");
 
-                Log.d("CurrDate", date);
-                rentalHeader.setDateConfirmed(date);
-                rentalHeader.setStatus("Confirm");
+                    java.text.DateFormat df = new java.text.SimpleDateFormat("yyyy-MM-dd");
+                    Date date1 = null;
+                    String newDate="";
+                    try {
+                        date1 = df.parse(rentalHeader.getDateDeliver());
+                    } catch (ParseException e) {
+                        e.printStackTrace();
+                    }
 
-                java.text.DateFormat df = new java.text.SimpleDateFormat("yyyy-MM-dd");
-                Date date1 = null;
-                String newDate="";
-                try {
-                    date1 = df.parse(rentalHeader.getDateDeliver());
-                } catch (ParseException e) {
-                    e.printStackTrace();
+                    @SuppressLint({"NewApi", "LocalSuppress"})
+                    Calendar calendar = Calendar.getInstance();
+                    calendar.setTime(date1);
+                    calendar.add(calendar.DATE, rentalHeader.getRentalDetail().getDaysForRent());
+                    newDate = df.format(calendar.getTime());
+
+                    rentalHeader.setRentalEndDate(newDate);
+
+                    updateRentalHeader(rentalHeader);
+
+                }else{
+                    swapHeader.setMeetUp(meetUp);
+                    updateSwap("Confirm");
                 }
-                @SuppressLint({"NewApi", "LocalSuppress"})
-                Calendar calendar = Calendar.getInstance();
-                calendar.setTime(date1);
-                calendar.add(calendar.DATE, rentalHeader.getRentalDetail().getDaysForRent());
-                newDate = df.format(calendar.getTime());
 
-                rentalHeader.setRentalEndDate(newDate);
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.e("LOG_VOLLEY", error.toString());
+                error.printStackTrace();
+            }
+        }) {
+            @Override
+            public String getBodyContentType() {
+                return "application/json; charset=utf-8";
+            }
 
-                updateRentalHeader(rentalHeader);
+            @Override
+            public byte[] getBody() throws AuthFailureError {
+                try {
+                    return mRequestBody == null ? null : mRequestBody.getBytes("utf-8");
+                } catch (UnsupportedEncodingException uee) {
+                    VolleyLog.wtf("Unsupported Encoding while trying to get the bytes of %s using %s", mRequestBody, "utf-8");
+                    return null;
+                }
+            }
+        };
+
+        requestQueue.add(stringRequest);
+    }
+
+    @SuppressLint("NewApi")
+    public void updateSwap(final String status){
+        RequestQueue requestQueue = Volley.newRequestQueue(this);
+//        String URL = "http://104.197.4.32:8080/Koobym/user/add";
+//        String URL = Constants.WEB_SERVICE_URL+"user/add";
+        String nextDateStr = "";
+
+        java.util.Calendar c = java.util.Calendar.getInstance();
+        @SuppressLint({"NewApi", "LocalSuppress"})
+        DateFormat format = new android.icu.text.SimpleDateFormat("yyyy-MM-dd");
+        nextDateStr = format.format(c.getTime());
+
+        User user = new User();
+        user = (User) SPUtility.getSPUtil(this).getObject("USER_OBJECT", User.class);
+        String URL = Constants.UPDATE_SWAP_HEADER+"/"+status+"/"+swapHeader.getSwapHeaderId()+"/"+nextDateStr;
+
+        Log.d("UpdateSwapHeaderURL", URL);
 
 
+        final Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd").registerTypeAdapter(Date.class, GsonDateDeserializer.getInstance()).create();
+        final String mRequestBody = gson.toJson(swapHeader);
+
+
+        Log.d("LOG_VOLLEY_swapHeaderUD", mRequestBody);
+        Log.d("LOG_VOLLEY rentalHeader", mRequestBody);
+        final String finalNextDateStr = nextDateStr;
+        StringRequest stringRequest = new StringRequest(Request.Method.GET, URL, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                d("UpdateSwapHeader", response);
+                SwapHeader swapHeaderMod = gson.fromJson(response, SwapHeader.class);
+
+                Log.d("swapHeaderStatus", swapHeaderMod.getStatus());
+                swapHeaderMod.setMeetUp(meetUp);
+                swapHeaderMod.setStatus(status);
+//                swapHeaderMod.setDateReceived(finalNextDateStr);
+                updateSwapHeader(swapHeaderMod);
             }
         }, new Response.ErrorListener() {
             @Override
@@ -543,5 +612,54 @@ public class TimeDateChooser extends AppCompatActivity {
         requestQueue.add(stringRequest);
     }
 
+    public void updateSwapHeader(SwapHeader swapHeaderModel){
+        RequestQueue requestQueue = Volley.newRequestQueue(this);
+//        String URL = "http://104.197.4.32:8080/Koobym/user/add";
+        User user = new User();
+        user = (User) SPUtility.getSPUtil(this).getObject("USER_OBJECT", User.class);
+
+        String URL = Constants.PUT_SWAP_HEADER;
+
+        d("putRentalHeader", URL);
+//        String URL = Constants.WEB_SERVICE_URL+"user/add";
+
+
+        final Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd").registerTypeAdapter(Date.class, GsonDateDeserializer.getInstance()).create();
+        final String mRequestBody = gson.toJson(swapHeaderModel);
+
+
+        d("LOG_VOLLEY", mRequestBody);
+        final User finalUser = user;
+        StringRequest stringRequest = new StringRequest(Request.Method.PUT, URL, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                d("rentalHeaderResponseUD", response);
+                RentalHeader rentalHeaderMod = gson.fromJson(response, RentalHeader.class);
+
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.e("LOG_VOLLEY", error.toString());
+            }
+        }) {
+            @Override
+            public String getBodyContentType() {
+                return "application/json; charset=utf-8";
+            }
+
+            @Override
+            public byte[] getBody() throws AuthFailureError {
+                try {
+                    return mRequestBody == null ? null : mRequestBody.getBytes("utf-8");
+                } catch (UnsupportedEncodingException uee) {
+                    VolleyLog.wtf("Unsupported Encoding while trying to get the bytes of %s using %s", mRequestBody, "utf-8");
+                    return null;
+                }
+            }
+        };
+
+        requestQueue.add(stringRequest);
+    }
 
 }

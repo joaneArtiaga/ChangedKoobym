@@ -66,84 +66,49 @@
 
 
 
-    <EditText
-        android:id="@+id/addBoCondition"
-        android:gravity="top"
-        android:layout_width="250dp"
-        android:layout_height="150dp"
-        android:ems="10"
-        android:inputType="textMultiLine"
-        android:layout_below="@+id/linearLayout"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="20dp"
-        android:hint="Write Condition of Book"
-        android:background="@drawable/rounded_multiline"/>
-
-    <Spinner
-        android:id="@+id/spinnerCat"
-        android:layout_width="100dp"
-        android:layout_below="@id/addBoCondition"
-        android:layout_height="20dp"
-        android:entries="@array/book_category"
-        android:prompt="@string/category_prompt"
-        android:layout_alignRight="@id/addBoCondition"
-        android:layout_marginTop="10dp"
-        android:background="#FFFFFF"/>
-
-    <TextView
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Choose Book Category:"
-        android:layout_alignBaseline="@+id/spinnerCat"
-        android:layout_alignTop="@+id/spinnerCat"
-        android:layout_alignLeft="@+id/addBoCondition"
-        android:layout_alignStart="@+id/addBoCondition"
-        android:textColor="@color/colorTuftBrush"
-        android:id="@+id/textView6" />
+        android:orientation="vertical"
+        android:layout_below="@id/linearLayout"
+        android:gravity="center_horizontal"
+        android:padding="5dp">
 
-    <Spinner
-        android:id="@+id/spinnerDays"
-        android:layout_width="100dp"
-        android:layout_below="@id/spinnerCat"
-        android:layout_height="20dp"
-        android:entries="@array/days_category"
-        android:prompt="@string/days_prompt"
-        android:layout_alignRight="@id/spinnerCat"
-        android:layout_marginTop="10dp"
-        android:background="#FFFFFF"/>
+        <EditText
+            android:id="@+id/addBoCondition"
+            android:gravity="top"
+            android:layout_width="250dp"
+            android:layout_height="150dp"
+            android:ems="10"
+            android:inputType="textMultiLine"
+            android:layout_below="@+id/linearLayout"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="20dp"
+            android:hint="Write Condition of Book"
+            android:background="@drawable/rounded_multiline"/>
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Choose Book Days range:"
-        android:textColor="@color/colorTuftBrush"
-        android:id="@+id/textView6"
-        android:layout_alignBottom="@+id/spinnerDays"
-        android:layout_toLeftOf="@id/spinnerDays"/>
+        <EditText
+            android:id="@+id/addBoDatePublished"
+            android:layout_width="200dp"
+            android:layout_height="25dp"
+            android:background="@drawable/rounded_edittext"
+            android:clickable="true"
+            android:focusable="false"
+            android:gravity="center"
+            android:hint="Date Bought (YYYY-MM-DD)"
+            android:inputType="datetime"
+            android:textSize="15sp"
+            android:layout_marginTop="15dp"
+            android:layout_centerHorizontal="true"
+            android:layout_marginBottom="42dp" />
 
-    <EditText
-        android:id="@+id/addBoDatePublished"
-        android:layout_width="200dp"
-        android:layout_height="25dp"
-        android:background="@drawable/rounded_edittext"
-        android:clickable="true"
-        android:focusable="false"
-        android:gravity="center"
-        android:hint="Date Bought (YYYY-MM-DD)"
-        android:inputType="datetime"
-        android:textSize="15sp"
-        android:layout_marginTop="15dp"
-        android:layout_below="@id/spinnerDays"
-        android:layout_centerHorizontal="true"
-        android:layout_marginBottom="42dp" />
+        <Button
+            android:id="@+id/addBoBookBtn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Add Book  "
+            android:layout_centerHorizontal="true" />
 
-    <Button
-        android:id="@+id/addBoBookBtn"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Add Book  "
-        android:layout_below="@id/addBoDatePublished"
-        android:layout_centerHorizontal="true" />
-
+    </LinearLayout>
 
 </RelativeLayout>

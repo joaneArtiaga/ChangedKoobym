@@ -7,10 +7,13 @@
     android:background="@color/colorDark"
     tools:context="com.example.joane14.myapplication.Activities.SwapBookChooser">
 
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/my_recycler_view_swap_chooser"
+    <GridView
+        android:id="@+id/book_chooser_gridview"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:scrollbars="vertical"/>
+        android:numColumns="2"
+        android:horizontalSpacing="10dp"
+        android:verticalSpacing="10dp"
+        android:padding="10dp"/>
 
 </RelativeLayout>

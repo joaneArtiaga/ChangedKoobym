@@ -12,5 +12,6 @@
     <color name="colorRent">#53CC04</color>
     <color name="colorSwap">#ffae39</color>
     <color name="colorWhite">#FFFF</color>
+    <color name="colorGray">#D3D3D3</color>
 
 </resources>

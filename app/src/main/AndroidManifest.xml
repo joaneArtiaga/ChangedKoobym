@@ -98,7 +98,10 @@
         <activity
             android:name=".Activities.ViewBookAct"
             android:theme="@style/AppTheme.NoActionBar" />
-        <activity android:name=".Activities.NotificationAct"></activity>
+        <activity android:name=".Activities.NotificationAct" />
+        <activity android:name=".Activities.ViewOwnBookAct" />
+        <activity android:name=".Activities.JustForUse" />
+        <activity android:name=".Activities.SearchResult"></activity>
     </application>
 
 </manifest>

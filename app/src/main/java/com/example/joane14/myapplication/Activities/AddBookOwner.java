@@ -95,8 +95,8 @@ public class AddBookOwner extends AppCompatActivity {
 
         mBtnAddBO = (Button) findViewById(R.id.addBoBookBtn);
 
-        mSpinnerCat = (Spinner) findViewById(R.id.spinnerCat);
-        mSpinnerDays = (Spinner) findViewById(R.id.spinnerDays);
+//        mSpinnerCat = (Spinner) findViewById(R.id.spinnerCat);
+//        mSpinnerDays = (Spinner) findViewById(R.id.spinnerDays);
 
 
         mBookTitle.setText(bookModel.getBookTitle());
@@ -131,55 +131,63 @@ public class AddBookOwner extends AppCompatActivity {
                 bookOwnerModel.setBookObj(bookModel);
                 bookOwnerModel.setUserObj(user);
                 bookOwnerModel.setNoRenters(0);
-                if(catPos==0){
-                    rentalDetail.setBookOwner(bookOwnerModel);
-                    rentalDetail.setDaysForRent(daysForRent);
-                    rentalDetail.setCalculatedPrice(calculatePrice());
-                    addBook(true);
-                }else if(catPos==1){
-                    mSpinnerDays.setEnabled(false);
-                    swapDetail.setBookOwner(bookOwnerModel);
-                    swapDetail.setSwapDescription(mBookCondition.getText().toString());
-                    swapDetail.setSwapPrice(calculatePrice());
-                    @SuppressLint({"NewApi", "LocalSuppress"})
-                    String date = new android.icu.text.SimpleDateFormat("yyyy-MM-dd").format(new Date());
-                    swapDetail.setSwapTimeStamp(date);
-                    addBook(false);
-                }
+//                if(catPos==0){
+//                    rentalDetail.setBookOwner(bookOwnerModel);
+//                    rentalDetail.setDaysForRent(daysForRent);
+//                    rentalDetail.setCalculatedPrice(calculatePrice());
+//                    addBook(true);
+//                }else if(catPos==1){
+//                    mSpinnerDays.setEnabled(false);
+//                    swapDetail.setBookOwner(bookOwnerModel);
+//                    swapDetail.setSwapDescription(mBookCondition.getText().toString());
+//                    swapDetail.setSwapPrice(calculatePrice());
+//                    @SuppressLint({"NewApi", "LocalSuppress"})
+//                    String date = new android.icu.text.SimpleDateFormat("yyyy-MM-dd").format(new Date());
+//                    swapDetail.setSwapTimeStamp(date);
+//                    addBook(false);
+//                }
+                addBook();
+                Intent intent = new Intent(getApplicationContext(), ProfileActivity.class);
+                Bundle bundlePass = new Bundle();
+                User userModel = new User();
+                userModel = (User) SPUtility.getSPUtil(getApplicationContext()).getObject("USER_OBJECT", User.class);
+                bundlePass.putSerializable("userModelPass", userModel);
+                intent.putExtras(bundlePass);
+                startActivity(intent);
             }
         });
 
-        mSpinnerCat.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                Log.d("selectedCat", String.valueOf(position));
-                if(position==0){
-                    category = "Rent";
-                }else if(position==1){
-                    category="Swap";
-                }else{
-                    category = "Auction";
-                }
-                catPos = position;
-            }
+//        mSpinnerCat.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+//            @Override
+//            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+//                Log.d("selectedCat", String.valueOf(position));
+//                if(position==0){
+//                    category = "Rent";
+//                }else if(position==1){
+//                    category="Swap";
+//                }else{
+//                    category = "Auction";
+//                }
+//                catPos = position;
+//            }
+//
+//            @Override
+//            public void onNothingSelected(AdapterView<?> parent) {
+//
+//            }
+//        });
 
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-
-            }
-        });
-
-mSpinnerDays.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-    @Override
-    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-        daysForRent = position+1;
-    }
-
-    @Override
-    public void onNothingSelected(AdapterView<?> parent) {
-
-    }
-});
+//    mSpinnerDays.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+//    @Override
+//    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+//        daysForRent = position+1;
+//    }
+//
+//    @Override
+//    public void onNothingSelected(AdapterView<?> parent) {
+//
+//    }
+//});
         mDate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -202,6 +210,8 @@ mSpinnerDays.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() 
             }
 
         };
+
+
     }
 
     private void updateLabel() {
@@ -247,7 +257,7 @@ mSpinnerDays.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() 
         return price;
     }
 
-    private void addBook(final Boolean bool) {
+    private void addBook() {
         RequestQueue requestQueue = Volley.newRequestQueue(this);
 //        String URL = "http://104.197.4.32:8080/Koobym/user/add";
         String URL = Constants.POST_BOOK;
@@ -263,15 +273,16 @@ mSpinnerDays.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() 
         StringRequest stringRequest = new StringRequest(Request.Method.POST, URL, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
-                Log.i("swapDetailAddLog", response);
+                Log.i("addBook", response);
 
                 Book book = gson.fromJson(response, Book.class);
 
-                if(bool==true){
-                    addRentalDetail(book);
-                }else{
-                    addBookOwner(book);
-                }
+                addBookOwner(book);
+//                if(bool==true){
+//                    addRentalDetail(book);
+//                }else{
+//                    addBookOwner(book);
+//                }
 
 
             }
@@ -354,6 +365,8 @@ mSpinnerDays.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() 
 
 
         bookOwnerModel.setBookObj(book);
+        bookOwnerModel.setStatus("none");
+
         Log.d("bookDate", bookOwnerModel.getDateBought());
 //        user.setDayTimeModel();
         final Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd").registerTypeAdapter(Date.class, GsonDateDeserializer.getInstance()).create();
@@ -364,15 +377,15 @@ mSpinnerDays.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() 
         StringRequest stringRequest = new StringRequest(Request.Method.POST, URL, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
-                Log.i("swapDetailAddLog", response);
+                Log.i("addBookOwner", response);
 
                 BookOwnerModel bookOwnerModel1 = gson.fromJson(response, BookOwnerModel.class);
 
-                swapDetail.setBookOwner(bookOwnerModel1);
+//                swapDetail.setBookOwner(bookOwnerModel1);
 
                 Log.d("bookOwnerAdd", "");
 
-                addSwapDetail(swapDetail);
+//                addSwapDetail(swapDetail);
             }
         }, new Response.ErrorListener() {
             @Override

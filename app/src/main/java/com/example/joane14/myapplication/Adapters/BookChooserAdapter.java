@@ -1,18 +1,12 @@
 package com.example.joane14.myapplication.Adapters;
 
 import android.content.Context;
-import android.net.Uri;
-import android.os.Build;
-import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
-import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
-import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RatingBar;
@@ -29,13 +23,9 @@ import com.android.volley.toolbox.Volley;
 import com.bumptech.glide.Glide;
 import com.example.joane14.myapplication.Activities.GsonDateDeserializer;
 import com.example.joane14.myapplication.Fragments.Constants;
-import com.example.joane14.myapplication.Fragments.MostRentedBookFrag;
-import com.example.joane14.myapplication.Fragments.VolleyUtil;
 import com.example.joane14.myapplication.Model.BookOwnerModel;
-import com.example.joane14.myapplication.Model.GenreModel;
-import com.example.joane14.myapplication.Model.RentalDetail;
 import com.example.joane14.myapplication.Model.RentalHeader;
-import com.example.joane14.myapplication.Model.SwapHeader;
+import com.example.joane14.myapplication.Model.SwapDetail;
 import com.example.joane14.myapplication.Model.User;
 import com.example.joane14.myapplication.R;
 import com.example.joane14.myapplication.Utilities.SPUtility;
@@ -43,8 +33,6 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
 import java.io.UnsupportedEncodingException;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
@@ -52,26 +40,35 @@ import java.util.List;
  * Created by Joane14 on 20/10/2017.
  */
 
-public class PrefferedAdapter extends BaseAdapter {
+public class BookChooserAdapter extends BaseAdapter {
 
     private Context context;
-    List<BookOwnerModel> bookOwnerModelList;
-    BookOwnerModel bookOwnerModel;
+    List<SwapDetail> swapDetailList;
+    SwapDetail swapDetailModel;
     private LayoutInflater mInflater;
     RatingBar mRating;
     Float retFloat;
 
 
-    public PrefferedAdapter(Context context, List<BookOwnerModel> bookOwnerModelList){
+    public static void d(String TAG, String message) {
+        int maxLogSize = 2000;
+        for(int i = 0; i <= message.length() / maxLogSize; i++) {
+            int start = i * maxLogSize;
+            int end = (i+1) * maxLogSize;
+            end = end > message.length() ? message.length() : end;
+            android.util.Log.d(TAG, message.substring(start, end));
+        }
+    }
+    public BookChooserAdapter(Context context, List<SwapDetail> swapDetailList){
         this.context = context;
-        this.bookOwnerModelList = bookOwnerModelList;
+        this.swapDetailList = swapDetailList;
         mInflater = LayoutInflater.from(context);
 
     }
 
     @Override
     public int getCount(){
-        return bookOwnerModelList.size();
+        return swapDetailList.size();
     }
 
     @Override
@@ -92,7 +89,7 @@ public class PrefferedAdapter extends BaseAdapter {
             convertView = mInflater.inflate(R.layout.item_shelf, null);
         }
 
-        bookOwnerModel = bookOwnerModelList.get(position);
+        swapDetailModel = swapDetailList.get(position);
 
         ImageView bookPic = (ImageView) convertView.findViewById(R.id.displayBookPic);
         TextView bookTitle = (TextView) convertView.findViewById(R.id.lpBookTitle);
@@ -102,25 +99,25 @@ public class PrefferedAdapter extends BaseAdapter {
 
         mRating = (RatingBar) convertView.findViewById(R.id.rating_bookRating);
         Log.d("inside", "PrefferedAdapter");
-        bookTitle.setText(bookOwnerModel.getBookObj().getBookTitle());
+        bookTitle.setText(swapDetailModel.getBookOwner().getBookObj().getBookTitle());
 
-        statusBook.setText(bookOwnerModel.getStatus());
-        if(bookOwnerModel.getStatus().equals("Rent")){
+        statusBook.setText(swapDetailModel.getBookOwner().getStatus());
+        if(swapDetailModel.getBookOwner().getStatus().equals("Rent")){
             statusLinear.setBackgroundColor(ContextCompat.getColor(context, R.color.colorRent));
-        }else if(bookOwnerModel.getStatus().equals("Swap")){
+        }else if(swapDetailModel.getBookOwner().getStatus().equals("Swap")){
             statusLinear.setBackgroundColor(ContextCompat.getColor(context, R.color.colorSwap));
         }else{
             statusLinear.setBackgroundColor(ContextCompat.getColor(context, R.color.colorGray));
         }
 
         String author = " ";
-        if(bookOwnerModel.getBookObj().getBookAuthor().size()!=0){
-            for(int init=0; init<bookOwnerModel.getBookObj().getBookAuthor().size(); init++){
-                if(!(bookOwnerModel.getBookObj().getBookAuthor().get(init).getAuthorFName().equals(""))){
-                    author+=bookOwnerModel.getBookObj().getBookAuthor().get(init).getAuthorFName()+" ";
-                    if(!(bookOwnerModel.getBookObj().getBookAuthor().get(init).getAuthorLName().equals(""))){
-                        author+=bookOwnerModel.getBookObj().getBookAuthor().get(init).getAuthorLName();
-                        if(init+1<bookOwnerModel.getBookObj().getBookAuthor().size()){
+        if(swapDetailModel.getBookOwner().getBookObj().getBookAuthor().size()!=0){
+            for(int init=0; init<swapDetailModel.getBookOwner().getBookObj().getBookAuthor().size(); init++){
+                if(!(swapDetailModel.getBookOwner().getBookObj().getBookAuthor().get(init).getAuthorFName().equals(""))){
+                    author+=swapDetailModel.getBookOwner().getBookObj().getBookAuthor().get(init).getAuthorFName()+" ";
+                    if(!(swapDetailModel.getBookOwner().getBookObj().getBookAuthor().get(init).getAuthorLName().equals(""))){
+                        author+=swapDetailModel.getBookOwner().getBookObj().getBookAuthor().get(init).getAuthorLName();
+                        if(init+1<swapDetailModel.getBookOwner().getBookObj().getBookAuthor().size()){
                             author+=", ";
                         }
                     }
@@ -131,11 +128,11 @@ public class PrefferedAdapter extends BaseAdapter {
         }
         bookAuthor.setText(author);
 
-        Glide.with(context).load(bookOwnerModel.getBookObj().getBookFilename()).centerCrop().into(bookPic);
+        Glide.with(context).load(swapDetailModel.getBookOwner().getBookObj().getBookFilename()).centerCrop().into(bookPic);
 
         //getRatings();
 
-        mRating.setRating(Float.parseFloat(String.valueOf(bookOwnerModel.getRate())));
+        mRating.setRating(Float.parseFloat(String.valueOf(swapDetailModel.getBookOwner().getRate())));
 
 
 
@@ -148,7 +145,7 @@ public class PrefferedAdapter extends BaseAdapter {
         User user = new User();
         user = (User) SPUtility.getSPUtil(context).getObject("USER_OBJECT", User.class);
         Log.d("UserIdReceive", String.valueOf(user.getUserId()));
-        String URL = Constants.GET_RATINGS+bookOwnerModel.getBookOwnerId();
+        String URL = Constants.GET_RATINGS+swapDetailModel.getBookOwner().getBookOwnerId();
 //        String URL = Constants.WEB_SERVICE_URL+"user/add";
 
         final RentalHeader rentalHeader =new RentalHeader();
@@ -166,7 +163,7 @@ public class PrefferedAdapter extends BaseAdapter {
                 Float fl = Float.parseFloat(response);
 
                 mRating.setRating(fl);
-                Log.d("RatingAdapter: "+bookOwnerModel.getBookObj().getBookTitle(), String.valueOf(fl));
+                Log.d("RatingAdapter: "+swapDetailModel.getBookOwner().getBookObj().getBookTitle(), String.valueOf(fl));
             }
         }, new Response.ErrorListener() {
             @Override

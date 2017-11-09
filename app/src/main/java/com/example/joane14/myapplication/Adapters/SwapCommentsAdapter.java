@@ -139,17 +139,17 @@ public class SwapCommentsAdapter extends RecyclerView.Adapter<SwapCommentsAdapte
                     Bundle bundle = new Bundle();
                     int position = getAdapterPosition();
                     Log.d("AdapterPosition", "inside "+Integer.toString(position));
-                    Intent intent = new Intent(SwapCommentsAdapter.this.context, ViewBookSwapActivity.class);
-                    swapCommentObj = SwapCommentsAdapter.this.bookList.get(position);
-                    if(swapCommentObj==null){
-                        Log.d("rentalDetailAdapter", "is null");
-                    }else{
-                        Log.d("rentalDetailAdapter", "is not null");
-                    }
-                    intent.putExtra("ViewBookSwap", "fromAdapter");
-                    bundle.putSerializable("ViewSwap", swapCommentObj);
-                    intent.putExtras(bundle);
-                    context.startActivity(intent);
+//                    Intent intent = new Intent(SwapCommentsAdapter.this.context, ViewBookSwapActivity.class);
+//                    swapCommentObj = SwapCommentsAdapter.this.bookList.get(position);
+//                    if(swapCommentObj==null){
+//                        Log.d("rentalDetailAdapter", "is null");
+//                    }else{
+//                        Log.d("rentalDetailAdapter", "is not null");
+//                    }
+//                    intent.putExtra("ViewBookSwap", "fromAdapter");
+//                    bundle.putSerializable("ViewSwap", swapCommentObj);
+//                    intent.putExtras(bundle);
+//                    context.startActivity(intent);
                 }
             });
         }

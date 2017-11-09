@@ -15,8 +15,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
+import android.widget.AdapterView;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.GridView;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
@@ -32,6 +34,7 @@ import com.example.joane14.myapplication.Activities.AddBookOwner;
 import com.example.joane14.myapplication.Activities.GsonDateDeserializer;
 import com.example.joane14.myapplication.Activities.ProfileActivity;
 import com.example.joane14.myapplication.Adapters.RecyclerAdapterShowBook;
+import com.example.joane14.myapplication.Adapters.ShowBooksAdapter;
 import com.example.joane14.myapplication.Model.Author;
 import com.example.joane14.myapplication.Model.Book;
 import com.example.joane14.myapplication.Model.BookOwnerModel;
@@ -56,8 +59,8 @@ import java.util.Locale;
 
 public class ShowBooksFrag extends Fragment {
 
-    private RecyclerView mRecyclerView;
-    private RecyclerView.Adapter mAdapter;
+    private GridView mGridView;
+    private ShowBooksAdapter mAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
     ArrayList<Book> bookList;
     Book bookObject;
@@ -98,10 +101,8 @@ public class ShowBooksFrag extends Fragment {
         bookList = new ArrayList<Book>();
 
         userObkect = new User();
-        mRecyclerView = (RecyclerView) view.findViewById(R.id.my_recycler_view);
-        mRecyclerView.setHasFixedSize(true);
+        mGridView = (GridView) view.findViewById(R.id.show_books_gridview);
         mLayoutManager = new LinearLayoutManager(getContext());
-        mRecyclerView.setLayoutManager(mLayoutManager);
 
 
         String resultString = getArguments().getString("searchResult");
@@ -194,9 +195,19 @@ public class ShowBooksFrag extends Fragment {
             }
         }
 
-        mAdapter = new RecyclerAdapterShowBook(bookList);
-        mRecyclerView.setAdapter(mAdapter);
+        mAdapter = new ShowBooksAdapter(getContext(), bookList);
+        mGridView.setAdapter(mAdapter);
 
+        mGridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Intent intent = new Intent(getContext(), AddBookOwner.class);
+                Bundle bundle = new Bundle();
+                bundle.putSerializable("bookPass", bookList.get(position));
+                intent.putExtras(bundle);
+                startActivity(intent);
+            }
+        });
         return view;
     }
 
@@ -221,106 +232,106 @@ public class ShowBooksFrag extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-        ((RecyclerAdapterShowBook) mAdapter).setOnItemClickListener(new RecyclerAdapterShowBook
-                .MyClickListener() {
-            @Override
-            public void onItemClick(int position, View v) {
-
-                Intent intent = new Intent(getContext(), AddBookOwner.class);
-                Bundle bundle = new Bundle();
-                bundle.putSerializable("bookPass", bookList.get(position));
-                intent.putExtras(bundle);
-                startActivity(intent);
-
-//                Toast.makeText(getContext() ,bookList.get(position).getBookTitle(), Toast.LENGTH_SHORT).show();
+//        ((ShowBooksAdapter) mAdapter).setOnItemClickListener(new RecyclerAdapterShowBook
+//                .MyClickListener() {
+//            @Override
+//            public void onItemClick(int position, View v) {
 //
-//                bookObject = bookList.get(position);
+//                Intent intent = new Intent(getContext(), AddBookOwner.class);
+//                Bundle bundle = new Bundle();
+//                bundle.putSerializable("bookPass", bookList.get(position));
+//                intent.putExtras(bundle);
+//                startActivity(intent);
 //
-//                if(userObkect!=null){
-//                    Log.d("userObject", "not null");
-//                }else{
-//                    Log.d("userObject", "null");
-//                }
-//
-//                if(bookObject!=null){
-//                    Log.d("bookObject", "not null");
-//                }else{
-//                    Log.d("bookObject", "null");
-//                }
-//
-//                final AlertDialog.Builder alert = new AlertDialog.Builder(getContext());
-//
-//                LinearLayout layout = new LinearLayout(getContext());
-//                layout.setOrientation(LinearLayout.VERTICAL);
-//
-//
-//                final EditText statDescription = new EditText(getContext());
-//                statDescription.setHint("Book State Description");
-//                layout.addView(statDescription);
-//
-//                final EditText etBought = new EditText(getContext());
-//                layout.addView(etBought);
-//
-//                date = new DatePickerDialog.OnDateSetListener() {
-//
-//                    @Override
-//                    public void onDateSet(DatePicker view, int year, int monthOfYear,
-//                                          int dayOfMonth) {
-//                        // TODO Auto-generated method stub
-//                        calendar.set(Calendar.YEAR, year);
-//                        calendar.set(Calendar.MONTH, monthOfYear);
-//                        calendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
-//                        String myFormat = "yyyy-MM-dd"; //In which you need put here
-//                        SimpleDateFormat sdf = new SimpleDateFormat(myFormat, Locale.US);
-//                        etBought.setText(sdf.format(calendar.getTime()));
-//                    }
-//
-//                };
-//
-//                etBought.setHint("Date Bought (YYYY-MM-DD)");
-//                etBought.setOnClickListener(new View.OnClickListener() {
-//                    @Override
-//                    public void onClick(View view) {
-//
-//                        new DatePickerDialog(getContext(), date, calendar
-//                                .get(Calendar.YEAR), calendar.get(Calendar.MONTH),
-//                                calendar.get(Calendar.DAY_OF_MONTH)).show();
-//
-//                    }
-//                });
-//
-//                alert.setView(layout);
-//
-//                alert.setTitle("You chose "+bookList.get(position).getBookTitle());
-//
-//
-//                alert.setPositiveButton("SUBMIT", new DialogInterface.OnClickListener() {
-//                    public void onClick(DialogInterface dialog, int whichButton) {
-////                        //What ever you want to do with the value
-////                        Editable YouEditTextValue = edittext.getText();
-////                        //OR
-////                        String YouEditTextValue
-//
-//                        Log.d("Inside", "onClickPositiveButton");
-//                        bookStatDes = statDescription.getText().toString();
-//                        Log.d("Stat Description", bookStatDes);
-//                        bookDateBought = etBought.getText().toString();
-//                        Log.d("Date Bought", bookDateBought);
-//                        addBook(userObkect, bookObject, bookStatDes, bookDateBought);
-//
-//                    }
-//                });
-//
-//                alert.setNegativeButton("CANCEL", new DialogInterface.OnClickListener() {
-//                    public void onClick(DialogInterface dialog, int whichButton) {
-//                        Log.d("Inside", "onClickNegativeButton");
-//                        dialog.dismiss();
-//                    }
-//                });
-//
-//                alert.show();
-            }
-        });
+////                Toast.makeText(getContext() ,bookList.get(position).getBookTitle(), Toast.LENGTH_SHORT).show();
+////
+////                bookObject = bookList.get(position);
+////
+////                if(userObkect!=null){
+////                    Log.d("userObject", "not null");
+////                }else{
+////                    Log.d("userObject", "null");
+////                }
+////
+////                if(bookObject!=null){
+////                    Log.d("bookObject", "not null");
+////                }else{
+////                    Log.d("bookObject", "null");
+////                }
+////
+////                final AlertDialog.Builder alert = new AlertDialog.Builder(getContext());
+////
+////                LinearLayout layout = new LinearLayout(getContext());
+////                layout.setOrientation(LinearLayout.VERTICAL);
+////
+////
+////                final EditText statDescription = new EditText(getContext());
+////                statDescription.setHint("Book State Description");
+////                layout.addView(statDescription);
+////
+////                final EditText etBought = new EditText(getContext());
+////                layout.addView(etBought);
+////
+////                date = new DatePickerDialog.OnDateSetListener() {
+////
+////                    @Override
+////                    public void onDateSet(DatePicker view, int year, int monthOfYear,
+////                                          int dayOfMonth) {
+////                        // TODO Auto-generated method stub
+////                        calendar.set(Calendar.YEAR, year);
+////                        calendar.set(Calendar.MONTH, monthOfYear);
+////                        calendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
+////                        String myFormat = "yyyy-MM-dd"; //In which you need put here
+////                        SimpleDateFormat sdf = new SimpleDateFormat(myFormat, Locale.US);
+////                        etBought.setText(sdf.format(calendar.getTime()));
+////                    }
+////
+////                };
+////
+////                etBought.setHint("Date Bought (YYYY-MM-DD)");
+////                etBought.setOnClickListener(new View.OnClickListener() {
+////                    @Override
+////                    public void onClick(View view) {
+////
+////                        new DatePickerDialog(getContext(), date, calendar
+////                                .get(Calendar.YEAR), calendar.get(Calendar.MONTH),
+////                                calendar.get(Calendar.DAY_OF_MONTH)).show();
+////
+////                    }
+////                });
+////
+////                alert.setView(layout);
+////
+////                alert.setTitle("You chose "+bookList.get(position).getBookTitle());
+////
+////
+////                alert.setPositiveButton("SUBMIT", new DialogInterface.OnClickListener() {
+////                    public void onClick(DialogInterface dialog, int whichButton) {
+//////                        //What ever you want to do with the value
+//////                        Editable YouEditTextValue = edittext.getText();
+//////                        //OR
+//////                        String YouEditTextValue
+////
+////                        Log.d("Inside", "onClickPositiveButton");
+////                        bookStatDes = statDescription.getText().toString();
+////                        Log.d("Stat Description", bookStatDes);
+////                        bookDateBought = etBought.getText().toString();
+////                        Log.d("Date Bought", bookDateBought);
+////                        addBook(userObkect, bookObject, bookStatDes, bookDateBought);
+////
+////                    }
+////                });
+////
+////                alert.setNegativeButton("CANCEL", new DialogInterface.OnClickListener() {
+////                    public void onClick(DialogInterface dialog, int whichButton) {
+////                        Log.d("Inside", "onClickNegativeButton");
+////                        dialog.dismiss();
+////                    }
+////                });
+////
+////                alert.show();
+//            }
+//        });
     }
 
     public interface OnFragmentInteractionListener {

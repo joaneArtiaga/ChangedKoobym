@@ -158,6 +158,7 @@ public class ViewBookAct extends AppCompatActivity implements
             mRating.setRating(Float.parseFloat(String.valueOf(rentalDetailModel.getBookOwner().getRate())));
 
             getCount();
+            getRatings(rentalDetailModel.getBookOwner().getBookOwnerId());
 
             Bundle bundle = new Bundle();
             bundle.putSerializable("rentalDetail", rentalDetailModel);
@@ -191,8 +192,8 @@ public class ViewBookAct extends AppCompatActivity implements
 
             mRating.setRating(Float.parseFloat(String.valueOf(swapDetail.getBookOwner().getRate())));
 
-//            mLPrice.setText(String.valueOf(swapDetail.getSwapPrice()));
-//            mRPrice.setText(String.valueOf(swapDetail.getSwapPrice()/2));
+            mLPrice.setText(String.valueOf(swapDetail.getSwapPrice()));
+            mRPrice.setText(String.valueOf(swapDetail.getSwapPrice()/2));
 //            mRPrice.setVisibility(View.GONE);
 
             final User user = (User) SPUtility.getSPUtil(ViewBookAct.this).getObject("USER_OBJECT", User.class);
@@ -223,7 +224,7 @@ public class ViewBookAct extends AppCompatActivity implements
             mContent.setText(swapDetail.getBookOwner().getBookObj().getBookDescription());
             mCondition.setText(swapDetail.getBookOwner().getStatusDescription());
 
-//            getRatings();
+            getRatings(swapDetail.getBookOwner().getBookOwnerId());
 //            getCount();
 
 //            Bundle bundle = new Bundle();
@@ -257,7 +258,11 @@ public class ViewBookAct extends AppCompatActivity implements
             mRentBtn.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    checkIfExist(user.getUserId(), rentalDetailModel.getRental_detailId());
+                    Intent intent = new Intent(ViewBookAct.this, SwapBookChooser.class);
+                    Bundle bundle = new Bundle();
+                    bundle.putSerializable("swapDetail", swapDetail);
+                    intent.putExtras(bundle);
+                    startActivity(intent);
                 }
             });
         }
@@ -499,13 +504,13 @@ public class ViewBookAct extends AppCompatActivity implements
         requestQueue.add(stringRequest);
     }
 
-    public void getRatings(){
+    public void getRatings(int bookOwnerId){
         RequestQueue requestQueue = Volley.newRequestQueue(this);
 //        String URL = "http://104.197.4.32:8080/Koobym/user/add";
         User user = new User();
         user = (User) SPUtility.getSPUtil(this).getObject("USER_OBJECT", User.class);
         d("UserIdReceive", String.valueOf(user.getUserId()));
-        String URL = Constants.GET_RATINGS+rentalDetailModel.getBookOwner().getBookOwnerId();
+        String URL = Constants.GET_RATINGS+"/"+bookOwnerId;
 //        String URL = Constants.WEB_SERVICE_URL+"user/add";
 
         final RentalHeader rentalHeader =new RentalHeader();
@@ -524,7 +529,7 @@ public class ViewBookAct extends AppCompatActivity implements
 
                 mRating.setRating(fl);
 
-                d("RatingAdapter: "+rentalDetailModel.getBookOwner().getBookObj().getBookTitle(), String.valueOf(fl));
+//                d("RatingAdapter: "+rentalDetailModel.getBookOwner().getBookObj().getBookTitle(), String.valueOf(fl));
             }
         }, new Response.ErrorListener() {
             @Override

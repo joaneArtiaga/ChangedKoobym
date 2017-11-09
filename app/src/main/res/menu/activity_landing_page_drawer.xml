@@ -21,7 +21,7 @@
         <item
             android:id="@+id/transaction"
             android:icon="@drawable/home"
-            android:title="Transaction" />
+            android:title="Book Activity" />
         <item
             android:id="@+id/request"
             android:icon="@drawable/request"

@@ -48,4 +48,11 @@
         <item>4</item>
         <item>5</item>
     </string-array>
+
+    <string name="bookStatSPNR_prompt">Choose rating</string>
+    <string-array name="book_status">
+        <item>Rent</item>
+        <item>Swap</item>
+        <item>Not Advertised</item>
+    </string-array>
 </resources>

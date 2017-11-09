@@ -29,6 +29,7 @@ import com.example.joane14.myapplication.Activities.GsonDateDeserializer;
 import com.example.joane14.myapplication.Activities.HistoryActivity;
 import com.example.joane14.myapplication.Activities.MeetUpChooser;
 import com.example.joane14.myapplication.Activities.NotificationAct;
+import com.example.joane14.myapplication.Activities.SwapMeetUpChooser;
 import com.example.joane14.myapplication.Activities.TransactionActivity;
 import com.example.joane14.myapplication.Activities.ViewBookAct;
 import com.example.joane14.myapplication.Activities.ViewBookActivity;
@@ -36,6 +37,7 @@ import com.example.joane14.myapplication.Fragments.Constants;
 import com.example.joane14.myapplication.Model.BookOwnerReview;
 import com.example.joane14.myapplication.Model.RentalDetail;
 import com.example.joane14.myapplication.Model.RentalHeader;
+import com.example.joane14.myapplication.Model.SwapHeader;
 import com.example.joane14.myapplication.Model.User;
 import com.example.joane14.myapplication.Model.UserNotification;
 import com.example.joane14.myapplication.R;
@@ -79,19 +81,41 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
         userNotificationList = myDataset;
     }
 
+    @SuppressLint("NewApi")
     @Override
     public void onBindViewHolder(NotificationAdapter.BookHolder holder, final int position) {
 
         UserNotification userNotification = userNotificationList.get(position);
 
+        String dateStr="";
+        Calendar c = Calendar.getInstance();
+        @SuppressLint({"NewApi", "LocalSuppress"})
+        DateFormat format = new android.icu.text.SimpleDateFormat("yyyy-MM-dd");
+        dateStr = format.format(c.getTime());
+
         String message = "";
-        if(userNotificationList.get(position).getActionStatus().equals("request")||userNotificationList.get(position).getActionStatus().equals("Request")){
-            message = userNotification.getUserPerformer().getUserFname()+" "+userNotification.getUserPerformer().getUserLname()+" "+userNotification.getActionStatus()+"ed your book "+userNotification.getBookActionPerformedOn().getBookObj().getBookTitle();
-        }else if(userNotification.getActionStatus().equals("Approved")){
-            message = userNotification.getUserPerformer().getUserFname()+" "+userNotification.getUserPerformer().getUserLname()+" "+userNotification.getActionStatus()+" your request of the book "+userNotification.getBookActionPerformedOn().getBookObj().getBookTitle();
-        }else if(userNotification.getActionStatus().equals("Confirm")){
-            message = userNotification.getUserPerformer().getUserFname()+" "+userNotification.getUserPerformer().getUserLname()+" "+userNotification.getActionStatus()+" the meet up location and time with the book "+userNotification.getBookActionPerformedOn().getBookObj().getBookTitle();
+        if(userNotification.getActionName().equals("rental")){
+            if(userNotificationList.get(position).getActionStatus().equals("request")||userNotificationList.get(position).getActionStatus().equals("Request")){
+                message = userNotification.getUserPerformer().getUserFname()+" "+userNotification.getUserPerformer().getUserLname()+" "+userNotification.getActionStatus()+"ed your book "+userNotification.getBookActionPerformedOn().getBookObj().getBookTitle()+" to be rented.";
+            }else if(userNotification.getActionStatus().equals("Approved")){
+                message = userNotification.getUserPerformer().getUserFname()+" "+userNotification.getUserPerformer().getUserLname()+" "+userNotification.getActionStatus()+" your request of the book "+userNotification.getBookActionPerformedOn().getBookObj().getBookTitle()+" to be rented.";
+            }else if(userNotification.getActionStatus().equals("Confirm")){
+                message = userNotification.getUserPerformer().getUserFname()+" "+userNotification.getUserPerformer().getUserLname()+" "+userNotification.getActionStatus()+"ed the meet up location and time with the book "+userNotification.getBookActionPerformedOn().getBookObj().getBookTitle()+" to be rented.";
+            }
+        }else if(userNotification.getActionName().equals("swap")){
+            if(userNotificationList.get(position).getActionStatus().equals("request")||userNotificationList.get(position).getActionStatus().equals("Request")){
+                message = userNotification.getUserPerformer().getUserFname()+" "+userNotification.getUserPerformer().getUserLname()+" "+userNotification.getActionStatus()+"ed your book "+userNotification.getBookActionPerformedOn().getBookObj().getBookTitle()+" to be swapped.";
+            }else if(userNotification.getActionStatus().equals("Approved")){
+                message = userNotification.getUserPerformer().getUserFname()+" "+userNotification.getUserPerformer().getUserLname()+" "+userNotification.getActionStatus()+" your request of the book "+userNotification.getBookActionPerformedOn().getBookObj().getBookTitle()+" to be swapped.";
+            }else if(userNotification.getActionStatus().equals("Confirm")){
+                message = userNotification.getUserPerformer().getUserFname()+" "+userNotification.getUserPerformer().getUserLname()+" "+userNotification.getActionStatus()+"ed the meet up location and time with the book "+userNotification.getBookActionPerformedOn().getBookObj().getBookTitle()+" to be swapped.";
+            }else if(userNotification.getActionName().equals("ToGive")){
+                message = "The book "+userNotification.getBookActionPerformedOn().getBookObj().getBookTitle()+" which is to be swapped should be delivered today, "+dateStr+" to "+userNotification.getUserPerformer().getUserFname()+" "+userNotification.getUserPerformer().getUserLname();
+            }else if(userNotification.getActionName().equals("ToReceive")){
+                message = "The book "+userNotification.getBookActionPerformedOn().getBookObj().getBookTitle()+" was delivered today, "+dateStr+" by "+userNotification.getUserPerformer().getUserFname()+" "+userNotification.getUserPerformer().getUserLname();
+            }
         }
+
 
         holder.mMessage.setText(message);
         Picasso.with(context).load(userNotificationList.get(position).getUserPerformer().getImageFilename()).fit().into(holder.mPerformer);
@@ -99,6 +123,9 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
 
         if(userNotification.getRead()==true){
             holder.mCardView.setCardBackgroundColor(ContextCompat.getColor(context, R.color.colorWhite));
+            Log.d("cardRead", "true");
+        }else if(userNotification.getRead()==false){
+            holder.mCardView.setCardBackgroundColor(ContextCompat.getColor(context, R.color.colorMint));
             Log.d("cardRead", "true");
         }
     }
@@ -144,30 +171,82 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
                     User user = (User) SPUtility.getSPUtil(context).getObject("USER_OBJECT", User.class);
                     if(user.getUserId()==userNotificationList.get(position).getUser().getUserId()){
 
-                        if(userNotificationList.get(position).getActionStatus().equals("Request")){
-                            createDialog(position);
-                        }else if(userNotificationList.get(position).getActionStatus().equals("Approved")){
-                            Log.d("ApprovedNotif", "Inside");
-                            getRentalHeader(position, "meetUp");
-                            getRead(position);
-                        }
+                        if(userNotificationList.get(position).getActionName().equals("rental")){
+                            Log.d("RentalAdapter", "Inside");
 
+                            if(userNotificationList.get(position).getActionStatus().equals("Request")){
+                                createDialog(position);
+                            }else if(userNotificationList.get(position).getActionStatus().equals("Approved")){
+                                Log.d("ApprovedNotif", "Inside");
+                                getRentalHeader(position, "meetUp");
+                                updateReceive(position, "Confirm");
+                                getRead(position);
+                            }else if(userNotificationList.get(position).getActionStatus().equals("Confirm")){
+                                getRead(position);
+                            }
+
+                        }else if(userNotificationList.get(position).getActionName().equals("swap")){
+                            Log.d("SwapAdapter", "Inside");
+                            if (userNotificationList.get(position).getActionName().equals("swap")) {
+
+                                if (userNotificationList.get(position).getActionStatus().equals("Request")) {
+                                    acceptSwap(position);
+                                } else if (userNotificationList.get(position).getActionStatus().equals("Approved")) {
+                                    Log.d("ApprovedNotif", "Inside");
+                                    getSwapHeader(position, "meetUp");
+                                    updateReceive(position, "Confirm");
+                                    getRead(position);
+                                } else if (userNotificationList.get(position).getActionStatus().equals("Confirm")) {
+                                    getRead(position);
+
+                                }else if(userNotificationList.get(position).getActionName().equals("ToGive")){
+                                    toGiveDialog(position);
+                                }
+                            }
+                        }
                     }else{
-                        getRentalHeader(position, "view");
+
+                        if(userNotificationList.get(position).getActionName().equals("rental")){
+                            getRentalHeader(position, "view");
+                        }else if(userNotificationList.get(position).getActionName().equals("swap")){
+                            getSwapHeader(position, "view");
+                        }
                     }
 
                 }
             });
         }
+    }
 
-//        @Override
-//        public void onClick(View v) {
-//            int position = getAdapterPosition();
-//
-//
-//            Log.d("AdapterPosition", "inside "+Integer.toString(position));
-//
-//        }
+    public void toGiveDialog(final int position){
+        android.support.v7.app.AlertDialog.Builder alertDialogBuilder = new android.support.v7.app.AlertDialog.Builder(context);
+        alertDialogBuilder.setMessage("Did you deliver the book "+userNotificationList.get(position).getBookActionPerformedOn().getBookObj().getBookTitle()+" to "+userNotificationList.get(position).getUserPerformer().getUserFname()+" "+userNotificationList.get(position).getUserPerformer().getUserLname()+" on time?");
+        alertDialogBuilder.setPositiveButton("Yes",
+                new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface arg0, int arg1) {
+                        getRead(position);
+                        if(userNotificationList.get(position).getActionName().equals("rental")){
+                            updateReceive(position, "Approved");
+                        }else if(userNotificationList.get(position).getActionName().equals("swap")){
+                            updateSwap(position, "ToReceive");
+                        }
+                        Intent intent = new Intent(context, NotificationAct.class);
+                        context.startActivity(intent);
+                    }
+                });
+        alertDialogBuilder.setNegativeButton("No", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                getRead(position);
+                updateReceive(position, "Rejected");
+                Intent intent = new Intent(context, NotificationAct.class);
+                context.startActivity(intent);
+            }
+        });
+
+        android.support.v7.app.AlertDialog alertDialog = alertDialogBuilder.create();
+        alertDialog.show();
     }
 
     public void createDialog(final int position){
@@ -179,7 +258,11 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
                     @Override
                     public void onClick(DialogInterface arg0, int arg1) {
                         getRead(position);
-                        updateReceive(position, "Approved");
+                        if(userNotificationList.get(position).getActionName().equals("rental")){
+                            updateReceive(position, "Approved");
+                        }else if(userNotificationList.get(position).getActionName().equals("swap")){
+                            updateSwap(position, "Approved");
+                        }
                         Intent intent = new Intent(context, NotificationAct.class);
                         context.startActivity(intent);
                     }
@@ -189,11 +272,105 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
             public void onClick(DialogInterface dialog, int which) {
                 getRead(position);
                 updateReceive(position, "Rejected");
+                Intent intent = new Intent(context, NotificationAct.class);
+                context.startActivity(intent);
             }
         });
 
         android.support.v7.app.AlertDialog alertDialog = alertDialogBuilder.create();
         alertDialog.show();
+    }
+
+    public void acceptSwap(final int position){
+        android.support.v7.app.AlertDialog.Builder alertDialogBuilder = new android.support.v7.app.AlertDialog.Builder(context);
+        alertDialogBuilder.setTitle("Swap Request");
+        alertDialogBuilder.setMessage("Do you want to accept "+userNotificationList.get(position).getUserPerformer().getUserFname()+" "+userNotificationList.get(position).getUserPerformer().getUserLname()+"'s "+userNotificationList.get(position).getActionStatus()+"?");
+        alertDialogBuilder.setPositiveButton("Accept",
+                new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface arg0, int arg1) {
+                        getRead(position);
+                        if(userNotificationList.get(position).getActionName().equals("rental")){
+                            updateReceive(position, "Approved");
+                        }else if(userNotificationList.get(position).getActionName().equals("swap")){
+                            updateSwap(position, "Approved");
+                        }
+                        Intent intent = new Intent(context, NotificationAct.class);
+                        context.startActivity(intent);
+                    }
+                });
+        alertDialogBuilder.setNegativeButton("Reject", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                getRead(position);
+                updateReceive(position, "Rejected");
+                Intent intent = new Intent(context, NotificationAct.class);
+                context.startActivity(intent);
+            }
+        });
+
+        android.support.v7.app.AlertDialog alertDialog = alertDialogBuilder.create();
+        alertDialog.show();
+    }
+    @SuppressLint("NewApi")
+    public void updateSwap(final int position, String status){
+        RequestQueue requestQueue = Volley.newRequestQueue(context);
+//        String URL = "http://104.197.4.32:8080/Koobym/user/add";
+//        String URL = Constants.WEB_SERVICE_URL+"user/add";
+        String nextDateStr = "";
+
+        Calendar c = Calendar.getInstance();
+        @SuppressLint({"NewApi", "LocalSuppress"})
+        DateFormat format = new android.icu.text.SimpleDateFormat("yyyy-MM-dd");
+        nextDateStr = format.format(c.getTime());
+
+        User user = new User();
+        user = (User) SPUtility.getSPUtil(context).getObject("USER_OBJECT", User.class);
+        String URL = Constants.UPDATE_SWAP_HEADER+"/"+status+"/"+userNotificationList.get(position).getActionId()+"/"+nextDateStr;
+
+        Log.d("UpdateSwapHeaderURL", URL);
+
+
+        final Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd").registerTypeAdapter(Date.class, GsonDateDeserializer.getInstance()).create();
+        final String mRequestBody = gson.toJson(userNotificationList);
+
+
+        Log.d("LOG_VOLLEY_swapHeaderUD", mRequestBody);
+        Log.d("LOG_VOLLEY rentalHeader", mRequestBody);
+        StringRequest stringRequest = new StringRequest(Request.Method.GET, URL, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                Log.i("UpdateSwapHeader", response);
+                SwapHeader swapHeaderMod = gson.fromJson(response, SwapHeader.class);
+
+                getSwapHeader(position, "view");
+
+
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.e("LOG_VOLLEY", error.toString());
+                error.printStackTrace();
+            }
+        }) {
+            @Override
+            public String getBodyContentType() {
+                return "application/json; charset=utf-8";
+            }
+
+            @Override
+            public byte[] getBody() throws AuthFailureError {
+                try {
+                    return mRequestBody == null ? null : mRequestBody.getBytes("utf-8");
+                } catch (UnsupportedEncodingException uee) {
+                    VolleyLog.wtf("Unsupported Encoding while trying to get the bytes of %s using %s", mRequestBody, "utf-8");
+                    return null;
+                }
+            }
+        };
+
+        requestQueue.add(stringRequest);
     }
 
     @SuppressLint("NewApi")
@@ -337,6 +514,73 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
                         Intent intent = new Intent(context, MeetUpChooser.class);
                         Bundle bundle = new Bundle();
                         bundle.putSerializable("rentalHeader", rentalHeaderMod);
+                        intent.putExtras(bundle);
+                        context.startActivity(intent);
+                    }
+                }
+
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.e("LOG_VOLLEY", error.toString());
+            }
+        }) {
+            @Override
+            public String getBodyContentType() {
+                return "application/json; charset=utf-8";
+            }
+
+            @Override
+            public byte[] getBody() throws AuthFailureError {
+                try {
+                    return mRequestBody == null ? null : mRequestBody.getBytes("utf-8");
+                } catch (UnsupportedEncodingException uee) {
+                    VolleyLog.wtf("Unsupported Encoding while trying to get the bytes of %s using %s", mRequestBody, "utf-8");
+                    return null;
+                }
+            }
+        };
+
+        requestQueue.add(stringRequest);
+    }
+
+    public void getSwapHeader(final int position, final String status){
+        RequestQueue requestQueue = Volley.newRequestQueue(context);
+//        String URL = "http://104.197.4.32:8080/Koobym/user/add";
+        User user = new User();
+        user = (User) SPUtility.getSPUtil(context).getObject("USER_OBJECT", User.class);
+
+        String URL = Constants.GET_SWAP_DETAIL+userNotificationList.get(position).getActionId();
+
+        d("getSwapHeader", URL);
+//        String URL = Constants.WEB_SERVICE_URL+"user/add";
+
+        final SwapHeader swapHeader = new SwapHeader();
+
+        final Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd").registerTypeAdapter(Date.class, GsonDateDeserializer.getInstance()).create();
+        final String mRequestBody = gson.toJson(swapHeader);
+
+
+        d("LOG_VOLLEY", mRequestBody);
+        final User finalUser = user;
+        StringRequest stringRequest = new StringRequest(Request.Method.GET, URL, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                Log.i("swapHeaderResponseId", response);
+                SwapHeader swapHeaderMod = gson.fromJson(response, SwapHeader.class);
+
+                if(status.equals("view")){
+                    Intent intent = new Intent(context, ViewBookAct.class);
+                    Bundle bundle = new Bundle();
+                    bundle.putSerializable("swapBook", swapHeaderMod.getSwapDetail());
+                    intent.putExtras(bundle);
+                    context.startActivity(intent);
+                }else if(status.equals("meetUp")){
+                    if(finalUser.getUserId()==userNotificationList.get(position).getUser().getUserId()){
+                        Intent intent = new Intent(context, SwapMeetUpChooser.class);
+                        Bundle bundle = new Bundle();
+                        bundle.putSerializable("swapHeader", swapHeaderMod);
                         intent.putExtras(bundle);
                         context.startActivity(intent);
                     }

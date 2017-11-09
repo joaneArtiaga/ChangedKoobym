@@ -77,6 +77,16 @@
                 </LinearLayout>
             </LinearLayout>
 
+
+            <Spinner
+                android:id="@+id/spinnerStatus"
+                android:layout_width="350dp"
+                android:layout_height="30dp"
+                android:layout_marginTop="5dp"
+                android:entries="@array/book_status"
+                android:layout_gravity="center_horizontal"
+                android:gravity="center_horizontal"/>
+
             <LinearLayout
                 android:layout_width="330dp"
                 android:layout_height="wrap_content"
@@ -84,8 +94,7 @@
                 android:background="@drawable/rounded_ll"
                 android:layout_marginTop="10dp"
                 android:padding="10dp"
-                android:layout_gravity="center_horizontal"
-                >
+                android:layout_gravity="center_horizontal">
 
                 <TextView
                     android:layout_width="match_parent"
@@ -151,7 +160,8 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal">
+                    android:orientation="horizontal"
+                    android:id="@+id/rentalLL">
 
                     <TextView
                         android:layout_width="150dp"
@@ -173,6 +183,7 @@
 
                     <TextView
                         android:layout_width="150dp"
+                        android:id="@+id/headerLP"
                         android:layout_height="wrap_content"
                         android:text="Lock-in Price:"/>
 
@@ -189,37 +200,32 @@
                 android:layout_height="wrap_content"
                 android:id="@+id/fragment_review_container"
                 android:layout_gravity="center_horizontal"/>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_gravity="center_horizontal"
+                android:padding="7dp"
+                android:gravity="center_horizontal"
+                android:id="@+id/button_ll">
+
+                <Button
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:layout_height="70dp"
+                    android:text="Request to Rent"
+                    android:id="@+id/btnVbRent"
+                    android:gravity="center"/>
+
+                <Button
+                    android:layout_width="0dp"
+                    android:layout_height="70dp"
+                    android:layout_weight="1"
+                    android:text="View Owner Profile"
+                    android:id="@+id/btnVbViewOwner"
+                    android:gravity="center" />
+            </LinearLayout>
         </LinearLayout>
     </ScrollView>
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:layout_alignParentBottom="true"
-        android:layout_gravity="center_horizontal"
-        android:padding="7dp"
-        android:gravity="center_horizontal"
-        android:id="@+id/button_ll">
-
-        <Button
-            android:layout_width="0dp"
-            android:layout_weight="1"
-            android:layout_height="70dp"
-            android:text="Request to Rent"
-            android:id="@+id/btnVbRent"
-            android:gravity="center"
-            android:textColor="@color/colorDark"
-            android:background="@color/colorLightOrange"/>
-
-        <Button
-            android:layout_width="0dp"
-            android:layout_height="70dp"
-            android:layout_weight="1"
-            android:layout_marginLeft="5dp"
-            android:text="View Owner Profile"
-            android:id="@+id/btnVbViewOwner"
-            android:gravity="center"
-            android:textColor="@color/colorDark"
-            android:background="@color/colorLightOrange"/>
-    </LinearLayout>
 </RelativeLayout>

@@ -294,6 +294,24 @@ public class LandingPage extends AppCompatActivity
         // SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
         SearchView searchView = (SearchView) MenuItemCompat.getActionView(menu.findItem(R.id.action_search));
         MenuItem item = menu.findItem(R.id.action_notifications);
+
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                Log.d("SearchKeyword", query);
+                Intent intent = new Intent(LandingPage.this, SearchResult.class);
+                Bundle bundle = new Bundle();
+                bundle.putString("SearchKeyword", query);
+                intent.putExtras(bundle);
+                startActivity(intent);
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                return false;
+            }
+        });
         // searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
         item.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
             @Override
@@ -352,7 +370,7 @@ public class LandingPage extends AppCompatActivity
     BroadcastReceiver notificationReceivedReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
-            Toast.makeText(getApplicationContext(), intent.getStringExtra("data"), Toast.LENGTH_SHORT).show();
+            Toast.makeText(getApplicationContext(), "push notification", Toast.LENGTH_SHORT).show();
         }
     };
 }

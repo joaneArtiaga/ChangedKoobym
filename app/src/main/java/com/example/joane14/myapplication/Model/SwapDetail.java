@@ -23,7 +23,7 @@ public class SwapDetail implements Serializable {
     @SerializedName("swapTimeStamp")
     private String swapTimeStamp;
 
-    @SerializedName("price")
+    @SerializedName("swapPrice")
     private Float swapPrice;
 
     @SerializedName("swapComments")

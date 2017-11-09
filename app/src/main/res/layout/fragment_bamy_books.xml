@@ -1,12 +1,12 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.example.joane14.myapplication.Fragments.ShowBooksFrag"
-    android:orientation="vertical">
+    tools:context="com.example.joane14.myapplication.Fragments.BAmyBooks">
+
 
     <GridView
-        android:id="@+id/show_books_gridview"
+        android:id="@+id/my_books_gridview"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:numColumns="2"
@@ -14,4 +14,4 @@
         android:verticalSpacing="10dp"
         android:padding="10dp"/>
 
-</LinearLayout>
+</FrameLayout>

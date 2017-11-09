@@ -24,6 +24,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.example.joane14.myapplication.Fragments.BAbookRequest;
+import com.example.joane14.myapplication.Fragments.BAmyBooks;
 import com.example.joane14.myapplication.Fragments.CompleteFrag;
 import com.example.joane14.myapplication.Fragments.CompleteSwapFrag;
 import com.example.joane14.myapplication.Fragments.Constants;
@@ -57,7 +59,9 @@ public class TransactionActivity extends AppCompatActivity
         SwapTransaction.OnSwapTransactionInteractionListener,
         ToDeliverSwapFrag.OnToDeliverSwapInteractionListener,
         CompleteSwapFrag.OnCompleteSwapInteractionListener,
-        ToApproveFrag.OnToApproveInteractionListener{
+        ToApproveFrag.OnToApproveInteractionListener,
+        BAbookRequest.OnRequestInteractionListener,
+        BAmyBooks.OnMyBookListener{
 
     ImageView profileImg;
     private TabLayout tabLayout;
@@ -110,8 +114,8 @@ public class TransactionActivity extends AppCompatActivity
 
     private void setupViewPager(ViewPager viewPager) {
         TransactionActivity.ViewPagerAdapter adapter = new TransactionActivity.ViewPagerAdapter(getSupportFragmentManager());
-        adapter.addFragment(new RentTransaction(), "Rent");
-        adapter.addFragment(new SwapTransaction(), "Swap");
+        adapter.addFragment(new BAmyBooks(), "My Books");
+        adapter.addFragment(new BAbookRequest(), "Requests");
 //        adapter.addFragment(new ToReturnFrag(), "To Return");
 //        adapter.addFragment(new CompleteFrag(), "Complete");
         viewPager.setAdapter(adapter);
@@ -223,6 +227,16 @@ public class TransactionActivity extends AppCompatActivity
 
     @Override
     public void ontToApproveOnClick(Uri uri) {
+
+    }
+
+    @Override
+    public void onMyBookOnClick(Uri uri) {
+
+    }
+
+    @Override
+    public void OnRequestOnClick(Uri uri) {
 
     }
 

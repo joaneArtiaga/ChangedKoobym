@@ -47,6 +47,8 @@ public class Constants {
 
     public static final String UPDATE_BOOK_OWNER = WEB_SERVICE_URL + "bookOwner/updateBookOwner";
 
+    public static final String UPDATE_BOOK_OWNER_1 = WEB_SERVICE_URL + "bookOwner/update";
+
     public static final String UPDATE_SWAP_HEADER = WEB_SERVICE_URL + "swapHeader/updateStatus";
 
     public static final String GET_SWAP_DETAILS_ALL = WEB_SERVICE_URL + "swapDetail/getAllSwap";
@@ -54,6 +56,8 @@ public class Constants {
     public static final String GET_REQUEST_RECEIVED = WEB_SERVICE_URL + "rentalHeader/requestReceivedById/";
 
     public static final String GET_MY_SWAP = WEB_SERVICE_URL + "swapDetail/mySwapBooks/";
+
+    public static final String GET_MY_SWAP_RECOMMENDED = WEB_SERVICE_URL + "swapDetail/mySwapBooksPrice/";
 
     public static final String RECOMMEND_SWAP_BOOK = WEB_SERVICE_URL + "swapDetail/mySwapBooksPrice/";
 
@@ -83,7 +87,11 @@ public class Constants {
 
     public static final String POST_RENTAL_DETAIL = WEB_SERVICE_URL + "rentalDetail/add";
 
+    public static final String POST_RENTAL_DETAIL_1 = WEB_SERVICE_URL + "rentalDetail/setBookOwnerAsRental";
+
     public static final String POST_SWAP_DETAIL = WEB_SERVICE_URL + "swapDetail/add";
+
+    public static final String POST_SWAP_DETAIL_1 = WEB_SERVICE_URL + "swapDetail/setBookOwnerAsSwap";
 
     public static final String POST_BOOK_OWNER = WEB_SERVICE_URL + "bookOwner/add";
 
@@ -119,6 +127,8 @@ public class Constants {
 
     public static final String GET_RENTAL_DETAIL = WEB_SERVICE_URL + "rentalHeader/get/";
 
+    public static final String GET_SWAP_DETAIL = WEB_SERVICE_URL + "swapHeader/get/";
+
     public static final String GET_ALL_BOOK_OWNER = WEB_SERVICE_URL + "bookOwner/all/";
 
     public static final String GET_BOOK_OWNER_RENTAL_DETAIL = WEB_SERVICE_URL + "rentalDetail/getRentalDetail/";
@@ -127,6 +137,14 @@ public class Constants {
 
     public static final String GET_RECOMMENDATION = WEB_SERVICE_URL + "bookOwner/suggestedBooks/";
 
+    public static final String GET_SEARCH_RESULT = WEB_SERVICE_URL + "bookOwner/searchBooks/";
+
     public static final String PUT_RENTAL_HEADER = WEB_SERVICE_URL + "rentalHeader/update";
+
+    public static final String PUT_SWAP_HEADER = WEB_SERVICE_URL + "swapHeader/update";
+
+    public static final String GET_BOOK_ACVTIVITY_REQUEST = WEB_SERVICE_URL + "bookOwner/bookActivity/requests/";
+
+    public static final String GET_BOOK_ACTIVITY_MY_BOOKS = WEB_SERVICE_URL + "bookOwner/bookActivity/own/";
 
 }

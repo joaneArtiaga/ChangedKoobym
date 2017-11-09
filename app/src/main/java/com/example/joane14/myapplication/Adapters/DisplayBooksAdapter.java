@@ -97,8 +97,11 @@ public class DisplayBooksAdapter extends BaseAdapter {
         statusBook.setText(bookOwnerModel.getStatus());
         if(bookOwnerModel.getStatus().equals("Rent")){
             statusLinear.setBackgroundColor(ContextCompat.getColor(context, R.color.colorRent));
-        }else{
+        }else if(bookOwnerModel.getStatus().equals("Swap")){
             statusLinear.setBackgroundColor(ContextCompat.getColor(context, R.color.colorSwap));
+        }else{
+            statusBook.setText("Not Advertised");
+            statusLinear.setBackgroundColor(ContextCompat.getColor(context, R.color.colorGray));
         }
 
         String author = " ";
@@ -124,8 +127,7 @@ public class DisplayBooksAdapter extends BaseAdapter {
 //        getRatings();
 
         mRating.setRating(Float.parseFloat(String.valueOf(bookOwnerModel.getRate())));
-
-
+        Log.d("getRateDisplayAdap", String.valueOf(bookOwnerModel.getRate()));
 
         return convertView;
     }
