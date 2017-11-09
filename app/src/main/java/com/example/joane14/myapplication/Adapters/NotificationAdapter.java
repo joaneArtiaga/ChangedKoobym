@@ -197,9 +197,11 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
                                     updateReceive(position, "Confirm");
                                     getRead(position);
                                 } else if (userNotificationList.get(position).getActionStatus().equals("Confirm")) {
+                                    Log.d("ConfirmNotif", "Inside");
                                     getRead(position);
-
-                                }else if(userNotificationList.get(position).getActionName().equals("ToGive")){
+                                    updateSwap(position, "ToReceive");
+                                }else if(userNotificationList.get(position).getActionName().equals("ToReceive")){
+                                    Log.d("ToDeliverNotif", "Inside");
                                     toGiveDialog(position);
                                 }
                             }
@@ -216,6 +218,37 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
                 }
             });
         }
+    }
+
+    public void toDeliverDialog(final int position){
+        android.support.v7.app.AlertDialog.Builder alertDialogBuilder = new android.support.v7.app.AlertDialog.Builder(context);
+        alertDialogBuilder.setMessage("Did you deliver the book "+userNotificationList.get(position).getBookActionPerformedOn().getBookObj().getBookTitle()+" to "+userNotificationList.get(position).getUserPerformer().getUserFname()+" "+userNotificationList.get(position).getUserPerformer().getUserLname()+" on time?");
+        alertDialogBuilder.setPositiveButton("Yes",
+                new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface arg0, int arg1) {
+                        getRead(position);
+                        if(userNotificationList.get(position).getActionName().equals("rental")){
+                            updateReceive(position, "Approved");
+                        }else if(userNotificationList.get(position).getActionName().equals("swap")){
+                            updateSwap(position, "ToReceive");
+                        }
+                        Intent intent = new Intent(context, NotificationAct.class);
+                        context.startActivity(intent);
+                    }
+                });
+        alertDialogBuilder.setNegativeButton("No", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                getRead(position);
+                updateReceive(position, "Rejected");
+                Intent intent = new Intent(context, NotificationAct.class);
+                context.startActivity(intent);
+            }
+        });
+
+        android.support.v7.app.AlertDialog alertDialog = alertDialogBuilder.create();
+        alertDialog.show();
     }
 
     public void toGiveDialog(final int position){

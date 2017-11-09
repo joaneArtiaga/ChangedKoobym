@@ -46,10 +46,21 @@ public class SwapHeader implements Serializable {
     @SerializedName("dateConfirmed")
     private String dateConfirmed;
 
+    @SerializedName("dateDelivered")
+    private String dateDelivered;
+
     @SerializedName("dateReceived")
     private String dateReceived;
 
     private MeetUp meetUp;
+
+    public String getDateDelivered() {
+        return dateDelivered;
+    }
+
+    public void setDateDelivered(String dateDelivered) {
+        this.dateDelivered = dateDelivered;
+    }
 
     public MeetUp getMeetUp() {
         return meetUp;
