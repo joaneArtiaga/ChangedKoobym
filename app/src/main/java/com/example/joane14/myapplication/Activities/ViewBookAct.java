@@ -106,6 +106,8 @@ public class ViewBookAct extends AppCompatActivity implements
 
         mRenters = (TextView) findViewById(R.id.vbRenters);
         TextView mAuthor = (TextView) findViewById(R.id.vbAuthor);
+        TextView mHeaderLP = (TextView) findViewById(R.id.headerLP);
+        TextView mHeaderRP = (TextView) findViewById(R.id.heaedrRP);
         TextView mLPrice = (TextView) findViewById(R.id.vbLockInP);
         TextView mRPrice = (TextView) findViewById(R.id.vbRentalP);
         TextView mTitle = (TextView) findViewById(R.id.vbTitle);
@@ -115,6 +117,7 @@ public class ViewBookAct extends AppCompatActivity implements
         TextView mCondition = (TextView) findViewById(R.id.vbCondition);
         ImageView mBookImg = (ImageView) findViewById(R.id.vbBookPic);
         LinearLayout buttonLinear = (LinearLayout) findViewById(R.id.button_ll);
+        LinearLayout lockInLinear = (LinearLayout) findViewById(R.id.lockInLinear);
 
         mRating = (RatingBar) findViewById(R.id.vbRating);
 
@@ -192,6 +195,8 @@ public class ViewBookAct extends AppCompatActivity implements
 
             mRating.setRating(Float.parseFloat(String.valueOf(swapDetail.getBookOwner().getRate())));
 
+            lockInLinear.setVisibility(View.GONE);
+            mHeaderRP.setText("Swap Price");
             mLPrice.setText(String.valueOf(swapDetail.getSwapPrice()));
             mRPrice.setText(String.valueOf(swapDetail.getSwapPrice()/2));
 //            mRPrice.setVisibility(View.GONE);

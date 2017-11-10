@@ -90,13 +90,67 @@ public class BookActivityRequestAdapter extends BaseAdapter {
         Log.d("inside", "PrefferedAdapter");
         bookTitle.setText(bookActivityModel.getBookOwner().getBookObj().getBookTitle());
 
-        statusBook.setText(bookActivityModel.getStatus());
+        Log.d("STATA", bookActivityModel.getBookStatus());
+
+        if(bookActivityModel.getBookStatus().equals("swap")){
+            if(bookActivityModel.getStatus().equals("Request")){
+                statusBook.setText("Request, "+bookActivityModel.getBookStatus());
+            }else if(bookActivityModel.getStatus().equals("Approved")){
+                statusBook.setText("Waiting for Confirmation, "+bookActivityModel.getBookStatus());
+            }else if(bookActivityModel.getStatus().equals("Confirm")){
+                statusBook.setText("To Deliver, "+bookActivityModel.getBookStatus());
+            }else if(bookActivityModel.getStatus().equals("ToReceive")){
+                statusBook.setText("Complete, "+bookActivityModel.getBookStatus());
+            }else if(bookActivityModel.getStatus().equals("Complete")){
+                statusBook.setText("Complete, "+bookActivityModel.getBookStatus());
+            }
+        }else if(bookActivityModel.getBookStatus().equals("rent")){
+            if(bookActivityModel.getStatus().equals("Request")){
+                statusBook.setText("Request Sent, "+bookActivityModel.getBookStatus());
+            }else if(bookActivityModel.getStatus().equals("Approved")){
+                statusBook.setText("Waiting for Confirmation, "+bookActivityModel.getBookStatus());
+            }else if(bookActivityModel.getStatus().equals("Confirm")){
+                statusBook.setText("To Receive, "+bookActivityModel.getBookStatus());
+            }else if(bookActivityModel.getStatus().equals("ToReceive")){
+                statusBook.setText("Complete, "+bookActivityModel.getBookStatus());
+            }else if(bookActivityModel.getStatus().equals("Complete")){
+                statusBook.setText("Complete, "+bookActivityModel.getBookStatus());
+            }
+        }
+
+
         Log.d("BookStata", bookActivityModel.getBookOwner().getBookObj().getBookTitle()+" : "+bookActivityModel.getBookStatus());
         if(bookActivityModel.getBookStatus().equals("rent")){
             typeBook.setText("Rent");
+            if(bookActivityModel.getStatus().equals("Request")){
+                statusBook.setText("Request Sent");
+            }else if(bookActivityModel.getStatus().equals("Approved")){
+                statusBook.setText("Waiting for Confirmation");
+            }else if(bookActivityModel.getStatus().equals("Confirm")){
+                statusBook.setText("To Receive");
+            }else if(bookActivityModel.getStatus().equals("ToReceive")){
+                statusBook.setText("Complete");
+            }else if(bookActivityModel.getStatus().equals("Complete")){
+                statusBook.setText("Complete");
+            }else if(bookActivityModel.getStatus().equals("Rejected")){
+                statusBook.setText("Rejected");
+            }
             statusLinear.setBackgroundColor(ContextCompat.getColor(context, R.color.colorRent));
         }else if(bookActivityModel.getBookStatus().equals("swap")){
             typeBook.setText("Swap");
+            if(bookActivityModel.getStatus().equals("Request")){
+                statusBook.setText("Request");
+            }else if(bookActivityModel.getStatus().equals("Approved")){
+                statusBook.setText("Waiting for Confirmation");
+            }else if(bookActivityModel.getStatus().equals("Confirm")){
+                statusBook.setText("To Deliver");
+            }else if(bookActivityModel.getStatus().equals("ToReceive")){
+                statusBook.setText("Complete");
+            }else if(bookActivityModel.getStatus().equals("Complete")){
+                statusBook.setText("Complete");
+            }else if(bookActivityModel.getStatus().equals("Rejected")){
+                statusBook.setText("Rejected");
+            }
             statusLinear.setBackgroundColor(ContextCompat.getColor(context, R.color.colorSwap));
         }else{
             statusLinear.setBackgroundColor(ContextCompat.getColor(context, R.color.colorGray));

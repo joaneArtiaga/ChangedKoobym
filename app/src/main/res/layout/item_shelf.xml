@@ -41,6 +41,16 @@
         android:textSize="14sp"
         android:textStyle="italic" />
 
+    <TextView
+        android:id="@+id/lpSwapPrice"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_horizontal"
+        android:lines="2"
+        android:text="Book Author"
+        android:textColor="@color/colorDark"
+        android:textSize="14sp"
+        android:textStyle="italic" />
 
     <RatingBar
         android:id="@+id/rating_bookRating"

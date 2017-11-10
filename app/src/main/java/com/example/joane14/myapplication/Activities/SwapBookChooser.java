@@ -125,13 +125,14 @@ public class SwapBookChooser extends AppCompatActivity {
                 Log.i("SwapDetailResponse", response);
                 if(response.isEmpty()){
                     d("Available", "No books for swap");
+                    showWarningBookChooser();
                 }else{
                     d("Available","books for swap");
+                    Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd").registerTypeAdapter(Date.class, GsonDateDeserializer.getInstance()).create();
+                    suggested.clear();
+                    suggested.addAll(Arrays.asList(gson.fromJson(response, SwapDetail[].class)));
+                    mAdapter.notifyDataSetChanged();
                 }
-                Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd").registerTypeAdapter(Date.class, GsonDateDeserializer.getInstance()).create();
-                suggested.clear();
-                suggested.addAll(Arrays.asList(gson.fromJson(response, SwapDetail[].class)));
-                mAdapter.notifyDataSetChanged();
             }
         }, new Response.ErrorListener() {
             @Override
@@ -157,6 +158,23 @@ public class SwapBookChooser extends AppCompatActivity {
         };
 
         requestQueue.add(stringRequest);
+    }
+
+    public void showWarningBookChooser(){
+        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this);
+        alertDialogBuilder.setTitle("Swap Book");
+        alertDialogBuilder.setMessage("You don't have an available book for swap that matches with "+swapDetailModel.getBookOwner().getBookObj().getBookTitle()+"'s price.");
+        alertDialogBuilder.setPositiveButton("Okay",
+                new DialogInterface.OnClickListener() {
+                    @SuppressLint("NewApi")
+                    @Override
+                    public void onClick(DialogInterface arg0, int arg1) {
+                        finish();
+                    }
+                });
+
+        AlertDialog alertDialog = alertDialogBuilder.create();
+        alertDialog.show();
     }
 
     public void showConfirmation(final int position){

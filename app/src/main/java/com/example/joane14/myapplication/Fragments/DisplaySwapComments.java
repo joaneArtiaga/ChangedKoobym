@@ -56,7 +56,7 @@ public class DisplaySwapComments extends Fragment {
         swapDetailObj = new SwapDetail();
         this.swapDetailObj = (SwapDetail) getArguments().getSerializable("swapComment");
         Log.d("swapComment", swapDetailObj.toString());
-        suggested = swapDetailObj.getSwapComments();
+//        suggested = swapDetailObj.getSwapComments();
 
 
 

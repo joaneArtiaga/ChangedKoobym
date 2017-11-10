@@ -95,6 +95,7 @@ public class BookChooserAdapter extends BaseAdapter {
         TextView bookTitle = (TextView) convertView.findViewById(R.id.lpBookTitle);
         TextView bookAuthor = (TextView) convertView.findViewById(R.id.lpAuthor);
         TextView statusBook = (TextView) convertView.findViewById(R.id.ratingStatusBook);
+        TextView swapPrice = (TextView) convertView.findViewById(R.id.lpSwapPrice);
         LinearLayout statusLinear = (LinearLayout) convertView.findViewById(R.id.status_ll);
 
         mRating = (RatingBar) convertView.findViewById(R.id.rating_bookRating);
@@ -109,6 +110,8 @@ public class BookChooserAdapter extends BaseAdapter {
         }else{
             statusLinear.setBackgroundColor(ContextCompat.getColor(context, R.color.colorGray));
         }
+
+        swapPrice.setText(String.valueOf(swapDetailModel.getSwapPrice()));
 
         String author = " ";
         if(swapDetailModel.getBookOwner().getBookObj().getBookAuthor().size()!=0){

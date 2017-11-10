@@ -88,6 +88,7 @@ public class DisplayBooksAdapter extends BaseAdapter {
         TextView bookTitle = (TextView) convertView.findViewById(R.id.lpBookTitle);
         TextView bookAuthor = (TextView) convertView.findViewById(R.id.lpAuthor);
         TextView statusBook = (TextView) convertView.findViewById(R.id.ratingStatusBook);
+        TextView bookPrice = (TextView) convertView.findViewById(R.id.lpSwapPrice);
         LinearLayout statusLinear = (LinearLayout) convertView.findViewById(R.id.status_ll);
 
         mRating = (RatingBar) convertView.findViewById(R.id.rating_bookRating);
@@ -103,6 +104,7 @@ public class DisplayBooksAdapter extends BaseAdapter {
             statusBook.setText("Not Advertised");
             statusLinear.setBackgroundColor(ContextCompat.getColor(context, R.color.colorGray));
         }
+        bookPrice.setVisibility(View.GONE);
 
         String author = " ";
         if(bookOwnerModel.getBookObj().getBookAuthor().size()!=0){

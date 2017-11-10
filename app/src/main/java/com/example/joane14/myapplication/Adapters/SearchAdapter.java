@@ -85,8 +85,10 @@ public class SearchAdapter extends BaseAdapter {
         TextView bookTitle = (TextView) convertView.findViewById(R.id.lpBookTitle);
         TextView bookAuthor = (TextView) convertView.findViewById(R.id.lpAuthor);
         TextView statusBook = (TextView) convertView.findViewById(R.id.ratingStatusBook);
+        TextView bookPrice = (TextView) convertView.findViewById(R.id.lpSwapPrice);
         LinearLayout statusLinear = (LinearLayout) convertView.findViewById(R.id.status_ll);
 
+        bookPrice.setVisibility(View.GONE);
         mRating = (RatingBar) convertView.findViewById(R.id.rating_bookRating);
         Log.d("inside", "PrefferedAdapter");
         bookTitle.setText(bookOwnerModel.getBookObj().getBookTitle());

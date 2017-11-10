@@ -18,6 +18,7 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.example.joane14.myapplication.Activities.GsonDateDeserializer;
+import com.example.joane14.myapplication.Activities.ViewBookAct;
 import com.example.joane14.myapplication.Activities.ViewOwnBookAct;
 import com.example.joane14.myapplication.Adapters.PrefferedAdapter;
 import com.example.joane14.myapplication.Adapters.SearchAdapter;
@@ -107,7 +108,7 @@ public class SearchFragmentResult extends Fragment {
                 Log.d("SwapDetailResponse", response);
                 Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd").registerTypeAdapter(Date.class, GsonDateDeserializer.getInstance()).create();
                 SwapDetail swapDetails = gson.fromJson(response, SwapDetail.class);
-                Intent intent = new Intent(getContext(), ViewOwnBookAct.class);
+                Intent intent = new Intent(getContext(), ViewBookAct.class);
                 Bundle bundle = new Bundle();
                 bundle.putSerializable("swapBook",swapDetails);
                 intent.putExtras(bundle);
@@ -138,7 +139,7 @@ public class SearchFragmentResult extends Fragment {
                 Log.d("RentalDetailResponse", response);
                 Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd").registerTypeAdapter(Date.class, GsonDateDeserializer.getInstance()).create();
                 RentalDetail rentalDetails = gson.fromJson(response, RentalDetail.class);
-                Intent intent = new Intent(getContext(), ViewOwnBookAct.class);
+                Intent intent = new Intent(getContext(), ViewBookAct.class);
                 Bundle bundle = new Bundle();
                 bundle.putSerializable("viewBook",rentalDetails);
                 intent.putExtras(bundle);

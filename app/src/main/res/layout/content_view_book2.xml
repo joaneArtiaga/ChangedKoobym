@@ -156,6 +156,7 @@
                     <TextView
                         android:layout_width="150dp"
                         android:layout_height="wrap_content"
+                        android:id="@+id/heaedrRP"
                         android:text="Rental Price:"/>
 
                     <TextView
@@ -169,11 +170,13 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal"
-                    android:layout_marginTop="5dp">
+                    android:layout_marginTop="5dp"
+                    android:id="@+id/lockInLinear">
 
                     <TextView
                         android:layout_width="150dp"
                         android:layout_height="wrap_content"
+                        android:id="@+id/headerLP"
                         android:text="Lock-in Price:"/>
 
                     <TextView
