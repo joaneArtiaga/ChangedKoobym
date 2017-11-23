@@ -278,6 +278,8 @@ public class TimeDateChooser extends AppCompatActivity {
                             Log.d("RentalHeaderRent", rentalHeader.toString());
 
                             addMeetUp();
+                            Intent intent = new Intent(TimeDateChooser.this, NotificationAct.class);
+                            startActivity(intent);
                         }else{
                             swapHeader.setDateTimeStamp(nextDateStr);
                             swapHeader.setLocation(locationChosen);

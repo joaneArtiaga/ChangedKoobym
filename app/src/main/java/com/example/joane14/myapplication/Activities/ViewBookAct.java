@@ -240,12 +240,12 @@ public class ViewBookAct extends AppCompatActivity implements
 //            ft.commit();
 
             Log.d("SwapComment", "Display");
-            Bundle bundle = new Bundle();
-            bundle.putSerializable("swapComment", swapDetail);
-            DisplaySwapComments displaySwapComments = DisplaySwapComments.newInstance(bundle);
-            FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
-            fragmentTransaction.replace(R.id.fragment_review_container, displaySwapComments, displaySwapComments.getTag());
-            fragmentTransaction.commit();
+//            Bundle bundle = new Bundle();
+//            bundle.putSerializable("swapComment", swapDetail);
+//            DisplaySwapComments displaySwapComments = DisplaySwapComments.newInstance(bundle);
+//            FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
+//            fragmentTransaction.replace(R.id.fragment_review_container, displaySwapComments, displaySwapComments.getTag());
+//            fragmentTransaction.commit();
 
             mRentBtn.setText("Request to Swap");
 

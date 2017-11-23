@@ -87,7 +87,7 @@ public class BookActivityMyBooksAdapter extends BaseAdapter {
             }
         }else if(bookActivityModel.getBookStatus().equals("rent")){
             if(bookActivityModel.getStatus().equals("Request")){
-                statusBook.setText("Request Sent");
+                statusBook.setText("Request");
             }else if(bookActivityModel.getStatus().equals("Approved")){
                 statusBook.setText("Waiting for Confirmation");
             }else if(bookActivityModel.getStatus().equals("Confirm")){

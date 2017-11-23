@@ -113,7 +113,8 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
             }
         } else if (userNotification.getActionName().equals("swap")) {
             if (userNotificationList.get(position).getActionStatus().equals("request") || userNotificationList.get(position).getActionStatus().equals("Request")) {
-                getSwapHeader(position, userNotification);
+//                getSwapHeader(position, userNotification);
+                message = userNotification.getUserPerformer().getUserFname() + " " + userNotification.getUserPerformer().getUserLname() + " " + userNotification.getActionStatus() + "ed your book " + userNotification.getBookActionPerformedOn().getBookObj().getBookTitle() + " to be swapped.";
             } else if (userNotification.getActionStatus().equals("Approved")) {
                 message = userNotification.getUserPerformer().getUserFname() + " " + userNotification.getUserPerformer().getUserLname() + " " + userNotification.getActionStatus() + " your request of the book " + userNotification.getBookActionPerformedOn().getBookObj().getBookTitle() + " to be swapped.";
             } else if (userNotification.getActionStatus().equals("Confirm")) {
@@ -270,10 +271,11 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
                                     Log.d("ToReceiveNotif", "Inside");
                                     toGiveDialog(position);
                                     getRead(position);
+                                    getSwapHeader(position, "change");
                                 } else if (userNotificationList.get(position).getActionStatus().equals("Complete")) {
                                     Log.d("CompletedNotif", "Inside");
                                     getRead(position);
-                                    getSwapHeader(position, "change");
+//                                    getSwapHeader(position, "change");
                                 }
                             }
                         }
