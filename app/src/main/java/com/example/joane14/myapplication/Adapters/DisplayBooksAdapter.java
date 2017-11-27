@@ -1,8 +1,6 @@
 package com.example.joane14.myapplication.Adapters;
 
 import android.content.Context;
-import android.graphics.Color;
-import android.graphics.drawable.Drawable;
 import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -26,7 +24,6 @@ import com.bumptech.glide.Glide;
 import com.example.joane14.myapplication.Activities.GsonDateDeserializer;
 import com.example.joane14.myapplication.Fragments.Constants;
 import com.example.joane14.myapplication.Model.BookOwnerModel;
-import com.example.joane14.myapplication.Model.RentalDetail;
 import com.example.joane14.myapplication.Model.RentalHeader;
 import com.example.joane14.myapplication.Model.User;
 import com.example.joane14.myapplication.R;
@@ -100,6 +97,8 @@ public class DisplayBooksAdapter extends BaseAdapter {
             statusLinear.setBackgroundColor(ContextCompat.getColor(context, R.color.colorRent));
         }else if(bookOwnerModel.getStatus().equals("Swap")){
             statusLinear.setBackgroundColor(ContextCompat.getColor(context, R.color.colorSwap));
+        }else if(bookOwnerModel.getStatus().equals("Auction")){
+            statusLinear.setBackgroundColor(ContextCompat.getColor(context, R.color.colorAuction));
         }else{
             statusBook.setText("Not Advertised");
             statusLinear.setBackgroundColor(ContextCompat.getColor(context, R.color.colorGray));
