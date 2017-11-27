@@ -135,6 +135,8 @@ public class Constants {
 
     public static final String GET_BOOK_OWNER_SWAP_DETAIL = WEB_SERVICE_URL + "swapDetail/getSwapDetail/";
 
+    public static final String GET_BOOK_OWNER_AUCTION_DETAIL = WEB_SERVICE_URL + "auctionDetail/getAuctionDetail/";
+
     public static final String GET_RECOMMENDATION = WEB_SERVICE_URL + "bookOwner/suggestedBooks/";
 
     public static final String GET_SEARCH_RESULT = WEB_SERVICE_URL + "bookOwner/searchBooks/";

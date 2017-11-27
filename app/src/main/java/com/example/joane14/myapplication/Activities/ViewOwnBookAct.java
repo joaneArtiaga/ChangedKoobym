@@ -8,6 +8,7 @@ import android.icu.text.DateFormat;
 import android.icu.text.SimpleDateFormat;
 import android.icu.util.Calendar;
 import android.net.Uri;
+import android.os.Bundle;
 import android.os.Handler;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.FragmentTransaction;
@@ -17,7 +18,6 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.MenuItem;
@@ -25,7 +25,6 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RatingBar;
@@ -50,7 +49,6 @@ import com.example.joane14.myapplication.Model.BookOwnerModel;
 import com.example.joane14.myapplication.Model.DayModel;
 import com.example.joane14.myapplication.Model.RentalDetail;
 import com.example.joane14.myapplication.Model.RentalHeader;
-import com.example.joane14.myapplication.Model.SwapComment;
 import com.example.joane14.myapplication.Model.SwapDetail;
 import com.example.joane14.myapplication.Model.TimeModel;
 import com.example.joane14.myapplication.Model.User;
@@ -163,6 +161,7 @@ public class ViewOwnBookAct extends AppCompatActivity
             statusBook.add("Rent");
             statusBook.add("Swap");
             statusBook.add("Not Advertised");
+            statusBook.add("Auction");
 
             ArrayAdapter<String> adapter = new ArrayAdapter<String>(ViewOwnBookAct.this, android.R.layout.simple_dropdown_item_1line, statusBook);
             adapter.setDropDownViewResource(R.layout.support_simple_spinner_dropdown_item);
@@ -187,10 +186,12 @@ public class ViewOwnBookAct extends AppCompatActivity
                         bookOwnerModel = rentalDetailModel.getBookOwner();
                         bookOwnerModel.setStatus("Swap");
                         updateBookOwner(bookOwnerModel, "Rent");
-                    }else{
+                    }else if(position==2){
                         bookOwnerModel = rentalDetailModel.getBookOwner();
                         bookOwnerModel.setStatus("none");
                         updateBookOwner(bookOwnerModel, "Rent");
+                    }else{
+
                     }
                 }
 
@@ -260,6 +261,7 @@ public class ViewOwnBookAct extends AppCompatActivity
             statusBook.add("Rent");
             statusBook.add("Swap");
             statusBook.add("Not Advertised");
+            statusBook.add("Auction");
 
             getRatings(swapDetail.getBookOwner().getBookOwnerId());
 
@@ -285,10 +287,137 @@ public class ViewOwnBookAct extends AppCompatActivity
 //                        bookOwnerModel = rentalDetailModel.getBookOwner();
 //                        bookOwnerModel.setStatus("Swap");
 //                        updateBookOwner(bookOwnerModel);
-                    }else{
+                    }else if(position==2){
                         bookOwnerModel = swapDetail.getBookOwner();
                         bookOwnerModel.setStatus("none");
                         updateBookOwner(bookOwnerModel, "Swap");
+                    }else{
+
+                    }
+                }
+
+                @Override
+                public void onNothingSelected(AdapterView<?> parent) {
+
+                }
+            });
+
+            mTitle.setText(swapDetail.getBookOwner().getBookObj().getBookTitle());
+
+
+
+//            mLPrice.setText(String.valueOf(swapDetail.getSwapPrice()));
+//            mRPrice.setText(String.valueOf(swapDetail.getSwapPrice()/2));
+//            mRPrice.setVisibility(View.GONE);
+
+            final User user = (User) SPUtility.getSPUtil(ViewOwnBookAct.this).getObject("USER_OBJECT", User.class);
+
+            if(user.getUserId()==swapDetail.getBookOwner().getUserObj().getUserId()){
+                buttonLinear.setVisibility(View.GONE);
+            }
+
+            String author = "";
+
+            if(swapDetail.getBookOwner().getBookObj().getBookAuthor().size()!=0){
+                for(int init=0; init<swapDetail.getBookOwner().getBookObj().getBookAuthor().size(); init++){
+                    if(!(swapDetail.getBookOwner().getBookObj().getBookAuthor().get(init).getAuthorFName().equals(""))){
+                        author+=swapDetail.getBookOwner().getBookObj().getBookAuthor().get(init).getAuthorFName()+" ";
+                        if(!(swapDetail.getBookOwner().getBookObj().getBookAuthor().get(init).getAuthorLName().equals(""))){
+                            author+=swapDetail.getBookOwner().getBookObj().getBookAuthor().get(init).getAuthorLName();
+                            if(init+1<swapDetail.getBookOwner().getBookObj().getBookAuthor().size()){
+                                author+=", ";
+                            }
+                        }
+                    }
+                }
+            }else{
+                author="Unknown Author";
+            }
+            mAuthor.setText(author);
+            Glide.with(this).load(swapDetail.getBookOwner().getBookObj().getBookFilename()).centerCrop().into(mBookImg);
+            mContent.setText(swapDetail.getBookOwner().getBookObj().getBookDescription());
+            mCondition.setText(swapDetail.getBookOwner().getStatusDescription());
+
+//            getRatings();
+//            getCount();
+
+//            Bundle bundle = new Bundle();
+//            bundle.putSerializable("swapDetail", swapDetail);
+//
+//            FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+//            ft.replace(R.id.fragment_review_container, DisplayBookReview.newInstance(bundle));
+//            ft.commit();
+
+            Log.d("SwapComment", "Display");
+            Bundle bundle = new Bundle();
+            bundle.putSerializable("swapComment", swapDetail);
+            DisplaySwapComments displaySwapComments = DisplaySwapComments.newInstance(bundle);
+            FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
+            fragmentTransaction.replace(R.id.fragment_review_container, displaySwapComments, displaySwapComments.getTag());
+            fragmentTransaction.commit();
+
+            mRentBtn.setText("Request to Swap");
+
+            mViewBtn.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent = new Intent(ViewOwnBookAct.this, ProfileActivity.class);
+                    Bundle bundle = new Bundle();
+                    bundle.putSerializable("userModelPass", swapDetail.getBookOwner().getUserObj());
+                    intent.putExtras(bundle);
+                    startActivity(intent);
+                }
+            });
+
+            mRentBtn.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    checkIfExist(user.getUserId(), rentalDetailModel.getRental_detailId());
+                }
+            });
+        }else if(getIntent().getExtras().getSerializable("auctionBook")!=null){
+
+
+            swapDetail = new SwapDetail();
+            swapDetail = (SwapDetail) getIntent().getExtras().getSerializable("swapBook");
+
+
+            List<String> statusBook = new ArrayList<String>();
+            statusBook.add("Rent");
+            statusBook.add("Swap");
+            statusBook.add("Not Advertised");
+            statusBook.add("Auction");
+
+            getRatings(swapDetail.getBookOwner().getBookOwnerId());
+
+            ArrayAdapter<String> adapter = new ArrayAdapter<String>(ViewOwnBookAct.this, android.R.layout.simple_dropdown_item_1line, statusBook);
+            adapter.setDropDownViewResource(R.layout.support_simple_spinner_dropdown_item);
+            mSpinnerDay.setAdapter(adapter);
+
+            mSpinnerDay.setSelection(1);
+            mSpinnerDay.setBackgroundColor(ContextCompat.getColor(ViewOwnBookAct.this, R.color.colorSwap));
+
+            mSpinnerDay.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                @Override
+                public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+
+                    Log.d("SwapBookOwner", String.valueOf(position));
+                    if(position==0){
+                        bookOwnerModel = swapDetail.getBookOwner();
+                        bookOwnerModel.setStatus("Rent");
+                        customDialog("Swap");
+                    }else if(position==1){
+                        Toast.makeText(ViewOwnBookAct.this, "This book is already for Swap.", Toast.LENGTH_SHORT).show();
+//                        BookOwnerModel bookOwnerModel = new BookOwnerModel();
+//                        bookOwnerModel = rentalDetailModel.getBookOwner();
+//                        bookOwnerModel.setStatus("Swap");
+//                        updateBookOwner(bookOwnerModel);
+                    }else if(position==2){
+                        bookOwnerModel = swapDetail.getBookOwner();
+                        bookOwnerModel.setStatus("none");
+                        updateBookOwner(bookOwnerModel, "Swap");
+                    }else{
+
                     }
                 }
 
