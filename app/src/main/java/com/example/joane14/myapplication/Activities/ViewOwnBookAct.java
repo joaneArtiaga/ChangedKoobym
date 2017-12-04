@@ -1,6 +1,7 @@
 package com.example.joane14.myapplication.Activities;
 
 import android.annotation.SuppressLint;
+import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -22,15 +23,7 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
-import android.widget.Button;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.RatingBar;
-import android.widget.Spinner;
-import android.widget.TextView;
-import android.widget.Toast;
+import android.widget.*;
 
 import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
@@ -44,6 +37,7 @@ import com.bumptech.glide.Glide;
 import com.example.joane14.myapplication.Fragments.Constants;
 import com.example.joane14.myapplication.Fragments.DisplayBookReview;
 import com.example.joane14.myapplication.Fragments.DisplaySwapComments;
+import com.example.joane14.myapplication.Model.AuctionDetailModel;
 import com.example.joane14.myapplication.Model.Book;
 import com.example.joane14.myapplication.Model.BookOwnerModel;
 import com.example.joane14.myapplication.Model.DayModel;
@@ -64,6 +58,7 @@ import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 import static android.net.sip.SipErrorCode.TIME_OUT;
 import static android.util.Log.d;
@@ -76,10 +71,15 @@ public class ViewOwnBookAct extends AppCompatActivity
     static final int MSG_DISMISS_DIALOG = 0;
     RentalDetail rentalDetailModel, rentToPost;
     SwapDetail swapDetail, swapToPost;
+    AuctionDetailModel auctionToPost;
     BookOwnerModel bookOwnerModel;
     RatingBar mRating;
     TextView mRenters;
+    Button mStartDate;
+    List<String> mEndDate;
     private java.util.Calendar calendar;
+    private Calendar aucDate;
+    ArrayAdapter<String> adapterA;
 
 
     private AlertDialog mAlertDialog;
@@ -511,6 +511,7 @@ public class ViewOwnBookAct extends AppCompatActivity
             statusBook.add("Rent");
             statusBook.add("Swap");
             statusBook.add("Not Advertised");
+            statusBook.add("Auction");
 
             ArrayAdapter<String> adapter = new ArrayAdapter<String>(ViewOwnBookAct.this, android.R.layout.simple_dropdown_item_1line, statusBook);
             adapter.setDropDownViewResource(R.layout.support_simple_spinner_dropdown_item);
@@ -533,12 +534,16 @@ public class ViewOwnBookAct extends AppCompatActivity
                         bookOwnerModel = finalBookOwner;
                         bookOwnerModel.setStatus("Swap");
                         updateBookOwner(bookOwnerModel, "NotAdvertised");
-                    }else{
+                    }else if(position==2){
                         Toast.makeText(ViewOwnBookAct.this, "This book is already Not Advertised.", Toast.LENGTH_SHORT).show();
 //                        BookOwnerModel bookOwnerModel = new BookOwnerModel();
 //                        bookOwnerModel = swapDetail.getBookOwner();
 //                        bookOwnerModel.setStatus("none");
 //                        updateBookOwner(bookOwnerModel);
+                    }else{
+                        bookOwnerModel=finalBookOwner;
+                        bookOwnerModel.setStatus("Auction");
+                        customAuctionDialog("NotAdvertised");
                     }
                 }
 
@@ -610,6 +615,211 @@ public class ViewOwnBookAct extends AppCompatActivity
         }
     }
 
+    @SuppressLint("NewApi")
+    public void customAuctionDialog(final String status){
+        final Dialog dialog = new Dialog(this);
+        dialog.setContentView(R.layout.auction_custom_dialog);
+        dialog.setTitle("Auction Settings");
+        final DayModel day;
+        final TimeModel time;
+        final DatePickerDialog.OnDateSetListener mDatePicker;
+
+        aucDate = Calendar.getInstance();
+
+
+        day = new DayModel();
+        time = new TimeModel();
+
+        mEndDate = new ArrayList<String>();
+        Log.d("mEndDate", "labay lang");
+        final List<String> dateEnd = new ArrayList<String>();
+        final List<String> rangeDays = new ArrayList<String>();
+
+
+        auctionToPost = new AuctionDetailModel();
+
+
+        Button mBtnOkay = (Button) dialog.findViewById(R.id.btnOkay);
+        Button mBtnCancel = (Button) dialog.findViewById(R.id.btnCancel);
+
+
+        mDatePicker = new DatePickerDialog.OnDateSetListener(){
+
+            @Override
+            public void onDateSet(android.widget.DatePicker view, int year, int monthOfYear,
+                                  int dayOfMonth) {
+                // TODO Auto-generated method stub
+                aucDate.set(java.util.Calendar.YEAR, year);
+                aucDate.set(java.util.Calendar.MONTH, monthOfYear);
+                aucDate.set(java.util.Calendar.DAY_OF_MONTH, dayOfMonth);
+                String myFormat = "yyyy-MM-dd"; //In which you need put here
+                java.text.SimpleDateFormat sdf = new java.text.SimpleDateFormat(myFormat, Locale.US);
+                mStartDate.setText(sdf.format(aucDate.getTime()));
+                Log.d("startDate", sdf.format(aucDate.getTime()));
+
+                auctionToPost.setStartDate(sdf.format(aucDate.getTime()));
+
+                aucDate.add(java.util.Calendar.DAY_OF_MONTH, 1);
+                dateEnd.add(sdf.format(aucDate.getTime()));
+                adapterA.notifyDataSetChanged();
+                Log.d("endDate 1", sdf.format(aucDate.getTime()));
+
+
+                aucDate.add(java.util.Calendar.DAY_OF_MONTH, 1);
+                dateEnd.add(sdf.format(aucDate.getTime()));
+                adapterA.notifyDataSetChanged();
+                Log.d("endDate 2", sdf.format(aucDate.getTime()));
+
+                aucDate.add(java.util.Calendar.DAY_OF_MONTH, 1);
+                dateEnd.add(sdf.format(aucDate.getTime()));
+                adapterA.notifyDataSetChanged();
+                Log.d("endDate 3", sdf.format(aucDate.getTime()));
+            }
+        };
+
+        mStartDate = (Button) dialog.findViewById(R.id.tvAucStartDate);
+        mStartDate.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                new DatePickerDialog(ViewOwnBookAct.this, mDatePicker, aucDate.get(java.util.Calendar.YEAR),
+                        aucDate.get(java.util.Calendar.MONTH), aucDate.get(Calendar.DAY_OF_MONTH)).show();
+            }
+        });
+
+        if(dateEnd.size()==0||dateEnd.isEmpty()){
+            Log.d("dateEnd", "empty");
+        }else{
+            Log.d("dateEnd", "not empty");
+        }
+
+        adapterA = new ArrayAdapter<String>(this, android.R.layout.simple_dropdown_item_1line, dateEnd);
+        adapterA.setDropDownViewResource(R.layout.support_simple_spinner_dropdown_item);
+
+        Spinner mSpinner = (Spinner) dialog.findViewById(R.id.aucSpinner);
+        if(adapterA==null){
+            Log.d("apater", "is null");
+        }else{
+            Log.d("apater", "is not null");
+        }
+        mSpinner.setAdapter(adapterA);
+
+        mSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                Log.d("AuctionItemSelected", dateEnd.get(position));
+                auctionToPost.setEndDate(dateEnd.get(position));
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+                Log.d("AuctionItemSelected", "walay selceted");
+
+            }
+        });
+        mBtnOkay.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                updateBookOwner(bookOwnerModel, status);
+            }
+        });
+
+        mBtnCancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.cancel();
+            }
+        });
+        dialog.show();
+
+    }
+
+//    @SuppressLint("NewApi")
+//    private void updateLabel() {
+//        String myFormat = "yyyy-MM-dd"; //In which you need put here
+//        java.text.SimpleDateFormat sdf = new java.text.SimpleDateFormat(myFormat, Locale.US);
+//        mStartDate.setText(sdf.format(aucDate.getTime()));
+//        Log.d("startDate", sdf.format(aucDate.getTime()));
+//
+//        auctionToPost.setStartDate(sdf.format(aucDate.getTime()));
+//        Date forEnd;
+//
+//        aucDate.add(java.util.Calendar.DAY_OF_MONTH, 1);
+//        mEndDate.add(sdf.format(aucDate.getTime()));
+//        adapterA.notifyDataSetChanged();
+//        Log.d("endDate 1", sdf.format(aucDate.getTime()));
+//
+//
+//        aucDate.add(java.util.Calendar.DAY_OF_MONTH, 1);
+//        mEndDate.add(sdf.format(aucDate.getTime()));
+//        adapterA.notifyDataSetChanged();
+//        Log.d("endDate 2", sdf.format(aucDate.getTime()));
+//
+//        aucDate.add(java.util.Calendar.DAY_OF_MONTH, 1);
+//        mEndDate.add(sdf.format(aucDate.getTime()));
+//        adapterA.notifyDataSetChanged();
+//        Log.d("endDate 3", sdf.format(aucDate.getTime()));
+//
+//    }
+
+//    public void customDialogAuction(final String status){
+//        final Dialog dialog = new Dialog(this);
+//        dialog.setContentView(R.layout.auction_custom_dialog);
+//        final DayModel day;
+//        final TimeModel time;
+//
+//
+//        day = new DayModel();
+//        time = new TimeModel();
+//
+//        final List<String> endingDate = new ArrayList<String>();
+//
+//        rangeDays.add("1");
+//        rangeDays.add("2");
+//        rangeDays.add("3");
+//        rangeDays.add("4");
+//        rangeDays.add("5");
+//
+//        Button mBtnOkay = (Button) dialog.findViewById(R.id.btnOkay);
+//        Button mBtnCancel = (Button) dialog.findViewById(R.id.btnCancel);
+//
+//        Spinner mSpinAuc = (Spinner) dialog.findViewById(R.id.aucSpinner);
+//
+//        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_dropdown_item_1line, endingDate);
+//        adapter.setDropDownViewResource(R.layout.support_simple_spinner_dropdown_item);
+//        if(adapter==null){
+//            Log.d("apater", "is null");
+//        }else{
+//            Log.d("apater", "is not null");
+//        }
+//        mSpinAuc.setAdapter(adapter);
+//
+//        mSpinAuc.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+//            @Override
+//            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+//                rentToPost.setDaysForRent(Integer.parseInt(endingDate.get(position)));
+//            }
+//
+//            @Override
+//            public void onNothingSelected(AdapterView<?> parent) {
+//
+//            }
+//        });
+//        mBtnOkay.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                updateBookOwner(bookOwnerModel, status);
+//            }
+//        });
+//
+//        mBtnCancel.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                dialog.cancel();
+//            }
+//        });
+//        dialog.show();
+//    }
+
     public void customDialog(final String status){
         final Dialog dialog = new Dialog(this);
         dialog.setContentView(R.layout.spinner);
@@ -675,6 +885,8 @@ public class ViewOwnBookAct extends AppCompatActivity
 //        String URL = "http://104.197.4.32:8080/Koobym/user/add";
         String URL = Constants.UPDATE_BOOK_OWNER_1;
 
+        final User user = (User) SPUtility.getSPUtil(ViewOwnBookAct.this).getObject("USER_OBJECT", User.class);
+
         final Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd").registerTypeAdapter(Date.class, GsonDateDeserializer.getInstance()).create();
         final String mRequestBody = gson.toJson(bookOwnerModelToPost);
 
@@ -708,6 +920,15 @@ public class ViewOwnBookAct extends AppCompatActivity
                         swapToPost.setSwapDescription(bookOwnerModel.getStatusDescription());
                     }
                     addSwapDetail(swapToPost);
+                }else if(bookOwnerModelToPost.getStatus().equals("Auction")){
+                    if(fromWhere.equals("NotAdvertised")){
+                        auctionToPost.setBookOwner(bookOwnerModelToPost);
+                        auctionToPost.setUser(user);
+                        auctionToPost.setAuctionDescription(bookOwnerModelToPost.getStatusDescription());
+                        auctionToPost.setStartingPrice(Float.parseFloat(String.valueOf(calculatePrice(bookOwnerModelToPost.getBookObj()))));
+                    }
+
+                    addAuctionDetail(auctionToPost);
                 }
             }
         }, new Response.ErrorListener() {
@@ -715,6 +936,62 @@ public class ViewOwnBookAct extends AppCompatActivity
             public void onErrorResponse(VolleyError error) {
                 Log.e("LOG_VOLLEY", error.toString());
                 error.printStackTrace();
+            }
+        }) {
+            @Override
+            public String getBodyContentType() {
+                return "application/json; charset=utf-8";
+            }
+
+            @Override
+            public byte[] getBody() throws AuthFailureError {
+                try {
+                    return mRequestBody == null ? null : mRequestBody.getBytes("utf-8");
+                } catch (UnsupportedEncodingException uee) {
+                    VolleyLog.wtf("Unsupported Encoding while trying to get the bytes of %s using %s", mRequestBody, "utf-8");
+                    return null;
+                }
+            }
+        };
+
+        requestQueue.add(stringRequest);
+    }
+
+    private void addAuctionDetail(AuctionDetailModel auctionDetailModel) {
+        RequestQueue requestQueue = Volley.newRequestQueue(this);
+//        String URL = "http://104.197.4.32:8080/Koobym/user/add";
+        String URL = Constants.POST_AUCTION_DETAIL_1;
+
+
+//        user.setDayTimeModel();
+        final Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd").registerTypeAdapter(Date.class, GsonDateDeserializer.getInstance()).create();
+        final String mRequestBody = gson.toJson(auctionDetailModel);
+
+
+        int maxLogSize = 2000;
+        for(int i = 0; i <= mRequestBody.length() / maxLogSize; i++) {
+            int start = i * maxLogSize;
+            int end = (i+1) * maxLogSize;
+            end = end > mRequestBody.length() ? mRequestBody.length() : end;
+            Log.d("aucLogVolley", mRequestBody);
+        }
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, URL, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                Log.i("auctionDetailAddLog", response);
+
+                Intent intent = new Intent(ViewOwnBookAct.this, ProfileActivity.class);
+                Bundle bundlePass = new Bundle();
+                User userModel = new User();
+                userModel = (User) SPUtility.getSPUtil(ViewOwnBookAct.this).getObject("USER_OBJECT", User.class);
+                bundlePass.putSerializable("userModelPass", userModel);
+                intent.putExtras(bundlePass);
+                startActivity(intent);
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.e("LOG_VOLLEY", error.toString());
             }
         }) {
             @Override

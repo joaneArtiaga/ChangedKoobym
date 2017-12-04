@@ -149,4 +149,6 @@ public class Constants {
 
     public static final String GET_BOOK_ACTIVITY_MY_BOOKS = WEB_SERVICE_URL + "bookOwner/bookActivity/own/";
 
+    public static final String POST_AUCTION_DETAIL_1 = WEB_SERVICE_URL + "auctionDetail/setBookOwnerAsAuction";
+
 }
