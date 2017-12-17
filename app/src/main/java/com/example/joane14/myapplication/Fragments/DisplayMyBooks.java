@@ -25,6 +25,7 @@ import com.android.volley.toolbox.Volley;
 import com.example.joane14.myapplication.Activities.GsonDateDeserializer;
 import com.example.joane14.myapplication.Activities.ViewOwnBookAct;
 import com.example.joane14.myapplication.Adapters.DisplayBooksAdapter;
+import com.example.joane14.myapplication.Model.AuctionDetailModel;
 import com.example.joane14.myapplication.Model.BookOwnerModel;
 import com.example.joane14.myapplication.Model.RentalDetail;
 import com.example.joane14.myapplication.Model.SwapDetail;
@@ -111,10 +112,10 @@ public class DisplayMyBooks extends Fragment {
             public void onResponse(String response) {
                 Log.d("AuctionDetailResponse", response);
                 Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd").registerTypeAdapter(Date.class, GsonDateDeserializer.getInstance()).create();
-                SwapDetail swapDetails = gson.fromJson(response, SwapDetail.class);
+                AuctionDetailModel auctionDetailModel= gson.fromJson(response, AuctionDetailModel.class);
                 Intent intent = new Intent(getContext(), ViewOwnBookAct.class);
                 Bundle bundle = new Bundle();
-                bundle.putSerializable("auctionBook",swapDetails);
+                bundle.putSerializable("auctionBook",auctionDetailModel);
                 intent.putExtras(bundle);
                 startActivity(intent);
 //                Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd").registerTypeAdapter(Date.class, GsonDateDeserializer.getInstance()).create();

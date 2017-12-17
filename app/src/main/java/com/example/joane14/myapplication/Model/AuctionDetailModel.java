@@ -10,8 +10,6 @@ public class AuctionDetailModel implements Serializable {
 
     private int auctionDetailId;
 
-    private User user;
-
     private float startingPrice;
 
     private BookOwnerModel bookOwner;
@@ -29,14 +27,6 @@ public class AuctionDetailModel implements Serializable {
 
     public void setAuctionDetailId(int auctionDetailId) {
         this.auctionDetailId = auctionDetailId;
-    }
-
-    public User getUser() {
-        return user;
-    }
-
-    public void setUser(User user) {
-        this.user = user;
     }
 
     public float getStartingPrice() {

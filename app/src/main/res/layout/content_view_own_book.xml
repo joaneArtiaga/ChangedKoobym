@@ -149,6 +149,7 @@
 
             <LinearLayout
                 android:layout_width="330dp"
+                android:id="@+id/llprice"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
                 android:background="@drawable/rounded_ll"
