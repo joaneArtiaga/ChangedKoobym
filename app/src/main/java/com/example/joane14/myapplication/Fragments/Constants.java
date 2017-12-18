@@ -155,4 +155,6 @@ public class Constants {
 
     public static final String POST_AUCTION_DETAIL_1 = WEB_SERVICE_URL + "auctionDetail/setBookOwnerAsAuction";
 
+    public static final String GET_AUCTION_BID = WEB_SERVICE_URL + "auctionCommentDetail/getAuctionCommentDetailsOfAuctionDetail/";
+
 }

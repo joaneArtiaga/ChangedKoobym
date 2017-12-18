@@ -17,6 +17,7 @@ import android.widget.TextView;
 
 import com.example.joane14.myapplication.Activities.SwapBookChooser;
 import com.example.joane14.myapplication.Model.AuctionComment;
+import com.example.joane14.myapplication.Model.AuctionCommentDetail;
 import com.example.joane14.myapplication.Model.AuctionDetailModel;
 import com.example.joane14.myapplication.Model.AuctionHeader;
 import com.example.joane14.myapplication.Model.SwapComment;
@@ -35,7 +36,7 @@ import java.util.List;
 
 public class AuctionCommentsAdapter extends RecyclerView.Adapter<AuctionCommentsAdapter.BookHolder> {
 
-    public List<AuctionComment> bookList;
+    public List<AuctionCommentDetail> bookList;
     public AuctionDetailModel auctionDetailModel;
     AuctionHeader auctionHeader;
     public Activity context;
@@ -54,7 +55,7 @@ public class AuctionCommentsAdapter extends RecyclerView.Adapter<AuctionComments
 
 
 
-    public AuctionCommentsAdapter(List<AuctionComment> myDataset, AuctionDetailModel auctionDetailModel) {
+    public AuctionCommentsAdapter(List<AuctionCommentDetail> myDataset, AuctionDetailModel auctionDetailModel) {
         auctionHeader = new AuctionHeader();
         bookList = myDataset;
         this.auctionDetailModel = auctionDetailModel;
@@ -64,10 +65,10 @@ public class AuctionCommentsAdapter extends RecyclerView.Adapter<AuctionComments
     @Override
     public void onBindViewHolder(AuctionCommentsAdapter.BookHolder holder, final int position) {
 
-        holder.mAuctionCommenterComment.setText(bookList.get(position).getAuctionComment());
-        holder.mAuctionCommenterName.setText(bookList.get(position).getUser().getUserFname()+" "+bookList.get(position).getUser().getUserLname());
+        holder.mAuctionCommenterComment.setText(bookList.get(position).getAuctionComment().getAuctionComment());
+        holder.mAuctionCommenterName.setText(bookList.get(position).getAuctionComment().getUser().getUserFname()+" "+bookList.get(position).getAuctionComment().getUser().getUserLname());
 
-        Picasso.with(context).load(bookList.get(position).getUser().getImageFilename()).fit().into(holder.mAuctionCommenterImg);
+        Picasso.with(context).load(bookList.get(position).getAuctionComment().getUser().getImageFilename()).fit().into(holder.mAuctionCommenterImg);
 //        Log.d("displayImage", bookList.get(position).getBookOwner().getBookObj().getBookFilename());
     }
 
@@ -85,9 +86,9 @@ public class AuctionCommentsAdapter extends RecyclerView.Adapter<AuctionComments
             super(itemView);
 
             this.context = context;
-            mAuctionCommenterName = (TextView) itemView.findViewById(R.id.swapCommenterName);
-            mAuctionCommenterComment = (TextView) itemView.findViewById(R.id.swapCommenterComment);
-            mAuctionCommenterImg = (ImageView) itemView.findViewById(R.id.ivSwapCommenterImg);
+            mAuctionCommenterName = (TextView) itemView.findViewById(R.id.auctionCommenterName);
+            mAuctionCommenterComment = (TextView) itemView.findViewById(R.id.auctionCommenterComment);
+            mAuctionCommenterImg = (ImageView) itemView.findViewById(R.id.ivAuctionCommenterImg);
 //            itemView.setOnClickListener(this);
 
 

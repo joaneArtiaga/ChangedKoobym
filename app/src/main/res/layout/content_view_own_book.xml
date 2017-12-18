@@ -198,7 +198,7 @@
 
             <FrameLayout
                 android:layout_width="330dp"
-                android:layout_height="wrap_content"
+                android:layout_height="500dp"
                 android:id="@+id/fragment_review_container"
                 android:layout_gravity="center_horizontal"/>
 

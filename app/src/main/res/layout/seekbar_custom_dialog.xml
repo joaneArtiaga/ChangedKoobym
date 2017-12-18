@@ -1,14 +1,32 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical"
+    android:layout_gravity="center_horizontal"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:id="@+id/seekbar_layout">
+    android:id="@+id/seekbar_layout"
+    android:padding="10dp">
+
+    <TextView
+        android:id="@+id/tvPriceBar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="20dp"
+        android:text="Hello World~"
+        android:textStyle="bold"
+        android:textAlignment="center"/>
+
+    <ProgressBar
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/progBar"
+        style="?android:attr/progressBarStyleHorizontal"/>
 
     <SeekBar
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/seekbarPrice"/>
+        android:id="@+id/seekbarPrice"
+        android:max="1000"/>
 
     <LinearLayout
         android:layout_width="match_parent"

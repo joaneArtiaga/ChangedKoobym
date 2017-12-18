@@ -25,6 +25,7 @@ import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.RatingBar;
 import android.widget.SeekBar;
 import android.widget.TextView;
@@ -127,7 +128,6 @@ public class ViewAuctionBook extends AppCompatActivity
             auctionDetailModel = (AuctionDetailModel) getIntent().getExtras().getSerializable("auctionBook");
 
 
-            FrameLayout containerBid = (FrameLayout) findViewById(R.id.fragment_bid_container);
             FragmentManager fragmentManager = getSupportFragmentManager();
             Bundle bundle = new Bundle();
             bundle.putSerializable("auctionComment", auctionDetailModel);
@@ -209,6 +209,7 @@ public class ViewAuctionBook extends AppCompatActivity
                 public void onClick(View v) {
 
                     Log.d("BidTriggered", "YES");
+
                     Dialog dialogCustom = new Dialog(ViewAuctionBook.this);
                     LayoutInflater inflater = (LayoutInflater) ViewAuctionBook.this.getSystemService(LAYOUT_INFLATER_SERVICE);
                     View layout = inflater.inflate(R.layout.seekbar_custom_dialog, (ViewGroup) findViewById(R.id.seekbar_layout));
@@ -217,8 +218,28 @@ public class ViewAuctionBook extends AppCompatActivity
                     Button mBtnOkay = (Button) layout.findViewById(R.id.btnOkay);
                     Button mBtnCancel = (Button) layout.findViewById(R.id.btnCancel);
 
+                    final TextView mPriceBar = (TextView) layout.findViewById(R.id.tvPriceBar);
+                    final ProgressBar mProgBar = (ProgressBar) layout.findViewById(R.id.progBar);
                     final SeekBar mSeekBar= (SeekBar) layout.findViewById(R.id.seekbarPrice);
 
+                    mSeekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+                        @Override
+                        public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                            progress+=Math.round(auctionDetailModel.getStartingPrice());
+                            mProgBar.setProgress(progress);
+                            mPriceBar.setText(""+progress);
+                        }
+
+                        @Override
+                        public void onStartTrackingTouch(SeekBar seekBar) {
+
+                        }
+
+                        @Override
+                        public void onStopTrackingTouch(SeekBar seekBar) {
+
+                        }
+                    });
                     mBtnOkay.setOnClickListener(new View.OnClickListener() {
                         @RequiresApi(api = Build.VERSION_CODES.N)
                         @Override
