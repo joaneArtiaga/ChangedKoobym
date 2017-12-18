@@ -101,7 +101,8 @@
         <activity android:name=".Activities.NotificationAct" />
         <activity android:name=".Activities.ViewOwnBookAct" />
         <activity android:name=".Activities.JustForUse" />
-        <activity android:name=".Activities.SearchResult"></activity>
+        <activity android:name=".Activities.SearchResult" />
+        <activity android:name=".Activities.ViewAuctionBook"></activity>
     </application>
 
 </manifest>

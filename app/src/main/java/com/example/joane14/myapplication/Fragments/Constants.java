@@ -27,6 +27,8 @@ public class Constants {
 
     public static final String POST_SWAP_HEADER = WEB_SERVICE_URL + "swapHeader/add";
 
+    public static final String POST_AUCTION_HEADER = WEB_SERVICE_URL + "auctionHeader/add";
+
     public static final String GET_RENTAL_HEADER_MY_REQUEST = WEB_SERVICE_URL + "rentalHeader/myRequestById/";
 
     public static final String GET_TRANSACTION_TO_RETURN_RENTER = WEB_SERVICE_URL + "rentalHeader/toReturnByIdRenter/";
@@ -64,6 +66,8 @@ public class Constants {
     public static final String UPLOAD_IMAGE = WEB_SERVICE_URL + "image/upload";
 
     public static final String POST_SWAP_COMMENT_DETAIL = WEB_SERVICE_URL + "swapCommentDetail/add";
+
+    public static final String POST_AUCTION_COMMENT_DETAIL = WEB_SERVICE_URL + "auctionCommentDetail/add";
 
     public static final String GET_TO_APPROVE = WEB_SERVICE_URL + "swapHeader/toApproveById";
 

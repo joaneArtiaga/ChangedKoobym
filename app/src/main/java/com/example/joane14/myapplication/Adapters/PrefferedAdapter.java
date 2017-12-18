@@ -111,6 +111,8 @@ public class PrefferedAdapter extends BaseAdapter {
             statusLinear.setBackgroundColor(ContextCompat.getColor(context, R.color.colorRent));
         }else if(bookOwnerModel.getStatus().equals("Swap")){
             statusLinear.setBackgroundColor(ContextCompat.getColor(context, R.color.colorSwap));
+        }else if(bookOwnerModel.getStatus().equals("Auction")){
+            statusLinear.setBackgroundColor(ContextCompat.getColor(context, R.color.colorAuction));
         }else{
             statusLinear.setBackgroundColor(ContextCompat.getColor(context, R.color.colorGray));
         }

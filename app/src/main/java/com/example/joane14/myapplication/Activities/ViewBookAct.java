@@ -39,6 +39,7 @@ import com.bumptech.glide.Glide;
 import com.example.joane14.myapplication.Fragments.Constants;
 import com.example.joane14.myapplication.Fragments.DisplayBookReview;
 import com.example.joane14.myapplication.Fragments.DisplaySwapComments;
+import com.example.joane14.myapplication.Model.AuctionDetailModel;
 import com.example.joane14.myapplication.Model.RentalDetail;
 import com.example.joane14.myapplication.Model.RentalHeader;
 import com.example.joane14.myapplication.Model.SwapDetail;
@@ -65,6 +66,7 @@ public class ViewBookAct extends AppCompatActivity implements
     static final int MSG_DISMISS_DIALOG = 0;
     RentalDetail rentalDetailModel;
     SwapDetail swapDetail;
+    AuctionDetailModel auctionDetailModel;
     RatingBar mRating;
     TextView mRenters;
 
@@ -270,6 +272,89 @@ public class ViewBookAct extends AppCompatActivity implements
                     startActivity(intent);
                 }
             });
+        }else if(getIntent().getExtras().getSerializable("auctionBook")!=null){
+            auctionDetailModel = new AuctionDetailModel();
+            auctionDetailModel = (AuctionDetailModel) getIntent().getExtras().getSerializable("auctionBook");
+
+
+            mTitle.setText(auctionDetailModel.getBookOwner().getBookObj().getBookTitle());
+
+            mRating.setRating(Float.parseFloat(String.valueOf(auctionDetailModel.getBookOwner().getRate())));
+
+            lockInLinear.setVisibility(View.GONE);
+            mHeaderRP.setText("Starting Price");
+            mLPrice.setText(String.valueOf(auctionDetailModel.getStartingPrice()));
+//            mRPrice.setVisibility(View.GONE);
+
+            final User user = (User) SPUtility.getSPUtil(ViewBookAct.this).getObject("USER_OBJECT", User.class);
+
+            if(user.getUserId()==auctionDetailModel.getBookOwner().getUserObj().getUserId()){
+                buttonLinear.setVisibility(View.GONE);
+            }
+
+            String author = "";
+
+            if(auctionDetailModel.getBookOwner().getBookObj().getBookAuthor().size()!=0){
+                for(int init=0; init<auctionDetailModel.getBookOwner().getBookObj().getBookAuthor().size(); init++){
+                    if(!(auctionDetailModel.getBookOwner().getBookObj().getBookAuthor().get(init).getAuthorFName().equals(""))){
+                        author+=auctionDetailModel.getBookOwner().getBookObj().getBookAuthor().get(init).getAuthorFName()+" ";
+                        if(!(auctionDetailModel.getBookOwner().getBookObj().getBookAuthor().get(init).getAuthorLName().equals(""))){
+                            author+=auctionDetailModel.getBookOwner().getBookObj().getBookAuthor().get(init).getAuthorLName();
+                            if(init+1<auctionDetailModel.getBookOwner().getBookObj().getBookAuthor().size()){
+                                author+=", ";
+                            }
+                        }
+                    }
+                }
+            }else{
+                author="Unknown Author";
+            }
+            mAuthor.setText(author);
+            Glide.with(this).load(auctionDetailModel.getBookOwner().getBookObj().getBookFilename()).centerCrop().into(mBookImg);
+            mContent.setText(auctionDetailModel.getBookOwner().getBookObj().getBookDescription());
+            mCondition.setText(auctionDetailModel.getBookOwner().getStatusDescription());
+
+            getRatings(auctionDetailModel.getBookOwner().getBookOwnerId());
+//            getCount();
+
+//            Bundle bundle = new Bundle();
+//            bundle.putSerializable("swapDetail", swapDetail);
+//
+//            FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+//            ft.replace(R.id.fragment_review_container, DisplayBookReview.newInstance(bundle));
+//            ft.commit();
+
+            Log.d("SwapComment", "Display");
+//            Bundle bundle = new Bundle();
+//            bundle.putSerializable("swapComment", swapDetail);
+//            DisplaySwapComments displaySwapComments = DisplaySwapComments.newInstance(bundle);
+//            FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
+//            fragmentTransaction.replace(R.id.fragment_review_container, displaySwapComments, displaySwapComments.getTag());
+//            fragmentTransaction.commit();
+
+            mRentBtn.setText("Bid");
+
+            mViewBtn.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent = new Intent(ViewBookAct.this, ProfileActivity.class);
+                    Bundle bundle = new Bundle();
+                    bundle.putSerializable("userModelPass", auctionDetailModel.getBookOwner().getUserObj());
+                    intent.putExtras(bundle);
+                    startActivity(intent);
+                }
+            });
+
+//            mRentBtn.setOnClickListener(new View.OnClickListener() {
+//                @Override
+//                public void onClick(View v) {
+//                    Intent intent = new Intent(ViewBookAct.this, SwapBookChooser.class);
+//                    Bundle bundle = new Bundle();
+//                    bundle.putSerializable("swapDetail", auctionDetailModel);
+//                    intent.putExtras(bundle);
+//                    startActivity(intent);
+//                }
+//            });
         }
     }
 
