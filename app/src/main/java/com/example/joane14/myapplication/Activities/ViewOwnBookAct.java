@@ -12,6 +12,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.design.widget.NavigationView;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.GravityCompat;
@@ -34,7 +35,9 @@ import com.android.volley.VolleyLog;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.bumptech.glide.Glide;
+import com.example.joane14.myapplication.Fragments.AuctionBidFragment;
 import com.example.joane14.myapplication.Fragments.Constants;
+import com.example.joane14.myapplication.Fragments.CountdownFrag;
 import com.example.joane14.myapplication.Fragments.DisplayBookReview;
 import com.example.joane14.myapplication.Fragments.DisplaySwapComments;
 import com.example.joane14.myapplication.Model.AuctionDetailModel;
@@ -66,7 +69,8 @@ import static android.util.Log.d;
 public class ViewOwnBookAct extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener,
         DisplaySwapComments.OnSwapCommentInteractionListener,
-        DisplayBookReview.OnDisplayBookReviewInteractionListener{
+        DisplayBookReview.OnDisplayBookReviewInteractionListener,
+        CountdownFrag.OnCountdownInteractionListener{
 
     static final int MSG_DISMISS_DIALOG = 0;
     RentalDetail rentalDetailModel, rentToPost;
@@ -378,6 +382,13 @@ public class ViewOwnBookAct extends AppCompatActivity
             });
         }else if(getIntent().getExtras().getSerializable("auctionBook")!=null){
 
+            Log.d("auctionBook", "inside");
+
+            FragmentManager fragmentManager = getSupportFragmentManager();
+            CountdownFrag cdf = CountdownFrag.newInstance();
+            FragmentTransaction ft = fragmentManager.beginTransaction();
+            ft.replace(R.id.countdown_container, cdf);
+            ft.commit();
 
             auctionDetail = new AuctionDetailModel();
             auctionDetail = (AuctionDetailModel) getIntent().getExtras().getSerializable("auctionBook");
@@ -1563,6 +1574,11 @@ public class ViewOwnBookAct extends AppCompatActivity
 
     @Override
     public void onSwapCommentOnClick(Uri uri) {
+
+    }
+
+    @Override
+    public void onCountdownOnClick(Uri uri) {
 
     }
 }

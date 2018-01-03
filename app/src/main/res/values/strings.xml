@@ -24,6 +24,9 @@
     <string name="title_activity_swap_meet_up_chooser">Map</string>
 
 
+    <string name="countdown">There are only</string>
+    <string name="countdownLeft">till this auction stops.</string>
+
     <string name="spinner_prompt">Choose rating</string>
     <string-array name="rating_array">
         <item>1</item>

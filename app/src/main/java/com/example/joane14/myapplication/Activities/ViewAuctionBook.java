@@ -41,6 +41,7 @@ import com.android.volley.toolbox.Volley;
 import com.bumptech.glide.Glide;
 import com.example.joane14.myapplication.Fragments.AuctionBidFragment;
 import com.example.joane14.myapplication.Fragments.Constants;
+import com.example.joane14.myapplication.Fragments.CountdownFrag;
 import com.example.joane14.myapplication.Model.AuctionComment;
 import com.example.joane14.myapplication.Model.AuctionCommentDetail;
 import com.example.joane14.myapplication.Model.AuctionDetailModel;
@@ -66,7 +67,8 @@ import static android.util.Log.d;
 
 public class ViewAuctionBook extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener,
-        AuctionBidFragment.OnAuctionBidInteractionListener {
+        AuctionBidFragment.OnAuctionBidInteractionListener,
+        CountdownFrag.OnCountdownInteractionListener {
 
     AuctionDetailModel auctionDetailModel;
     RatingBar mRating;
@@ -77,6 +79,9 @@ public class ViewAuctionBook extends AppCompatActivity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_view_auction_book);
+
+        Log.d("ViewAuction", "inside");
+
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbarViewBookAuction);
         setSupportActionBar(toolbar);
@@ -135,6 +140,11 @@ public class ViewAuctionBook extends AppCompatActivity
             FragmentTransaction ft = fragmentManager.beginTransaction();
             ft.replace(R.id.fragment_bid_container, abf);
             ft.commit();
+
+            CountdownFrag cdf = CountdownFrag.newInstance();
+            ft.replace(R.id.countdown_container, cdf);
+            ft.commit();
+
 
             mTitle.setText(auctionDetailModel.getBookOwner().getBookObj().getBookTitle());
 
@@ -477,6 +487,11 @@ public class ViewAuctionBook extends AppCompatActivity
 
     @Override
     public void onAuctionBidClick(Uri uri) {
+
+    }
+
+    @Override
+    public void onCountdownOnClick(Uri uri) {
 
     }
 }

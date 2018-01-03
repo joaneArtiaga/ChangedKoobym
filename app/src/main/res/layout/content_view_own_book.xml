@@ -77,6 +77,12 @@
                 </LinearLayout>
             </LinearLayout>
 
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="200dp"
+                android:id="@+id/countdown_container"
+                android:layout_gravity="center_horizontal"/>
+
 
             <Spinner
                 android:id="@+id/spinnerStatus"
