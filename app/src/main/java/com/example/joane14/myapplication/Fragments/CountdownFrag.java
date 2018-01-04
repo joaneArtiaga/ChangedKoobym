@@ -11,6 +11,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.example.joane14.myapplication.Model.AuctionDetailModel;
 import com.example.joane14.myapplication.R;
 
 import java.text.SimpleDateFormat;
@@ -22,14 +23,16 @@ public class CountdownFrag extends Fragment {
     TextView txtTimerDay, txtTimerHour, txtTimerMinute, txtTimerSec, tvEvent;
     Handler handler;
     Runnable runnable;
+    AuctionDetailModel auctionDetailModel;
 
     private OnCountdownInteractionListener mListener;
 
     public CountdownFrag() {
     }
 
-    public static CountdownFrag newInstance() {
+    public static CountdownFrag newInstance(Bundle bundle) {
         CountdownFrag fragment = new CountdownFrag();
+        fragment.setArguments(bundle);
         return fragment;
     }
 
@@ -42,6 +45,13 @@ public class CountdownFrag extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_countdown, container, false);
+
+        auctionDetailModel = (AuctionDetailModel) getArguments().getSerializable("auctionBook");
+        if(auctionDetailModel!=null){
+            Log.d("auction", "not empty");
+        }else{
+            Log.d("auction", "empty");
+        }
 
         Log.d("Countdown", "inside");
         txtTimerDay = (TextView) view.findViewById(R.id.txtTimerDay);
@@ -57,6 +67,7 @@ public class CountdownFrag extends Fragment {
     }
 
     public void countDownStart() {
+        final String dateEnder = auctionDetailModel.getEndDate();
         handler = new Handler();
         runnable = new Runnable() {
             @Override
@@ -66,7 +77,8 @@ public class CountdownFrag extends Fragment {
                     SimpleDateFormat dateFormat = new SimpleDateFormat(
                             "yyyy-MM-dd");
                     // Please here set your event date//YYYY-MM-DD
-                    Date futureDate = dateFormat.parse("2018-12-25");
+                    Date futureDate = dateFormat.parse(dateEnder);
+                    Log.d("dateEnder", dateEnder);
                     Date currentDate = new Date();
                     if (!currentDate.after(futureDate)) {
                         long diff = futureDate.getTime()

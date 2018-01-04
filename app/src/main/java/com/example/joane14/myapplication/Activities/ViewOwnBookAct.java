@@ -385,7 +385,9 @@ public class ViewOwnBookAct extends AppCompatActivity
             Log.d("auctionBook", "inside");
 
             FragmentManager fragmentManager = getSupportFragmentManager();
-            CountdownFrag cdf = CountdownFrag.newInstance();
+            Bundle bundle = new Bundle();
+            bundle.putSerializable("auctionBook", getIntent().getExtras().getSerializable("auctionBook"));
+            CountdownFrag cdf = CountdownFrag.newInstance(bundle);
             FragmentTransaction ft = fragmentManager.beginTransaction();
             ft.replace(R.id.countdown_container, cdf);
             ft.commit();
