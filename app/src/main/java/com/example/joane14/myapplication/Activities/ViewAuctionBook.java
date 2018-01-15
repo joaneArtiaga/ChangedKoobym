@@ -139,7 +139,7 @@ public class ViewAuctionBook extends AppCompatActivity
             AuctionBidFragment abf = AuctionBidFragment.newInstance(bundle);
             FragmentTransaction ft = fragmentManager.beginTransaction();
             ft.replace(R.id.fragment_bid_container, abf);
-            ft.commit();
+//            ft.commit();
 
             bundle.putSerializable("auctionBook", auctionDetailModel);
             CountdownFrag cdf = CountdownFrag.newInstance(bundle);
