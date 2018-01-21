@@ -20,6 +20,15 @@ public class AuctionDetailModel implements Serializable {
 
     private String auctionDescription;
 
+    private String auctionStatus;
+
+    public String getAuctionStatus() {
+        return auctionStatus;
+    }
+
+    public void setAuctionStatus(String auctionStatus) {
+        this.auctionStatus = auctionStatus;
+    }
 
     public int getAuctionDetailId() {
         return auctionDetailId;
