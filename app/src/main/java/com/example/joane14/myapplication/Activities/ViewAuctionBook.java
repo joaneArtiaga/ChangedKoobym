@@ -16,11 +16,17 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.text.Html;
+import android.text.SpannableStringBuilder;
+import android.text.Spanned;
+import android.text.method.LinkMovementMethod;
+import android.text.style.ClickableSpan;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
 import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
@@ -190,6 +196,7 @@ public class ViewAuctionBook extends AppCompatActivity
             Glide.with(this).load(auctionDetailModel.getBookOwner().getBookObj().getBookFilename()).centerCrop().into(mBookImg);
             mContent.setText(auctionDetailModel.getBookOwner().getBookObj().getBookDescription());
             mCondition.setText(auctionDetailModel.getBookOwner().getStatusDescription());
+            makeTextViewResizable(mContent, 5, "See More", true);
 
             getRatings(auctionDetailModel.getBookOwner().getBookOwnerId());
 //            getCount();
@@ -290,6 +297,72 @@ public class ViewAuctionBook extends AppCompatActivity
                 }
             });
         }
+    }
+
+    public static void makeTextViewResizable(final TextView textView, final int maxLine, final String expandText, final boolean viewMore){
+        Log.d("makeTextViewResizable","inside");
+        if(textView.getTag() == null){
+            textView.setTag(textView.getText());
+        }
+
+        ViewTreeObserver treeObserver = textView.getViewTreeObserver();
+        treeObserver.addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+            @Override
+            public void onGlobalLayout() {
+                String text;
+                int lineEndText;
+                ViewTreeObserver observer = textView.getViewTreeObserver();
+
+                observer.removeGlobalOnLayoutListener(this);
+
+                if(maxLine == 0){
+                    lineEndText = textView.getLayout().getLineEnd(0);
+                    text = textView.getText().subSequence(0, lineEndText - expandText.length()-1)+" "+ expandText;
+                }else if(maxLine > 0 && textView.getLineCount() >= maxLine){
+                    lineEndText = textView.getLayout().getLineEnd(maxLine - 1);
+                    text = textView.getText().subSequence(0, lineEndText - expandText.length()-1)+" "+ expandText;
+                }else{
+                    lineEndText = textView.getLayout().getLineEnd(textView.getLayout().getLineCount()-1);
+                    text = textView.getText().subSequence(0, lineEndText)+" "+ expandText;
+                }
+
+                textView.setText(text);
+                textView.setMovementMethod(LinkMovementMethod.getInstance());
+                textView.setText(addClickablePartTextViewResizable(Html.fromHtml(textView.getText().toString()), textView, lineEndText, expandText,
+                        viewMore), TextView.BufferType.SPANNABLE);
+
+            }
+        });
+
+
+    }
+
+    private static SpannableStringBuilder addClickablePartTextViewResizable(final Spanned strSpanned, final TextView tv,
+                                                                            final int maxLine, final String spanableText, final boolean viewMore) {
+        String str = strSpanned.toString();
+        SpannableStringBuilder ssb = new SpannableStringBuilder(strSpanned);
+
+        if (str.contains(spanableText)) {
+            ssb.setSpan(new ClickableSpan() {
+
+                @Override
+                public void onClick(View widget) {
+                    Log.d("spannable", "inside");
+                    tv.setLayoutParams(tv.getLayoutParams());
+                    tv.setText(tv.getTag().toString(), TextView.BufferType.SPANNABLE);
+                    tv.invalidate();
+                    if (viewMore) {
+                        makeTextViewResizable(tv, -1, "View Less", false);
+                    } else {
+                        makeTextViewResizable(tv, 3, "View More", true);
+                    }
+
+                }
+            }, str.indexOf(spanableText), str.indexOf(spanableText) + spanableText.length(), 0);
+
+        }
+        return ssb;
+
     }
 
     public void addAuctionHeader(AuctionHeader auctionToPost, AuctionComment auctionComment, final AuctionCommentDetail auctionCommentDetail){
@@ -488,7 +561,7 @@ public class ViewAuctionBook extends AppCompatActivity
             startActivity(intent);
         }
 
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout_view_book2);
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout_view_book_auction);
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }
