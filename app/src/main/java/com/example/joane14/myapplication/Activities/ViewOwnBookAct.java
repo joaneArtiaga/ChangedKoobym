@@ -254,6 +254,7 @@ public class ViewOwnBookAct extends AppCompatActivity
 //                }
 //            });
             mCondition.setText(rentalDetailModel.getBookOwner().getStatusDescription());
+            makeTextViewResizable(mContent, 5, "See More", true);
 
             mRating.setRating(Float.parseFloat(String.valueOf(rentalDetailModel.getBookOwner().getRate())));
 
@@ -370,6 +371,7 @@ public class ViewOwnBookAct extends AppCompatActivity
             Glide.with(this).load(swapDetail.getBookOwner().getBookObj().getBookFilename()).centerCrop().into(mBookImg);
             mContent.setText(swapDetail.getBookOwner().getBookObj().getBookDescription());
             mCondition.setText(swapDetail.getBookOwner().getStatusDescription());
+            makeTextViewResizable(mContent, 5, "See More", true);
 
 //            getRatings();
 //            getCount();
@@ -382,12 +384,12 @@ public class ViewOwnBookAct extends AppCompatActivity
 //            ft.commit();
 
             Log.d("SwapComment", "Display");
-            Bundle bundle = new Bundle();
-            bundle.putSerializable("swapComment", swapDetail);
-            DisplaySwapComments displaySwapComments = DisplaySwapComments.newInstance(bundle);
-            FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
-            fragmentTransaction.replace(R.id.fragment_review_container, displaySwapComments, displaySwapComments.getTag());
-            fragmentTransaction.commit();
+//            Bundle bundle = new Bundle();
+//            bundle.putSerializable("swapComment", swapDetail);
+//            DisplaySwapComments displaySwapComments = DisplaySwapComments.newInstance(bundle);
+//            FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
+//            fragmentTransaction.replace(R.id.fragment_review_container, displaySwapComments, displaySwapComments.getTag());
+//            fragmentTransaction.commit();
 
             mRentBtn.setText("Request to Swap");
 
@@ -638,6 +640,7 @@ public class ViewOwnBookAct extends AppCompatActivity
             Glide.with(this).load(bookOwnerModel.getBookObj().getBookFilename()).centerCrop().into(mBookImg);
             mContent.setText(bookOwnerModel.getBookObj().getBookDescription());
             mCondition.setText(bookOwnerModel.getStatusDescription());
+            makeTextViewResizable(mContent, 5, "See More", true);
 
 
             mRentBtn.setText("Request to Swap");
