@@ -35,6 +35,26 @@
         android:orientation="horizontal">
 
         <TextView
+            android:id="@+id/textView6"
+            android:layout_width="100dp"
+            android:layout_height="wrap_content"
+            android:text="Start Time" />
+
+        <TextView
+            android:id="@+id/tvAucStartTime"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:clickable="true"
+            android:text="Pick Time"/>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <TextView
             android:layout_width="100dp"
             android:layout_height="wrap_content"
             android:text="End Date"/>
@@ -46,6 +66,27 @@
             android:backgroundTint="@color/colorDark"/>
 
     </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/textView6"
+            android:layout_width="100dp"
+            android:layout_height="wrap_content"
+            android:text="End Time" />
+
+        <TextView
+            android:id="@+id/tvAucEndTime"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:clickable="true"
+            android:text="Pick Time"/>
+
+    </LinearLayout>
+
 
     <LinearLayout
         android:layout_width="match_parent"

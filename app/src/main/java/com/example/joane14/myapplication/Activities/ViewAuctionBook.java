@@ -3,6 +3,7 @@ package com.example.joane14.myapplication.Activities;
 import android.app.Dialog;
 import android.content.Intent;
 import android.icu.util.Calendar;
+import android.icu.util.TimeZone;
 import android.net.Uri;
 import android.os.Build;
 import android.support.annotation.NonNull;
@@ -66,6 +67,7 @@ import com.google.gson.GsonBuilder;
 import com.squareup.picasso.Picasso;
 
 import java.io.UnsupportedEncodingException;
+import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -81,6 +83,7 @@ public class ViewAuctionBook extends AppCompatActivity
     TextView mRenters;
 
 
+    @RequiresApi(api = Build.VERSION_CODES.N)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -149,11 +152,12 @@ public class ViewAuctionBook extends AppCompatActivity
 
             FrameLayout containerForCounter = (FrameLayout) findViewById(R.id.fragment_bid_container);
 
+
             if(auctionDetailModel.getAuctionStatus().equals("start")){
-                bundle.putSerializable("auctionBook", auctionDetailModel);
-                CountdownFrag cdf = CountdownFrag.newInstance(bundle);
-                ft.replace(R.id.countdown_container, cdf);
-                ft.commit();
+                    bundle.putSerializable("auctionBook", auctionDetailModel);
+                    CountdownFrag cdf = CountdownFrag.newInstance(bundle);
+                    ft.replace(R.id.countdown_container, cdf);
+                    ft.commit();
             }else {
                 containerForCounter.setVisibility(View.GONE);
             }

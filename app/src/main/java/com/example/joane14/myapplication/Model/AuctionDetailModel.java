@@ -18,9 +18,29 @@ public class AuctionDetailModel implements Serializable {
 
     private String endDate;
 
+    private String endTime;
+
+    private String startTime;
+
     private String auctionDescription;
 
     private String auctionStatus;
+
+    public String getEndTime() {
+        return endTime;
+    }
+
+    public void setEndTime(String endTime) {
+        this.endTime = endTime;
+    }
+
+    public String getStartTime() {
+        return startTime;
+    }
+
+    public void setStartTime(String startTime) {
+        this.startTime = startTime;
+    }
 
     public String getAuctionStatus() {
         return auctionStatus;

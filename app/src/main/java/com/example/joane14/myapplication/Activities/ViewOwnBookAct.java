@@ -3,14 +3,17 @@ package com.example.joane14.myapplication.Activities;
 import android.annotation.SuppressLint;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
+import android.app.TimePickerDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.icu.text.DateFormat;
 import android.icu.text.SimpleDateFormat;
 import android.icu.util.Calendar;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.annotation.RequiresApi;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
@@ -33,11 +36,13 @@ import android.view.ViewTreeObserver;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RatingBar;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.TimePicker;
 import android.widget.Toast;
 
 import com.android.volley.AuthFailureError;
@@ -62,6 +67,7 @@ import com.example.joane14.myapplication.Model.RentalHeader;
 import com.example.joane14.myapplication.Model.SwapDetail;
 import com.example.joane14.myapplication.Model.TimeModel;
 import com.example.joane14.myapplication.Model.User;
+import com.example.joane14.myapplication.Model.UserDayTime;
 import com.example.joane14.myapplication.R;
 import com.example.joane14.myapplication.Utilities.SPUtility;
 import com.facebook.login.LoginManager;
@@ -91,7 +97,7 @@ public class ViewOwnBookAct extends AppCompatActivity
     AuctionDetailModel auctionDetail, auctionToPost;
     BookOwnerModel bookOwnerModel;
     RatingBar mRating;
-    TextView mRenters;
+    TextView mRenters, mStartTime, mEndTime;
     Button mStartDate;
     List<String> mEndDate;
     private java.util.Calendar calendar;
@@ -102,6 +108,7 @@ public class ViewOwnBookAct extends AppCompatActivity
 
     private AlertDialog mAlertDialog;
 
+    @RequiresApi(api = Build.VERSION_CODES.N)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -123,6 +130,8 @@ public class ViewOwnBookAct extends AppCompatActivity
         TextView mName = (TextView) hView.findViewById(R.id.tvName);
         TextView mEmail = (TextView) hView.findViewById(R.id.tvEmail);
         ImageView profileImg = (ImageView) hView.findViewById(R.id.profPic);
+
+        FrameLayout containerForCounter = (FrameLayout) findViewById(R.id.countdown_container);
 
         bookOwnerModel = new BookOwnerModel();
 
@@ -412,19 +421,24 @@ public class ViewOwnBookAct extends AppCompatActivity
             });
         }else if(getIntent().getExtras().getSerializable("auctionBook")!=null){
 
+
             Log.d("auctionBook", "inside");
 
             FragmentManager fragmentManager = getSupportFragmentManager();
             Bundle bundle = new Bundle();
             bundle.putSerializable("auctionBook", getIntent().getExtras().getSerializable("auctionBook"));
-            CountdownFrag cdf = CountdownFrag.newInstance(bundle);
-            FragmentTransaction ft = fragmentManager.beginTransaction();
-            ft.replace(R.id.countdown_container, cdf);
-            ft.commit();
 
             auctionDetail = new AuctionDetailModel();
             auctionDetail = (AuctionDetailModel) getIntent().getExtras().getSerializable("auctionBook");
 
+            if(auctionDetail.getAuctionStatus().equals("start")) {
+                CountdownFrag cdf = CountdownFrag.newInstance(bundle);
+                FragmentTransaction ft = fragmentManager.beginTransaction();
+                ft.replace(R.id.countdown_container, cdf);
+                ft.commit();
+            }else{
+                containerForCounter.setVisibility(View.GONE);
+            }
 
             List<String> statusBook = new ArrayList<String>();
             statusBook.add("Rent");
@@ -758,6 +772,22 @@ public class ViewOwnBookAct extends AppCompatActivity
         Button mBtnOkay = (Button) dialog.findViewById(R.id.btnOkay);
         Button mBtnCancel = (Button) dialog.findViewById(R.id.btnCancel);
 
+        mStartTime = (TextView) dialog.findViewById(R.id.tvAucStartTime);
+        mEndTime = (TextView) dialog.findViewById(R.id.tvAucEndTime);
+
+        mStartTime.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                CreateTimePicker(mStartTime, "start");
+            }
+        });
+
+        mEndTime.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                CreateTimePicker(mEndTime, "end");
+            }
+        });
 
         mDatePicker = new DatePickerDialog.OnDateSetListener(){
 
@@ -768,12 +798,14 @@ public class ViewOwnBookAct extends AppCompatActivity
                 aucDate.set(java.util.Calendar.YEAR, year);
                 aucDate.set(java.util.Calendar.MONTH, monthOfYear);
                 aucDate.set(java.util.Calendar.DAY_OF_MONTH, dayOfMonth);
-                String myFormat = "yyyy-MM-dd"; //In which you need put here
+
+                String myFormat = "yyyy-MM-dd";
                 java.text.SimpleDateFormat sdf = new java.text.SimpleDateFormat(myFormat, Locale.US);
                 mStartDate.setText(sdf.format(aucDate.getTime()));
                 Log.d("startDate", sdf.format(aucDate.getTime()));
 
                 auctionToPost.setStartDate(sdf.format(aucDate.getTime()));
+
 
                 aucDate.add(java.util.Calendar.DAY_OF_MONTH, 1);
                 dateEnd.add(sdf.format(aucDate.getTime()));
@@ -835,7 +867,11 @@ public class ViewOwnBookAct extends AppCompatActivity
         mBtnOkay.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                updateBookOwner(bookOwnerModel, status);
+                if(mStartTime==null&&mEndTime==null){
+                    Toast.makeText(getApplicationContext(), "Should set time for Auction.", Toast.LENGTH_SHORT).show();
+                }else{
+                    updateBookOwner(bookOwnerModel, status);
+                }
             }
         });
 
@@ -1041,6 +1077,8 @@ public class ViewOwnBookAct extends AppCompatActivity
                         auctionToPost.setBookOwner(bookOwnerModelToPost);
                         auctionToPost.setAuctionDescription(bookOwnerModelToPost.getStatusDescription());
                         auctionToPost.setStartingPrice(Float.parseFloat(String.valueOf(calculatePrice(bookOwnerModelToPost.getBookObj()))));
+                        auctionToPost.setStartTime(mStartTime.getText().toString());
+                        auctionToPost.setEndTime(mEndTime.getText().toString());
                     }
 
                     addAuctionDetail(auctionToPost);
@@ -1419,6 +1457,68 @@ public class ViewOwnBookAct extends AppCompatActivity
         };
 
         requestQueue.add(stringRequest);
+    }
+
+    public void CreateTimePicker(final TextView tvSet, final String stat){
+
+
+        final java.util.Calendar c = java.util.Calendar.getInstance();
+        int mHour = c.get(java.util.Calendar.HOUR_OF_DAY);
+        int mMinute = c.get(java.util.Calendar.MINUTE);
+
+
+        TimePickerDialog timePickerDialog = new TimePickerDialog(this,
+                new TimePickerDialog.OnTimeSetListener() {
+
+                    @Override
+                    public void onTimeSet(TimePicker view, int hourOfDay,
+                                          int minute) {
+                        int hour = hourOfDay;
+                        int minutes = minute;
+                        String timeSet = "";
+                        if (hour > 12) {
+                            hour -= 12;
+                            timeSet = "PM";
+                        } else if (hour == 0) {
+                            hour += 12;
+                            timeSet = "AM";
+                        } else if (hour == 12){
+                            timeSet = "PM";
+                        }else{
+                            timeSet = "AM";
+                        }
+
+                        String min = "";
+                        if (minutes < 10)
+                            min = "0" + minutes ;
+                        else
+                            min = String.valueOf(minutes);
+
+                        // Append in a StringBuilder
+                        String aTime = new StringBuilder().append(hour).append(':')
+                                .append(min ).append(" ").append(timeSet).toString();
+
+                        String timeGiven = "";
+                        timeGiven = hourOfDay + ":" + minute;
+                        Log.d("time selected Auction", timeGiven);
+//
+//                        if(pos==0){
+//                            mStartTime.setText(aTime);
+//                        }else{
+//                            mEndTime.setText(aTime);
+//                        }
+//
+                        tvSet.setText(aTime);
+
+                        if(stat.equals("start")){
+                            auctionToPost.setStartTime(aTime);
+                        }else if(stat.equals("end")) {
+                            auctionToPost.setEndTime(aTime);
+                        }
+
+                    }
+                }, mHour, mMinute, false);
+        timePickerDialog.show();
     }
 
     private Handler mHandler = new Handler() {
