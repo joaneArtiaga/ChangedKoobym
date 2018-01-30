@@ -35,6 +35,8 @@ import com.example.joane14.myapplication.Activities.TransactionActivity;
 import com.example.joane14.myapplication.Activities.ViewBookAct;
 import com.example.joane14.myapplication.Activities.ViewBookActivity;
 import com.example.joane14.myapplication.Fragments.Constants;
+import com.example.joane14.myapplication.Model.AuctionDetailModel;
+import com.example.joane14.myapplication.Model.AuctionHeader;
 import com.example.joane14.myapplication.Model.BookOwnerModel;
 import com.example.joane14.myapplication.Model.BookOwnerReview;
 import com.example.joane14.myapplication.Model.RentalDetail;
@@ -65,6 +67,8 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
     public List<UserNotification> userNotificationList;
     BookOwnerReview bookOwnerReview;
     SwapHeader swapHeaderModelOut;
+    AuctionHeader auctionHeaderModel;
+    AuctionDetailModel auctionDetailModel;
     String message = "";
 
     public Activity context;
@@ -100,7 +104,12 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
         dateStr = format.format(c.getTime());
 
         swapHeaderModelOut = new SwapHeader();
+        auctionDetailModel = new AuctionDetailModel();
+        auctionHeaderModel = new AuctionHeader();
+
+
         if (userNotification.getActionName().equals("rental")) {
+            Log.d("notifRent", "inside");
             if (userNotificationList.get(position).getActionStatus().equals("request") || userNotificationList.get(position).getActionStatus().equals("Request")) {
                 message = userNotification.getUserPerformer().getUserFname() + " " + userNotification.getUserPerformer().getUserLname() + " " + userNotification.getActionStatus() + "ed your book " + userNotification.getBookActionPerformedOn().getBookObj().getBookTitle() + " to be rented.";
             } else if (userNotification.getActionStatus().equals("Approved")) {
@@ -112,6 +121,7 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
                         "your deposit will be deducted.";
             }
         } else if (userNotification.getActionName().equals("swap")) {
+            Log.d("notifSwap", "inside");
             if (userNotificationList.get(position).getActionStatus().equals("request") || userNotificationList.get(position).getActionStatus().equals("Request")) {
 //                getSwapHeader(position, userNotification);
                 message = userNotification.getUserPerformer().getUserFname() + " " + userNotification.getUserPerformer().getUserLname() + " " + userNotification.getActionStatus() + "ed your book " + userNotification.getBookActionPerformedOn().getBookObj().getBookTitle() + " to be swapped.";
@@ -127,6 +137,18 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
                 message = "The book " + userNotification.getBookActionPerformedOn().getBookObj().getBookTitle() + " was Rejected by " + userNotification.getUserPerformer().getUserFname() + " " + userNotification.getUserPerformer().getUserLname();
             } else if (userNotification.getActionStatus().equals("Complete")) {
                 message = "The transaction of the book that you want to " + userNotification.getActionName() + " is completed";
+            }
+        } else if(userNotification.getActionName().equals("auction")){
+            User winner = new User();
+            Log.d("notifAuc", "inside");
+            if(userNotificationList.get(position).getActionStatus().equals("win")){
+                Log.d("notifAuc", "win");
+                message = "The book, "+userNotification.getBookActionPerformedOn().getBookObj().getBookTitle()+", you tried bidding just ended. Your bid fortunately won which is "+userNotification.getExtraMessage();
+            }else if(userNotificationList.get(position).getActionStatus().equals("lose")){
+                Log.d("notifAuc", "lose");
+                message = "The book, "+userNotification.getBookActionPerformedOn().getBookObj().getBookTitle()+", you tried bidding just ended. Your bid unfortunately lost.";
+            }else if(userNotificationList.get(position).getActionStatus().equals("own")){
+                message = "The book, "+userNotification.getBookActionPerformedOn().getBookObj().getBookTitle()+", you auctioned just ended. The highest bid is "+userNotification.getExtraMessage()+" by "+userNotification.getUserPerformer().getUserFname()+" "+userNotification.getUserPerformer().getUserLname();
             }
         }
 
