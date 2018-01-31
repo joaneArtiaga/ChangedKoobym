@@ -9,7 +9,7 @@ import java.io.Serializable;
 public class AuctionComment implements Serializable {
 
     private int auctionCommentId;
-    private String auctionComment;
+    private int auctionComment;
     private User user;
 
 
@@ -21,11 +21,11 @@ public class AuctionComment implements Serializable {
         this.auctionCommentId = auctionCommentId;
     }
 
-    public String getAuctionComment() {
+    public Integer getAuctionComment() {
         return auctionComment;
     }
 
-    public void setAuctionComment(String auctionComment) {
+    public void setAuctionComment(int auctionComment) {
         this.auctionComment = auctionComment;
     }
 

@@ -1,6 +1,7 @@
 package com.example.joane14.myapplication.Activities;
 
 import android.app.Dialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.icu.util.Calendar;
 import android.icu.util.TimeZone;
@@ -14,6 +15,7 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
@@ -69,7 +71,10 @@ import com.squareup.picasso.Picasso;
 import java.io.UnsupportedEncodingException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
+import java.util.List;
 
 import static android.util.Log.d;
 
@@ -81,6 +86,8 @@ public class ViewAuctionBook extends AppCompatActivity
     AuctionDetailModel auctionDetailModel;
     RatingBar mRating;
     TextView mRenters;
+    Float priceCompare;
+    List<AuctionComment> auctionHeaderModelMod;
 
 
     @RequiresApi(api = Build.VERSION_CODES.N)
@@ -91,6 +98,9 @@ public class ViewAuctionBook extends AppCompatActivity
 
         Log.d("ViewAuction", "inside");
 
+        auctionHeaderModelMod = new ArrayList<AuctionComment>();
+
+        priceCompare = Float.valueOf(0);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbarViewBookAuction);
         setSupportActionBar(toolbar);
@@ -112,12 +122,12 @@ public class ViewAuctionBook extends AppCompatActivity
         auctionDetailModel = new AuctionDetailModel();
 
 
-        if(SPUtility.getSPUtil(this).contains("USER_OBJECT")){
+        if (SPUtility.getSPUtil(this).contains("USER_OBJECT")) {
             User userModel = new User();
             userModel = (User) SPUtility.getSPUtil(this).getObject("USER_OBJECT", User.class);
-            mName.setText(userModel.getUserFname()+" "+userModel.getUserLname());
+            mName.setText(userModel.getUserFname() + " " + userModel.getUserLname());
             mEmail.setText(userModel.getEmail());
-            Picasso.with(ViewAuctionBook.this).load( userModel.getImageFilename()).fit().into(profileImg);
+            Picasso.with(ViewAuctionBook.this).load(userModel.getImageFilename()).fit().into(profileImg);
         }
 
         mRenters = (TextView) findViewById(R.id.vbRenters);
@@ -137,32 +147,32 @@ public class ViewAuctionBook extends AppCompatActivity
 
         mRating = (RatingBar) findViewById(R.id.vbRating);
 
-        if(getIntent().getExtras().getSerializable("auctionBook")!=null){
+        if (getIntent().getExtras().getSerializable("auctionBook") != null) {
             auctionDetailModel = new AuctionDetailModel();
             auctionDetailModel = (AuctionDetailModel) getIntent().getExtras().getSerializable("auctionBook");
 
-
-            FragmentManager fragmentManager = getSupportFragmentManager();
-            Bundle bundle = new Bundle();
-            bundle.putSerializable("auctionComment", auctionDetailModel);
-            AuctionBidFragment abf = AuctionBidFragment.newInstance(bundle);
-            FragmentTransaction ft = fragmentManager.beginTransaction();
-
+            priceCompare = auctionDetailModel.getStartingPrice();
 
             FrameLayout containerForCounter = (FrameLayout) findViewById(R.id.fragment_bid_container);
 
+            FragmentManager fragmentManager = getSupportFragmentManager();
+            Bundle bundle = new Bundle();
+            FragmentTransaction ft = fragmentManager.beginTransaction();
 
-            if(auctionDetailModel.getAuctionStatus().equals("start")){
-                    bundle.putSerializable("auctionBook", auctionDetailModel);
-                    CountdownFrag cdf = CountdownFrag.newInstance(bundle);
-                    ft.replace(R.id.countdown_container, cdf);
-            }else {
+            if (auctionDetailModel.getAuctionStatus().equals("start")) {
+                bundle.putSerializable("auctionBook", auctionDetailModel);
+                CountdownFrag cdf = CountdownFrag.newInstance(bundle);
+                ft.replace(R.id.countdown_container, cdf);
+            } else {
                 containerForCounter.setVisibility(View.GONE);
             }
 
 
+            bundle.putSerializable("auctionComment", auctionDetailModel);
+            AuctionBidFragment abf = AuctionBidFragment.newInstance(bundle);
             ft.replace(R.id.fragment_bid_container, abf);
             ft.commit();
+
 
             mTitle.setText(auctionDetailModel.getBookOwner().getBookObj().getBookTitle());
 
@@ -175,26 +185,26 @@ public class ViewAuctionBook extends AppCompatActivity
 
             final User user = (User) SPUtility.getSPUtil(ViewAuctionBook.this).getObject("USER_OBJECT", User.class);
 
-            if(user.getUserId()==auctionDetailModel.getBookOwner().getUserObj().getUserId()){
+            if (user.getUserId() == auctionDetailModel.getBookOwner().getUserObj().getUserId()) {
                 buttonLinear.setVisibility(View.GONE);
             }
 
             String author = "";
 
-            if(auctionDetailModel.getBookOwner().getBookObj().getBookAuthor().size()!=0){
-                for(int init=0; init<auctionDetailModel.getBookOwner().getBookObj().getBookAuthor().size(); init++){
-                    if(!(auctionDetailModel.getBookOwner().getBookObj().getBookAuthor().get(init).getAuthorFName().equals(""))){
-                        author+=auctionDetailModel.getBookOwner().getBookObj().getBookAuthor().get(init).getAuthorFName()+" ";
-                        if(!(auctionDetailModel.getBookOwner().getBookObj().getBookAuthor().get(init).getAuthorLName().equals(""))){
-                            author+=auctionDetailModel.getBookOwner().getBookObj().getBookAuthor().get(init).getAuthorLName();
-                            if(init+1<auctionDetailModel.getBookOwner().getBookObj().getBookAuthor().size()){
-                                author+=", ";
+            if (auctionDetailModel.getBookOwner().getBookObj().getBookAuthor().size() != 0) {
+                for (int init = 0; init < auctionDetailModel.getBookOwner().getBookObj().getBookAuthor().size(); init++) {
+                    if (!(auctionDetailModel.getBookOwner().getBookObj().getBookAuthor().get(init).getAuthorFName().equals(""))) {
+                        author += auctionDetailModel.getBookOwner().getBookObj().getBookAuthor().get(init).getAuthorFName() + " ";
+                        if (!(auctionDetailModel.getBookOwner().getBookObj().getBookAuthor().get(init).getAuthorLName().equals(""))) {
+                            author += auctionDetailModel.getBookOwner().getBookObj().getBookAuthor().get(init).getAuthorLName();
+                            if (init + 1 < auctionDetailModel.getBookOwner().getBookObj().getBookAuthor().size()) {
+                                author += ", ";
                             }
                         }
                     }
                 }
-            }else{
-                author="Unknown Author";
+            } else {
+                author = "Unknown Author";
             }
             mAuthor.setText(author);
             Glide.with(this).load(auctionDetailModel.getBookOwner().getBookObj().getBookFilename()).centerCrop().into(mBookImg);
@@ -238,74 +248,105 @@ public class ViewAuctionBook extends AppCompatActivity
                 public void onClick(View v) {
 
                     Log.d("BidTriggered", "YES");
+                    getMaximumBid(auctionDetailModel);
+                    if (auctionDetailModel.getAuctionStatus().equals("start")) {
 
-                    Dialog dialogCustom = new Dialog(ViewAuctionBook.this);
-                    LayoutInflater inflater = (LayoutInflater) ViewAuctionBook.this.getSystemService(LAYOUT_INFLATER_SERVICE);
-                    View layout = inflater.inflate(R.layout.seekbar_custom_dialog, (ViewGroup) findViewById(R.id.seekbar_layout));
-                    dialogCustom.setContentView(layout);
+                        final Dialog dialogCustom = new Dialog(ViewAuctionBook.this);
+                        LayoutInflater inflater = (LayoutInflater) ViewAuctionBook.this.getSystemService(LAYOUT_INFLATER_SERVICE);
+                        View layout = inflater.inflate(R.layout.seekbar_custom_dialog, (ViewGroup) findViewById(R.id.seekbar_layout));
+                        dialogCustom.setContentView(layout);
 
-                    Button mBtnOkay = (Button) layout.findViewById(R.id.btnOkay);
-                    Button mBtnCancel = (Button) layout.findViewById(R.id.btnCancel);
+                        Button mBtnOkay = (Button) layout.findViewById(R.id.btnOkay);
+                        Button mBtnCancel = (Button) layout.findViewById(R.id.btnCancel);
 
-                    final TextView mPriceBar = (TextView) layout.findViewById(R.id.tvPriceBar);
-                    final ProgressBar mProgBar = (ProgressBar) layout.findViewById(R.id.progBar);
-                    final SeekBar mSeekBar= (SeekBar) layout.findViewById(R.id.seekbarPrice);
+                        final TextView mPriceBar = (TextView) layout.findViewById(R.id.tvPriceBar);
+                        final ProgressBar mProgBar = (ProgressBar) layout.findViewById(R.id.progBar);
+                        final SeekBar mSeekBar = (SeekBar) layout.findViewById(R.id.seekbarPrice);
 
-                    mSeekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
-                        @Override
-                        public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-                            progress+=Math.round(auctionDetailModel.getStartingPrice());
-                            mProgBar.setProgress(progress);
-                            mPriceBar.setText(""+progress);
-                        }
+                        mSeekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+                            @Override
+                            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                                getMaximumBid(auctionDetailModel);
 
-                        @Override
-                        public void onStartTrackingTouch(SeekBar seekBar) {
+                                if (auctionHeaderModelMod.isEmpty()) {
+                                    progress += Math.round(auctionDetailModel.getStartingPrice());
+                                } else {
+                                    progress += auctionHeaderModelMod.get(0).getAuctionComment();
+                                }
+                                mProgBar.setProgress(progress);
+                                mPriceBar.setText("" + progress);
+                            }
 
-                        }
+                            @Override
+                            public void onStartTrackingTouch(SeekBar seekBar) {
 
-                        @Override
-                        public void onStopTrackingTouch(SeekBar seekBar) {
+                            }
 
-                        }
-                    });
-                    mBtnOkay.setOnClickListener(new View.OnClickListener() {
-                        @RequiresApi(api = Build.VERSION_CODES.N)
-                        @Override
-                        public void onClick(View v) {
-                            Calendar calendar = Calendar.getInstance();
-                            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-                            String currDate = sdf.format(calendar.getTime());
+                            @Override
+                            public void onStopTrackingTouch(SeekBar seekBar) {
+
+                            }
+                        });
+                        mBtnOkay.setOnClickListener(new View.OnClickListener() {
+                            @RequiresApi(api = Build.VERSION_CODES.N)
+                            @Override
+                            public void onClick(View v) {
+                                Calendar calendar = Calendar.getInstance();
+                                SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+                                String currDate = sdf.format(calendar.getTime());
 
 
-                            int price = mSeekBar.getProgress();
-                            Log.d("SeekBarPrice", String.valueOf(price));
+                                int price = mSeekBar.getProgress() + Math.round(auctionDetailModel.getStartingPrice());
+                                Log.d("SeekBarPrice", String.valueOf(price));
 
-                            AuctionComment auctionComment = new AuctionComment();
-                            auctionComment.setUser(user);
-                            auctionComment.setAuctionComment(String.valueOf(price));
+                                AuctionComment auctionComment = new AuctionComment();
+                                auctionComment.setUser(user);
+                                auctionComment.setAuctionComment(price);
 
-                            AuctionCommentDetail auctionCommentDetail = new AuctionCommentDetail();
-                            auctionCommentDetail.setAuctionDetail(auctionDetailModel);
-                            auctionCommentDetail.setAuctionComment(auctionComment);
+                                AuctionCommentDetail auctionCommentDetail = new AuctionCommentDetail();
+                                auctionCommentDetail.setAuctionDetail(auctionDetailModel);
+                                auctionCommentDetail.setAuctionComment(auctionComment);
 
-                            AuctionHeader auctionHeaderPost = new AuctionHeader();
-                            auctionHeaderPost.setAuctionDetail(auctionDetailModel);
-                            auctionHeaderPost.setUser(user);
-                            auctionHeaderPost.setAuctionHeaderDateStamp(currDate);
-                            addAuctionHeader(auctionHeaderPost, auctionComment, auctionCommentDetail);
-                        }
-                    });
+                                AuctionHeader auctionHeaderPost = new AuctionHeader();
+                                auctionHeaderPost.setAuctionDetail(auctionDetailModel);
+                                auctionHeaderPost.setUser(user);
+                                auctionHeaderPost.setAuctionHeaderDateStamp(currDate);
+                                addAuctionHeader(auctionHeaderPost, auctionComment, auctionCommentDetail);
 
-                    dialogCustom.show();
+                                dialogCustom.dismiss();
+                            }
+                        });
+
+                        mBtnCancel.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                dialogCustom.dismiss();
+                            }
+                        });
+
+                        dialogCustom.show();
+
+                    }else if(auctionDetailModel.getAuctionStatus().equals("stop")){
+                        AlertDialog ad = new AlertDialog.Builder(ViewAuctionBook.this).create();
+                        ad.setTitle("ALERT!");
+                        ad.setMessage("You can't bid because the Aution already ended.");
+                        ad.setButton(AlertDialog.BUTTON_NEUTRAL, "Okay", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                dialog.dismiss();
+                            }
+                        });
+                        ad.show();
+                    }
+
                 }
             });
         }
     }
 
-    public static void makeTextViewResizable(final TextView textView, final int maxLine, final String expandText, final boolean viewMore){
-        Log.d("makeTextViewResizable","inside");
-        if(textView.getTag() == null){
+    public static void makeTextViewResizable(final TextView textView, final int maxLine, final String expandText, final boolean viewMore) {
+        Log.d("makeTextViewResizable", "inside");
+        if (textView.getTag() == null) {
             textView.setTag(textView.getText());
         }
 
@@ -319,15 +360,15 @@ public class ViewAuctionBook extends AppCompatActivity
 
                 observer.removeGlobalOnLayoutListener(this);
 
-                if(maxLine == 0){
+                if (maxLine == 0) {
                     lineEndText = textView.getLayout().getLineEnd(0);
-                    text = textView.getText().subSequence(0, lineEndText - expandText.length()-1)+" "+ expandText;
-                }else if(maxLine > 0 && textView.getLineCount() >= maxLine){
+                    text = textView.getText().subSequence(0, lineEndText - expandText.length() - 1) + " " + expandText;
+                } else if (maxLine > 0 && textView.getLineCount() >= maxLine) {
                     lineEndText = textView.getLayout().getLineEnd(maxLine - 1);
-                    text = textView.getText().subSequence(0, lineEndText - expandText.length()-1)+" "+ expandText;
-                }else{
-                    lineEndText = textView.getLayout().getLineEnd(textView.getLayout().getLineCount()-1);
-                    text = textView.getText().subSequence(0, lineEndText)+" "+ expandText;
+                    text = textView.getText().subSequence(0, lineEndText - expandText.length() - 1) + " " + expandText;
+                } else {
+                    lineEndText = textView.getLayout().getLineEnd(textView.getLayout().getLineCount() - 1);
+                    text = textView.getText().subSequence(0, lineEndText) + " " + expandText;
                 }
 
                 textView.setText(text);
@@ -369,7 +410,7 @@ public class ViewAuctionBook extends AppCompatActivity
 
     }
 
-    public void addAuctionHeader(AuctionHeader auctionToPost, AuctionComment auctionComment, final AuctionCommentDetail auctionCommentDetail){
+    public void addAuctionHeader(AuctionHeader auctionToPost, AuctionComment auctionComment, final AuctionCommentDetail auctionCommentDetail) {
         RequestQueue requestQueue = Volley.newRequestQueue(this);
 //        String URL = "http://192.168.1.6:8080/Koobym/swapHeader/add";
         String URL = Constants.POST_AUCTION_HEADER;
@@ -379,9 +420,9 @@ public class ViewAuctionBook extends AppCompatActivity
 
         d("auctionHeader_VOLLEY", mRequestBody);
         int maxLogSize = 2000;
-        for(int i = 0; i <= mRequestBody.length() / maxLogSize; i++) {
+        for (int i = 0; i <= mRequestBody.length() / maxLogSize; i++) {
             int start = i * maxLogSize;
-            int end = (i+1) * maxLogSize;
+            int end = (i + 1) * maxLogSize;
             end = end > mRequestBody.length() ? mRequestBody.length() : end;
             Log.d("addAuctionHeader", mRequestBody.substring(start, end));
         }
@@ -425,7 +466,59 @@ public class ViewAuctionBook extends AppCompatActivity
         requestQueue.add(stringRequest);
     }
 
-    public void addAuctionComment(AuctionCommentDetail auctionCommentDetail){
+    public void getMaximumBid(AuctionDetailModel auctionDetailModel) {
+        RequestQueue requestQueue = Volley.newRequestQueue(this);
+//        String URL = "http://192.168.1.6:8080/Koobym/swapHeader/add";
+        String URL = Constants.GET_MAXIMUM_BID + auctionDetailModel.getAuctionDetailId();
+
+        final Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd").registerTypeAdapter(Date.class, GsonDateDeserializer.getInstance()).create();
+        final String mRequestBody = gson.toJson(auctionDetailModel);
+
+        d("maximumBid_VOLLEY", mRequestBody);
+        int maxLogSize = 2000;
+        for (int i = 0; i <= mRequestBody.length() / maxLogSize; i++) {
+            int start = i * maxLogSize;
+            int end = (i + 1) * maxLogSize;
+            end = end > mRequestBody.length() ? mRequestBody.length() : end;
+            Log.d("maximumBid", mRequestBody.substring(start, end));
+        }
+        StringRequest stringRequest = new StringRequest(Request.Method.GET, URL, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                d("onResponse maxBid", "inside");
+                Log.i("MaximumBid", response);
+
+                auctionHeaderModelMod.clear();
+                auctionHeaderModelMod.addAll(Arrays.asList(gson.fromJson(response, AuctionComment[].class)));
+
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.e("LOG_VOLLEY", error.toString());
+                error.printStackTrace();
+            }
+        }) {
+            @Override
+            public String getBodyContentType() {
+                return "application/json; charset=utf-8";
+            }
+
+            @Override
+            public byte[] getBody() throws AuthFailureError {
+                try {
+                    return mRequestBody == null ? null : mRequestBody.getBytes("utf-8");
+                } catch (UnsupportedEncodingException uee) {
+                    VolleyLog.wtf("Unsupported Encoding while trying to get the bytes of %s using %s", mRequestBody, "utf-8");
+                    return null;
+                }
+            }
+        };
+
+        requestQueue.add(stringRequest);
+    }
+
+    public void addAuctionComment(AuctionCommentDetail auctionCommentDetail) {
         RequestQueue requestQueue = Volley.newRequestQueue(this);
 //        String URL = "http://192.168.1.6:8080/Koobym/swapHeader/add";
         String URL = Constants.POST_AUCTION_COMMENT_DETAIL;
@@ -469,16 +562,16 @@ public class ViewAuctionBook extends AppCompatActivity
         requestQueue.add(stringRequest);
     }
 
-    public void getRatings(int bookOwnerId){
+    public void getRatings(int bookOwnerId) {
         RequestQueue requestQueue = Volley.newRequestQueue(this);
 //        String URL = "http://104.197.4.32:8080/Koobym/user/add";
         User user = new User();
         user = (User) SPUtility.getSPUtil(this).getObject("USER_OBJECT", User.class);
         d("UserIdReceive", String.valueOf(user.getUserId()));
-        String URL = Constants.GET_RATINGS+"/"+bookOwnerId;
+        String URL = Constants.GET_RATINGS + "/" + bookOwnerId;
 //        String URL = Constants.WEB_SERVICE_URL+"user/add";
 
-        final RentalHeader rentalHeader =new RentalHeader();
+        final RentalHeader rentalHeader = new RentalHeader();
 
         final Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd").registerTypeAdapter(Date.class, GsonDateDeserializer.getInstance()).create();
         final String mRequestBody = gson.toJson(rentalHeader);
