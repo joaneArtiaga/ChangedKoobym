@@ -300,6 +300,10 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
 //                                    getSwapHeader(position, "change");
                                 }
                             }
+                        }else if(userNotificationList.get(position).getActionName().equals("auction")){
+                            if(userNotificationList.get(position).getActionStatus().equals("win")){
+
+                            }
                         }
                     } else {
 
@@ -390,6 +394,8 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
                                 updateReceive(position, "Approved");
                             } else if (userNotificationList.get(position).getActionName().equals("swap")) {
                                 updateSwap(position, "ToReceive");
+                            }else if(userNotificationList.get(position).getActionName().equals("auction")){
+
                             }
                             Intent intent = new Intent(context, NotificationAct.class);
                             context.startActivity(intent);
@@ -771,6 +777,78 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
             requestQueue.add(stringRequest);
         }
 
+        public void getAuctionHeader(final int position, final String status) {
+            RequestQueue requestQueue = Volley.newRequestQueue(context);
+//        String URL = "http://104.197.4.32:8080/Koobym/user/add";
+            User user = new User();
+            user = (User) SPUtility.getSPUtil(context).getObject("USER_OBJECT", User.class);
+
+            String URL = Constants.GET_AUCTION_HEADER + userNotificationList.get(position).getActionId();
+
+            d("getAuctionHeader", URL);
+//        String URL = Constants.WEB_SERVICE_URL+"user/add";
+
+            final SwapHeader swapHeader = new SwapHeader();
+
+            final Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd").registerTypeAdapter(Date.class, GsonDateDeserializer.getInstance()).create();
+            final String mRequestBody = gson.toJson(swapHeader);
+
+
+            d("LOG_VOLLEY", mRequestBody);
+            final User finalUser = user;
+            StringRequest stringRequest = new StringRequest(Request.Method.GET, URL, new Response.Listener<String>() {
+                @Override
+                public void onResponse(String response) {
+                    Log.i("swapHeaderResponseId", response);
+                    SwapHeader swapHeaderMod = gson.fromJson(response, SwapHeader.class);
+
+                    if (status.equals("view")) {
+                        Intent intent = new Intent(context, ViewBookAct.class);
+                        Bundle bundle = new Bundle();
+                        bundle.putSerializable("swapBook", swapHeaderMod.getSwapDetail());
+                        intent.putExtras(bundle);
+                        context.startActivity(intent);
+                    } else if (status.equals("meetUp")) {
+                        if (finalUser.getUserId() == userNotificationList.get(position).getUser().getUserId()) {
+                            Intent intent = new Intent(context, SwapMeetUpChooser.class);
+                            Bundle bundle = new Bundle();
+                            bundle.putSerializable("swapHeader", swapHeaderMod);
+                            intent.putExtras(bundle);
+                            context.startActivity(intent);
+                        }
+                    } else if (status.equals("change")) {
+                        updateBookOwner(position, true, swapHeaderMod);
+                        updateBookOwner(position, false, swapHeaderMod);
+                    }else if(status.equals("summ")){
+                        meetUpSumm(position, swapHeaderMod);
+                    }
+                }
+
+            }, new Response.ErrorListener() {
+                @Override
+                public void onErrorResponse(VolleyError error) {
+                    Log.e("LOG_VOLLEY", error.toString());
+                }
+            }) {
+                @Override
+                public String getBodyContentType() {
+                    return "application/json; charset=utf-8";
+                }
+
+                @Override
+                public byte[] getBody() throws AuthFailureError {
+                    try {
+                        return mRequestBody == null ? null : mRequestBody.getBytes("utf-8");
+                    } catch (UnsupportedEncodingException uee) {
+                        VolleyLog.wtf("Unsupported Encoding while trying to get the bytes of %s using %s", mRequestBody, "utf-8");
+                        return null;
+                    }
+                }
+            };
+
+            requestQueue.add(stringRequest);
+        }
+
         public void getSwapHeader(final int position, final String status) {
             RequestQueue requestQueue = Volley.newRequestQueue(context);
 //        String URL = "http://104.197.4.32:8080/Koobym/user/add";
@@ -842,7 +920,6 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
 
             requestQueue.add(stringRequest);
         }
-
 
     }
 

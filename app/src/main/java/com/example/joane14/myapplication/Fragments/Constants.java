@@ -133,6 +133,8 @@ public class Constants {
 
     public static final String GET_SWAP_DETAIL = WEB_SERVICE_URL + "swapHeader/get/";
 
+    public static final String GET_AUCTION_HEADER = WEB_SERVICE_URL + "auctionHeader/get/";
+
     public static final String GET_ALL_BOOK_OWNER = WEB_SERVICE_URL + "bookOwner/all/";
 
     public static final String GET_BOOK_OWNER_RENTAL_DETAIL = WEB_SERVICE_URL + "rentalDetail/getRentalDetail/";

@@ -147,8 +147,7 @@ public class ViewAuctionBook extends AppCompatActivity
             bundle.putSerializable("auctionComment", auctionDetailModel);
             AuctionBidFragment abf = AuctionBidFragment.newInstance(bundle);
             FragmentTransaction ft = fragmentManager.beginTransaction();
-            ft.replace(R.id.fragment_bid_container, abf);
-            ft.commit();
+
 
             FrameLayout containerForCounter = (FrameLayout) findViewById(R.id.fragment_bid_container);
 
@@ -157,12 +156,13 @@ public class ViewAuctionBook extends AppCompatActivity
                     bundle.putSerializable("auctionBook", auctionDetailModel);
                     CountdownFrag cdf = CountdownFrag.newInstance(bundle);
                     ft.replace(R.id.countdown_container, cdf);
-                    ft.commit();
             }else {
                 containerForCounter.setVisibility(View.GONE);
             }
 
 
+            ft.replace(R.id.fragment_bid_container, abf);
+            ft.commit();
 
             mTitle.setText(auctionDetailModel.getBookOwner().getBookObj().getBookTitle());
 

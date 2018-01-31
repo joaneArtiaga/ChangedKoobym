@@ -1494,11 +1494,20 @@ public class ViewOwnBookAct extends AppCompatActivity
                         else
                             min = String.valueOf(minutes);
 
+                        String hours = "";
+
+                        if(hour<10)
+                            hours = "0" + hour;
+                        else
+                            hours = String.valueOf(hour);
+
                         // Append in a StringBuilder
-                        String aTime = new StringBuilder().append(hour).append(':')
+                        String aTime = new StringBuilder().append(hours).append(':')
                                 .append(min ).append(" ").append(timeSet).toString();
 
                         String timeGiven = "";
+                        hourOfDay = Integer.parseInt(String.format("%02d", hourOfDay));
+                        minute = Integer.parseInt(String.format("%02d", minute));
                         timeGiven = hourOfDay + ":" + minute;
                         Log.d("time selected Auction", timeGiven);
 //
