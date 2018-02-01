@@ -6,6 +6,8 @@ import android.content.Intent;
 import android.icu.text.DateFormat;
 import android.icu.text.SimpleDateFormat;
 import android.icu.util.Calendar;
+import android.os.Build;
+import android.support.annotation.RequiresApi;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -25,6 +27,8 @@ import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.example.joane14.myapplication.Adapters.TimeDateAdapter;
 import com.example.joane14.myapplication.Fragments.Constants;
+import com.example.joane14.myapplication.Model.AuctionDetailModel;
+import com.example.joane14.myapplication.Model.AuctionHeader;
 import com.example.joane14.myapplication.Model.LocationModel;
 import com.example.joane14.myapplication.Model.MeetUp;
 import com.example.joane14.myapplication.Model.RentalDetail;
@@ -52,6 +56,8 @@ public class TimeDateChooser extends AppCompatActivity {
     List<UserDayTime> userDayTimeList;
     UserDayTime userDayTimeModel;
     RentalHeader rentalHeader, rentalHeaderModel;
+    AuctionHeader auctionHeader;
+    AuctionDetailModel auctionDetail;
     SwapDetail swapDetail;
     SwapHeader swapHeader;
     LocationModel locationChosen;
@@ -132,6 +138,23 @@ public class TimeDateChooser extends AppCompatActivity {
                 }
             }else{
                 Log.d("rentalDetailPassed", "null");
+            }
+        }
+
+        if(getIntent().getBundleExtra("confirm").getBoolean("fromAuction")==true){
+            Log.d("So this ", "is auction");
+            fromWhere = "auction";
+            auctionDetail = new AuctionDetailModel();
+            auctionHeader = new AuctionHeader();
+            if(getIntent().getExtras().getSerializable("auctionHeader")!=null){
+                userDayTimeModel = new UserDayTime();
+                auctionHeader = (AuctionHeader) getIntent().getSerializableExtra("auctionHeader");
+                Log.d("AuctionFreakinHeader", auctionHeader.getUser().getUserFname());
+                Log.d("AuctionFreakinHeader", auctionHeader.getAuctionDetail().getBookOwner().getBookObj().getBookTitle());
+                for(int init=0; init<auctionHeader.getAuctionDetail().getBookOwner().getUserObj().getDayTimeModel().size(); init++){
+                    userDayTimeModel = auctionHeader.getAuctionDetail().getBookOwner().getUserObj().getDayTimeModel().get(init);
+                    userDayTimeList.add(userDayTimeModel);
+                }
             }
         }
 
@@ -257,8 +280,21 @@ public class TimeDateChooser extends AppCompatActivity {
                 "\n\nLocation:\t"+locationChosen.getLocationName());
         alertDialogBuilder.setPositiveButton("Okay",
                 new DialogInterface.OnClickListener() {
+                    @RequiresApi(api = Build.VERSION_CODES.N)
                     @Override
                     public void onClick(DialogInterface arg0, int arg1) {
+
+                        String timeSave = userDayTimeList.get(position).getTime().getStrTime();
+                        SimpleDateFormat dateFormat = new SimpleDateFormat("hh:mm aa");
+
+                        try {
+                            timeSave = dateFormat.format(dateFormat.parseObject(userDayTimeList.get(position).getTime().getStrTime()));
+                        } catch (ParseException e) {
+                            e.printStackTrace();
+                        }
+                        UserDayTime udtMod = new UserDayTime();
+                        udtMod = userDayTimeList.get(position);
+                        udtMod.getTime().setStrTime(timeSave);
 
                         if(fromWhere.equals("rent")){
 
@@ -271,24 +307,32 @@ public class TimeDateChooser extends AppCompatActivity {
                             rentalHeaderModel.setUserDayTime(userDayTimeList.get(position));
                             rentalHeaderModel.setTotalPrice(Float.parseFloat(String.valueOf(rentalHeader.getRentalDetail().getCalculatedPrice())));
                             rentalHeaderModel.setLocation(locationChosen);
-                            meetUp.setUserDayTime(userDayTimeList.get(position));
+                            meetUp.setUserDayTime(udtMod);
                             rentalHeaderModel.setMeetUp(meetUp);
 //
                             Log.d("ONClickTime", "inside");
                             Log.d("RentalHeaderRent", rentalHeader.toString());
 
-                            addMeetUp();
+                            addMeetUp("rent");
                             Intent intent = new Intent(TimeDateChooser.this, NotificationAct.class);
                             startActivity(intent);
-                        }else{
+                        }else if(fromWhere.equals("swap")){
                             swapHeader.setDateTimeStamp(nextDateStr);
                             swapHeader.setLocation(locationChosen);
                             swapHeader.setUserDayTime(userDayTimeList.get(position));
-                            meetUp.setUserDayTime(userDayTimeList.get(position));
+                            meetUp.setUserDayTime(udtMod);
                             swapHeader.setMeetUp(meetUp);
 
-                            addMeetUp();
+                            addMeetUp("swap");
                             Log.d("SwapHeader dialog", "inside");
+                            Intent intent = new Intent(TimeDateChooser.this, NotificationAct.class);
+                            startActivity(intent);
+                        }else if(fromWhere.equals("auction")){
+                            meetUp.setUserDayTime(udtMod);
+                            auctionHeader.setDateDelivered(nextDateStr);
+                            auctionHeader.setMeetUp(meetUp);
+                            addMeetUp("auction");
+
                             Intent intent = new Intent(TimeDateChooser.this, NotificationAct.class);
                             startActivity(intent);
                         }
@@ -417,7 +461,7 @@ public class TimeDateChooser extends AppCompatActivity {
         requestQueue.add(stringRequest);
     }
 
-    public void addMeetUp(){
+    public void addMeetUp(final String status){
         RequestQueue requestQueue = Volley.newRequestQueue(this);
 //        String URL = "http://104.197.4.32:8080/Koobym/user/add";
         String URL = Constants.POST_MEET_UP;
@@ -437,7 +481,7 @@ public class TimeDateChooser extends AppCompatActivity {
                 Log.d("MeetUpResponse", "inside");
                 Log.i("MeetUpResponse", response);
                 MeetUp meetUp = gson.fromJson(response, MeetUp.class);
-                if(fromWhere.equals("rent")){
+                if(status.equals("rent")){
                     rentalHeader.setMeetUp(meetUp);
                     @SuppressLint({"NewApi", "LocalSuppress"})
                     Calendar c = Calendar.getInstance();
@@ -468,11 +512,78 @@ public class TimeDateChooser extends AppCompatActivity {
 
                     updateRentalHeader(rentalHeader);
 
-                }else{
+                }else if(status.equals("swap")){
                     swapHeader.setMeetUp(meetUp);
                     updateSwap("Confirm");
+                }else if(status.equals("auction")){
+                    auctionHeader.setMeetUp(meetUp);
+                    updateAuction(auctionHeader.getAuctionDetail().getAuctionStatus());
                 }
 
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.e("LOG_VOLLEY", error.toString());
+                error.printStackTrace();
+            }
+        }) {
+            @Override
+            public String getBodyContentType() {
+                return "application/json; charset=utf-8";
+            }
+
+            @Override
+            public byte[] getBody() throws AuthFailureError {
+                try {
+                    return mRequestBody == null ? null : mRequestBody.getBytes("utf-8");
+                } catch (UnsupportedEncodingException uee) {
+                    VolleyLog.wtf("Unsupported Encoding while trying to get the bytes of %s using %s", mRequestBody, "utf-8");
+                    return null;
+                }
+            }
+        };
+
+        requestQueue.add(stringRequest);
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.N)
+    public void updateAuction(final String status){
+        RequestQueue requestQueue = Volley.newRequestQueue(this);
+//        String URL = "http://104.197.4.32:8080/Koobym/user/add";
+//        String URL = Constants.WEB_SERVICE_URL+"user/add";
+        String nextDateStr = "";
+
+        java.util.Calendar c = java.util.Calendar.getInstance();
+        @SuppressLint({"NewApi", "LocalSuppress"})
+        DateFormat format = new android.icu.text.SimpleDateFormat("yyyy-MM-dd");
+        nextDateStr = format.format(c.getTime());
+
+        User user = new User();
+        user = (User) SPUtility.getSPUtil(this).getObject("USER_OBJECT", User.class);
+        String URL = Constants.UPDATE_AUCTION_HEADER+"/"+status+"/"+auctionHeader.getAuctionHeaderId()+"/"+nextDateStr;
+
+        Log.d("UpdateSwapHeaderURL", URL);
+
+
+        final Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd").registerTypeAdapter(Date.class, GsonDateDeserializer.getInstance()).create();
+        final String mRequestBody = gson.toJson(swapHeader);
+
+
+        Log.d("LOG_VOLLEY_swapHeaderUD", mRequestBody);
+        Log.d("LOG_VOLLEY rentalHeader", mRequestBody);
+        final String finalNextDateStr = nextDateStr;
+        StringRequest stringRequest = new StringRequest(Request.Method.GET, URL, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                d("UpdateSwapHeader", response);
+                AuctionHeader auctionHeader1 = gson.fromJson(response, AuctionHeader.class);
+
+                Log.d("swapHeaderStatus", auctionHeader1.getStatus());
+                auctionHeader1.setMeetUp(meetUp);
+                auctionHeader1.setStatus(status);
+//                swapHeaderMod.setDateReceived(finalNextDateStr);
+                updateAuctionHeader(auctionHeader1);
             }
         }, new Response.ErrorListener() {
             @Override
@@ -543,6 +654,58 @@ public class TimeDateChooser extends AppCompatActivity {
             public void onErrorResponse(VolleyError error) {
                 Log.e("LOG_VOLLEY", error.toString());
                 error.printStackTrace();
+            }
+        }) {
+            @Override
+            public String getBodyContentType() {
+                return "application/json; charset=utf-8";
+            }
+
+            @Override
+            public byte[] getBody() throws AuthFailureError {
+                try {
+                    return mRequestBody == null ? null : mRequestBody.getBytes("utf-8");
+                } catch (UnsupportedEncodingException uee) {
+                    VolleyLog.wtf("Unsupported Encoding while trying to get the bytes of %s using %s", mRequestBody, "utf-8");
+                    return null;
+                }
+            }
+        };
+
+        requestQueue.add(stringRequest);
+    }
+
+    public void updateAuctionHeader(AuctionHeader auctionHeader){
+        RequestQueue requestQueue = Volley.newRequestQueue(this);
+//        String URL = "http://104.197.4.32:8080/Koobym/user/add";
+        User user = new User();
+        user = (User) SPUtility.getSPUtil(this).getObject("USER_OBJECT", User.class);
+
+        String URL = Constants.PUT_AUCTION_HEADER;
+
+        d("putRentalHeader", URL);
+//        String URL = Constants.WEB_SERVICE_URL+"user/add";
+
+
+        final Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd").registerTypeAdapter(Date.class, GsonDateDeserializer.getInstance()).create();
+        final String mRequestBody = gson.toJson(auctionHeader);
+
+
+        d("LOG_VOLLEY", mRequestBody);
+        final User finalUser = user;
+        StringRequest stringRequest = new StringRequest(Request.Method.PUT, URL, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                d("auctionHeaderResponseUD", response);
+                AuctionHeader auctionHeader1 = gson.fromJson(response, AuctionHeader.class);
+
+                Log.d("UpdateAuctionHeader", auctionHeader1.toString());
+
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.e("LOG_VOLLEY", error.toString());
             }
         }) {
             @Override

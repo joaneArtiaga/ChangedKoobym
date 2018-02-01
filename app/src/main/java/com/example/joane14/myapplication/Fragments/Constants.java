@@ -161,5 +161,10 @@ public class Constants {
 
     public static final String GET_MAXIMUM_BID = WEB_SERVICE_URL + "auctionComment/getMaximumBid/";
 
+    public static final String PUT_AUCTION_HEADER = WEB_SERVICE_URL + "auctionHeader/update";
+
+    public static final String UPDATE_AUCTION_HEADER = WEB_SERVICE_URL + "auctionHeader/updateStatus";
+
+
 
 }

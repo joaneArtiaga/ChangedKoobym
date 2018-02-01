@@ -13,7 +13,25 @@ public class AuctionHeader implements Serializable {
     private AuctionDetailModel auctionDetail;
     private String auctionHeaderDateStamp;
     private MeetUp meetUp;
+    private String dateDelivered;
+    private String status;
 
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
+    public String getDateDelivered() {
+        return dateDelivered;
+    }
+
+    public void setDateDelivered(String dateDelivered) {
+        this.dateDelivered = dateDelivered;
+    }
 
     public int getAuctionHeaderId() {
         return auctionHeaderId;

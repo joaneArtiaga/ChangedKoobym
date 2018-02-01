@@ -25,13 +25,16 @@ import com.android.volley.VolleyError;
 import com.android.volley.VolleyLog;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+import com.example.joane14.myapplication.Activities.AuctionMeetUpChooser;
 import com.example.joane14.myapplication.Activities.GsonDateDeserializer;
 import com.example.joane14.myapplication.Activities.HistoryActivity;
 import com.example.joane14.myapplication.Activities.MeetUpChooser;
 import com.example.joane14.myapplication.Activities.MyShelf;
 import com.example.joane14.myapplication.Activities.NotificationAct;
+import com.example.joane14.myapplication.Activities.ProfileActivity;
 import com.example.joane14.myapplication.Activities.SwapMeetUpChooser;
 import com.example.joane14.myapplication.Activities.TransactionActivity;
+import com.example.joane14.myapplication.Activities.ViewAuctionBook;
 import com.example.joane14.myapplication.Activities.ViewBookAct;
 import com.example.joane14.myapplication.Activities.ViewBookActivity;
 import com.example.joane14.myapplication.Fragments.Constants;
@@ -302,7 +305,14 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
                             }
                         }else if(userNotificationList.get(position).getActionName().equals("auction")){
                             if(userNotificationList.get(position).getActionStatus().equals("win")){
-
+                                getRead(position);
+                                getAuctionHeader(position, userNotificationList.get(position).getActionStatus());
+                            }else if(userNotificationList.get(position).getActionStatus().equals("lose")){
+                                getRead(position);
+                                getAuctionHeader(position, userNotificationList.get(position).getActionStatus());
+                            }else if(userNotificationList.get(position).getActionStatus().equals("own")){
+                                getRead(position);
+                                getAuctionHeader(position, userNotificationList.get(position).getActionStatus());
                             }
                         }
                     } else {
@@ -311,6 +321,8 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
                             getRentalHeader(position, "view");
                         } else if (userNotificationList.get(position).getActionName().equals("swap")) {
                             getSwapHeader(position, "view");
+                        }else if(userNotificationList.get(position).getActionName().equals("auction")){
+                            getAuctionHeader(position, "view");
                         }
                     }
 
@@ -385,6 +397,43 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
                     "\n\nDay:\t"+swapHeaderSumm.getMeetUp().getUserDayTime().getDay().getStrDay()+
                     "\n\nTime:\t"+swapHeaderSumm.getMeetUp().getUserDayTime().getTime().getStrTime()+
                     "\n\nLocation:\t"+swapHeaderSumm.getMeetUp().getLocation().getLocationName());
+            alertDialogBuilder.setPositiveButton("Okay",
+                    new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface arg0, int arg1) {
+                            getRead(position);
+                            if (userNotificationList.get(position).getActionName().equals("rental")) {
+                                updateReceive(position, "Approved");
+                            } else if (userNotificationList.get(position).getActionName().equals("swap")) {
+                                updateSwap(position, "ToReceive");
+                            }else if(userNotificationList.get(position).getActionName().equals("auction")){
+
+                            }
+                            Intent intent = new Intent(context, NotificationAct.class);
+                            context.startActivity(intent);
+                        }
+                    });
+//            alertDialogBuilder.setNegativeButton("No", new DialogInterface.OnClickListener() {
+//                @Override
+//                public void onClick(DialogInterface dialog, int which) {
+//                    getRead(position);
+//                    updateReceive(position, "Rejected");
+//                    Intent intent = new Intent(context, NotificationAct.class);
+//                    context.startActivity(intent);
+//                }
+//            });
+
+            android.support.v7.app.AlertDialog alertDialog = alertDialogBuilder.create();
+            alertDialog.show();
+        }
+
+        public void meetUpAuctionSumm(final int position, AuctionHeader auctionHeader) {
+            android.support.v7.app.AlertDialog.Builder alertDialogBuilder = new android.support.v7.app.AlertDialog.Builder(context);
+            alertDialogBuilder.setTitle("MeetUp Summary");
+            alertDialogBuilder.setMessage("Date:\t" +auctionHeader.getDateDelivered()+
+                    "\n\nDay:\t"+auctionHeader.getMeetUp().getUserDayTime().getDay().getStrDay()+
+                    "\n\nTime:\t"+auctionHeader.getMeetUp().getUserDayTime().getTime().getStrTime()+
+                    "\n\nLocation:\t"+auctionHeader.getMeetUp().getLocation().getLocationName());
             alertDialogBuilder.setPositiveButton("Okay",
                     new DialogInterface.OnClickListener() {
                         @Override
@@ -788,10 +837,10 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
             d("getAuctionHeader", URL);
 //        String URL = Constants.WEB_SERVICE_URL+"user/add";
 
-            final SwapHeader swapHeader = new SwapHeader();
+            final AuctionHeader auctionHeader = new AuctionHeader();
 
             final Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd").registerTypeAdapter(Date.class, GsonDateDeserializer.getInstance()).create();
-            final String mRequestBody = gson.toJson(swapHeader);
+            final String mRequestBody = gson.toJson(auctionHeader);
 
 
             d("LOG_VOLLEY", mRequestBody);
@@ -799,28 +848,47 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
             StringRequest stringRequest = new StringRequest(Request.Method.GET, URL, new Response.Listener<String>() {
                 @Override
                 public void onResponse(String response) {
-                    Log.i("swapHeaderResponseId", response);
-                    SwapHeader swapHeaderMod = gson.fromJson(response, SwapHeader.class);
+                    Log.i("auctionHeaderResponseId", response);
+                    AuctionHeader auctionHeaderMod = gson.fromJson(response, AuctionHeader.class);
 
-                    if (status.equals("view")) {
-                        Intent intent = new Intent(context, ViewBookAct.class);
-                        Bundle bundle = new Bundle();
-                        bundle.putSerializable("swapBook", swapHeaderMod.getSwapDetail());
-                        intent.putExtras(bundle);
-                        context.startActivity(intent);
-                    } else if (status.equals("meetUp")) {
+                    if (status.equals("win")) {
+
                         if (finalUser.getUserId() == userNotificationList.get(position).getUser().getUserId()) {
-                            Intent intent = new Intent(context, SwapMeetUpChooser.class);
+                            Intent intent = new Intent(context, AuctionMeetUpChooser.class);
                             Bundle bundle = new Bundle();
-                            bundle.putSerializable("swapHeader", swapHeaderMod);
+                            bundle.putSerializable("auctionHeader", auctionHeaderMod);
                             intent.putExtras(bundle);
                             context.startActivity(intent);
                         }
-                    } else if (status.equals("change")) {
-                        updateBookOwner(position, true, swapHeaderMod);
-                        updateBookOwner(position, false, swapHeaderMod);
-                    }else if(status.equals("summ")){
-                        meetUpSumm(position, swapHeaderMod);
+                    } else if (status.equals("own")) {
+
+                        Intent intent = new Intent(context, ProfileActivity.class);
+                        Bundle bundle = new Bundle();
+                        bundle.putSerializable("userModelPass", userNotificationList.get(position).getUserPerformer());
+                        intent.putExtras(bundle);
+                        context.startActivity(intent);
+//                        updateBookOwner(position, true, swapHeaderMod);
+//                        updateBookOwner(position, false, swapHeaderMod);
+                    }else if(status.equals("lose")){
+                        Intent intent = new Intent(context, ViewAuctionBook.class);
+                        Bundle bundle = new Bundle();
+                        bundle.putSerializable("auctionBook",auctionHeaderMod.getAuctionDetail());
+                        bundle.putBoolean("notif", true);
+                        intent.putExtras(bundle);
+
+//                        if(auctionDetailModel==null){
+//                            Log.d("NotifAuc", "null");
+//                        }else{
+//                            Log.d("NotifAuc", auctionDetailModel.toString());
+//                        }
+                        context.startActivity(intent);
+//                        meetUpSumm(position, swapHeaderMod);
+                    }else if (status.equals("view")) {
+                        Intent intent = new Intent(context, ViewBookAct.class);
+                        Bundle bundle = new Bundle();
+                        bundle.putSerializable("auctionBook", auctionHeader.getAuctionDetail());
+                        intent.putExtras(bundle);
+                        context.startActivity(intent);
                     }
                 }
 

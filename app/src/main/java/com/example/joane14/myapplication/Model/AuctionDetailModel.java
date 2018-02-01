@@ -97,4 +97,20 @@ public class AuctionDetailModel implements Serializable {
     public void setAuctionDescription(String auctionDescription) {
         this.auctionDescription = auctionDescription;
     }
+
+
+    @Override
+    public String toString() {
+        return "AuctionDetail{" +
+                "auctionDetailId=" + auctionDetailId +
+                ", startingPrice ='" + startingPrice + '\'' +
+                ", bookOwner =" + bookOwner.toString() +
+                ", startDate =" + startDate +
+                ", endDate =" + endDate +
+                ", endTime =" + endTime +
+                ", startTime =" + startTime +
+                ", auctionDescription =" + auctionDescription +
+                ", auctionStatus =" + auctionStatus +
+                '}';
+    }
 }
