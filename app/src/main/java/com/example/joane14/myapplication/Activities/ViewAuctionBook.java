@@ -159,13 +159,9 @@ public class ViewAuctionBook extends AppCompatActivity
             Bundle bundle = new Bundle();
             FragmentTransaction ft = fragmentManager.beginTransaction();
 
-            if (auctionDetailModel.getAuctionStatus().equals("start")) {
                 bundle.putSerializable("auctionBook", auctionDetailModel);
                 CountdownFrag cdf = CountdownFrag.newInstance(bundle);
                 ft.replace(R.id.countdown_container, cdf);
-            } else {
-                containerForCounter.setVisibility(View.GONE);
-            }
 
 
             bundle.putSerializable("auctionComment", auctionDetailModel);
