@@ -161,4 +161,5 @@ public class Constants {
 
     public static final String GET_MAXIMUM_BID = WEB_SERVICE_URL + "auctionComment/getMaximumBid/";
 
+
 }

@@ -1,10 +1,12 @@
 package com.example.joane14.myapplication.Fragments;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -18,10 +20,12 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.example.joane14.myapplication.Activities.GsonDateDeserializer;
+import com.example.joane14.myapplication.Activities.ViewAuctionBook;
 import com.example.joane14.myapplication.Activities.ViewBookAct;
 import com.example.joane14.myapplication.Activities.ViewOwnBookAct;
 import com.example.joane14.myapplication.Adapters.PrefferedAdapter;
 import com.example.joane14.myapplication.Adapters.SearchAdapter;
+import com.example.joane14.myapplication.Model.AuctionDetailModel;
 import com.example.joane14.myapplication.Model.BookOwnerModel;
 import com.example.joane14.myapplication.Model.RentalDetail;
 import com.example.joane14.myapplication.Model.SwapDetail;
@@ -80,12 +84,18 @@ public class SearchFragmentResult extends Fragment {
                     getRentalDetail(bookOwnerModelList.get(position).getBookOwnerId());
                 }else if(bookOwnerModelList.get(position).getStatus().endsWith("Swap")) {
                     getSwapDetail(bookOwnerModelList.get(position).getBookOwnerId());
-                }else{
-                    Intent intent = new Intent(getContext(), ViewOwnBookAct.class);
-                    Bundle bundle = new Bundle();
-                    bundle.putSerializable("notAdBook",bookOwnerModelList.get(position));
-                    intent.putExtras(bundle);
-                    startActivity(intent);
+                }else if(bookOwnerModelList.get(position).getStatus().equals("none")){
+                    AlertDialog ad = new AlertDialog.Builder(getContext()).create();
+                    ad.setTitle("Alert!");
+                    ad.setMessage("This book is not advertised.");
+                    ad.setButton(AlertDialog.BUTTON_NEUTRAL, "Okay", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            dialog.dismiss();
+                        }
+                    });
+                }else if(bookOwnerModelList.get(position).getStatus().equals("Auction")){
+                    getAuctionDetail(bookOwnerModelList.get(position).getBookOwnerId());
                 }
             }
         });
@@ -93,6 +103,37 @@ public class SearchFragmentResult extends Fragment {
         getSuggested(keyword);
 
         return view;
+    }
+
+    private void getAuctionDetail(int bookOwnerId){
+//        String URL = "http://104.198.152.85/Koobym/rentalDetail/suggested/%d";
+//        String URL = Constants.WEB_SERVICE_URL+"rentalDetail/suggested/%d";
+        String URL = Constants.GET_BOOK_OWNER_AUCTION_DETAIL+bookOwnerId;
+//        URL = String.format(URL, userId);
+        Log.d("PreferenceURL", URL);
+        StringRequest stringRequest = new StringRequest(Request.Method.GET, URL, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                Log.d("AuctionDetailResponse", response);
+                Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd").registerTypeAdapter(Date.class, GsonDateDeserializer.getInstance()).create();
+                AuctionDetailModel auctionDetails = gson.fromJson(response, AuctionDetailModel.class);
+                Intent intent = new Intent(getContext(), ViewAuctionBook.class);
+                Bundle bundle = new Bundle();
+                bundle.putSerializable("auctionBook",auctionDetails);
+                intent.putExtras(bundle);
+                startActivity(intent);
+//                Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd").registerTypeAdapter(Date.class, GsonDateDeserializer.getInstance()).create();
+//                BookOwnerModel[] bookOwnerModels = gson.fromJson(response, BookOwnerModel[].class);
+//                bookOwnerModelList.addAll(Arrays.asList(bookOwnerModels));
+//                mAdapter.notifyDataSetChanged();
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.e("LOG_VOLLEY", error.toString());
+            }
+        }) ;
+        VolleyUtil.volleyRQInstance(getContext()).add(stringRequest);
     }
 
     private void getSwapDetail(int bookOwnerId){

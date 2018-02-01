@@ -98,9 +98,11 @@ public class SearchAdapter extends BaseAdapter {
             statusLinear.setBackgroundColor(ContextCompat.getColor(context, R.color.colorRent));
         }else if(bookOwnerModel.getStatus().equals("Swap")){
             statusLinear.setBackgroundColor(ContextCompat.getColor(context, R.color.colorSwap));
-        }else{
+        }else if(bookOwnerModel.getStatus().equals("none")){
             statusBook.setText("Not Advertised");
             statusLinear.setBackgroundColor(ContextCompat.getColor(context, R.color.colorGray));
+        }else if(bookOwnerModel.getStatus().equals("Auction")){
+            statusLinear.setBackgroundColor(ContextCompat.getColor(context, R.color.colorAuction));
         }
 
         String author = " ";
