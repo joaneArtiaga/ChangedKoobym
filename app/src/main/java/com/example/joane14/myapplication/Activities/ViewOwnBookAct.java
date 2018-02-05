@@ -216,7 +216,7 @@ public class ViewOwnBookAct extends AppCompatActivity
                         updateBookOwner(bookOwnerModel, "Rent");
                     }else if(position==2){
                         bookOwnerModel = rentalDetailModel.getBookOwner();
-                        bookOwnerModel.setStatus("none");
+                        bookOwnerModel.setStatus("NotAdvertised");
                         updateBookOwner(bookOwnerModel, "Rent");
                     }else{
                         bookOwnerModel = rentalDetailModel.getBookOwner();
@@ -466,18 +466,18 @@ public class ViewOwnBookAct extends AppCompatActivity
 
                     Log.d("SwapBookOwner", String.valueOf(position));
                     if(position==0){
-                        bookOwnerModel = swapDetail.getBookOwner();
+                        bookOwnerModel = auctionDetail.getBookOwner();
                         bookOwnerModel.setStatus("Rent");
-                        customDialog("Swap");
+                        customDialog("Auction");
                     }else if(position==1){
-//                        BookOwnerModel bookOwnerModel = new BookOwnerModel();
-//                        bookOwnerModel = rentalDetailModel.getBookOwner();
-//                        bookOwnerModel.setStatus("Swap");
-//                        updateBookOwner(bookOwnerModel);
+                        BookOwnerModel bookOwnerModel = new BookOwnerModel();
+                        bookOwnerModel = auctionDetail.getBookOwner();
+                        bookOwnerModel.setStatus("Swap");
+                        updateBookOwner(bookOwnerModel, "Auction");
                     }else if(position==2){
-                        bookOwnerModel = swapDetail.getBookOwner();
-                        bookOwnerModel.setStatus("none");
-                        updateBookOwner(bookOwnerModel, "Swap");
+                        bookOwnerModel = auctionDetail.getBookOwner();
+                        bookOwnerModel.setStatus("NotAdvertised");
+                        updateBookOwner(bookOwnerModel, "Auction");
                     }else{
                         Toast.makeText(ViewOwnBookAct.this, "This book is already for Auction.", Toast.LENGTH_SHORT).show();
                     }
@@ -1063,6 +1063,10 @@ public class ViewOwnBookAct extends AppCompatActivity
                         rentToPost.setBookOwner(bookOwnerModelToPost);
                         rentToPost.setDaysForRent(5);
                         rentToPost.setCalculatedPrice(calculatePrice(bookOwnerModelToPost.getBookObj()));
+                    }else if(fromWhere.equals("Auction")){
+                        rentToPost.setBookOwner(bookOwnerModelToPost);
+                        rentToPost.setDaysForRent(5);
+                        rentToPost.setCalculatedPrice(calculatePrice(bookOwnerModelToPost.getBookObj()));
                     }
 
                     addRentalDetail(rentToPost);
@@ -1073,8 +1077,12 @@ public class ViewOwnBookAct extends AppCompatActivity
                         swapToPost.setSwapDescription(rentalDetailModel.getBookOwner().getStatusDescription());
                     }else if(fromWhere.equals("NotAdvertised")){
                         swapToPost.setBookOwner(bookOwnerModelToPost);
-                        swapToPost.setSwapPrice(Float.parseFloat(String.valueOf(calculatePrice(bookOwnerModel.getBookObj()))));
-                        swapToPost.setSwapDescription(bookOwnerModel.getStatusDescription());
+                        swapToPost.setSwapPrice(Float.parseFloat(String.valueOf(calculatePrice(bookOwnerModelToPost.getBookObj()))));
+                        swapToPost.setSwapDescription(bookOwnerModelToPost.getStatusDescription());
+                    }else if(fromWhere.equals("Auction")){
+                        swapToPost.setBookOwner(bookOwnerModelToPost);
+                        swapToPost.setSwapPrice(Float.parseFloat(String.valueOf(calculatePrice(bookOwnerModelToPost.getBookObj()))));
+                        swapToPost.setSwapDescription(bookOwnerModelToPost.getStatusDescription());
                     }
                     addSwapDetail(swapToPost);
                 }else if(bookOwnerModelToPost.getStatus().equals("Auction")){
