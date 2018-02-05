@@ -219,7 +219,9 @@ public class ViewOwnBookAct extends AppCompatActivity
                         bookOwnerModel.setStatus("none");
                         updateBookOwner(bookOwnerModel, "Rent");
                     }else{
-
+                        bookOwnerModel = rentalDetailModel.getBookOwner();
+                        bookOwnerModel.setStatus("Auction");
+                        customAuctionDialog("Rent");
                     }
                 }
 
@@ -1083,6 +1085,12 @@ public class ViewOwnBookAct extends AppCompatActivity
                         auctionToPost.setStartTime(mStartTime.getText().toString());
                         auctionToPost.setEndTime(mEndTime.getText().toString());
                     }else if(fromWhere.equals("Swap")){
+                        auctionToPost.setBookOwner(bookOwnerModelToPost);
+                        auctionToPost.setAuctionDescription(bookOwnerModelToPost.getStatusDescription());
+                        auctionToPost.setStartingPrice(Float.parseFloat(String.valueOf(calculatePrice(bookOwnerModelToPost.getBookObj()))));
+                        auctionToPost.setStartTime(mStartTime.getText().toString());
+                        auctionToPost.setEndTime(mEndTime.getText().toString());
+                    }else if(fromWhere.equals("Rent")){
                         auctionToPost.setBookOwner(bookOwnerModelToPost);
                         auctionToPost.setAuctionDescription(bookOwnerModelToPost.getStatusDescription());
                         auctionToPost.setStartingPrice(Float.parseFloat(String.valueOf(calculatePrice(bookOwnerModelToPost.getBookObj()))));
