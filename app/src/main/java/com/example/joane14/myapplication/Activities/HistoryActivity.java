@@ -145,7 +145,7 @@ public class HistoryActivity extends AppCompatActivity
         } else if (id == R.id.history) {
 
         } else if (id == R.id.transaction) {
-            Intent intent = new Intent(HistoryActivity.this, TransactionActivity.class);
+            Intent intent = new Intent(HistoryActivity.this, BookActActivity.class);
             startActivity(intent);
         } else if (id == R.id.request) {
             Intent intent = new Intent(HistoryActivity.this, RequestActivity.class);

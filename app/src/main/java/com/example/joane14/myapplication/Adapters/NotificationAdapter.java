@@ -8,6 +8,7 @@ import android.content.Intent;
 import android.icu.text.DateFormat;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -71,6 +72,7 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
     BookOwnerReview bookOwnerReview;
     SwapHeader swapHeaderModelOut;
     AuctionHeader auctionHeaderModel;
+    RentalHeader rentalHeaderObj;
     AuctionDetailModel auctionDetailModel;
     String message = "";
 
@@ -109,6 +111,7 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
         swapHeaderModelOut = new SwapHeader();
         auctionDetailModel = new AuctionDetailModel();
         auctionHeaderModel = new AuctionHeader();
+        rentalHeaderObj = new RentalHeader();
 
 
         if (userNotification.getActionName().equals("rental")) {
@@ -122,6 +125,8 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
             }else if(userNotification.getActionStatus().equals("Due")){
                 message = "The book you rented "+userNotification.getBookActionPerformedOn().getBookObj().getBookTitle()+" is already due, " +
                         "your deposit will be deducted.";
+            }else if(userNotification.getActionStatus().equals("return")){
+                message = userNotification.getUserPerformer().getUserFname()+" "+userNotification.getUserPerformer().getUserLname()+" wants to return the book earlier.";
             }
         } else if (userNotification.getActionName().equals("swap")) {
             Log.d("notifSwap", "inside");
@@ -256,7 +261,7 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
 //                    bundle.putSerializable("View", rentalDetailObj);
 //                    intent.putExtras(bundle);
 //                    context.startActivity(intent);
-                    int position = getAdapterPosition();
+                    final int position = getAdapterPosition();
                     Log.d("AdapterNotif", userNotificationList.get(position).getUserPerformer().getUserFname());
 
                     User user = (User) SPUtility.getSPUtil(context).getObject("USER_OBJECT", User.class);
@@ -274,6 +279,42 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
                                 getRead(position);
                             } else if (userNotificationList.get(position).getActionStatus().equals("Confirm")) {
                                 getRead(position);
+                            }else if(userNotificationList.get(position).getActionStatus().equals("return")){
+                                getRead(position);
+                                AlertDialog ad = new AlertDialog.Builder(context).create();
+                                ad.setTitle("Confirmatioin");
+                                ad.setMessage(userNotificationList.get(position).getUserPerformer().getUserFname()+" "+userNotificationList.get(position).getUserPerformer().getUserLname()+" wants to return the book earlier at "+userNotificationList.get(position).getExtraMessage());
+                                ad.setButton(AlertDialog.BUTTON_POSITIVE, "Confirm", new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        getRentalHeader(position, "return");
+                                        UserNotification un = new UserNotification();
+                                        un.setUser(userNotificationList.get(position).getUserPerformer());
+                                        un.setUserPerformer(userNotificationList.get(position).getUser());
+                                        un.setBookActionPerformedOn(userNotificationList.get(position).getBookActionPerformedOn());
+                                        un.setActionStatus("return");
+                                        un.setActionName("rental");
+                                        un.setExtraMessage("confirmed");
+                                        un.setActionId(userNotificationList.get(position).getActionId());
+
+                                        addUserNotif(un);
+                                    }
+                                });
+                                ad.setButton(AlertDialog.BUTTON_NEGATIVE, "Deny", new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        UserNotification un = new UserNotification();
+                                        un.setUser(userNotificationList.get(position).getUserPerformer());
+                                        un.setUserPerformer(userNotificationList.get(position).getUser());
+                                        un.setActionStatus("return");
+                                        un.setExtraMessage("denied");
+                                        un.setActionId(userNotificationList.get(position).getActionId());
+                                        un.setActionName("rental");
+                                        un.setBookActionPerformedOn(userNotificationList.get(position).getBookActionPerformedOn());
+
+                                        addUserNotif(un);
+                                    }
+                                });
                             }
 
                         } else if (userNotificationList.get(position).getActionName().equals("swap")) {
@@ -798,8 +839,55 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
                             intent.putExtras(bundle);
                             context.startActivity(intent);
                         }
+                    }else if(status.equals("return")){
+                        rentalHeaderObj = rentalHeaderMod;
                     }
 
+                }
+            }, new Response.ErrorListener() {
+                @Override
+                public void onErrorResponse(VolleyError error) {
+                    Log.e("LOG_VOLLEY", error.toString());
+                }
+            }) {
+                @Override
+                public String getBodyContentType() {
+                    return "application/json; charset=utf-8";
+                }
+
+                @Override
+                public byte[] getBody() throws AuthFailureError {
+                    try {
+                        return mRequestBody == null ? null : mRequestBody.getBytes("utf-8");
+                    } catch (UnsupportedEncodingException uee) {
+                        VolleyLog.wtf("Unsupported Encoding while trying to get the bytes of %s using %s", mRequestBody, "utf-8");
+                        return null;
+                    }
+                }
+            };
+
+            requestQueue.add(stringRequest);
+        }
+
+        public void addUserNotif(UserNotification userNotification) {
+            RequestQueue requestQueue = Volley.newRequestQueue(context);
+//        String URL = "http://104.197.4.32:8080/Koobym/user/add";
+            User user = new User();
+            user = (User) SPUtility.getSPUtil(context).getObject("USER_OBJECT", User.class);
+            d("UserIdReceive", String.valueOf(user.getUserId()));
+            String URL = Constants.POST_USER_NOTIFICATION;
+
+            final RentalHeader rentalHeader = new RentalHeader();
+
+            final Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd").registerTypeAdapter(Date.class, GsonDateDeserializer.getInstance()).create();
+            final String mRequestBody = gson.toJson(userNotification);
+
+
+            d("LOG_VOLLEY", mRequestBody);
+            StringRequest stringRequest = new StringRequest(Request.Method.POST, URL, new Response.Listener<String>() {
+                @Override
+                public void onResponse(String response) {
+                    Log.i("userNotificationPost", response);
                 }
             }, new Response.ErrorListener() {
                 @Override

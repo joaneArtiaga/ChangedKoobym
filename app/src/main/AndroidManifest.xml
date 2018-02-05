@@ -103,7 +103,8 @@
         <activity android:name=".Activities.JustForUse" />
         <activity android:name=".Activities.SearchResult" />
         <activity android:name=".Activities.ViewAuctionBook" />
-        <activity android:name=".Activities.AuctionMeetUpChooser"></activity>
+        <activity android:name=".Activities.AuctionMeetUpChooser" />
+        <activity android:name=".Activities.BookActActivity"></activity>
     </application>
 
 </manifest>

@@ -604,7 +604,7 @@ public class ViewBookActivity extends AppCompatActivity implements
             Intent intent = new Intent(ViewBookActivity.this, HistoryActivity.class);
             startActivity(intent);
         } else if (id == R.id.transaction) {
-            Intent intent = new Intent(ViewBookActivity.this, TransactionActivity.class);
+            Intent intent = new Intent(ViewBookActivity.this, BookActActivity.class);
             startActivity(intent);
         } else if (id == R.id.request) {
             Intent intent = new Intent(ViewBookActivity.this, RequestActivity.class);

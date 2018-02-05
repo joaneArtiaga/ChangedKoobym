@@ -2,6 +2,7 @@ package com.example.joane14.myapplication.Activities;
 
 import android.content.Intent;
 import android.net.Uri;
+import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
@@ -16,30 +17,45 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.example.joane14.myapplication.Fragments.NotificationFrag;
+import com.example.joane14.myapplication.Adapters.ToDeliverRentAdapter;
+import com.example.joane14.myapplication.Fragments.DisplayBookReview;
+import com.example.joane14.myapplication.Fragments.ToDeliverAuctionFragment;
+import com.example.joane14.myapplication.Fragments.ToDeliverRentFragment;
+import com.example.joane14.myapplication.Fragments.ToDeliverSwapFrag;
+import com.example.joane14.myapplication.Fragments.ToReceiveAuctionFragment;
+import com.example.joane14.myapplication.Fragments.ToReceiveRentFragment;
+import com.example.joane14.myapplication.Fragments.ToReceiveSwapFrag;
+import com.example.joane14.myapplication.Fragments.ToReturnFrag;
 import com.example.joane14.myapplication.Model.User;
 import com.example.joane14.myapplication.R;
 import com.example.joane14.myapplication.Utilities.SPUtility;
 import com.facebook.login.LoginManager;
 import com.squareup.picasso.Picasso;
 
-public class NotificationAct extends AppCompatActivity
+public class BookActActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener,
-        NotificationFrag.OnNotificationInteractionListener{
+        ToDeliverSwapFrag.OnToDeliverSwapInteractionListener,
+        ToDeliverRentFragment.OnToDeliverRentInteractionListener,
+        ToDeliverAuctionFragment.OnToDeliverAuctionInteractionListener,
+        ToReceiveSwapFrag.OnToSwapReceiveInteractionListener,
+        ToReceiveAuctionFragment.OnToReceiveAuctionInteractionListener,
+        ToReceiveRentFragment.OnToRecevieFragmentInteractionListener,
+        ToReturnFrag.OnToReturnInteractionListener {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_notification);
+        setContentView(R.layout.activity_book);
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbarNotification);
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
 
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout_notification);
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout_book_activity);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.setDrawerListener(toggle);
@@ -61,31 +77,38 @@ public class NotificationAct extends AppCompatActivity
             userModel = (User) SPUtility.getSPUtil(this).getObject("USER_OBJECT", User.class);
             mName.setText(userModel.getUserFname()+" "+userModel.getUserLname());
             mEmail.setText(userModel.getEmail());
-            Picasso.with(NotificationAct.this).load(userModel.getImageFilename()).fit().into(profileImg);
+            Picasso.with(BookActActivity.this).load(userModel.getImageFilename()).fit().into(profileImg);
         }
 
-        NotificationFrag notificationFrag = NotificationFrag.newInstance();
-        FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
-        fragmentTransaction.replace(R.id.fragment_container_notification, notificationFrag);
-        fragmentTransaction.commit();
+        FrameLayout mDelSwap = (FrameLayout) findViewById(R.id.toDeliverSwap);
+        FrameLayout mDelAuc = (FrameLayout) findViewById(R.id.toDeliverAuction);
+        FrameLayout mDelRent = (FrameLayout) findViewById(R.id.toDeliverRent);
+
+        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+        ft.replace(R.id.toDeliverSwap, ToDeliverSwapFrag.newInstance());
+        ft.replace(R.id.toDeliverAuction, ToDeliverAuctionFragment.newInstance());
+        ft.replace(R.id.toDeliverRent, ToDeliverRentFragment.newInstance());
+        ft.replace(R.id.toReceiveAuction, ToReceiveAuctionFragment.newInstance());
+        ft.replace(R.id.toReceiveRent, ToReceiveRentFragment.newInstance());
+        ft.replace(R.id.toReceiveSwap, ToReceiveSwapFrag.newInstance());
+        ft.replace(R.id.toReturnRent, ToReturnFrag.newInstance());
+        ft.commit();
     }
 
-    @SuppressWarnings("StatementWithEmptyBody")
     @Override
-    public boolean onNavigationItemSelected(MenuItem item) {
-        // Handle navigation view item clicks here.
+    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         Log.d("onNavigationItem", "inside");
 
         int id = item.getItemId();
 
         if (id == R.id.home) {
-            Intent intent = new Intent(NotificationAct.this , LandingPage.class);
+            Intent intent = new Intent(BookActActivity.this , LandingPage.class);
             Bundle bundle = new Bundle();
             bundle.putBoolean("fromRegister", false);
             intent.putExtra("user", bundle);
             startActivity(intent);
         } else if (id == R.id.profile) {
-            Intent intent = new Intent(NotificationAct.this, ProfileActivity.class);
+            Intent intent = new Intent(BookActActivity.this, ProfileActivity.class);
 //            User user = userModel;
 //            Log.d("User Id", String.valueOf(userModel.getUserId()));
 //            Log.d("User name", userModel.getUserFname()+" "+userModel.getUserLname());
@@ -96,25 +119,25 @@ public class NotificationAct extends AppCompatActivity
             intent.putExtras(bundlePass);
             startActivity(intent);
         } else if (id == R.id.shelf) {
-            Intent intent = new Intent(NotificationAct.this, MyShelf.class);
+            Intent intent = new Intent(BookActActivity.this, MyShelf.class);
             startActivity(intent);
         } else if (id == R.id.history) {
-            Intent intent = new Intent(NotificationAct.this, HistoryActivity.class);
+            Intent intent = new Intent(BookActActivity.this, HistoryActivity.class);
             startActivity(intent);
         } else if (id == R.id.transaction) {
-            Intent intent = new Intent(NotificationAct.this, BookActActivity.class);
+            Intent intent = new Intent(BookActActivity.this, BookActActivity.class);
             startActivity(intent);
         } else if (id == R.id.request) {
-            Intent intent = new Intent(NotificationAct.this, RequestActivity.class);
+            Intent intent = new Intent(BookActActivity.this, RequestActivity.class);
             startActivity(intent);
         } else if (id == R.id.signOut) {
-            SPUtility.getSPUtil(NotificationAct.this).clear();
+            SPUtility.getSPUtil(BookActActivity.this).clear();
             LoginManager.getInstance().logOut();
-            Intent intent = new Intent(NotificationAct.this, MainActivity.class);
+            Intent intent = new Intent(BookActActivity.this, MainActivity.class);
             startActivity(intent);
         }
 
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout_notification);
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout_book_activity);
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }
@@ -132,7 +155,37 @@ public class NotificationAct extends AppCompatActivity
     }
 
     @Override
-    public void OnNotificationOnClick(Uri uri) {
+    public void onToDeliverAuctionOnClick(Uri uri) {
+
+    }
+
+    @Override
+    public void onToDeliverSwapOnClick(Uri uri) {
+
+    }
+
+    @Override
+    public void onToDeliverRentOnClick(Uri uri) {
+
+    }
+
+    @Override
+    public void onToReceiveAuctionOnClick(Uri uri) {
+
+    }
+
+    @Override
+    public void onToReturnOnClick(Uri uri) {
+
+    }
+
+    @Override
+    public void onToRecevieFragmentOnClick(Uri uri) {
+
+    }
+
+    @Override
+    public void onToSwapReceiveOnClick(Uri uri) {
 
     }
 }

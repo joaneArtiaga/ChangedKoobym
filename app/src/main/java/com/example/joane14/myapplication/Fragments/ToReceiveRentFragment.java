@@ -20,11 +20,9 @@ import com.android.volley.VolleyLog;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.example.joane14.myapplication.Activities.GsonDateDeserializer;
-import com.example.joane14.myapplication.Adapters.CompleteSwapAdapter;
-import com.example.joane14.myapplication.Adapters.ToApproveSwapAdapter;
-import com.example.joane14.myapplication.Adapters.ToDeliverSwapAdapter;
+import com.example.joane14.myapplication.Adapters.ToDeliverRentAdapter;
+import com.example.joane14.myapplication.Adapters.ToReceiveRentAdapter;
 import com.example.joane14.myapplication.Model.RentalHeader;
-import com.example.joane14.myapplication.Model.SwapHeader;
 import com.example.joane14.myapplication.Model.User;
 import com.example.joane14.myapplication.R;
 import com.example.joane14.myapplication.Utilities.SPUtility;
@@ -37,19 +35,23 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
-public class ToDeliverSwapFrag extends Fragment {
 
-    private OnToDeliverSwapInteractionListener mListener;
-    List<SwapHeader> swapHeaderList;
+public class ToReceiveRentFragment extends Fragment {
+
+    List<RentalHeader> rentalHeaderList;
     private RecyclerView mRecyclerView;
     private RecyclerView.Adapter mAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
+    private OnToRecevieFragmentInteractionListener mListener;
 
-    public ToDeliverSwapFrag() {
+    public ToReceiveRentFragment() {
     }
 
-    public static ToDeliverSwapFrag newInstance() {
-        ToDeliverSwapFrag fragment = new ToDeliverSwapFrag();
+
+    public static ToReceiveRentFragment newInstance() {
+        ToReceiveRentFragment fragment = new ToReceiveRentFragment();
+        Bundle args = new Bundle();
+        fragment.setArguments(args);
         return fragment;
     }
 
@@ -61,31 +63,32 @@ public class ToDeliverSwapFrag extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_to_deliver_swap, container, false);
+        View view = inflater.inflate(R.layout.fragment_to_receive2, container, false);
 
 
-        Log.d("TodeliverSwap", "inside");
-        swapHeaderList = new ArrayList<SwapHeader>();
-        mRecyclerView = (RecyclerView) view.findViewById(R.id.my_recycler_view_to_deliver_swap);
+        Log.d("ToReceiveRent", "inside");
+
+        rentalHeaderList = new ArrayList<RentalHeader>();
+        mRecyclerView = (RecyclerView) view.findViewById(R.id.my_recycler_view_to_receive_rent);
         mRecyclerView.setHasFixedSize(true);
         mLayoutManager = new LinearLayoutManager(getContext());
         mRecyclerView.setLayoutManager(mLayoutManager);
-        mAdapter = new ToDeliverSwapAdapter(swapHeaderList);
+        mAdapter = new ToReceiveRentAdapter(rentalHeaderList);
         mRecyclerView.setAdapter(mAdapter);
 
-        getDeliveries();
+        getToReceiveRenter();
 
         return view;
+
     }
 
-    public void getDeliveries(){
+    public void getToReceiveRenter(){
         RequestQueue requestQueue = Volley.newRequestQueue(getContext());
 //        String URL = "http://104.197.4.32:8080/Koobym/user/add";
         User user = new User();
         user = (User) SPUtility.getSPUtil(getContext()).getObject("USER_OBJECT", User.class);
         Log.d("UserIdReceive", String.valueOf(user.getUserId()));
-        String URL = Constants.GET_TO_DELIVER_SWAP+"/"+user.getUserId();
-        Log.d("UserIdURL", URL);
+        String URL = Constants.GET_TRANSACTION_TO_RECEIVE_RENTER+user.getUserId();
 //        String URL = Constants.WEB_SERVICE_URL+"user/add";
 
         final RentalHeader rentalHeader =new RentalHeader();
@@ -100,8 +103,8 @@ public class ToDeliverSwapFrag extends Fragment {
             public void onResponse(String response) {
                 Log.i("ResponseRequestReceived", response);
 //                RentalHeader rentalHeaderModel = gson.fromJson(response, RentalHeader.class);
-                swapHeaderList.clear();
-                swapHeaderList.addAll(Arrays.asList(gson.fromJson(response, SwapHeader[].class)));
+                rentalHeaderList.clear();
+                rentalHeaderList.addAll(Arrays.asList(gson.fromJson(response, RentalHeader[].class)));
                 mAdapter.notifyDataSetChanged();
             }
         }, new Response.ErrorListener() {
@@ -129,17 +132,18 @@ public class ToDeliverSwapFrag extends Fragment {
         requestQueue.add(stringRequest);
     }
 
+
     public void onButtonPressed(Uri uri) {
         if (mListener != null) {
-            mListener.onToDeliverSwapOnClick(uri);
+            mListener.onToRecevieFragmentOnClick(uri);
         }
     }
 
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        if (context instanceof OnToDeliverSwapInteractionListener) {
-            mListener = (OnToDeliverSwapInteractionListener) context;
+        if (context instanceof OnToRecevieFragmentInteractionListener) {
+            mListener = (OnToRecevieFragmentInteractionListener) context;
         } else {
             throw new RuntimeException(context.toString()
                     + " must implement OnFragmentInteractionListener");
@@ -153,7 +157,8 @@ public class ToDeliverSwapFrag extends Fragment {
     }
 
 
-    public interface OnToDeliverSwapInteractionListener {
-        void onToDeliverSwapOnClick(Uri uri);
+    public interface OnToRecevieFragmentInteractionListener {
+        // TODO: Update argument type and name
+        void onToRecevieFragmentOnClick(Uri uri);
     }
 }

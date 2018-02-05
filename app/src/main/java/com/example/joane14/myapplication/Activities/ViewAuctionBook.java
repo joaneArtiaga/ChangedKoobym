@@ -642,7 +642,7 @@ public class ViewAuctionBook extends AppCompatActivity
             Intent intent = new Intent(ViewAuctionBook.this, HistoryActivity.class);
             startActivity(intent);
         } else if (id == R.id.transaction) {
-            Intent intent = new Intent(ViewAuctionBook.this, TransactionActivity.class);
+            Intent intent = new Intent(ViewAuctionBook.this, BookActActivity.class);
             startActivity(intent);
         } else if (id == R.id.request) {
             Intent intent = new Intent(ViewAuctionBook.this, RequestActivity.class);

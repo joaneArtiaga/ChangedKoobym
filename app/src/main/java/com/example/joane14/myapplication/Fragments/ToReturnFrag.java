@@ -48,7 +48,7 @@ public class ToReturnFrag extends Fragment {
     public ToReturnFrag() {
     }
 
-    public static ToReturnFrag newInstance(String param1, String param2) {
+    public static ToReturnFrag newInstance() {
         ToReturnFrag fragment = new ToReturnFrag();
         return fragment;
     }
@@ -62,6 +62,9 @@ public class ToReturnFrag extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_to_return, container, false);
+
+
+        Log.d("ToReturn", "inside");
 
         rentalHeaderList = new ArrayList<RentalHeader>();
         mRecyclerView = (RecyclerView) view.findViewById(R.id.my_recycler_view_to_return);

@@ -392,7 +392,7 @@ public class ProfileActivity extends AppCompatActivity implements
             Intent intent = new Intent(ProfileActivity.this, HistoryActivity.class);
             startActivity(intent);
         } else if (id == R.id.transaction) {
-            Intent intent = new Intent(ProfileActivity.this, TransactionActivity.class);
+            Intent intent = new Intent(ProfileActivity.this, BookActActivity.class);
             startActivity(intent);
         } else if (id == R.id.request) {
             Intent intent = new Intent(ProfileActivity.this, RequestActivity.class);

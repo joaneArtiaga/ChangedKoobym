@@ -1760,7 +1760,7 @@ public class ViewOwnBookAct extends AppCompatActivity
             Intent intent = new Intent(ViewOwnBookAct.this, HistoryActivity.class);
             startActivity(intent);
         } else if (id == R.id.transaction) {
-            Intent intent = new Intent(ViewOwnBookAct.this, TransactionActivity.class);
+            Intent intent = new Intent(ViewOwnBookAct.this, BookActActivity.class);
             startActivity(intent);
         } else if (id == R.id.request) {
             Intent intent = new Intent(ViewOwnBookAct.this, RequestActivity.class);

@@ -47,7 +47,7 @@ public class ToReceiveSwapFrag extends Fragment {
     public ToReceiveSwapFrag() {
     }
 
-    public static ToReceiveSwapFrag newInstance(String param1, String param2) {
+    public static ToReceiveSwapFrag newInstance() {
         ToReceiveSwapFrag fragment = new ToReceiveSwapFrag();
         return fragment;
     }
@@ -61,7 +61,7 @@ public class ToReceiveSwapFrag extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_to_receive_swap, container, false);
-        Log.d("ToReceiveSwapfrag", "inside");
+        Log.d("ToReceiveSwap", "inside");
 
         swapHeaderList = new ArrayList<SwapHeader>();
         mRecyclerView = (RecyclerView) view.findViewById(R.id.my_recycler_view_to_receive_swap);

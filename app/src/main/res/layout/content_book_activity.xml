@@ -1,0 +1,223 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    app:layout_behavior="@string/appbar_scrolling_view_behavior"
+    tools:context="com.example.joane14.myapplication.Activities.BookActActivity"
+    tools:showIn="@layout/app_bar_book_activity">
+
+    <!--<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="match_parent"-->
+        <!--android:fillViewport="true">-->
+        <!---->
+    <!--</ScrollView>-->
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Book Activity"
+        android:id="@+id/lpTitle"
+        android:layout_marginTop="15dp"
+        android:layout_marginBottom="5dp"
+        android:gravity="center_horizontal"
+        android:textColor="@color/colorLightOrange"
+        android:textSize="30dp"/>
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text=" To Deliver"
+                android:textSize="15dp"
+                android:textStyle="bold|italic"
+                android:layout_marginBottom="5dp"
+                android:background="@color/colorLightOrange"/>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Rent      "
+                    android:textSize="15dp"
+                    android:textStyle="bold|italic"
+                    android:gravity="right"
+                    android:background="@color/colorRent"/>
+
+                <FrameLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/toDeliverRent"/>
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Swap   "
+                    android:textSize="15dp"
+                    android:layout_marginTop="10dp"
+                    android:textStyle="bold|italic"
+                    android:gravity="right"
+                    android:background="@color/colorSwap"
+                    android:layout_marginRight="15dp"/>
+
+                <FrameLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/toDeliverSwap"/>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Auction   "
+                    android:textSize="15dp"
+                    android:layout_marginTop="10dp"
+                    android:textStyle="bold|italic"
+                    android:gravity="right"
+                    android:background="@color/colorAuction"
+                    android:layout_marginRight="15dp"/>
+
+                <FrameLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/toDeliverAuction"/>
+
+            </LinearLayout>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="To Receive"
+                android:textSize="15dp"
+                android:layout_marginLeft="5dp"
+                android:background="@color/colorLightOrange"
+                android:textStyle="bold|italic"/>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Rent   "
+                    android:textSize="15dp"
+                    android:layout_marginTop="10dp"
+                    android:textStyle="bold|italic"
+                    android:gravity="right"
+                    android:background="@color/colorRent"
+                    android:layout_marginRight="15dp"/>
+
+                <FrameLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/toReceiveRent"/>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Swap   "
+                    android:layout_marginTop="10dp"
+                    android:textSize="15dp"
+                    android:textStyle="bold|italic"
+                    android:gravity="right"
+                    android:background="@color/colorSwap"
+                    android:layout_marginRight="15dp"/>
+
+                <FrameLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/toReceiveSwap"/>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Auction   "
+                    android:layout_marginTop="10dp"
+                    android:textSize="15dp"
+                    android:layout_marginLeft="5dp"
+                    android:textStyle="bold|italic"
+                    android:gravity="right"
+                    android:background="@color/colorAuction"
+                    android:layout_marginRight="15dp"/>
+
+                <FrameLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/toReceiveAuction"/>
+            </LinearLayout>
+
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="To Return"
+                    android:textSize="15dp"
+                    android:layout_marginLeft="5dp"
+                    android:background="@color/colorLightOrange"
+                    android:textStyle="bold|italic"/>
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Rent   "
+                    android:layout_marginTop="10dp"
+                    android:textSize="15dp"
+                    android:layout_marginLeft="5dp"
+                    android:background="@color/colorRent"
+                    android:textStyle="bold|italic"
+                    android:gravity="right"
+                    android:layout_marginRight="15dp"/>
+
+                <FrameLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/toReturnRent"/>
+
+            </LinearLayout>
+
+        </LinearLayout>
+    </ScrollView>
+
+</LinearLayout>

@@ -152,7 +152,7 @@ public class MyShelf extends AppCompatActivity implements
             Intent intent = new Intent(MyShelf.this, HistoryActivity.class);
             startActivity(intent);
         } else if (id == R.id.transaction) {
-            Intent intent = new Intent(MyShelf.this, TransactionActivity.class);
+            Intent intent = new Intent(MyShelf.this, BookActActivity.class);
             startActivity(intent);
         } else if (id == R.id.request) {
             Intent intent = new Intent(MyShelf.this, RequestActivity.class);

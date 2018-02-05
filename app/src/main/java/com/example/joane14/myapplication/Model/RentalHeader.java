@@ -39,6 +39,7 @@ public class RentalHeader implements Serializable {
 
     MeetUp meetUp;
 
+
     public String getDateDeliver() {
         return dateDeliver;
     }
