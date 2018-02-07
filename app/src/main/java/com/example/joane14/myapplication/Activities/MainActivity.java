@@ -316,8 +316,8 @@ public class MainActivity extends AppCompatActivity {
 
     public void login(View view) {
         RequestQueue requestQueue = Volley.newRequestQueue(this);
-        String URL = "http://104.198.152.85/Koobym/user/login";
-//        String URL = Constants.WEB_SERVICE_URL +"user/login";
+//        String URL = "http://104.198.152.85/Koobym/user/login";
+        String URL = Constants.WEB_SERVICE_URL +"user/login";
         User user = new User();
         user.setUsername(mUsername);
         user.setPassword(mPassword);

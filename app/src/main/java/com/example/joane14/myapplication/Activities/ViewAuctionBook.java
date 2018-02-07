@@ -86,7 +86,10 @@ public class ViewAuctionBook extends AppCompatActivity
     AuctionDetailModel auctionDetailModel;
     RatingBar mRating;
     TextView mRenters;
+    TextView mPriceBar;
     Float priceCompare;
+    boolean flag;
+    int priceNiya;
     List<AuctionComment> auctionHeaderModelMod;
 
 
@@ -101,6 +104,8 @@ public class ViewAuctionBook extends AppCompatActivity
         auctionHeaderModelMod = new ArrayList<AuctionComment>();
 
         priceCompare = Float.valueOf(0);
+        priceNiya = 0;
+        flag = false;
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbarViewBookAuction);
         setSupportActionBar(toolbar);
@@ -243,8 +248,8 @@ public class ViewAuctionBook extends AppCompatActivity
                 @Override
                 public void onClick(View v) {
 
+
                     Log.d("BidTriggered", "YES");
-                    getMaximumBid(auctionDetailModel);
                     if (auctionDetailModel.getAuctionStatus().equals("start")) {
 
                         final Dialog dialogCustom = new Dialog(ViewAuctionBook.this);
@@ -255,20 +260,44 @@ public class ViewAuctionBook extends AppCompatActivity
                         Button mBtnOkay = (Button) layout.findViewById(R.id.btnOkay);
                         Button mBtnCancel = (Button) layout.findViewById(R.id.btnCancel);
 
-                        final TextView mPriceBar = (TextView) layout.findViewById(R.id.tvPriceBar);
+                        mPriceBar = (TextView) layout.findViewById(R.id.tvPriceBar);
                         final ProgressBar mProgBar = (ProgressBar) layout.findViewById(R.id.progBar);
                         final SeekBar mSeekBar = (SeekBar) layout.findViewById(R.id.seekbarPrice);
+                        getMaximumBid(auctionDetailModel);
+
+//                        int prog = Math.round(auctionDetailModel.getStartingPrice());
+//
+//                        if(flag == false){
+//                            Log.d("bidComment", "empty : "+prog);
+//                            mProgBar.setProgress(prog);
+//                            mPriceBar.setText("" + prog);
+//                        }else{
+//                            prog = prog + auctionHeaderModelMod.get(0).getAuctionComment();
+//
+//                            Log.d("bidComment", "not empty : "+prog);
+//                            mProgBar.setProgress(prog);
+//                            mPriceBar.setText("" + prog);
+//                        }
+
+
 
                         mSeekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
                             @Override
                             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-                                getMaximumBid(auctionDetailModel);
+//                                getMaximumBid(auctionDetailModel);
 
-                                if (auctionHeaderModelMod.isEmpty()) {
-                                    progress += Math.round(auctionDetailModel.getStartingPrice());
+                                Log.d("startProgress", progress+"");
+
+                                if (flag==false) {
+                                    Log.d("startProgress If", progress+Math.round(auctionDetailModel.getStartingPrice())+"");
+                                    progress = progress + Math.round(auctionDetailModel.getStartingPrice());
                                 } else {
-                                    progress += auctionHeaderModelMod.get(0).getAuctionComment();
+                                    progress = progress + auctionHeaderModelMod.get(0).getAuctionComment();
+                                    Log.d("startProgress Else", progress+auctionHeaderModelMod.get(0).getAuctionComment()+"");
                                 }
+
+                                priceNiya = progress;
+
                                 mProgBar.setProgress(progress);
                                 mPriceBar.setText("" + progress);
                             }
@@ -292,12 +321,12 @@ public class ViewAuctionBook extends AppCompatActivity
                                 String currDate = sdf.format(calendar.getTime());
 
 
-                                int price = mSeekBar.getProgress() + Math.round(auctionDetailModel.getStartingPrice());
-                                Log.d("SeekBarPrice", String.valueOf(price));
+                                int price = mProgBar.getProgress() + Math.round(auctionDetailModel.getStartingPrice());
+                                Log.d("SeekBarPrice", priceNiya+"");
 
                                 AuctionComment auctionComment = new AuctionComment();
                                 auctionComment.setUser(user);
-                                auctionComment.setAuctionComment(price);
+                                auctionComment.setAuctionComment(priceNiya);
 
                                 AuctionCommentDetail auctionCommentDetail = new AuctionCommentDetail();
                                 auctionCommentDetail.setAuctionDetail(auctionDetailModel);
@@ -462,7 +491,7 @@ public class ViewAuctionBook extends AppCompatActivity
         requestQueue.add(stringRequest);
     }
 
-    public void getMaximumBid(AuctionDetailModel auctionDetailModel) {
+    public void getMaximumBid(final AuctionDetailModel auctionDetailModel) {
         RequestQueue requestQueue = Volley.newRequestQueue(this);
 //        String URL = "http://192.168.1.6:8080/Koobym/swapHeader/add";
         String URL = Constants.GET_MAXIMUM_BID + auctionDetailModel.getAuctionDetailId();
@@ -484,8 +513,18 @@ public class ViewAuctionBook extends AppCompatActivity
                 d("onResponse maxBid", "inside");
                 Log.i("MaximumBid", response);
 
-                auctionHeaderModelMod.clear();
                 auctionHeaderModelMod.addAll(Arrays.asList(gson.fromJson(response, AuctionComment[].class)));
+
+
+                if(auctionHeaderModelMod.get(0)==null){
+                    Log.d("walaySulodAngHeader", "true");
+                    mPriceBar.setText(Math.round(auctionDetailModel.getStartingPrice())+"");
+                    flag = false;
+                }else{
+                    Log.d("walaySulodAngHeader", "false");
+                    mPriceBar.setText(auctionHeaderModelMod.get(0).getAuctionComment()+"");
+                    flag = true;
+                }
 
             }
         }, new Response.ErrorListener() {

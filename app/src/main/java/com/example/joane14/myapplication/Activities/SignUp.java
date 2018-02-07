@@ -146,8 +146,10 @@ public class SignUp extends AppCompatActivity implements
 
     private void register() {
         RequestQueue requestQueue = Volley.newRequestQueue(this);
-        String URL = "http://104.198.152.85/Koobym/user/add";
-//        String URL = Constants.WEB_SERVICE_URL+"user/add";
+//        String URL = "http://104.198.152.85/Koobym/user/add";
+        String URL = Constants.WEB_SERVICE_URL+"user/add";
+
+
 
         User user = new User();
         user.setUserFname(userModel.getUserFname());
