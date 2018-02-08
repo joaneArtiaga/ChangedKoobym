@@ -93,6 +93,7 @@ public class ViewOwnBookAct extends AppCompatActivity
 
     static final int MSG_DISMISS_DIALOG = 0;
     RentalDetail rentalDetailModel, rentToPost;
+    boolean boolStartDate, boolEndDate, boolStartTime, boolEndTime;
     SwapDetail swapDetail, swapToPost;
     AuctionDetailModel auctionDetail, auctionToPost;
     BookOwnerModel bookOwnerModel;
@@ -139,6 +140,13 @@ public class ViewOwnBookAct extends AppCompatActivity
         swapToPost = new SwapDetail();
         rentToPost = new RentalDetail();
 
+        boolStartDate = false;
+        boolEndDate = false;
+
+        boolStartTime = false;
+        boolEndTime = false;
+
+
         calendar = java.util.Calendar.getInstance();
 
 
@@ -170,6 +178,8 @@ public class ViewOwnBookAct extends AppCompatActivity
         mRating = (RatingBar) findViewById(R.id.vbRating);
 
         if (getIntent().getExtras().getSerializable("viewBook")!=null){
+
+            containerForCounter.setVisibility(View.GONE);
 
             rentalDetailModel = (RentalDetail) getIntent().getExtras().getSerializable("viewBook");
 
@@ -297,7 +307,7 @@ public class ViewOwnBookAct extends AppCompatActivity
             });
         }else if(getIntent().getExtras().getSerializable("swapBook")!=null){
 
-
+            containerForCounter.setVisibility(View.GONE);
             swapDetail = new SwapDetail();
             swapDetail = (SwapDetail) getIntent().getExtras().getSerializable("swapBook");
 
@@ -570,6 +580,7 @@ public class ViewOwnBookAct extends AppCompatActivity
             });
         }else if(getIntent().getExtras().getSerializable("notAdBook")!=null){
 
+            containerForCounter.setVisibility(View.GONE);
             BookOwnerModel bookOwner = new BookOwnerModel();
 
             bookOwner = (BookOwnerModel) getIntent().getExtras().getSerializable("notAdBook");
@@ -783,6 +794,7 @@ public class ViewOwnBookAct extends AppCompatActivity
         mStartTime.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                boolStartTime = true;
                 CreateTimePicker(mStartTime, "start");
             }
         });
@@ -790,6 +802,7 @@ public class ViewOwnBookAct extends AppCompatActivity
         mEndTime.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                boolEndTime = true;
                 CreateTimePicker(mEndTime, "end");
             }
         });
@@ -834,6 +847,7 @@ public class ViewOwnBookAct extends AppCompatActivity
         mStartDate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                boolStartDate = true;
                 new DatePickerDialog(ViewOwnBookAct.this, mDatePicker, aucDate.get(java.util.Calendar.YEAR),
                         aucDate.get(java.util.Calendar.MONTH), aucDate.get(Calendar.DAY_OF_MONTH)).show();
             }
@@ -861,6 +875,7 @@ public class ViewOwnBookAct extends AppCompatActivity
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 Log.d("AuctionItemSelected", dateEnd.get(position));
                 auctionToPost.setEndDate(dateEnd.get(position));
+                boolEndDate = true;
             }
 
             @Override
@@ -872,11 +887,23 @@ public class ViewOwnBookAct extends AppCompatActivity
         mBtnOkay.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(mStartTime==null&&mEndTime==null){
-                    Toast.makeText(getApplicationContext(), "Should set time for Auction.", Toast.LENGTH_SHORT).show();
+
+                if(boolStartTime==false||boolEndTime==false||boolEndDate==false||boolStartDate==false){
+                    AlertDialog ad = new AlertDialog.Builder(ViewOwnBookAct.this).create();
+                    ad.setTitle("Alert!");
+                    ad.setMessage("Fill up all data.");
+                    ad.setButton(AlertDialog.BUTTON_NEUTRAL, "Okay", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            dialog.dismiss();
+                        }
+                    });
+                    ad.show();
                 }else{
                     updateBookOwner(bookOwnerModel, status);
                 }
+
+
             }
         });
 

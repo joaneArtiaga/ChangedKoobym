@@ -27,197 +27,96 @@
         android:textColor="@color/colorLightOrange"
         android:textSize="30dp"/>
 
-    <ScrollView
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_gravity="center_horizontal"
+        android:gravity="center_horizontal"
+        android:background="@color/colorWhite">
 
         <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical">
+            android:layout_width="100dp"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:padding="10dp">
 
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text=" To Deliver"
-                android:textSize="15dp"
-                android:textStyle="bold|italic"
-                android:layout_marginBottom="5dp"
-                android:background="@color/colorLightOrange"/>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical">
-
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="Rent      "
-                    android:textSize="15dp"
-                    android:textStyle="bold|italic"
-                    android:gravity="right"
-                    android:background="@color/colorRent"/>
-
-                <FrameLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:id="@+id/toDeliverRent"/>
-
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="Swap   "
-                    android:textSize="15dp"
-                    android:layout_marginTop="10dp"
-                    android:textStyle="bold|italic"
-                    android:gravity="right"
-                    android:background="@color/colorSwap"
-                    android:layout_marginRight="15dp"/>
-
-                <FrameLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:id="@+id/toDeliverSwap"/>
-
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical">
-
-
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="Auction   "
-                    android:textSize="15dp"
-                    android:layout_marginTop="10dp"
-                    android:textStyle="bold|italic"
-                    android:gravity="right"
-                    android:background="@color/colorAuction"
-                    android:layout_marginRight="15dp"/>
-
-                <FrameLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:id="@+id/toDeliverAuction"/>
-
-            </LinearLayout>
+            <ImageButton
+                android:id="@+id/toDeliverBA"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="10dp"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:background="@null"
+                android:adjustViewBounds="true"
+                android:scaleType="fitXY"
+                android:src="@drawable/todeliver"/>
 
             <TextView
+                android:id="@+id/tvBAdeliver"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="To Deliver"
+                android:textColor="@color/colorDark"/>
+
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="100dp"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:padding="10dp">
+
+            <ImageButton
+                android:id="@+id/toReceiveBA"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="10dp"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:background="@null"
+                android:adjustViewBounds="true"
+                android:scaleType="fitXY"
+                android:src="@drawable/toreceive"/>
+
+            <TextView
+                android:id="@+id/tvBAreceive"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="To Receive"
-                android:textSize="15dp"
-                android:layout_marginLeft="5dp"
-                android:background="@color/colorLightOrange"
-                android:textStyle="bold|italic"/>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical">
-
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="Rent   "
-                    android:textSize="15dp"
-                    android:layout_marginTop="10dp"
-                    android:textStyle="bold|italic"
-                    android:gravity="right"
-                    android:background="@color/colorRent"
-                    android:layout_marginRight="15dp"/>
-
-                <FrameLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:id="@+id/toReceiveRent"/>
-
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical">
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="Swap   "
-                    android:layout_marginTop="10dp"
-                    android:textSize="15dp"
-                    android:textStyle="bold|italic"
-                    android:gravity="right"
-                    android:background="@color/colorSwap"
-                    android:layout_marginRight="15dp"/>
-
-                <FrameLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:id="@+id/toReceiveSwap"/>
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical">
-
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="Auction   "
-                    android:layout_marginTop="10dp"
-                    android:textSize="15dp"
-                    android:layout_marginLeft="5dp"
-                    android:textStyle="bold|italic"
-                    android:gravity="right"
-                    android:background="@color/colorAuction"
-                    android:layout_marginRight="15dp"/>
-
-                <FrameLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:id="@+id/toReceiveAuction"/>
-            </LinearLayout>
-
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical">
-
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="To Return"
-                    android:textSize="15dp"
-                    android:layout_marginLeft="5dp"
-                    android:background="@color/colorLightOrange"
-                    android:textStyle="bold|italic"/>
-
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="Rent   "
-                    android:layout_marginTop="10dp"
-                    android:textSize="15dp"
-                    android:layout_marginLeft="5dp"
-                    android:background="@color/colorRent"
-                    android:textStyle="bold|italic"
-                    android:gravity="right"
-                    android:layout_marginRight="15dp"/>
-
-                <FrameLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:id="@+id/toReturnRent"/>
-
-            </LinearLayout>
+                android:textColor="@color/colorDark"/>
 
         </LinearLayout>
-    </ScrollView>
+        <LinearLayout
+            android:layout_width="100dp"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:padding="10dp">
+
+            <ImageButton
+                android:id="@+id/toReturnBA"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="10dp"
+                android:adjustViewBounds="true"
+                android:background="@null"
+                android:scaleType="fitXY"
+                android:src="@drawable/toreturn" />
+
+
+            <TextView
+                android:id="@+id/tvBAreturn"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="To Return"
+                android:textColor="@color/colorDark" />
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <FrameLayout
+        android:id="@+id/fragment_container_book_activity"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
 
 </LinearLayout>
