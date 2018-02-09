@@ -11,9 +11,9 @@
         android:layout_width="match_parent"
         android:layout_height="150dp"
         android:orientation="horizontal"
-        android:layout_marginTop="10dp"
         android:id="@+id/linearLayout"
-        android:background="#FFFF">
+        android:background="#FFFF"
+        android:layout_alignParentTop="true">
 
 
         <ImageView
@@ -70,45 +70,52 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:layout_below="@id/linearLayout"
         android:gravity="center_horizontal"
-        android:padding="5dp">
-
-        <EditText
-            android:id="@+id/addBoCondition"
-            android:gravity="top"
-            android:layout_width="250dp"
-            android:layout_height="150dp"
-            android:ems="10"
-            android:inputType="textMultiLine"
-            android:layout_below="@+id/linearLayout"
-            android:layout_centerHorizontal="true"
-            android:layout_marginTop="20dp"
-            android:hint="Write Condition of Book"
-            android:background="@drawable/rounded_multiline"/>
+        android:padding="5dp"
+        android:weightSum="1"
+        android:layout_marginBottom="20dp"
+        android:layout_above="@+id/addBoBookBtn"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:id="@+id/linearLayout4">
 
         <EditText
             android:id="@+id/addBoDatePublished"
-            android:layout_width="200dp"
-            android:layout_height="25dp"
-            android:background="@drawable/rounded_edittext"
+            android:layout_width="194dp"
+            android:layout_height="35dp"
+            android:layout_centerHorizontal="true"
+            android:layout_marginBottom="42dp"
+            android:layout_marginTop="15dp"
+            android:layout_weight="0.28"
+            android:background="@color/colorLightOrange"
             android:clickable="true"
             android:focusable="false"
             android:gravity="center"
             android:hint="Date Bought (YYYY-MM-DD)"
             android:inputType="datetime"
-            android:textSize="15sp"
-            android:layout_marginTop="15dp"
-            android:layout_centerHorizontal="true"
-            android:layout_marginBottom="42dp" />
-
-        <Button
-            android:id="@+id/addBoBookBtn"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Add Book  "
-            android:layout_centerHorizontal="true" />
+            android:textSize="15sp" />
 
     </LinearLayout>
+
+    <Button
+        android:id="@+id/addBoBookBtn"
+        android:layout_width="325dp"
+        android:layout_height="95dp"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="19dp"
+        android:background="@drawable/add book" />
+
+    <EditText
+        android:id="@+id/addBoCondition"
+        android:layout_width="357dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="0.55"
+        android:background="@color/colorLightOrange"
+        android:ems="10"
+        android:gravity="top"
+        android:hint="Write Condition of Book"
+        android:inputType="textMultiLine"
+        android:layout_above="@+id/linearLayout4" />
 
 </RelativeLayout>

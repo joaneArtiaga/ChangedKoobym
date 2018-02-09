@@ -4,10 +4,9 @@ import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.icu.util.Calendar;
-import android.icu.util.TimeZone;
 import android.net.Uri;
 import android.os.Build;
-import android.support.annotation.NonNull;
+import android.os.Bundle;
 import android.support.annotation.RequiresApi;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.FragmentManager;
@@ -17,7 +16,6 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.text.Html;
 import android.text.SpannableStringBuilder;
@@ -55,11 +53,7 @@ import com.example.joane14.myapplication.Model.AuctionComment;
 import com.example.joane14.myapplication.Model.AuctionCommentDetail;
 import com.example.joane14.myapplication.Model.AuctionDetailModel;
 import com.example.joane14.myapplication.Model.AuctionHeader;
-import com.example.joane14.myapplication.Model.RentalDetail;
 import com.example.joane14.myapplication.Model.RentalHeader;
-import com.example.joane14.myapplication.Model.SwapComment;
-import com.example.joane14.myapplication.Model.SwapCommentDetail;
-import com.example.joane14.myapplication.Model.SwapHeader;
 import com.example.joane14.myapplication.Model.User;
 import com.example.joane14.myapplication.R;
 import com.example.joane14.myapplication.Utilities.SPUtility;
@@ -69,7 +63,6 @@ import com.google.gson.GsonBuilder;
 import com.squareup.picasso.Picasso;
 
 import java.io.UnsupportedEncodingException;
-import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -78,7 +71,8 @@ import java.util.List;
 
 import static android.util.Log.d;
 
-public class ViewAuctionBook extends AppCompatActivity
+public class
+ViewAuctionBook extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener,
         AuctionBidFragment.OnAuctionBidInteractionListener,
         CountdownFrag.OnCountdownInteractionListener {
