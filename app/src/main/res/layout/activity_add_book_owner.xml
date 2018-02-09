@@ -104,7 +104,7 @@
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
         android:layout_marginBottom="19dp"
-        android:background="@drawable/add book" />
+        android:background="@drawable/addbook" />
 
     <EditText
         android:id="@+id/addBoCondition"

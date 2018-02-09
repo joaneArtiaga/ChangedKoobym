@@ -23,11 +23,22 @@ public class SwapDetail implements Serializable {
     @SerializedName("swapTimeStamp")
     private String swapTimeStamp;
 
+    @SerializedName("swapStatus")
+    private String swapStatus;
+
     @SerializedName("swapPrice")
     private Float swapPrice;
 
     @SerializedName("swapComments")
     private List<SwapComment> swapComments;
+
+    public String getSwapStatus() {
+        return swapStatus;
+    }
+
+    public void setSwapStatus(String swapStatus) {
+        this.swapStatus = swapStatus;
+    }
 
     public List<SwapComment> getSwapComments() {
         return swapComments;

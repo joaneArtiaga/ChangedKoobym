@@ -13,7 +13,17 @@ public class RentalDetail implements Serializable{
 
     private double calculatedPrice;
 
+    private String rentalStatus;
+
     private BookOwnerModel bookOwner;
+
+    public String getRentalStatus() {
+        return rentalStatus;
+    }
+
+    public void setRentalStatus(String rentalStatus) {
+        this.rentalStatus = rentalStatus;
+    }
 
     public int getRental_detailId() {
         return rental_detailId;

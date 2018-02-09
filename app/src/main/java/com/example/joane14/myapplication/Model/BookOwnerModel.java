@@ -10,7 +10,7 @@ import java.io.Serializable;
 
 public class BookOwnerModel implements Serializable{
 
-    String dateBought, statusDescription, status;
+    String dateBought, statusDescription, status, bookStat;
 
     int noRenters;
 
@@ -43,6 +43,14 @@ public class BookOwnerModel implements Serializable{
         this.statusDescription = statusDescription;
         this.bookObj = bookObj;
         this.userObj = userObj;
+    }
+
+    public String getBookStat() {
+        return bookStat;
+    }
+
+    public void setBookStat(String bookStat) {
+        this.bookStat = bookStat;
     }
 
     public String getStatus() {

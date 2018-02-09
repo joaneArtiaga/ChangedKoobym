@@ -7,12 +7,15 @@
     <color name="colorMint">#9ebed3</color>
     <color name="colorDarkMint">#6E97B1</color>
     <color name="colorOrange">#080808</color>
-    <color name="colorLightOrange">#ffae39</color>
+    <color name="colorLightOrange">#FFD700</color>
     <color name="colorTuftBrush">#f2d2c3</color>
     <color name="colorRent">#53CC04</color>
     <color name="colorSwap">#ffae39</color>
     <color name="colorWhite">#FFFF</color>
     <color name="colorGray">#D3D3D3</color>
     <color name="colorAuction">#FF0000</color>
+    <color name="colorLightRent">#ADFF2F</color>
+    <color name="colorLightSwap">#FFFF00</color>
+    <color name="colorLightAuction">#FF6347</color>
 
 </resources>

@@ -26,6 +26,16 @@ public class AuctionDetailModel implements Serializable {
 
     private String auctionStatus;
 
+    private String status;
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
     public String getEndTime() {
         return endTime;
     }
