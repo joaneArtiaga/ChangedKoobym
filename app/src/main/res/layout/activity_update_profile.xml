@@ -8,152 +8,192 @@
     <android.support.constraint.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/colorMint">
-
-        <ImageView
-            android:id="@+id/imageView8"
-            android:layout_width="100dp"
-            android:layout_height="100dp"
-            app:srcCompat="@drawable/com_facebook_tooltip_black_xout"
-            tools:layout_editor_absoluteX="142dp"
-            tools:layout_editor_absoluteY="16dp" />
+        android:background="@color/colorDark">
 
         <LinearLayout
-            android:layout_width="410dp"
-            android:layout_height="350dp"
-            android:orientation="vertical"
-            android:weightSum="1"
+            android:layout_width="381dp"
+            android:layout_height="44dp"
+            android:orientation="horizontal"
             tools:layout_editor_absoluteX="2dp"
-            tools:layout_editor_absoluteY="138dp">
+            tools:layout_editor_absoluteY="94dp" />
 
+        <ImageView
+            android:id="@+id/imageView11"
+            android:layout_width="51dp"
+            android:layout_height="44dp"
+            app:srcCompat="@drawable/firstname"
+            tools:layout_editor_absoluteX="0dp"
+            tools:layout_editor_absoluteY="94dp" />
 
-            <TextView
-                android:id="@+id/frstName"
-                android:layout_width="98dp"
-                android:layout_height="wrap_content"
-                android:text="First Name"
-                android:textColor="@color/colorPrimaryDark"
-                android:textSize="18sp"
-                android:textStyle="bold" />
+        <EditText
+            android:id="@+id/editText6"
+            android:layout_width="330dp"
+            android:layout_height="40dp"
+            android:layout_weight="1"
+            android:ems="10"
+            android:hint="First Name"
+            android:inputType="textPersonName"
+            android:textColor="@color/cardview_light_background"
+            android:textColorHint="@color/cardview_light_background"
+            android:textStyle="bold"
+            tools:layout_editor_absoluteX="62dp"
+            tools:layout_editor_absoluteY="94dp" />
+
+        <ImageView
+            android:id="@+id/imageView11"
+            android:layout_width="51dp"
+            android:layout_height="44dp"
+            app:srcCompat="@drawable/lastname"
+            tools:layout_editor_absoluteX="2dp"
+            tools:layout_editor_absoluteY="138dp" />
+
+        <EditText
+            android:id="@+id/editText10"
+            android:layout_width="392dp"
+            android:layout_height="0dp"
+            android:ems="10"
+            android:inputType="textPersonName"
+            android:text="Last Name"
+            android:textColor="@color/cardview_light_background"
+            android:textStyle="bold"
+            tools:layout_editor_absoluteX="62dp"
+            tools:layout_editor_absoluteY="138dp" />
+
+        <ImageView
+            android:id="@+id/imageView13"
+            android:layout_width="45dp"
+            android:layout_height="42dp"
+            app:srcCompat="@drawable/bday"
+            tools:layout_editor_absoluteX="2dp"
+            tools:layout_editor_absoluteY="182dp" />
+
+        <LinearLayout
+            android:layout_width="392dp"
+            android:layout_height="43dp"
+            android:orientation="vertical"
+            tools:layout_editor_absoluteX="-4dp"
+            tools:layout_editor_absoluteY="181dp">
+
+        </LinearLayout>
+
+        <EditText
+            android:id="@+id/editText12"
+            android:layout_width="331dp"
+            android:layout_height="38dp"
+            android:ems="10"
+            android:inputType="textPersonName"
+            android:text="Birthday"
+            android:textColor="@color/cardview_light_background"
+            android:textStyle="bold"
+            tools:layout_editor_absoluteX="58dp"
+            tools:layout_editor_absoluteY="181dp" />
+
+        <LinearLayout
+            android:layout_width="381dp"
+            android:layout_height="44dp"
+            android:orientation="horizontal"
+            tools:layout_editor_absoluteX="2dp"
+            tools:layout_editor_absoluteY="224dp">
+
+            <ImageView
+                android:id="@+id/imageView14"
+                android:layout_width="56dp"
+                android:layout_height="44dp"
+                app:srcCompat="@drawable/location1"
+                tools:layout_editor_absoluteX="179dp"
+                tools:layout_editor_absoluteY="354dp" />
 
             <EditText
-                android:id="@+id/editText5"
-                android:layout_width="match_parent"
-                android:layout_height="24dp"
+                android:id="@+id/editText14"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
                 android:ems="10"
-                android:inputType="textPersonName"
-                android:textAlignment="viewStart"
+                android:inputType="textPostalAddress"
+                android:text="Address"
                 android:textColor="@color/cardview_light_background" />
+        </LinearLayout>
 
-            <TextView
-                android:id="@+id/textView11"
-                android:layout_width="100dp"
-                android:layout_height="wrap_content"
-                android:text="Last Name"
-                android:textColor="@color/colorPrimaryDark"
-                android:textSize="18sp"
-                android:textStyle="bold" />
+        <LinearLayout
+            android:layout_width="381dp"
+            android:layout_height="44dp"
+            android:orientation="horizontal"
+            tools:layout_editor_absoluteX="2dp"
+            tools:layout_editor_absoluteY="268dp">
+
+            <ImageView
+                android:id="@+id/imageView14"
+                android:layout_width="52dp"
+                android:layout_height="39dp"
+                app:srcCompat="@drawable/username"
+                tools:layout_editor_absoluteX="179dp"
+                tools:layout_editor_absoluteY="354dp" />
 
             <EditText
-                android:id="@+id/editText7"
-                android:layout_width="match_parent"
-                android:layout_height="24dp"
+                android:id="@+id/editText14"
+                android:layout_width="314dp"
+                android:layout_height="39dp"
+                android:layout_weight="1"
                 android:ems="10"
-                android:inputType="textPersonName"
-                android:textColor="@color/cardview_light_background" />
+                android:inputType="textPostalAddress"
+                android:text="Username"
+                android:textColor="@color/cardview_light_background"
+                tools:layout_editor_absoluteX="69dp"
+                tools:layout_editor_absoluteY="389dp" />
 
-            <TextView
-                android:id="@+id/textView12"
-                android:layout_width="100dp"
-                android:layout_height="wrap_content"
-                android:text="Email"
-                android:textColor="@color/colorPrimaryDark"
-                android:textSize="18sp"
-                android:textStyle="bold" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="381dp"
+            android:layout_height="44dp"
+            android:orientation="horizontal"
+            tools:layout_editor_absoluteX="2dp"
+            tools:layout_editor_absoluteY="320dp">
+
+            <ImageView
+                android:id="@+id/imageView14"
+                android:layout_width="52dp"
+                android:layout_height="39dp"
+                app:srcCompat="@drawable/email"
+                tools:layout_editor_absoluteX="179dp"
+                tools:layout_editor_absoluteY="354dp" />
 
             <EditText
-                android:id="@+id/editText8"
-                android:layout_width="match_parent"
-                android:layout_height="30dp"
+                android:id="@+id/editText16"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
                 android:ems="10"
                 android:inputType="textEmailAddress"
-                android:textColor="@color/cardview_light_background" />
-
-            <TextView
-                android:id="@+id/textView14"
-                android:layout_width="100dp"
-                android:layout_height="wrap_content"
-                android:text="Contact no."
-                android:textColor="@color/colorPrimaryDark"
-                android:textSize="18sp"
+                android:text="Email"
+                android:textColor="@color/cardview_light_background"
                 android:textStyle="bold" />
 
-            <EditText
-                android:id="@+id/editText9"
-                android:layout_width="match_parent"
-                android:layout_height="27dp"
-                android:ems="10"
-                android:inputType="phone"
-                android:textColor="@color/cardview_light_background" />
-
-            <TextView
-                android:id="@+id/textView15"
-                android:layout_width="100dp"
-                android:layout_height="wrap_content"
-                android:text="Username"
-                android:textColor="@color/colorPrimaryDark"
-                android:textSize="18sp"
-                android:textStyle="bold" />
-
-            <EditText
-                android:id="@+id/editText11"
-                android:layout_width="match_parent"
-                android:layout_height="30dp"
-                android:ems="10"
-                android:inputType="textPersonName"
-                android:textColor="@color/cardview_light_background" />
-
-            <TextView
-                android:id="@+id/textView16"
-                android:layout_width="100dp"
-                android:layout_height="wrap_content"
-                android:text="Address"
-                android:textColor="@color/colorPrimaryDark"
-                android:textSize="18sp"
-                android:textStyle="bold" />
-
-            <EditText
-                android:id="@+id/editText15"
-                android:layout_width="match_parent"
-                android:layout_height="22dp"
-                android:ems="10"
-                android:inputType="textPersonName"
-                android:textColor="@color/cardview_light_background" />
-
-            <TextView
-                android:id="@+id/textView17"
-                android:layout_width="100dp"
-                android:layout_height="wrap_content"
-                android:text="Birthdate"
-                android:textColor="@color/colorPrimaryDark"
-                android:textSize="18sp"
-                android:textStyle="bold" />
-
-            <Spinner
-                android:id="@+id/spinner4"
-                android:layout_width="70dp"
-                android:layout_height="wrap_content" />
         </LinearLayout>
 
         <ImageView
-            android:id="@+id/imageView9"
-            android:layout_width="100dp"
-            android:layout_height="100dp"
-            app:srcCompat="@drawable/update"
-            tools:layout_editor_absoluteX="142dp"
-            tools:layout_editor_absoluteY="473dp" />
+            android:id="@+id/imageView17"
+            android:layout_width="259dp"
+            android:layout_height="125dp"
+            app:srcCompat="@drawable/updateprofile"
+            tools:layout_editor_absoluteX="63dp"
+            tools:layout_editor_absoluteY="449dp" />
 
+        <ImageButton
+            android:id="@+id/imageButton"
+            android:layout_width="78dp"
+            android:layout_height="60dp"
+            app:srcCompat="@drawable/profile"
+            tools:layout_editor_absoluteX="153dp"
+            tools:layout_editor_absoluteY="16dp" />
 
+        <LinearLayout
+            android:layout_width="392dp"
+            android:layout_height="43dp"
+            android:orientation="horizontal"
+            tools:layout_editor_absoluteX="-4dp"
+            tools:layout_editor_absoluteY="138dp">
+
+        </LinearLayout>
     </android.support.constraint.ConstraintLayout>
-
 </LinearLayout>

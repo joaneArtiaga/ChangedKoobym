@@ -10,7 +10,7 @@
     <android.support.constraint.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/colorTuftBrush">
+        android:background="@color/colorDark">
 
         <ImageView
             android:id="@+id/imageView10"
@@ -32,13 +32,13 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="Book Author"
-                android:textColor="@color/colorPrimaryDark"
+                android:textColor="@color/colorWhite"
                 android:textSize="18sp"
                 android:textStyle="bold" />
 
             <EditText
                 android:id="@+id/editText2"
-                android:layout_width="370dp"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:ems="10"
                 android:inputType="none|textPersonName" />
@@ -47,27 +47,27 @@
 
         <EditText
             android:id="@+id/editText3"
-            android:layout_width="354dp"
-            android:layout_height="35dp"
+            android:layout_width="237dp"
+            android:layout_height="47dp"
             android:ems="10"
             android:inputType="textPersonName"
-            tools:layout_editor_absoluteX="20dp"
-            tools:layout_editor_absoluteY="301dp" />
+            tools:layout_editor_absoluteX="143dp"
+            tools:layout_editor_absoluteY="270dp" />
 
         <ImageView
             android:id="@+id/imageView4"
-            android:layout_width="290dp"
-            android:layout_height="100dp"
+            android:layout_width="318dp"
+            android:layout_height="98dp"
             app:srcCompat="@drawable/update"
-            tools:layout_editor_absoluteX="34dp"
-            tools:layout_editor_absoluteY="477dp" />
+            tools:layout_editor_absoluteX="33dp"
+            tools:layout_editor_absoluteY="465dp" />
 
         <TextView
             android:id="@+id/BkTittle"
             android:layout_width="123dp"
             android:layout_height="wrap_content"
             android:text="Book Tittle "
-            android:textColor="@color/colorPrimaryDark"
+            android:textColor="@color/colorWhite"
             android:textSize="18sp"
             android:textStyle="bold"
             tools:layout_editor_absoluteX="20dp"
@@ -78,7 +78,7 @@
             android:layout_width="123dp"
             android:layout_height="wrap_content"
             android:text="Description"
-            android:textColor="@color/colorPrimaryDark"
+            android:textColor="@color/colorWhite"
             android:textSize="18sp"
             android:textStyle="bold"
             tools:layout_editor_absoluteX="16dp"
