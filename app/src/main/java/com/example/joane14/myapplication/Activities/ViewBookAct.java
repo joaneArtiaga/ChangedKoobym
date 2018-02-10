@@ -135,8 +135,8 @@ public class ViewBookAct extends AppCompatActivity implements
 
             mTitle.setText(rentalDetailModel.getBookOwner().getBookObj().getBookTitle());
 
-            mLPrice.setText(String.valueOf(rentalDetailModel.getCalculatedPrice()));
-            mRPrice.setText(String.valueOf(rentalDetailModel.getCalculatedPrice()/2));
+            mLPrice.setText("₱ "+String.format("%.2f",rentalDetailModel.getCalculatedPrice()));
+            mRPrice.setText("₱ "+String.format("%.2f",rentalDetailModel.getCalculatedPrice()/2));
 
             final User user = (User) SPUtility.getSPUtil(ViewBookAct.this).getObject("USER_OBJECT", User.class);
 
@@ -208,7 +208,8 @@ public class ViewBookAct extends AppCompatActivity implements
             mHeaderRP.setText("Swap Price");
             mLPrice.setText(String.valueOf(swapDetail.getSwapPrice()));
             mRPrice.setText(String.valueOf(swapDetail.getSwapPrice()/2));
-//            mRPrice.setVisibility(View.GONE);
+            mRPrice.setVisibility(View.GONE);
+            mHeaderRP.setVisibility(View.GONE);
 
             final User user = (User) SPUtility.getSPUtil(ViewBookAct.this).getObject("USER_OBJECT", User.class);
 

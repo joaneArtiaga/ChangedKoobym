@@ -203,8 +203,8 @@ public class ViewBookActivity extends AppCompatActivity implements
                 }else{
                     author="Unknown Author";
                 }
-                mPrice.setText(String.format("%.2f",rentalDetail.getCalculatedPrice()));
-                mLockIn.setText(String.format("%.2f",rentalDetail.getCalculatedPrice()/2));
+                mPrice.setText("₱ "+String.format("%.2f",rentalDetail.getCalculatedPrice()));
+                mLockIn.setText("₱ "+String.format("%.2f",rentalDetail.getCalculatedPrice()/2));
                 Log.d("RentalAuthor", author);
                 mCondition.setText(rentalDetail.getBookOwner().getStatusDescription());
                 mBookAuthor.setText(author);

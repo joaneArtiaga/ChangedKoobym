@@ -162,6 +162,7 @@ public class ViewOwnBookAct extends AppCompatActivity
         TextView mAuthor = (TextView) findViewById(R.id.vbAuthor);
         TextView mLPrice = (TextView) findViewById(R.id.vbLockInP);
         TextView mHeaderLPrice = (TextView) findViewById(R.id.headerLP);
+        TextView mHeaderRPrice = (TextView) findViewById(R.id.headerRP);
         TextView mRPrice = (TextView) findViewById(R.id.vbRentalP);
         TextView mTitle = (TextView) findViewById(R.id.vbTitle);
         Button mViewBtn = (Button) findViewById(R.id.btnVbViewOwner);
@@ -185,8 +186,8 @@ public class ViewOwnBookAct extends AppCompatActivity
 
             mTitle.setText(rentalDetailModel.getBookOwner().getBookObj().getBookTitle());
 
-            mLPrice.setText(String.valueOf(rentalDetailModel.getCalculatedPrice()));
-            mRPrice.setText(String.valueOf(rentalDetailModel.getCalculatedPrice()/2));
+            mLPrice.setText("₱ "+String.format("%.2f", rentalDetailModel.getCalculatedPrice()));
+            mRPrice.setText("₱ "+String.format("%.2f", rentalDetailModel.getCalculatedPrice()/2));
 
             final User user = (User) SPUtility.getSPUtil(ViewOwnBookAct.this).getObject("USER_OBJECT", User.class);
 
@@ -222,14 +223,17 @@ public class ViewOwnBookAct extends AppCompatActivity
 //                        updateBookOwner(bookOwnerModel);
                     }else if(position==1){
                         bookOwnerModel = rentalDetailModel.getBookOwner();
+                        bookOwnerModel.setBookStat("Available");
                         bookOwnerModel.setStatus("Swap");
                         updateBookOwner(bookOwnerModel, "Rent");
                     }else if(position==2){
                         bookOwnerModel = rentalDetailModel.getBookOwner();
+                        bookOwnerModel.setBookStat("Available");
                         bookOwnerModel.setStatus("NotAdvertised");
                         updateBookOwner(bookOwnerModel, "Rent");
                     }else{
                         bookOwnerModel = rentalDetailModel.getBookOwner();
+                        bookOwnerModel.setBookStat("Available");
                         bookOwnerModel.setStatus("Auction");
                         customAuctionDialog("Rent");
                     }
@@ -311,6 +315,7 @@ public class ViewOwnBookAct extends AppCompatActivity
             swapDetail = new SwapDetail();
             swapDetail = (SwapDetail) getIntent().getExtras().getSerializable("swapBook");
 
+            priceLinear.setVisibility(View.GONE);
 
             List<String> statusBook = new ArrayList<String>();
             statusBook.add("Rent");
@@ -334,6 +339,7 @@ public class ViewOwnBookAct extends AppCompatActivity
                     Log.d("SwapBookOwner", String.valueOf(position));
                     if(position==0){
                         bookOwnerModel = swapDetail.getBookOwner();
+                        bookOwnerModel.setBookStat("Available");
                         bookOwnerModel.setStatus("Rent");
                         customDialog("Swap");
                     }else if(position==1){
@@ -344,10 +350,12 @@ public class ViewOwnBookAct extends AppCompatActivity
 //                        updateBookOwner(bookOwnerModel);
                     }else if(position==2){
                         bookOwnerModel = swapDetail.getBookOwner();
+                        bookOwnerModel.setBookStat("Available");
                         bookOwnerModel.setStatus("none");
                         updateBookOwner(bookOwnerModel, "Swap");
                     }else{
                         bookOwnerModel = swapDetail.getBookOwner();
+                        bookOwnerModel.setBookStat("Available");
                         bookOwnerModel.setStatus("Auction");
                         customAuctionDialog("Swap");
 
@@ -446,6 +454,12 @@ public class ViewOwnBookAct extends AppCompatActivity
             auctionDetail = new AuctionDetailModel();
             auctionDetail = (AuctionDetailModel) getIntent().getExtras().getSerializable("auctionBook");
 
+            mHeaderLPrice.setText("Starting Price:");
+            mHeaderRPrice.setVisibility(View.GONE);
+            mRPrice.setVisibility(View.GONE);
+            mLPrice.setText("₱ "+String.format("%.2f",auctionDetail.getStartingPrice()));
+
+
             if(auctionDetail.getAuctionStatus().equals("start")) {
                 CountdownFrag cdf = CountdownFrag.newInstance(bundle);
                 FragmentTransaction ft = fragmentManager.beginTransaction();
@@ -477,15 +491,18 @@ public class ViewOwnBookAct extends AppCompatActivity
                     Log.d("SwapBookOwner", String.valueOf(position));
                     if(position==0){
                         bookOwnerModel = auctionDetail.getBookOwner();
+                        bookOwnerModel.setBookStat("Available");
                         bookOwnerModel.setStatus("Rent");
                         customDialog("Auction");
                     }else if(position==1){
                         BookOwnerModel bookOwnerModel = new BookOwnerModel();
                         bookOwnerModel = auctionDetail.getBookOwner();
+                        bookOwnerModel.setBookStat("Available");
                         bookOwnerModel.setStatus("Swap");
                         updateBookOwner(bookOwnerModel, "Auction");
                     }else if(position==2){
                         bookOwnerModel = auctionDetail.getBookOwner();
+                        bookOwnerModel.setBookStat("Available");
                         bookOwnerModel.setStatus("NotAdvertised");
                         updateBookOwner(bookOwnerModel, "Auction");
                     }else{
@@ -512,8 +529,6 @@ public class ViewOwnBookAct extends AppCompatActivity
             if(user.getUserId()==auctionDetail.getBookOwner().getUserObj().getUserId()){
                 buttonLinear.setVisibility(View.GONE);
             }
-
-            priceLinear.setVisibility(View.GONE);
 
             String author = "";
 

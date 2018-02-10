@@ -172,6 +172,7 @@
 
                     <TextView
                         android:layout_width="150dp"
+                        android:id="@+id/headerRP"
                         android:layout_height="wrap_content"
                         android:text="Rental Price:"/>
 

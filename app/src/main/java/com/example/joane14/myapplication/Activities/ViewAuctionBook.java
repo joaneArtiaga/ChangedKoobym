@@ -244,7 +244,7 @@ ViewAuctionBook extends AppCompatActivity
 
 
                     Log.d("BidTriggered", "YES");
-                    if (auctionDetailModel.getAuctionStatus().equals("start")) {
+                    if (auctionDetailModel.getBookOwner().getBookStat().equals("Available")) {
 
                         final Dialog dialogCustom = new Dialog(ViewAuctionBook.this);
                         LayoutInflater inflater = (LayoutInflater) ViewAuctionBook.this.getSystemService(LAYOUT_INFLATER_SERVICE);
