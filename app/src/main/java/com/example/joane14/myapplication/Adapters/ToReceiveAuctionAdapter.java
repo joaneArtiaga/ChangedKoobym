@@ -75,6 +75,7 @@ public class ToReceiveAuctionAdapter extends RecyclerView.Adapter<ToReceiveAucti
     @Override
     public void onBindViewHolder(ToReceiveAuctionAdapter.BookHolder holder, final int position) {
 
+        holder.mBtnMail.setVisibility(View.GONE);
 
         holder.mBookTitle.setText(bookList.get(position).getAuctionDetail().getBookOwner().getBookObj().getBookTitle());
         holder.mBookDate.setText(bookList.get(position).getAuctionHeaderDateStamp());

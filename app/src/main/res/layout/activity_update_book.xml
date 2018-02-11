@@ -4,94 +4,212 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/colorDark"
     android:orientation="vertical"
-    android:weightSum="1">
+    android:weightSum="1"
+    tools:context=".Activities.UpdateBookActivity">
 
-    <android.support.constraint.ConstraintLayout
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="@color/colorDark">
-
-        <ImageView
-            android:id="@+id/imageView10"
-            android:layout_width="124dp"
-            android:layout_height="154dp"
-            app:srcCompat="@drawable/com_facebook_tooltip_blue_xout"
-            tools:layout_editor_absoluteX="119dp"
-            tools:layout_editor_absoluteY="63dp" />
-
+        android:layout_height="match_parent">
         <LinearLayout
-            android:layout_width="350dp"
-            android:layout_height="219dp"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
             android:orientation="vertical"
-            tools:layout_editor_absoluteX="17dp"
-            tools:layout_editor_absoluteY="336dp">
+            android:padding="5dp">
 
-            <TextView
-                android:id="@+id/textView19"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Book Author"
-                android:textColor="@color/colorWhite"
-                android:textSize="18sp"
-                android:textStyle="bold" />
+            <ImageView
+                android:id="@+id/ivBookImgUB"
+                android:layout_width="124dp"
+                android:layout_height="154dp"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="10dp"
+                app:srcCompat="@drawable/com_facebook_tooltip_blue_xout"
+                tools:layout_editor_absoluteX="119dp"
+                tools:layout_editor_absoluteY="63dp" />
 
-            <EditText
-                android:id="@+id/editText2"
-                android:layout_width="match_parent"
+            <LinearLayout
+                android:layout_width="350dp"
                 android:layout_height="wrap_content"
-                android:ems="10"
-                android:inputType="none|textPersonName" />
+                android:orientation="vertical"
+                android:layout_gravity="center_horizontal"
+                android:gravity="center_horizontal"
+                tools:layout_editor_absoluteX="17dp"
+                tools:layout_editor_absoluteY="336dp"
+                android:padding="10dp">
+
+                <TextView
+                    android:id="@+id/BkTittle"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Book Tittle "
+                    android:textColor="@color/colorLightOrange"
+                    android:textSize="18sp"
+                    android:textStyle="bold"
+                    tools:layout_editor_absoluteX="20dp"
+                    tools:layout_editor_absoluteY="283dp" />
+
+                <TextView
+                    android:id="@+id/tvBookTitleUB"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:ems="10"
+                    android:textColor="@color/colorWhite"
+                    android:gravity="center_horizontal"/>
+
+                <TextView
+                    android:id="@+id/textView19"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Book Author"
+                    android:textColor="@color/colorLightOrange"
+                    android:textSize="18sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/tvAuthorUB"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:ems="10"
+                    android:textColor="@color/colorWhite"
+                    android:gravity="center_horizontal"
+                    android:inputType="none|textPersonName" />
+
+
+                <TextView
+                    android:id="@+id/textView20"
+                    android:layout_width="123dp"
+                    android:layout_height="wrap_content"
+                    android:text="Description"
+                    android:textColor="@color/colorLightOrange"
+                    android:textSize="18sp"
+                    android:textStyle="bold"
+                    android:layout_gravity="left"
+                    tools:layout_editor_absoluteX="16dp"
+                    tools:layout_editor_absoluteY="413dp" />
+
+                <TextView
+                    android:id="@+id/tvBookDescUB"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:ems="10"
+                    android:textColor="@color/colorWhite"
+                    android:gravity="center_horizontal"
+                    tools:layout_editor_absoluteX="20dp"
+                    tools:layout_editor_absoluteY="433dp" />
+
+                <TextView
+                    android:id="@+id/textView20"
+                    android:layout_width="123dp"
+                    android:layout_height="wrap_content"
+                    android:text="Book Price"
+                    android:textColor="@color/colorLightOrange"
+                    android:textSize="18sp"
+                    android:textStyle="bold"
+                    android:layout_gravity="left"
+                    tools:layout_editor_absoluteX="16dp"
+                    tools:layout_editor_absoluteY="413dp" />
+
+                <TextView
+                    android:id="@+id/tvBookPriceUB"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:ems="10"
+                    android:textColor="@color/colorWhite"
+                    android:gravity="center_horizontal"
+                    tools:layout_editor_absoluteX="20dp"
+                    tools:layout_editor_absoluteY="433dp" />
+
+                <TextView
+                    android:id="@+id/textView20"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Book Condition"
+                    android:textColor="@color/colorLightOrange"
+                    android:textSize="18sp"
+                    android:textStyle="bold"
+                    android:layout_gravity="left"
+                    tools:layout_editor_absoluteX="16dp"
+                    tools:layout_editor_absoluteY="413dp" />
+
+                <EditText
+                    android:id="@+id/tvBookCondUB"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:ems="10"
+                    android:textColor="@color/colorWhite"
+                    android:gravity="center_horizontal"
+                    tools:layout_editor_absoluteX="20dp"
+                    tools:layout_editor_absoluteY="433dp" />
+
+                <TextView
+                    android:id="@+id/textView20"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Date Bought"
+                    android:textColor="@color/colorLightOrange"
+                    android:textSize="18sp"
+                    android:textStyle="bold"
+                    android:layout_gravity="left"
+                    tools:layout_editor_absoluteX="16dp"
+                    tools:layout_editor_absoluteY="413dp" />
+
+                <EditText
+                    android:id="@+id/tvDatePublishedUB"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerHorizontal="true"
+                    android:layout_weight="0.28"
+                    android:clickable="true"
+                    android:focusable="false"
+                    android:gravity="center"
+                    android:textColor="@color/colorWhite"
+                    android:hint="Date Bought (YYYY-MM-DD)"
+                    android:inputType="datetime"
+                    android:textSize="15sp" />
+
+                <TextView
+                    android:id="@+id/textView20"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Book Type"
+                    android:textColor="@color/colorLightOrange"
+                    android:textSize="18sp"
+                    android:textStyle="bold"
+                    android:layout_gravity="left"
+                    tools:layout_editor_absoluteX="16dp"
+                    tools:layout_editor_absoluteY="413dp" />
+
+                <Spinner
+                    android:id="@+id/spinnerStatusUB"
+                    android:layout_width="350dp"
+                    android:layout_height="30dp"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginTop="5dp"
+                    android:entries="@array/book_status"
+                    android:gravity="center_horizontal"
+                    android:paddingLeft="10dp"/>
+
+
+            </LinearLayout>
+
+            <ImageButton
+                android:id="@+id/btnUpdateUB"
+                android:layout_width="250dp"
+                android:layout_height="100dp"
+                android:layout_gravity="center_horizontal"
+                app:srcCompat="@drawable/update"
+                android:scaleType="fitXY"
+                android:background="@null"
+                android:adjustViewBounds="true"/>
 
         </LinearLayout>
 
-        <EditText
-            android:id="@+id/editText3"
-            android:layout_width="237dp"
-            android:layout_height="47dp"
-            android:ems="10"
-            android:inputType="textPersonName"
-            tools:layout_editor_absoluteX="143dp"
-            tools:layout_editor_absoluteY="270dp" />
+    </ScrollView>
 
-        <ImageView
-            android:id="@+id/imageView4"
-            android:layout_width="318dp"
-            android:layout_height="98dp"
-            app:srcCompat="@drawable/update"
-            tools:layout_editor_absoluteX="33dp"
-            tools:layout_editor_absoluteY="465dp" />
-
-        <TextView
-            android:id="@+id/BkTittle"
-            android:layout_width="123dp"
-            android:layout_height="wrap_content"
-            android:text="Book Tittle "
-            android:textColor="@color/colorWhite"
-            android:textSize="18sp"
-            android:textStyle="bold"
-            tools:layout_editor_absoluteX="20dp"
-            tools:layout_editor_absoluteY="283dp" />
-
-        <TextView
-            android:id="@+id/textView20"
-            android:layout_width="123dp"
-            android:layout_height="wrap_content"
-            android:text="Description"
-            android:textColor="@color/colorWhite"
-            android:textSize="18sp"
-            android:textStyle="bold"
-            tools:layout_editor_absoluteX="16dp"
-            tools:layout_editor_absoluteY="413dp" />
-
-        <EditText
-            android:id="@+id/editText"
-            android:layout_width="359dp"
-            android:layout_height="39dp"
-            android:ems="10"
-            android:inputType="textPersonName"
-            tools:layout_editor_absoluteX="20dp"
-            tools:layout_editor_absoluteY="433dp" />
-
-    </android.support.constraint.ConstraintLayout>
 </LinearLayout>

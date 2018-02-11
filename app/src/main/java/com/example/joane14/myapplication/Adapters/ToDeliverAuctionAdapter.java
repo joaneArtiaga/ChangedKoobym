@@ -82,6 +82,8 @@ public class ToDeliverAuctionAdapter extends RecyclerView.Adapter<ToDeliverAucti
     public void onBindViewHolder(ToDeliverAuctionAdapter.BookHolder holder, final int position) {
 
 
+        holder.mNotify.setVisibility(View.GONE);
+
         holder.mBookTitle.setText(bookList.get(position).getAuctionDetail().getBookOwner().getBookObj().getBookTitle());
         holder.mBookDate.setText(bookList.get(position).getAuctionHeaderDateStamp());
         holder.mTime.setText(bookList.get(position).getMeetUp().getUserDayTime().getTime().getStrTime());

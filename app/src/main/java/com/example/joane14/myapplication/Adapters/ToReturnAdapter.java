@@ -7,6 +7,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.icu.util.Calendar;
 import android.os.Bundle;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -17,13 +18,24 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.android.volley.Request;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
 import com.bumptech.glide.Glide;
+import com.example.joane14.myapplication.Activities.GsonDateDeserializer;
 import com.example.joane14.myapplication.Activities.ProfileActivity;
+import com.example.joane14.myapplication.Fragments.Constants;
+import com.example.joane14.myapplication.Fragments.VolleyUtil;
+import com.example.joane14.myapplication.Model.AuctionDetailModel;
 import com.example.joane14.myapplication.Model.RentalHeader;
+import com.example.joane14.myapplication.Model.SwapHeader;
 import com.example.joane14.myapplication.Model.User;
 import com.example.joane14.myapplication.Model.UserNotification;
 import com.example.joane14.myapplication.R;
 import com.example.joane14.myapplication.Utilities.SPUtility;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 
 import java.text.DateFormat;
 import java.text.ParseException;
@@ -61,6 +73,15 @@ public class ToReturnAdapter extends RecyclerView.Adapter<ToReturnAdapter.BookHo
     @SuppressLint("NewApi")
     @Override
     public void onBindViewHolder(ToReturnAdapter.BookHolder holder, final int position) {
+
+        Date c = Calendar.getInstance().getTime();
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-DD");
+        String currDAte = sdf.format(c);
+
+        if(bookList.get(position).getRentalEndDate().equals(currDAte)){
+            holder.mNotify.setVisibility(View.GONE);
+        }
+
 
 
         holder.mBookTitle.setText(bookList.get(position).getRentalDetail().getBookOwner().getBookObj().getBookTitle());
@@ -141,15 +162,22 @@ public class ToReturnAdapter extends RecyclerView.Adapter<ToReturnAdapter.BookHo
         holder.mNotify.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                User user = new User();
-                user = (User) SPUtility.getSPUtil(context).getObject("USER_OBJECT", User.class);
-                UserNotification un = new UserNotification();
-                un.setUser(bookList.get(position).getRentalDetail().getBookOwner().getUserObj());
-                un.setActionId(Integer.parseInt(String.valueOf(bookList.get(position).getRentalHeaderId())));
-                un.setActionName("rental");
-                un.setActionStatus("return");
-                un.setBookActionPerformedOn(bookList.get(position).getRentalDetail().getBookOwner());
-                un.setUserPerformer(user);
+                AlertDialog ad = new AlertDialog.Builder(context).create();
+                ad.setTitle("Alert!");
+                ad.setMessage("Are you sure you can return the book earlier?");
+                ad.setButton(AlertDialog.BUTTON_POSITIVE, "Yes", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        sendMailNotif(bookList.get(position));
+                    }
+                });
+                ad.setButton(AlertDialog.BUTTON_NEGATIVE, "No", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                });
+                ad.show();
             }
         });
 
@@ -171,6 +199,34 @@ public class ToReturnAdapter extends RecyclerView.Adapter<ToReturnAdapter.BookHo
                 }
             }
         });
+
+    }
+
+    private void sendMailNotif(RentalHeader rentalHeader){
+//        String URL = "http://104.198.152.85/Koobym/rentalDetail/suggested/%d";
+//        String URL = Constants.WEB_SERVICE_URL+"rentalDetail/suggested/%d";
+        String URL = Constants.SEND_NOTIF_MAIL+rentalHeader.getRentalHeaderId();
+//        URL = String.format(URL, userId);
+        Log.d("MailNotif", URL);
+        StringRequest stringRequest = new StringRequest(Request.Method.GET, URL, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                Log.d("EarlyNotif", response);
+                Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd").registerTypeAdapter(Date.class, GsonDateDeserializer.getInstance()).create();
+                RentalHeader rentalHeaderMod = gson.fromJson(response, RentalHeader.class);
+
+//                Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd").registerTypeAdapter(Date.class, GsonDateDeserializer.getInstance()).create();
+//                BookOwnerModel[] bookOwnerModels = gson.fromJson(response, BookOwnerModel[].class);
+//                bookOwnerModelList.addAll(Arrays.asList(bookOwnerModels));
+//                mAdapter.notifyDataSetChanged();
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.e("LOG_VOLLEY", error.toString());
+            }
+        }) ;
+        VolleyUtil.volleyRQInstance(context).add(stringRequest);
 
     }
 

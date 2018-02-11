@@ -49,6 +49,8 @@ public class Constants {
 
     public static final String UPDATE_BOOK_OWNER = WEB_SERVICE_URL + "bookOwner/updateBookOwner";
 
+    public static final String UPDATE_BOOK = WEB_SERVICE_URL + "book/update";
+
     public static final String UPDATE_BOOK_OWNER_1 = WEB_SERVICE_URL + "bookOwner/update";
 
     public static final String UPDATE_SWAP_HEADER = WEB_SERVICE_URL + "swapHeader/updateStatus";
@@ -170,6 +172,8 @@ public class Constants {
     public static final String TO_RECEIVE_AUCTION = WEB_SERVICE_URL + "auctionHeader/toReceiveById/";
 
     public static final String POST_USER_NOTIFICATION = WEB_SERVICE_URL + "userNotification/add";
+
+    public static final String SEND_NOTIF_MAIL = WEB_SERVICE_URL + "userNotification/sendEarlyNotif/";
 
 
 }

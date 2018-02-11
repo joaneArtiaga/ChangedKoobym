@@ -105,6 +105,8 @@
         <activity android:name=".Activities.ViewAuctionBook" />
         <activity android:name=".Activities.AuctionMeetUpChooser" />
         <activity android:name=".Activities.BookActActivity"></activity>
+        <activity android:name=".Activities.UpdateBookActivity"></activity>
+        <activity android:name=".Activities.UpdateProfileActivity"></activity>
     </application>
 
 </manifest>

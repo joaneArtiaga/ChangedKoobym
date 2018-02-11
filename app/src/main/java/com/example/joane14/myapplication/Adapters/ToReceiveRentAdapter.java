@@ -78,6 +78,7 @@ public class ToReceiveRentAdapter extends RecyclerView.Adapter<ToReceiveRentAdap
     @Override
     public void onBindViewHolder(ToReceiveRentAdapter.BookHolder holder, final int position) {
 
+        holder.mBtnMail.setVisibility(View.GONE);
 
         holder.mBookTitle.setText(bookList.get(position).getRentalDetail().getBookOwner().getBookObj().getBookTitle());
         holder.mBookDate.setText(bookList.get(position).getRentalTimeStamp());

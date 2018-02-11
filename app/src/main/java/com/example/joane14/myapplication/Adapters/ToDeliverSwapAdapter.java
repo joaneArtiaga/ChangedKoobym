@@ -61,6 +61,7 @@ public class ToDeliverSwapAdapter extends RecyclerView.Adapter<ToDeliverSwapAdap
     public void onBindViewHolder(ToDeliverSwapAdapter.BookHolder holder, final int position) {
 
 
+        holder.mNotify.setVisibility(View.GONE);
         holder.mBookTitle.setText(bookList.get(position).getSwapDetail().getBookOwner().getBookObj().getBookTitle());
         holder.mBookDate.setText(bookList.get(position).getDateTimeStamp());
         holder.mPrice.setText(String.valueOf(bookList.get(position).getSwapDetail().getSwapPrice()));

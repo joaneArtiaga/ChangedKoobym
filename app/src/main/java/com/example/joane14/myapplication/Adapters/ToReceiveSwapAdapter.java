@@ -73,6 +73,7 @@ public class ToReceiveSwapAdapter extends RecyclerView.Adapter<ToReceiveSwapAdap
     @Override
     public void onBindViewHolder(ToReceiveSwapAdapter.BookHolder holder, final int position) {
 
+        holder.mNotify.setVisibility(View.GONE);
 
         holder.mBookTitle.setText(bookList.get(position).getSwapDetail().getBookOwner().getBookObj().getBookTitle());
         holder.mRenter.setText(bookList.get(position).getSwapDetail().getBookOwner().getUserObj().getUserFname()+" "+bookList.get(position).getSwapDetail().getBookOwner().getUserObj().getUserLname());

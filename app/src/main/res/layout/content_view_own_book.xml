@@ -222,16 +222,16 @@
                     android:layout_width="0dp"
                     android:layout_weight="1"
                     android:layout_height="70dp"
-                    android:background="@drawable/requesttorent"
-                    android:id="@+id/btnVbRent"
+                    android:text="Update"
+                    android:id="@+id/btnVbUpdate"
                     android:gravity="center"/>
 
                 <Button
                     android:layout_width="0dp"
                     android:layout_height="70dp"
                     android:layout_weight="1"
-                    android:background="@drawable/viewprof"
-                    android:id="@+id/btnVbViewOwner"
+                    android:text="DELETE"
+                    android:id="@+id/btnVbDElete"
                     android:gravity="center" />
             </LinearLayout>
         </LinearLayout>

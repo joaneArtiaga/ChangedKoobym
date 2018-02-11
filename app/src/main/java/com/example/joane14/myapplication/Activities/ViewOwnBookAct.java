@@ -140,11 +140,10 @@ public class ViewOwnBookAct extends AppCompatActivity
         swapToPost = new SwapDetail();
         rentToPost = new RentalDetail();
 
-        boolStartDate = false;
-        boolEndDate = false;
 
-        boolStartTime = false;
-        boolEndTime = false;
+
+
+
 
 
         calendar = java.util.Calendar.getInstance();
@@ -165,8 +164,8 @@ public class ViewOwnBookAct extends AppCompatActivity
         TextView mHeaderRPrice = (TextView) findViewById(R.id.headerRP);
         TextView mRPrice = (TextView) findViewById(R.id.vbRentalP);
         TextView mTitle = (TextView) findViewById(R.id.vbTitle);
-        Button mViewBtn = (Button) findViewById(R.id.btnVbViewOwner);
-        Button mRentBtn = (Button) findViewById(R.id.btnVbRent);
+        Button mUpdateBtn = (Button) findViewById(R.id.btnVbUpdate);
+        Button mDeleteBtn = (Button) findViewById(R.id.btnVbDElete);
         final TextView mContent = (TextView) findViewById(R.id.vbContent);
         final TextView mCondition = (TextView) findViewById(R.id.vbCondition);
         ImageView mBookImg = (ImageView) findViewById(R.id.vbBookPic);
@@ -176,6 +175,7 @@ public class ViewOwnBookAct extends AppCompatActivity
         Spinner mSpinnerDay = (Spinner) findViewById(R.id.spinnerStatus);
 
 
+        mSpinnerDay.setVisibility(View.GONE);
         mRating = (RatingBar) findViewById(R.id.vbRating);
 
         if (getIntent().getExtras().getSerializable("viewBook")!=null){
@@ -190,10 +190,6 @@ public class ViewOwnBookAct extends AppCompatActivity
             mRPrice.setText("₱ "+String.format("%.2f", rentalDetailModel.getCalculatedPrice()/2));
 
             final User user = (User) SPUtility.getSPUtil(ViewOwnBookAct.this).getObject("USER_OBJECT", User.class);
-
-            if(user.getUserId()==rentalDetailModel.getBookOwner().getUserObj().getUserId()){
-                buttonLinear.setVisibility(View.GONE);
-            }
 
             getRatings(rentalDetailModel.getBookOwner().getBookOwnerId());
             List<String> statusBook = new ArrayList<String>();
@@ -292,23 +288,39 @@ public class ViewOwnBookAct extends AppCompatActivity
             ft.replace(R.id.fragment_review_container, DisplayBookReview.newInstance(bundle));
             ft.commit();
 
-            mViewBtn.setOnClickListener(new View.OnClickListener() {
+            mUpdateBtn.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Intent intent = new Intent(ViewOwnBookAct.this, ProfileActivity.class);
+                    Intent intent = new Intent(ViewOwnBookAct.this, UpdateBookActivity.class);
                     Bundle bundle = new Bundle();
-                    bundle.putSerializable("userModelPass", rentalDetailModel.getBookOwner().getUserObj());
+                    bundle.putSerializable("viewBook", rentalDetailModel);
                     intent.putExtras(bundle);
                     startActivity(intent);
                 }
             });
 
-            mRentBtn.setOnClickListener(new View.OnClickListener() {
+            mDeleteBtn.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    checkIfExist(user.getUserId(), rentalDetailModel.getRental_detailId());
+                    AlertDialog ad = new AlertDialog.Builder(ViewOwnBookAct.this).create();
+                    ad.setTitle("Delete");
+                    ad.setMessage("Are you sure you want to delete this book?");
+                    ad.setButton(AlertDialog.BUTTON_POSITIVE, "Yes", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            updateBook(rentalDetailModel.getBookOwner().getBookObj());
+                        }
+                    });
+                    ad.setButton(AlertDialog.BUTTON_NEGATIVE, "No", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+
+                        }
+                    });
+                    ad.show();
                 }
             });
+
         }else if(getIntent().getExtras().getSerializable("swapBook")!=null){
 
             containerForCounter.setVisibility(View.GONE);
@@ -378,9 +390,6 @@ public class ViewOwnBookAct extends AppCompatActivity
 
             final User user = (User) SPUtility.getSPUtil(ViewOwnBookAct.this).getObject("USER_OBJECT", User.class);
 
-            if(user.getUserId()==swapDetail.getBookOwner().getUserObj().getUserId()){
-                buttonLinear.setVisibility(View.GONE);
-            }
 
             String author = "";
 
@@ -423,25 +432,39 @@ public class ViewOwnBookAct extends AppCompatActivity
 //            fragmentTransaction.replace(R.id.fragment_review_container, displaySwapComments, displaySwapComments.getTag());
 //            fragmentTransaction.commit();
 
-            mRentBtn.setText("Request to Swap");
-
-            mViewBtn.setOnClickListener(new View.OnClickListener() {
+            mUpdateBtn.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Intent intent = new Intent(ViewOwnBookAct.this, ProfileActivity.class);
+                    Intent intent = new Intent(ViewOwnBookAct.this, UpdateBookActivity.class);
                     Bundle bundle = new Bundle();
-                    bundle.putSerializable("userModelPass", swapDetail.getBookOwner().getUserObj());
+                    bundle.putSerializable("swapBook", swapDetail);
                     intent.putExtras(bundle);
                     startActivity(intent);
                 }
             });
 
-            mRentBtn.setOnClickListener(new View.OnClickListener() {
+            mDeleteBtn.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    checkIfExist(user.getUserId(), rentalDetailModel.getRental_detailId());
+                    AlertDialog ad = new AlertDialog.Builder(ViewOwnBookAct.this).create();
+                    ad.setTitle("Delete");
+                    ad.setMessage("Are you sure you want to delete this book?");
+                    ad.setButton(AlertDialog.BUTTON_POSITIVE, "Yes", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            updateBook(swapDetail.getBookOwner().getBookObj());
+                        }
+                    });
+                    ad.setButton(AlertDialog.BUTTON_NEGATIVE, "No", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+
+                        }
+                    });
+                    ad.show();
                 }
             });
+
         }else if(getIntent().getExtras().getSerializable("auctionBook")!=null){
 
 
@@ -526,9 +549,6 @@ public class ViewOwnBookAct extends AppCompatActivity
 
             final User user = (User) SPUtility.getSPUtil(ViewOwnBookAct.this).getObject("USER_OBJECT", User.class);
 
-            if(user.getUserId()==auctionDetail.getBookOwner().getUserObj().getUserId()){
-                buttonLinear.setVisibility(View.GONE);
-            }
 
             String author = "";
 
@@ -574,31 +594,45 @@ public class ViewOwnBookAct extends AppCompatActivity
 //            fragmentTransaction.replace(R.id.fragment_review_container, displaySwapComments, displaySwapComments.getTag());
 //            fragmentTransaction.commit();
 
-            mRentBtn.setText("Bid");
-
-            mViewBtn.setOnClickListener(new View.OnClickListener() {
+            mUpdateBtn.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Intent intent = new Intent(ViewOwnBookAct.this, ProfileActivity.class);
+                    Intent intent = new Intent(ViewOwnBookAct.this, UpdateBookActivity.class);
                     Bundle bundle = new Bundle();
-                    bundle.putSerializable("userModelPass", auctionDetail.getBookOwner().getUserObj());
+                    bundle.putSerializable("auctionBook", auctionDetail);
                     intent.putExtras(bundle);
                     startActivity(intent);
                 }
             });
 
-            mRentBtn.setOnClickListener(new View.OnClickListener() {
+            mDeleteBtn.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    checkIfExist(user.getUserId(), auctionDetail.getAuctionDetailId());
+                    AlertDialog ad = new AlertDialog.Builder(ViewOwnBookAct.this).create();
+                    ad.setTitle("Delete");
+                    ad.setMessage("Are you sure you want to delete this book?");
+                    ad.setButton(AlertDialog.BUTTON_POSITIVE, "Yes", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            updateBook(auctionDetail.getBookOwner().getBookObj());
+                        }
+                    });
+                    ad.setButton(AlertDialog.BUTTON_NEGATIVE, "No", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+
+                        }
+                    });
+                    ad.show();
                 }
             });
+
         }else if(getIntent().getExtras().getSerializable("notAdBook")!=null){
 
             containerForCounter.setVisibility(View.GONE);
-            BookOwnerModel bookOwner = new BookOwnerModel();
+                BookOwnerModel bookOwner = new BookOwnerModel();
 
-            bookOwner = (BookOwnerModel) getIntent().getExtras().getSerializable("notAdBook");
+                bookOwner = (BookOwnerModel) getIntent().getExtras().getSerializable("notAdBook");
 
             rentalLinear.setVisibility(View.GONE);
             List<String> statusBook = new ArrayList<String>();
@@ -687,26 +721,41 @@ public class ViewOwnBookAct extends AppCompatActivity
             mCondition.setText(bookOwnerModel.getStatusDescription());
             makeTextViewResizable(mContent, 5, "See More", true);
 
-
-            mRentBtn.setText("Request to Swap");
-
-            mViewBtn.setOnClickListener(new View.OnClickListener() {
+            final BookOwnerModel finalBookOwner1 = bookOwner;
+            mUpdateBtn.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Intent intent = new Intent(ViewOwnBookAct.this, ProfileActivity.class);
+                    Intent intent = new Intent(ViewOwnBookAct.this, UpdateBookActivity.class);
                     Bundle bundle = new Bundle();
-                    bundle.putSerializable("userModelPass", swapDetail.getBookOwner().getUserObj());
+                    bundle.putSerializable("notAdBook", finalBookOwner1);
                     intent.putExtras(bundle);
                     startActivity(intent);
                 }
             });
 
-            mRentBtn.setOnClickListener(new View.OnClickListener() {
+            final BookOwnerModel finalBookOwner2 = bookOwner;
+            mDeleteBtn.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    checkIfExist(user.getUserId(), rentalDetailModel.getRental_detailId());
+                    AlertDialog ad = new AlertDialog.Builder(ViewOwnBookAct.this).create();
+                    ad.setTitle("Delete");
+                    ad.setMessage("Are you sure you want to delete this book?");
+                    ad.setButton(AlertDialog.BUTTON_POSITIVE, "Yes", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            updateBook(finalBookOwner2.getBookObj());
+                        }
+                    });
+                    ad.setButton(AlertDialog.BUTTON_NEGATIVE, "No", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+
+                        }
+                    });
+                    ad.show();
                 }
             });
+
         }
     }
 
@@ -746,6 +795,65 @@ public class ViewOwnBookAct extends AppCompatActivity
         });
 
 
+    }
+
+    public void updateBook(final Book bookModel){
+        RequestQueue requestQueue = Volley.newRequestQueue(this);
+//        String URL = "http://104.197.4.32:8080/Koobym/user/add";
+        bookModel.setStatus("Deleted");
+        String URL = Constants.UPDATE_BOOK;
+
+        final User user = (User) SPUtility.getSPUtil(ViewOwnBookAct.this).getObject("USER_OBJECT", User.class);
+
+        final Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd").registerTypeAdapter(Date.class, GsonDateDeserializer.getInstance()).create();
+        final String mRequestBody = gson.toJson(bookModel);
+
+
+        d("BookOwnerPostVolley", mRequestBody);
+        StringRequest stringRequest = new StringRequest(Request.Method.PUT, URL, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                Log.i("BookPutRes", response);
+
+                AlertDialog ad = new AlertDialog.Builder(ViewOwnBookAct.this).create();
+                ad.setTitle("Delete");
+                ad.setMessage("The book, "+bookModel.getBookTitle()+", has been successfully deleted.");
+                ad.setButton(AlertDialog.BUTTON_NEUTRAL, "Okay", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        Intent intent = new Intent(ViewOwnBookAct.this, ProfileActivity.class);
+                        Bundle bundle = new Bundle();
+                        bundle.putSerializable("userModelPass", user);
+                        intent.putExtras(bundle);
+                        startActivity(intent);
+                    }
+                });
+                ad.show();
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.e("LOG_VOLLEY", error.toString());
+                error.printStackTrace();
+            }
+        }) {
+            @Override
+            public String getBodyContentType() {
+                return "application/json; charset=utf-8";
+            }
+
+            @Override
+            public byte[] getBody() throws AuthFailureError {
+                try {
+                    return mRequestBody == null ? null : mRequestBody.getBytes("utf-8");
+                } catch (UnsupportedEncodingException uee) {
+                    VolleyLog.wtf("Unsupported Encoding while trying to get the bytes of %s using %s", mRequestBody, "utf-8");
+                    return null;
+                }
+            }
+        };
+
+        requestQueue.add(stringRequest);
     }
 
     private static SpannableStringBuilder addClickablePartTextViewResizable(final Spanned strSpanned, final TextView tv,

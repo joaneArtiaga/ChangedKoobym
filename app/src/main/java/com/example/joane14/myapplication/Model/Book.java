@@ -14,13 +14,15 @@ public class Book implements Serializable{
 
     }
 
-    String bookId, bookTitle, description, publishedDate, bookFilename;
+    String bookId, bookTitle, description, publishedDate, bookFilename, status;
     Float bookOriginalPrice;
 
 
     List<Author> authors;
 
     List<GenreModel> genres;
+
+
 
     public void setBookFilename(String bookFilename){
         this.bookFilename = bookFilename;
@@ -48,6 +50,14 @@ public class Book implements Serializable{
 
     public void setBookOriginalPrice(Float bookOriginalPrice) {
         this.bookOriginalPrice = bookOriginalPrice;
+    }
+
+    public void setStatus(String status){
+        this.status = status;
+    }
+
+    public String getStatus(){
+        return this.status;
     }
 
     public void setBookAuthor(List<Author> bookAuthor) {

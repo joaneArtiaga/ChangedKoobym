@@ -60,6 +60,8 @@ public class ToDeliverRentAdapter extends RecyclerView.Adapter<ToDeliverRentAdap
     public void onBindViewHolder(final ToDeliverRentAdapter.BookHolder holder, final int position) {
 
 
+        holder.mNotify.setVisibility(View.GONE);
+
         holder.mBookTitle.setText(bookList.get(position).getRentalDetail().getBookOwner().getBookObj().getBookTitle());
         holder.mBookDate.setText(bookList.get(position).getRentalTimeStamp());
         holder.mPrice.setText(String.valueOf(bookList.get(position).getRentalDetail().getCalculatedPrice()));
