@@ -2,6 +2,7 @@ package com.example.joane14.myapplication.Fragments;
 
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
@@ -19,6 +20,7 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.example.joane14.myapplication.Activities.ProfileActivity;
+import com.example.joane14.myapplication.Activities.UpdateProfileActivity;
 import com.example.joane14.myapplication.Model.User;
 import com.example.joane14.myapplication.R;
 import com.example.joane14.myapplication.Utilities.SPUtility;
@@ -66,6 +68,7 @@ public class ProfileFragment extends Fragment {
         Log.d("onCreateView profFrag", userObj.toString());
 
         TextView mName = (TextView) view.findViewById(R.id.tvName);
+        TextView mBtnEdit = (TextView) view.findViewById(R.id.tvEditProfile);
         TextView mEmail = (TextView) view.findViewById(R.id.tvEmailProfile);
 //        TextView mAddress = (TextView) view.findViewById(R.id.tvAddress);
 //        TextView mBirthDate = (TextView) view.findViewById(R.id.tvBirthDate);
@@ -138,6 +141,13 @@ public class ProfileFragment extends Fragment {
             }
         });
 
+        mBtnEdit.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getContext(), UpdateProfileActivity.class);
+                startActivity(intent);
+            }
+        });
 
         return view;
     }
