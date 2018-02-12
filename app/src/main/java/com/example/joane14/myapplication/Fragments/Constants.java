@@ -51,6 +51,8 @@ public class Constants {
 
     public static final String UPDATE_BOOK = WEB_SERVICE_URL + "book/update";
 
+    public static final String UPDATE_USER = WEB_SERVICE_URL + "user/update";
+
     public static final String UPDATE_BOOK_OWNER_1 = WEB_SERVICE_URL + "bookOwner/update";
 
     public static final String UPDATE_SWAP_HEADER = WEB_SERVICE_URL + "swapHeader/updateStatus";

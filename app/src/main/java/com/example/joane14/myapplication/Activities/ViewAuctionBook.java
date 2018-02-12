@@ -282,6 +282,7 @@ ViewAuctionBook extends AppCompatActivity
 
                                 Log.d("startProgress", progress+"");
 
+                                progress = progress+1;
                                 if (flag==false) {
                                     Log.d("startProgress If", progress+Math.round(auctionDetailModel.getStartingPrice())+"");
                                     progress = progress + Math.round(auctionDetailModel.getStartingPrice());
@@ -513,11 +514,11 @@ ViewAuctionBook extends AppCompatActivity
 
                 if(auctionHeaderModelMod.size()==0){
                     Log.d("walaySulodAngHeader", "true");
-                    mPriceBar.setText(Math.round(auctionDetailModel.getStartingPrice())+"");
+                    mPriceBar.setText(Math.round(auctionDetailModel.getStartingPrice())+1+"");
                     flag = false;
                 }else{
                     Log.d("walaySulodAngHeader", "false");
-                    mPriceBar.setText(auctionHeaderModelMod.get(0).getAuctionComment()+"");
+                    mPriceBar.setText(auctionHeaderModelMod.get(0).getAuctionComment()+1+"");
                     flag = true;
                 }
 

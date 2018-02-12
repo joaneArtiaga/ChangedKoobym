@@ -104,9 +104,12 @@
         <activity android:name=".Activities.SearchResult" />
         <activity android:name=".Activities.ViewAuctionBook" />
         <activity android:name=".Activities.AuctionMeetUpChooser" />
-        <activity android:name=".Activities.BookActActivity"></activity>
-        <activity android:name=".Activities.UpdateBookActivity"></activity>
-        <activity android:name=".Activities.UpdateProfileActivity"></activity>
+        <activity android:name=".Activities.BookActActivity" />
+        <activity android:name=".Activities.UpdateBookActivity" />
+        <activity android:name=".Activities.UpdateProfileActivity" />
+        <activity
+            android:name=".Activities.MeetUpUpdate"
+            android:label="@string/title_activity_meet_up_update"></activity>
     </application>
 
 </manifest>
