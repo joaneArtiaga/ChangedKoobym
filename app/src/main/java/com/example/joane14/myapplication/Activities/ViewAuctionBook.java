@@ -244,7 +244,7 @@ ViewAuctionBook extends AppCompatActivity
 
 
                     Log.d("BidTriggered", "YES");
-                    if (auctionDetailModel.getBookOwner().getBookStat().equals("Available")) {
+                    if (auctionDetailModel.getAuctionStatus().equals("start")) {
 
                         final Dialog dialogCustom = new Dialog(ViewAuctionBook.this);
                         LayoutInflater inflater = (LayoutInflater) ViewAuctionBook.this.getSystemService(LAYOUT_INFLATER_SERVICE);
@@ -507,10 +507,11 @@ ViewAuctionBook extends AppCompatActivity
                 d("onResponse maxBid", "inside");
                 Log.i("MaximumBid", response);
 
+                auctionHeaderModelMod.clear();
                 auctionHeaderModelMod.addAll(Arrays.asList(gson.fromJson(response, AuctionComment[].class)));
 
 
-                if(auctionHeaderModelMod.get(0)==null){
+                if(auctionHeaderModelMod.size()==0){
                     Log.d("walaySulodAngHeader", "true");
                     mPriceBar.setText(Math.round(auctionDetailModel.getStartingPrice())+"");
                     flag = false;
