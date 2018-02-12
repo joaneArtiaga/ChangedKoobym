@@ -93,6 +93,14 @@ public class BookActActivity extends AppCompatActivity
         final TextView tvDeliver = (TextView) findViewById(R.id.tvBAdeliver);
         final TextView tvReceive = (TextView) findViewById(R.id.tvBAreceive);
         final TextView tvReturn = (TextView) findViewById(R.id.tvBAreturn);
+
+        FragmentTransaction fragT = getSupportFragmentManager().beginTransaction();
+        tvDeliver.setTextColor(ContextCompat.getColor(BookActActivity.this, R.color.colorLightOrange));
+        tvReceive.setTextColor(ContextCompat.getColor(BookActActivity.this, R.color.colorDark));
+        tvReturn.setTextColor(ContextCompat.getColor(BookActActivity.this, R.color.colorDark));
+        fragT.replace(R.id.fragment_container_book_activity, ToDeliver.newInstance());
+        fragT.commit();
+
         mDeliver.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
