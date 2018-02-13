@@ -95,6 +95,8 @@ public class ViewBookSwapActivity extends AppCompatActivity implements Navigatio
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbarViewBookSwap);
         setSupportActionBar(toolbar);
+        getSupportActionBar().setTitle("View Book");
+
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout_view_book_swap);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(

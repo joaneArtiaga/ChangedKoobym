@@ -86,6 +86,8 @@ public class ViewBookAct extends AppCompatActivity implements
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbarViewBook);
         setSupportActionBar(toolbar);
+        getSupportActionBar().setTitle("View Book");
+
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout_view_book2);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(

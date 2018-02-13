@@ -37,6 +37,8 @@ public class NotificationAct extends AppCompatActivity
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbarNotification);
         setSupportActionBar(toolbar);
+        getSupportActionBar().setTitle("Notification");
+
 
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout_notification);

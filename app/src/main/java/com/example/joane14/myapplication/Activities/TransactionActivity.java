@@ -72,8 +72,10 @@ public class TransactionActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_transaction);
 
+
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        getSupportActionBar().setTitle("Transaction");
 
         Log.d("RequestActivity", "inside");
 
@@ -145,9 +147,6 @@ public class TransactionActivity extends AppCompatActivity
             userModel = (User) SPUtility.getSPUtil(this).getObject("USER_OBJECT", User.class);
             bundlePass.putSerializable("userModelPass", userModel);
             intent.putExtras(bundlePass);
-            startActivity(intent);
-        } else if (id == R.id.shelf) {
-            Intent intent = new Intent(TransactionActivity.this, MyShelf.class);
             startActivity(intent);
         } else if (id == R.id.history) {
             Intent intent = new Intent(TransactionActivity.this, HistoryActivity.class);

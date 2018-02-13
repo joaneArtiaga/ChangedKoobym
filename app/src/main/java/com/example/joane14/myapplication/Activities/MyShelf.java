@@ -146,8 +146,6 @@ public class MyShelf extends AppCompatActivity implements
             bundlePass.putSerializable("userModelPass", userModel);
             intent.putExtras(bundlePass);
             startActivity(intent);
-        } else if (id == R.id.shelf) {
-
         } else if (id == R.id.history) {
             Intent intent = new Intent(MyShelf.this, HistoryActivity.class);
             startActivity(intent);

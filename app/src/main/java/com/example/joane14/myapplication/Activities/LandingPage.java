@@ -63,6 +63,9 @@ public class LandingPage extends AppCompatActivity
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
+        getSupportActionBar().setTitle("Home");
+
+
         userModel = new User();
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout_landingPage);

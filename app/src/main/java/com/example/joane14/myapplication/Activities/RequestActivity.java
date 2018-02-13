@@ -64,6 +64,8 @@ public class RequestActivity extends AppCompatActivity
         setContentView(R.layout.activity_request);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbarRequest);
         setSupportActionBar(toolbar);
+        getSupportActionBar().setTitle("Request");
+
 
         Log.d("RequestActivity", "inside");
 
@@ -138,9 +140,6 @@ public class RequestActivity extends AppCompatActivity
             bundlePass.putSerializable("userModelPass", userModel);
             intent.putExtras(bundlePass);
             startActivity(intent);
-        } else if (id == R.id.shelf) {
-            Intent intent = new Intent(RequestActivity.this, MyShelf.class);
-            startActivity(intent);
         } else if (id == R.id.history) {
             Intent intent = new Intent(RequestActivity.this, HistoryActivity.class);
             startActivity(intent);
@@ -154,7 +153,6 @@ public class RequestActivity extends AppCompatActivity
             LoginManager.getInstance().logOut();
             Intent intent = new Intent(RequestActivity.this, MainActivity.class);
             startActivity(intent);
-        } else if (id == R.id.shelf) {
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout_request);

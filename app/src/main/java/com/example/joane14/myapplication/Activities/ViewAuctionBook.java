@@ -103,6 +103,8 @@ ViewAuctionBook extends AppCompatActivity
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbarViewBookAuction);
         setSupportActionBar(toolbar);
+        getSupportActionBar().setTitle("View Book");
+
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout_view_book_auction);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(

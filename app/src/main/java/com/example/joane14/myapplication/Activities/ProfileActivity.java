@@ -84,6 +84,8 @@ public class ProfileActivity extends AppCompatActivity implements
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbarProfile);
         setSupportActionBar(toolbar);
+        getSupportActionBar().setTitle("View Profile");
+
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout_profile);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(

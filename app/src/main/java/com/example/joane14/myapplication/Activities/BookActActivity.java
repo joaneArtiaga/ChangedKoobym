@@ -60,6 +60,8 @@ public class BookActActivity extends AppCompatActivity
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        getSupportActionBar().setTitle("Book Activity");
+
 
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout_book_activity);
