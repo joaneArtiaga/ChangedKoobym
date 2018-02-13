@@ -88,8 +88,8 @@ public class CompleteRenterAdapter extends RecyclerView.Adapter<CompleteRenterAd
 //        Picasso.with(context).load(bookList.get(position).getRentalDetail().getBookOwner().getUserObj().getImageFilename()).fit().into(holder.mIvRenter);
         Glide.with(context).load(bookList.get(position).getRentalDetail().getBookOwner().getBookObj().getBookFilename()).centerCrop().into(holder.mIvBookImg);
 
-        holder.mReceiveTime.setText(bookList.get(position).getUserDayTime().getDay().getStrDay()+", "+bookList.get(position).getUserDayTime().getTime().getStrTime());
-        holder.mReturnTime.setText(bookList.get(position).getUserDayTime().getDay().getStrDay()+", "+bookList.get(position).getUserDayTime().getTime().getStrTime());
+//        holder.mReceiveTime.setText(bookList.get(position).getUserDayTime().getDay().getStrDay()+", "+bookList.get(position).getUserDayTime().getTime().getStrTime());
+//        holder.mReturnTime.setText(bookList.get(position).getUserDayTime().getDay().getStrDay()+", "+bookList.get(position).getUserDayTime().getTime().getStrTime());
 
     }
 
