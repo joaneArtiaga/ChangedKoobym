@@ -95,9 +95,6 @@ public class NotificationAct extends AppCompatActivity
             bundlePass.putSerializable("userModelPass", userModel);
             intent.putExtras(bundlePass);
             startActivity(intent);
-        } else if (id == R.id.shelf) {
-            Intent intent = new Intent(NotificationAct.this, MyShelf.class);
-            startActivity(intent);
         } else if (id == R.id.history) {
             Intent intent = new Intent(NotificationAct.this, HistoryActivity.class);
             startActivity(intent);

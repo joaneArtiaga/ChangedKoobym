@@ -385,9 +385,6 @@ public class ProfileActivity extends AppCompatActivity implements
             startActivity(intent);
         } else if (id == R.id.profile) {
 
-        } else if (id == R.id.shelf) {
-            Intent intent = new Intent(ProfileActivity.this, MyShelf.class);
-            startActivity(intent);
         } else if (id == R.id.history) {
             Intent intent = new Intent(ProfileActivity.this, HistoryActivity.class);
             startActivity(intent);

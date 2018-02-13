@@ -179,5 +179,6 @@ public class Constants {
 
     public static final String SEND_NOTIF_MAIL = WEB_SERVICE_URL + "userNotification/sendEarlyNotif/";
 
+    public static final String SWAP_OWNER = WEB_SERVICE_URL + "swapHeader/swapOwner/";
 
 }

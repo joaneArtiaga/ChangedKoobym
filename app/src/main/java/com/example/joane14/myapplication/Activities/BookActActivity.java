@@ -161,9 +161,6 @@ public class BookActActivity extends AppCompatActivity
             bundlePass.putSerializable("userModelPass", userModel);
             intent.putExtras(bundlePass);
             startActivity(intent);
-        } else if (id == R.id.shelf) {
-            Intent intent = new Intent(BookActActivity.this, MyShelf.class);
-            startActivity(intent);
         } else if (id == R.id.history) {
             Intent intent = new Intent(BookActActivity.this, HistoryActivity.class);
             startActivity(intent);

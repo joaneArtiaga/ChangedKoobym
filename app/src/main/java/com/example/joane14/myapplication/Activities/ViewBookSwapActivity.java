@@ -487,9 +487,6 @@ public class ViewBookSwapActivity extends AppCompatActivity implements Navigatio
             bundlePass.putSerializable("userModelPass", userModel);
             intent.putExtras(bundlePass);
             startActivity(intent);
-        } else if (id == R.id.shelf) {
-            Intent intent = new Intent(ViewBookSwapActivity.this, MyShelf.class);
-            startActivity(intent);
         } else if (id == R.id.history) {
             Intent intent = new Intent(ViewBookSwapActivity.this, HistoryActivity.class);
             startActivity(intent);

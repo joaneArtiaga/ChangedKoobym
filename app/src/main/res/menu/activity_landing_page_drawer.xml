@@ -8,12 +8,8 @@
             android:title="Home" />
         <item
             android:id="@+id/profile"
-            android:icon="@drawable/profile1"
+            android:icon="@drawable/profile"
             android:title="Profile" />
-        <item
-            android:id="@+id/shelf"
-            android:title="Shelf"
-            android:icon="@drawable/bookshelf"/>
         <item
             android:id="@+id/history"
             android:icon="@drawable/history"

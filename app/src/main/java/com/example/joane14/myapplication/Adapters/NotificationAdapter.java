@@ -549,6 +549,7 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
                                 updateReceive(position, "Approved");
                             } else if (userNotificationList.get(position).getActionName().equals("swap")) {
                                 updateSwap(position, "Complete");
+                                getSwapHeader(position, "Complete");
                                 Log.d("InsideGiveDialog","swap");
                             }
                             Intent intent = new Intent(context, NotificationAct.class);
@@ -631,6 +632,61 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
 
             android.support.v7.app.AlertDialog alertDialog = alertDialogBuilder.create();
             alertDialog.show();
+        }
+
+        public void swapOwners(SwapHeader swapHeaderModule) {
+            RequestQueue requestQueue = Volley.newRequestQueue(context);
+//        String URL = "http://104.197.4.32:8080/Koobym/user/add";
+        String URL = Constants.WEB_SERVICE_URL+Constants.SWAP_OWNER+swapHeaderModule.getSwapHeaderId();
+            String nextDateStr = "";
+
+            User user = new User();
+            user = (User) SPUtility.getSPUtil(context).getObject("USER_OBJECT", User.class);
+
+            Log.d("SwapOwnerURL", URL);
+
+
+            final Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd").registerTypeAdapter(Date.class, GsonDateDeserializer.getInstance()).create();
+            final String mRequestBody = gson.toJson(userNotificationList);
+
+
+            Log.d("LOG_VOLLEY_swapHeaderUD", mRequestBody);
+            Log.d("LOG_VOLLEY rentalHeader", mRequestBody);
+            StringRequest stringRequest = new StringRequest(Request.Method.GET, URL, new Response.Listener<String>() {
+                @Override
+                public void onResponse(String response) {
+                    Log.i("UpdateSwapOwner", response);
+                    SwapHeader swapHeaderMod = gson.fromJson(response, SwapHeader.class);
+
+//                    getSwapHeader(position, "view");
+
+                    Intent intent = new Intent(context, NotificationAct.class);
+                    context.startActivity(intent);
+                }
+            }, new Response.ErrorListener() {
+                @Override
+                public void onErrorResponse(VolleyError error) {
+                    Log.e("LOG_VOLLEY", error.toString());
+                    error.printStackTrace();
+                }
+            }) {
+                @Override
+                public String getBodyContentType() {
+                    return "application/json; charset=utf-8";
+                }
+
+                @Override
+                public byte[] getBody() throws AuthFailureError {
+                    try {
+                        return mRequestBody == null ? null : mRequestBody.getBytes("utf-8");
+                    } catch (UnsupportedEncodingException uee) {
+                        VolleyLog.wtf("Unsupported Encoding while trying to get the bytes of %s using %s", mRequestBody, "utf-8");
+                        return null;
+                    }
+                }
+            };
+
+            requestQueue.add(stringRequest);
         }
 
         @SuppressLint("NewApi")
@@ -1049,6 +1105,8 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
                         updateBookOwner(position, false, swapHeaderMod);
                     }else if(status.equals("summ")){
                         meetUpSumm(position, swapHeaderMod);
+                    }else if(status.equals("Complete")){
+                        swapOwners(swapHeaderMod);
                     }
                 }
 

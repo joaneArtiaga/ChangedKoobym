@@ -1928,9 +1928,6 @@ public class ViewOwnBookAct extends AppCompatActivity
             bundlePass.putSerializable("userModelPass", userModel);
             intent.putExtras(bundlePass);
             startActivity(intent);
-        } else if (id == R.id.shelf) {
-            Intent intent = new Intent(ViewOwnBookAct.this, MyShelf.class);
-            startActivity(intent);
         } else if (id == R.id.history) {
             Intent intent = new Intent(ViewOwnBookAct.this, HistoryActivity.class);
             startActivity(intent);

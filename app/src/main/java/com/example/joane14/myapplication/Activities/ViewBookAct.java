@@ -747,9 +747,6 @@ public class ViewBookAct extends AppCompatActivity implements
             bundlePass.putSerializable("userModelPass", userModel);
             intent.putExtras(bundlePass);
             startActivity(intent);
-        } else if (id == R.id.shelf) {
-            Intent intent = new Intent(ViewBookAct.this, MyShelf.class);
-            startActivity(intent);
         } else if (id == R.id.history) {
             Intent intent = new Intent(ViewBookAct.this, HistoryActivity.class);
             startActivity(intent);
