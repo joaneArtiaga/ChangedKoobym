@@ -8,6 +8,7 @@ import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v4.view.ViewPager;
@@ -30,6 +31,8 @@ import com.example.joane14.myapplication.Fragments.CompletedOwnerHistory;
 import com.example.joane14.myapplication.Fragments.CompletedRenterHistory;
 import com.example.joane14.myapplication.Fragments.CompletedSwapHistory;
 import com.example.joane14.myapplication.Fragments.Constants;
+import com.example.joane14.myapplication.Fragments.HistoryAuction;
+import com.example.joane14.myapplication.Fragments.HistoryFragment;
 import com.example.joane14.myapplication.Fragments.MyRequestFrag;
 import com.example.joane14.myapplication.Fragments.RejectedHistory;
 import com.example.joane14.myapplication.Fragments.RejectedOwnerHistory;
@@ -58,7 +61,8 @@ public class HistoryActivity extends AppCompatActivity
         RentHistoryFrag.OnRentHistoryInteractionListener,
         SwapHistory.OnSwapHistoryInteractionListener,
         CompletedSwapHistory.OnCompletedSwapHistoryInteractionListener,
-        RejectedSwapHistory.OnRejectedSwapHistoryInteractionListener{
+        RejectedSwapHistory.OnRejectedSwapHistoryInteractionListener,
+        HistoryFragment.OnHistoryFragmentInteractionListener, HistoryAuction.OnHistoryAuctionInteractionListener{
 
     User userModel;
     private TabLayout tabLayout;
@@ -72,13 +76,10 @@ public class HistoryActivity extends AppCompatActivity
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        getSupportActionBar().setTitle("History");
 
         userModel = new User();
-        viewPager = (ViewPager) findViewById(R.id.viewpager);
-        setupViewPager(viewPager);
 
-        tabLayout = (TabLayout) findViewById(R.id.tabs);
-        tabLayout.setupWithViewPager(viewPager);
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout_history);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -104,13 +105,9 @@ public class HistoryActivity extends AppCompatActivity
             Picasso.with(HistoryActivity.this).load(userModel.getImageFilename()).fit().into(profileImg);
         }
 
-    }
-
-    private void setupViewPager(ViewPager viewPager) {
-        HistoryActivity.ViewPagerAdapter adapter = new HistoryActivity.ViewPagerAdapter(getSupportFragmentManager());
-        adapter.addFragment(new RentHistoryFrag(), "Rent");
-        adapter.addFragment(new SwapHistory(), "Swap");
-        viewPager.setAdapter(adapter);
+        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+        ft.replace(R.id.fragment_history_container, HistoryFragment.newInstance());
+        ft.commit();
     }
 
 
@@ -224,33 +221,14 @@ public class HistoryActivity extends AppCompatActivity
 
     }
 
+    @Override
+    public void onHistoryOnClick(Uri uri) {
 
-    class ViewPagerAdapter extends FragmentPagerAdapter {
-        private final List<Fragment> mFragmentList = new ArrayList<>();
-        private final List<String> mFragmentTitleList = new ArrayList<>();
-
-        public ViewPagerAdapter(FragmentManager manager) {
-            super(manager);
-        }
-
-        @Override
-        public Fragment getItem(int position) {
-            return mFragmentList.get(position);
-        }
-
-        @Override
-        public int getCount() {
-            return mFragmentList.size();
-        }
-
-        public void addFragment(Fragment fragment, String title) {
-            mFragmentList.add(fragment);
-            mFragmentTitleList.add(title);
-        }
-
-        @Override
-        public CharSequence getPageTitle(int position) {
-            return mFragmentTitleList.get(position);
-        }
     }
+
+    @Override
+    public void onHistoryAuctionOnClick(Uri uri) {
+
+    }
+
 }

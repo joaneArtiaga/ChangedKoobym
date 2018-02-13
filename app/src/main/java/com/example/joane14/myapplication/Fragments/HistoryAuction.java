@@ -20,11 +20,10 @@ import com.android.volley.VolleyLog;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.example.joane14.myapplication.Activities.GsonDateDeserializer;
+import com.example.joane14.myapplication.Adapters.HistoryAuctionAdapter;
 import com.example.joane14.myapplication.Adapters.ToDeliverAuctionAdapter;
-import com.example.joane14.myapplication.Adapters.ToDeliverRentAdapter;
 import com.example.joane14.myapplication.Model.AuctionHeader;
 import com.example.joane14.myapplication.Model.RentalHeader;
-import com.example.joane14.myapplication.Model.SwapHeader;
 import com.example.joane14.myapplication.Model.User;
 import com.example.joane14.myapplication.R;
 import com.example.joane14.myapplication.Utilities.SPUtility;
@@ -37,20 +36,18 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
-
-public class ToDeliverAuctionFragment extends Fragment {
-
-    private OnToDeliverAuctionInteractionListener mListener;
+public class HistoryAuction extends Fragment {
+    private OnHistoryAuctionInteractionListener mListener;
     List<AuctionHeader> auctionHeaderList;
     private RecyclerView mRecyclerView;
     private RecyclerView.Adapter mAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
 
-    public ToDeliverAuctionFragment() {
+    public HistoryAuction() {
     }
 
-    public static ToDeliverAuctionFragment newInstance() {
-        ToDeliverAuctionFragment fragment = new ToDeliverAuctionFragment();
+    public static HistoryAuction newInstance() {
+        HistoryAuction fragment = new HistoryAuction();
         Bundle args = new Bundle();
         fragment.setArguments(args);
         return fragment;
@@ -64,30 +61,29 @@ public class ToDeliverAuctionFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_to_deliver_auction, container, false);
-
-        Log.d("TodeliverAuction", "inside");
+        View view = inflater.inflate(R.layout.fragment_history_auction, container, false);
 
         auctionHeaderList = new ArrayList<AuctionHeader>();
-        mRecyclerView = (RecyclerView) view.findViewById(R.id.my_recycler_view_to_deliver_auction);
+        mRecyclerView = (RecyclerView) view.findViewById(R.id.my_recycler_view_history_auction);
         mRecyclerView.setHasFixedSize(true);
         mLayoutManager = new LinearLayoutManager(getContext());
         mRecyclerView.setLayoutManager(mLayoutManager);
-        mAdapter = new ToDeliverAuctionAdapter(auctionHeaderList);
+        mAdapter = new HistoryAuctionAdapter(auctionHeaderList);
         mRecyclerView.setAdapter(mAdapter);
 
-        getDeliveries();
+        getHistory();
 
         return view;
+
     }
 
-    public void getDeliveries(){
+    public void getHistory(){
         RequestQueue requestQueue = Volley.newRequestQueue(getContext());
 //        String URL = "http://104.197.4.32:8080/Koobym/user/add";
         User user = new User();
         user = (User) SPUtility.getSPUtil(getContext()).getObject("USER_OBJECT", User.class);
         Log.d("UserIdReceive", String.valueOf(user.getUserId()));
-        String URL = Constants.TO_DELIVER_AUCTION+user.getUserId();
+        String URL = Constants.HISTORY_AUCTION+user.getUserId();
         Log.d("UserIdURL", URL);
 //        String URL = Constants.WEB_SERVICE_URL+"user/add";
 
@@ -102,7 +98,6 @@ public class ToDeliverAuctionFragment extends Fragment {
             @Override
             public void onResponse(String response) {
                 Log.i("ResponseRequestReceived", response);
-//                RentalHeader rentalHeaderModel = gson.fromJson(response, RentalHeader.class);
                 auctionHeaderList.clear();
                 auctionHeaderList.addAll(Arrays.asList(gson.fromJson(response, AuctionHeader[].class)));
                 mAdapter.notifyDataSetChanged();
@@ -134,15 +129,15 @@ public class ToDeliverAuctionFragment extends Fragment {
 
     public void onButtonPressed(Uri uri) {
         if (mListener != null) {
-            mListener.onToDeliverAuctionOnClick(uri);
+            mListener.onHistoryAuctionOnClick(uri);
         }
     }
 
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        if (context instanceof OnToDeliverAuctionInteractionListener) {
-            mListener = (OnToDeliverAuctionInteractionListener) context;
+        if (context instanceof OnHistoryAuctionInteractionListener) {
+            mListener = (OnHistoryAuctionInteractionListener) context;
         } else {
             throw new RuntimeException(context.toString()
                     + " must implement OnFragmentInteractionListener");
@@ -155,7 +150,7 @@ public class ToDeliverAuctionFragment extends Fragment {
         mListener = null;
     }
 
-    public interface OnToDeliverAuctionInteractionListener {
-        void onToDeliverAuctionOnClick(Uri uri);
+    public interface OnHistoryAuctionInteractionListener {
+        void onHistoryAuctionOnClick(Uri uri);
     }
 }

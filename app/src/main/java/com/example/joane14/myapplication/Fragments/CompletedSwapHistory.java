@@ -43,7 +43,7 @@ public class CompletedSwapHistory extends Fragment {
     public CompletedSwapHistory() {
     }
 
-    public static CompletedSwapHistory newInstance(String param1, String param2) {
+    public static CompletedSwapHistory newInstance() {
         CompletedSwapHistory fragment = new CompletedSwapHistory();
         return fragment;
     }

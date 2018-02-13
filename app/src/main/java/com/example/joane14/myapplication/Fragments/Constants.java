@@ -171,6 +171,8 @@ public class Constants {
 
     public static final String TO_DELIVER_AUCTION = WEB_SERVICE_URL + "auctionHeader/toDeliverById/";
 
+    public static final String HISTORY_AUCTION = WEB_SERVICE_URL + "auctionHeader/getWinById/";
+
     public static final String TO_RECEIVE_AUCTION = WEB_SERVICE_URL + "auctionHeader/toReceiveById/";
 
     public static final String POST_USER_NOTIFICATION = WEB_SERVICE_URL + "userNotification/add";

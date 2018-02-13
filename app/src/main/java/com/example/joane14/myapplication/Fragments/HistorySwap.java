@@ -21,7 +21,6 @@ import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.example.joane14.myapplication.Activities.GsonDateDeserializer;
 import com.example.joane14.myapplication.Adapters.ToDeliverAuctionAdapter;
-import com.example.joane14.myapplication.Adapters.ToDeliverRentAdapter;
 import com.example.joane14.myapplication.Model.AuctionHeader;
 import com.example.joane14.myapplication.Model.RentalHeader;
 import com.example.joane14.myapplication.Model.SwapHeader;
@@ -37,20 +36,19 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
+public class HistorySwap extends Fragment {
+    private OnHistorySwapInteractionListener mListener;
 
-public class ToDeliverAuctionFragment extends Fragment {
-
-    private OnToDeliverAuctionInteractionListener mListener;
-    List<AuctionHeader> auctionHeaderList;
+    List<SwapHeader> swapHeaderList;
     private RecyclerView mRecyclerView;
     private RecyclerView.Adapter mAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
 
-    public ToDeliverAuctionFragment() {
+    public HistorySwap() {
     }
 
-    public static ToDeliverAuctionFragment newInstance() {
-        ToDeliverAuctionFragment fragment = new ToDeliverAuctionFragment();
+    public static HistorySwap newInstance() {
+        HistorySwap fragment = new HistorySwap();
         Bundle args = new Bundle();
         fragment.setArguments(args);
         return fragment;
@@ -64,24 +62,22 @@ public class ToDeliverAuctionFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_to_deliver_auction, container, false);
+        View view = inflater.inflate(R.layout.fragment_history_swap, container, false);
 
-        Log.d("TodeliverAuction", "inside");
-
-        auctionHeaderList = new ArrayList<AuctionHeader>();
-        mRecyclerView = (RecyclerView) view.findViewById(R.id.my_recycler_view_to_deliver_auction);
+        swapHeaderList = new ArrayList<SwapHeader>();
+        mRecyclerView = (RecyclerView) view.findViewById(R.id.my_recycler_view_history_swap);
         mRecyclerView.setHasFixedSize(true);
         mLayoutManager = new LinearLayoutManager(getContext());
         mRecyclerView.setLayoutManager(mLayoutManager);
-        mAdapter = new ToDeliverAuctionAdapter(auctionHeaderList);
+//        mAdapter = new ToDeliverAuctionAdapter(swapHeaderList);
         mRecyclerView.setAdapter(mAdapter);
 
-        getDeliveries();
+        getHistory();
 
         return view;
     }
 
-    public void getDeliveries(){
+    public void getHistory(){
         RequestQueue requestQueue = Volley.newRequestQueue(getContext());
 //        String URL = "http://104.197.4.32:8080/Koobym/user/add";
         User user = new User();
@@ -103,8 +99,8 @@ public class ToDeliverAuctionFragment extends Fragment {
             public void onResponse(String response) {
                 Log.i("ResponseRequestReceived", response);
 //                RentalHeader rentalHeaderModel = gson.fromJson(response, RentalHeader.class);
-                auctionHeaderList.clear();
-                auctionHeaderList.addAll(Arrays.asList(gson.fromJson(response, AuctionHeader[].class)));
+                swapHeaderList.clear();
+                swapHeaderList.addAll(Arrays.asList(gson.fromJson(response, SwapHeader[].class)));
                 mAdapter.notifyDataSetChanged();
             }
         }, new Response.ErrorListener() {
@@ -134,15 +130,15 @@ public class ToDeliverAuctionFragment extends Fragment {
 
     public void onButtonPressed(Uri uri) {
         if (mListener != null) {
-            mListener.onToDeliverAuctionOnClick(uri);
+            mListener.onHistorySwapOnClick(uri);
         }
     }
 
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        if (context instanceof OnToDeliverAuctionInteractionListener) {
-            mListener = (OnToDeliverAuctionInteractionListener) context;
+        if (context instanceof OnHistorySwapInteractionListener) {
+            mListener = (OnHistorySwapInteractionListener) context;
         } else {
             throw new RuntimeException(context.toString()
                     + " must implement OnFragmentInteractionListener");
@@ -155,7 +151,7 @@ public class ToDeliverAuctionFragment extends Fragment {
         mListener = null;
     }
 
-    public interface OnToDeliverAuctionInteractionListener {
-        void onToDeliverAuctionOnClick(Uri uri);
+    public interface OnHistorySwapInteractionListener {
+        void onHistorySwapOnClick(Uri uri);
     }
 }
