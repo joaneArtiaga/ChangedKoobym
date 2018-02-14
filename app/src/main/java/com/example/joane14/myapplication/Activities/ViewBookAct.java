@@ -128,6 +128,7 @@ public class ViewBookAct extends AppCompatActivity implements
         ImageView mBookImg = (ImageView) findViewById(R.id.vbBookPic);
         LinearLayout buttonLinear = (LinearLayout) findViewById(R.id.button_ll);
         LinearLayout lockInLinear = (LinearLayout) findViewById(R.id.lockInLinear);
+        LinearLayout priceLinear = (LinearLayout) findViewById(R.id.priceLL);
 
         mRating = (RatingBar) findViewById(R.id.vbRating);
 
@@ -206,12 +207,12 @@ public class ViewBookAct extends AppCompatActivity implements
 
             mRating.setRating(Float.parseFloat(String.valueOf(swapDetail.getBookOwner().getRate())));
 
-            lockInLinear.setVisibility(View.GONE);
             mHeaderRP.setText("Swap Price");
             mLPrice.setText(String.valueOf(swapDetail.getSwapPrice()));
             mRPrice.setText(String.valueOf(swapDetail.getSwapPrice()/2));
             mRPrice.setVisibility(View.GONE);
             mHeaderRP.setVisibility(View.GONE);
+            priceLinear.setVisibility(View.GONE);
 
             final User user = (User) SPUtility.getSPUtil(ViewBookAct.this).getObject("USER_OBJECT", User.class);
 
