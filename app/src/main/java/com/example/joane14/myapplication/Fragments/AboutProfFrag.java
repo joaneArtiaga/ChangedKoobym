@@ -74,9 +74,11 @@ public class AboutProfFrag extends Fragment {
 
 
         @SuppressLint({"NewApi", "LocalSuppress"})
-        android.icu.text.DateFormat dateFormat = android.icu.text.DateFormat.getDateInstance();
-        mBirth.setText(dateFormat.format(user.getBirthdate()));
+//        android.icu.text.DateFormat dateFormat = android.icu.text.DateFormat.getDateInstance();
 
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+//        mBirth.setText(dateFormat.format(user.getBirthdate()));
+        mBirth.setText(sdf.format(user.getBirthdate()));
         Bundle bundle = new Bundle();
         bundle.putSerializable("user", user);
         FragmentManager fragmentManager = getFragmentManager();

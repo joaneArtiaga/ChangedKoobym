@@ -78,6 +78,7 @@ public class ToReceiveAuctionFragment extends Fragment {
         mAdapter = new ToReceiveAuctionAdapter(auctionHeaderList);
         mRecyclerView.setAdapter(mAdapter);
 
+        getReceived();
 
 
         return view;
