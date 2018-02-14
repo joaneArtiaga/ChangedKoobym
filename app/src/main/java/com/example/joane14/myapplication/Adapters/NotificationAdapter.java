@@ -27,8 +27,10 @@ import com.android.volley.VolleyLog;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.example.joane14.myapplication.Activities.AuctionMeetUpChooser;
+import com.example.joane14.myapplication.Activities.BookActActivity;
 import com.example.joane14.myapplication.Activities.GsonDateDeserializer;
 import com.example.joane14.myapplication.Activities.HistoryActivity;
+import com.example.joane14.myapplication.Activities.LandingPage;
 import com.example.joane14.myapplication.Activities.MeetUpChooser;
 import com.example.joane14.myapplication.Activities.MyShelf;
 import com.example.joane14.myapplication.Activities.NotificationAct;
@@ -278,6 +280,8 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
                                 updateReceive(position, "Confirm");
                                 getRead(position);
                             } else if (userNotificationList.get(position).getActionStatus().equals("Confirm")) {
+                                Log.d("Confirm", "Inside");
+                                getRentalHeader(position, "summary");
                                 getRead(position);
                             }else if(userNotificationList.get(position).getActionStatus().equals("return")){
                                 getRead(position);
@@ -400,10 +404,10 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
                 @Override
                 public void onResponse(String response) {
                     Log.i("RequestReceivedStatus", response);
-                    if (bool == false) {
-                        Intent intent = new Intent(context, HistoryActivity.class);
-                        context.startActivity(intent);
-                    }
+//                    if (bool == false) {
+//                        Intent intent = new Intent(context, HistoryActivity.class);
+//                        context.startActivity(intent);
+//                    }
                 }
             }, new Response.ErrorListener() {
                 @Override
@@ -552,8 +556,6 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
                                 getSwapHeader(position, "Complete");
                                 Log.d("InsideGiveDialog","swap");
                             }
-                            Intent intent = new Intent(context, NotificationAct.class);
-                            context.startActivity(intent);
                         }
                     });
             alertDialogBuilder.setNegativeButton("No", new DialogInterface.OnClickListener() {
@@ -561,7 +563,10 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
                 public void onClick(DialogInterface dialog, int which) {
                     getRead(position);
                     updateReceive(position, "Rejected");
-                    Intent intent = new Intent(context, NotificationAct.class);
+                    Intent intent = new Intent(context, LandingPage.class);
+                    Bundle bundle = new Bundle();
+                    bundle.putBoolean("fromRegister", false);
+                    intent.putExtra("user", bundle);
                     context.startActivity(intent);
                 }
             });
@@ -581,11 +586,23 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
                             getRead(position);
                             if (userNotificationList.get(position).getActionName().equals("rental")) {
                                 updateReceive(position, "Approved");
+                                AlertDialog ad = new AlertDialog.Builder(context).create();
+                                ad.setTitle("Approval");
+                                ad.setMessage("You just approved "+userNotificationList.get(position).getUserPerformer().getUserFname()+" "+userNotificationList.get(position).getUserPerformer().getUserLname() + "'s " + userNotificationList.get(position).getActionStatus());
+                                ad.setButton(AlertDialog.BUTTON_NEUTRAL, "Okay", new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        Intent intent = new Intent(context, LandingPage.class);
+                                        Bundle bond = new Bundle();
+                                        bond.putBoolean("fromRegister", false);
+                                        intent.putExtra("user", bond);
+                                        context.startActivity(intent);
+                                    }
+                                });
+                                ad.show();
                             } else if (userNotificationList.get(position).getActionName().equals("swap")) {
                                 updateSwap(position, "Approved");
                             }
-                            Intent intent = new Intent(context, NotificationAct.class);
-                            context.startActivity(intent);
                         }
                     });
             alertDialogBuilder.setNegativeButton("Reject", new DialogInterface.OnClickListener() {
@@ -616,7 +633,10 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
                             } else if (userNotificationList.get(position).getActionName().equals("swap")) {
                                 updateSwap(position, "Approved");
                             }
-                            Intent intent = new Intent(context, NotificationAct.class);
+                            Intent intent = new Intent(context, LandingPage.class);
+                            Bundle bundle = new Bundle();
+                            bundle.putBoolean("fromRegister", false);
+                            intent.putExtra("user", bundle);
                             context.startActivity(intent);
                         }
                     });
@@ -637,7 +657,7 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
         public void swapOwners(SwapHeader swapHeaderModule) {
             RequestQueue requestQueue = Volley.newRequestQueue(context);
 //        String URL = "http://104.197.4.32:8080/Koobym/user/add";
-        String URL = Constants.WEB_SERVICE_URL+Constants.SWAP_OWNER+swapHeaderModule.getSwapHeaderId();
+        String URL = Constants.SWAP_OWNER+swapHeaderModule.getSwapHeaderId();
             String nextDateStr = "";
 
             User user = new User();
@@ -659,8 +679,10 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
                     SwapHeader swapHeaderMod = gson.fromJson(response, SwapHeader.class);
 
 //                    getSwapHeader(position, "view");
-
-                    Intent intent = new Intent(context, NotificationAct.class);
+                    Intent intent = new Intent(context, LandingPage.class);
+                    Bundle bundle = new Bundle();
+                    bundle.putBoolean("fromRegister", false);
+                    intent.putExtra("user", bundle);
                     context.startActivity(intent);
                 }
             }, new Response.ErrorListener() {
@@ -722,8 +744,6 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
 
 //                    getSwapHeader(position, "view");
 
-                    Intent intent = new Intent(context, NotificationAct.class);
-                    context.startActivity(intent);
                 }
             }, new Response.ErrorListener() {
                 @Override
@@ -897,6 +917,24 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
                         }
                     }else if(status.equals("return")){
                         rentalHeaderObj = rentalHeaderMod;
+                    }else if(status.equals("summary")){
+                        AlertDialog ad = new AlertDialog.Builder(context).create();
+                        ad.setTitle("Meet Up Summary");
+                        ad.setMessage("Date:\t" +rentalHeaderMod.getDateDeliver()+
+                                "\n\nDay:\t"+rentalHeaderMod.getMeetUp().getUserDayTime().getDay().getStrDay()+
+                                "\n\nTime:\t"+rentalHeaderMod.getMeetUp().getUserDayTime().getTime().getStrTime());
+                        ad.setButton(AlertDialog.BUTTON_POSITIVE, "Okay", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                Intent intent = new Intent(context, LandingPage.class);
+                                Bundle bundle = new Bundle();
+                                bundle.putBoolean("fromRegister", false);
+                                intent.putExtra("user", bundle);
+                                context.startActivity(intent);
+                            }
+                        });
+                        ad.show();
+
                     }
 
                 }
@@ -1101,13 +1139,13 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
                             context.startActivity(intent);
                         }
                     } else if (status.equals("change")) {
-                        updateBookOwner(position, true, swapHeaderMod);
-                        updateBookOwner(position, false, swapHeaderMod);
+                        swapOwners(swapHeaderMod);
+//                        updateBookOwner(position, true, swapHeaderMod);
+//                        updateBookOwner(position, false, swapHeaderMod);
                     }else if(status.equals("summ")){
                         meetUpSumm(position, swapHeaderMod);
-                    }else if(status.equals("Complete")){
-                        swapOwners(swapHeaderMod);
                     }
+
                 }
 
             }, new Response.ErrorListener() {

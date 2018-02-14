@@ -75,7 +75,7 @@ public class TimeDateChooser extends AppCompatActivity {
 
         fromWhere = "";
         @SuppressLint({"NewApi", "LocalSuppress"}) final
-        String date = new SimpleDateFormat("yyyy-MM-dd").format(new Date());
+        String date = new SimpleDateFormat("MMM-dd-yyyy").format(new Date());
         Log.d("CurrentDate", date);
 
         userDayTimeList = new ArrayList<UserDayTime>();
@@ -314,7 +314,10 @@ public class TimeDateChooser extends AppCompatActivity {
                             Log.d("RentalHeaderRent", rentalHeader.toString());
 
                             addMeetUp("rent");
-                            Intent intent = new Intent(TimeDateChooser.this, NotificationAct.class);
+                            Intent intent = new Intent(TimeDateChooser.this , LandingPage.class);
+                            Bundle bundle = new Bundle();
+                            bundle.putBoolean("fromRegister", false);
+                            intent.putExtra("user", bundle);
                             startActivity(intent);
                         }else if(fromWhere.equals("swap")){
                             swapHeader.setDateTimeStamp(nextDateStr);
@@ -325,15 +328,21 @@ public class TimeDateChooser extends AppCompatActivity {
 
                             addMeetUp("swap");
                             Log.d("SwapHeader dialog", "inside");
-                            Intent intent = new Intent(TimeDateChooser.this, NotificationAct.class);
-                            startActivity(intent);
+                            Intent intent = new Intent(TimeDateChooser.this , LandingPage.class);
+                            Bundle bundle = new Bundle();
+                            bundle.putBoolean("fromRegister", false);
+                            intent.putExtra("user", bundle);
+                            startActivity(intent);;
                         }else if(fromWhere.equals("auction")){
                             meetUp.setUserDayTime(udtMod);
                             auctionHeader.setDateDelivered(nextDateStr);
                             auctionHeader.setMeetUp(meetUp);
                             addMeetUp("auction");
 
-                            Intent intent = new Intent(TimeDateChooser.this, NotificationAct.class);
+                            Intent intent = new Intent(TimeDateChooser.this , LandingPage.class);
+                            Bundle bundle = new Bundle();
+                            bundle.putBoolean("fromRegister", false);
+                            intent.putExtra("user", bundle);
                             startActivity(intent);
                         }
 

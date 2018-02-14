@@ -6,8 +6,14 @@ import android.content.Intent;
 import android.icu.text.RelativeDateTimeFormatter;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.text.Html;
+import android.text.SpannableStringBuilder;
+import android.text.Spanned;
+import android.text.method.LinkMovementMethod;
+import android.text.style.ClickableSpan;
 import android.util.Log;
 import android.view.View;
+import android.view.ViewTreeObserver;
 import android.widget.*;
 
 import com.android.volley.AuthFailureError;
@@ -101,6 +107,7 @@ public class AddBookOwner extends AppCompatActivity {
 
         mBookTitle.setText(bookModel.getBookTitle());
         mBookDescription.setText(bookModel.getBookDescription());
+        makeTextViewResizable(mBookDescription, 10, "See More", true);
         Picasso.with(this).load(bookModel.getBookFilename()).fit().into(mBookPic);
 
 
@@ -117,12 +124,21 @@ public class AddBookOwner extends AppCompatActivity {
                         author += ", ";
                     }
                 }
+            }else{
+                Log.d("authorName", "inside dododo");
+                author = bookModel.getBookAuthor().get(0).getAuthorFName() + bookModel.getBookAuthor().get(0).getAuthorLName();
             }
             Log.d("authorName if", "inside");
             Log.d("authorName if", author);
         }
+
+        if(author==null){
+         Log.d("authorNull", "yes");
+        }else{
+            Log.d("authorNull", author+" inside");
+        }
         mBookAuthor.setText(author);
-        mPrice.setText(String.valueOf(calculatePrice()));
+        mPrice.setText("₱ "+String.format("%.2f",calculatePrice()));
 
         mBtnAddBO.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -211,6 +227,72 @@ public class AddBookOwner extends AppCompatActivity {
 
         };
 
+
+    }
+
+    public static void makeTextViewResizable(final TextView textView, final int maxLine, final String expandText, final boolean viewMore){
+        Log.d("makeTextViewResizable","inside");
+        if(textView.getTag() == null){
+            textView.setTag(textView.getText());
+        }
+
+        ViewTreeObserver treeObserver = textView.getViewTreeObserver();
+        treeObserver.addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+            @Override
+            public void onGlobalLayout() {
+                String text;
+                int lineEndText;
+                ViewTreeObserver observer = textView.getViewTreeObserver();
+
+                observer.removeGlobalOnLayoutListener(this);
+
+                if(maxLine == 0){
+                    lineEndText = textView.getLayout().getLineEnd(0);
+                    text = textView.getText().subSequence(0, lineEndText - expandText.length()-1)+" "+ expandText;
+                }else if(maxLine > 0 && textView.getLineCount() >= maxLine){
+                    lineEndText = textView.getLayout().getLineEnd(maxLine - 1);
+                    text = textView.getText().subSequence(0, lineEndText - expandText.length()-1)+" "+ expandText;
+                }else{
+                    lineEndText = textView.getLayout().getLineEnd(textView.getLayout().getLineCount()-1);
+                    text = textView.getText().subSequence(0, lineEndText)+" "+ expandText;
+                }
+
+                textView.setText(text);
+                textView.setMovementMethod(LinkMovementMethod.getInstance());
+                textView.setText(addClickablePartTextViewResizable(Html.fromHtml(textView.getText().toString()), textView, lineEndText, expandText,
+                        viewMore), TextView.BufferType.SPANNABLE);
+
+            }
+        });
+
+
+    }
+
+    private static SpannableStringBuilder addClickablePartTextViewResizable(final Spanned strSpanned, final TextView tv,
+                                                                            final int maxLine, final String spanableText, final boolean viewMore) {
+        String str = strSpanned.toString();
+        SpannableStringBuilder ssb = new SpannableStringBuilder(strSpanned);
+
+        if (str.contains(spanableText)) {
+            ssb.setSpan(new ClickableSpan() {
+
+                @Override
+                public void onClick(View widget) {
+                    Log.d("spannable", "inside");
+                    tv.setLayoutParams(tv.getLayoutParams());
+                    tv.setText(tv.getTag().toString(), TextView.BufferType.SPANNABLE);
+                    tv.invalidate();
+                    if (viewMore) {
+                        makeTextViewResizable(tv, -1, "View Less", false);
+                    } else {
+                        makeTextViewResizable(tv, 3, "View More", true);
+                    }
+
+                }
+            }, str.indexOf(spanableText), str.indexOf(spanableText) + spanableText.length(), 0);
+
+        }
+        return ssb;
 
     }
 

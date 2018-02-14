@@ -8,58 +8,117 @@
     tools:context="com.example.joane14.myapplication.Activities.AddBookOwner">
 
     <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="150dp"
-        android:orientation="horizontal"
         android:id="@+id/linearLayout"
-        android:background="#FFFF"
-        android:layout_alignParentTop="true">
+        android:layout_width="match_parent"
+        android:layout_height="200dp"
+        android:layout_alignParentTop="true"
+        android:orientation="horizontal"
+        android:layout_above="@+id/linearLayout4">
 
 
         <ImageView
             android:id="@+id/addBOPic"
             android:layout_width="60dp"
             android:layout_height="70dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginTop="10dp"
             android:layout_weight="1"
-            android:layout_marginLeft="5dp"
             app:srcCompat="@drawable/com_facebook_profile_picture_blank_square" />
 
         <ScrollView
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal">
 
             <LinearLayout
                 android:layout_width="300dp"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:layout_marginLeft="5dp">
+                android:layout_marginLeft="5dp"
+                android:orientation="vertical">
+
 
                 <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginLeft="8dp"
+                    android:layout_marginTop="20dp"
                     android:orientation="horizontal">
 
                     <TextView
-                        android:layout_width="200dp"
+                        android:layout_width="120dp"
                         android:layout_height="wrap_content"
-                        android:id="@+id/addBoTitle"/>
+                        android:text="Book Title:"
+                        android:textColor="@color/colorLightOrange" />
 
                     <TextView
-                        android:layout_width="wrap_content"
+                        android:id="@+id/addBoTitle"
+                        android:layout_width="200dp"
                         android:layout_height="wrap_content"
-                        android:id="@+id/addBoPrice"/>
+                        android:textColor="@color/colorWhite" />
 
                 </LinearLayout>
 
-                <TextView
+                <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:id="@+id/addBoAuthor"/>
+                    android:layout_marginLeft="8dp"
+                    android:layout_marginTop="20dp"
+                    android:orientation="horizontal">
 
-                <TextView
+                    <TextView
+                        android:layout_width="120dp"
+                        android:layout_height="wrap_content"
+                        android:text="Book Price:"
+                        android:textColor="@color/colorLightOrange" />
+
+                    <TextView
+                        android:id="@+id/addBoPrice"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textColor="@color/colorWhite" />
+
+                </LinearLayout>
+
+                <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:id="@+id/addBoDescription"/>
+                    android:layout_marginLeft="8dp"
+                    android:layout_marginTop="20dp"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="120dp"
+                        android:layout_height="wrap_content"
+                        android:text="Book Author:"
+                        android:textColor="@color/colorLightOrange" />
+
+                    <TextView
+                        android:id="@+id/addBoAuthor"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textColor="@color/colorWhite" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="8dp"
+                    android:layout_marginTop="20dp"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="120dp"
+                        android:layout_height="wrap_content"
+                        android:text="Book Description:"
+                        android:textColor="@color/colorLightOrange" />
+
+                    <TextView
+                        android:id="@+id/addBoDescription"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="10dp"
+                        android:textColor="@color/colorWhite" />
+                </LinearLayout>
             </LinearLayout>
         </ScrollView>
     </LinearLayout>
@@ -68,54 +127,69 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="150dp"
         android:orientation="vertical"
         android:gravity="center_horizontal"
-        android:padding="5dp"
+        android:padding="10dp"
         android:weightSum="1"
-        android:layout_marginBottom="20dp"
+        android:id="@+id/linearLayout4"
         android:layout_above="@+id/addBoBookBtn"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
-        android:id="@+id/linearLayout4">
+        android:layout_marginBottom="57dp">
 
         <EditText
             android:id="@+id/addBoDatePublished"
             android:layout_width="194dp"
             android:layout_height="35dp"
+            android:layout_marginBottom="5dp"
             android:layout_centerHorizontal="true"
-            android:layout_marginBottom="42dp"
-            android:layout_marginTop="15dp"
             android:layout_weight="0.28"
-            android:background="@color/colorLightOrange"
+            android:background="@color/colorWhite"
             android:clickable="true"
             android:focusable="false"
             android:gravity="center"
+            android:padding="5dp"
             android:hint="Date Bought (YYYY-MM-DD)"
             android:inputType="datetime"
             android:textSize="15sp" />
 
+        <EditText
+            android:id="@+id/addBoCondition"
+            android:layout_width="350dp"
+            android:layout_height="100dp"
+            android:layout_above="@+id/linearLayout4"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:layout_weight="0.55"
+            android:background="@color/colorWhite"
+            android:ems="10"
+            android:gravity="top"
+            android:hint="Write Condition of Book"
+            android:inputType="textMultiLine"
+            android:padding="9dp" />
+
     </LinearLayout>
+
+    <!--<Button-->
+        <!--android:id="@+id/addBoBookBtn"-->
+        <!--android:layout_width="325dp"-->
+        <!--android:layout_height="95dp"-->
+        <!--android:layout_alignParentBottom="true"-->
+        <!--android:layout_centerHorizontal="true"-->
+        <!--android:layout_marginBottom="19dp"-->
+        <!--android:background="@drawable/addbook" />-->
 
     <Button
         android:id="@+id/addBoBookBtn"
-        android:layout_width="325dp"
-        android:layout_height="95dp"
+        android:layout_width="180dp"
+        android:layout_height="50dp"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
         android:layout_marginBottom="19dp"
-        android:background="@drawable/addbook" />
-
-    <EditText
-        android:id="@+id/addBoCondition"
-        android:layout_width="357dp"
-        android:layout_height="wrap_content"
-        android:layout_weight="0.55"
         android:background="@color/colorLightOrange"
-        android:ems="10"
-        android:gravity="top"
-        android:hint="Write Condition of Book"
-        android:inputType="textMultiLine"
-        android:layout_above="@+id/linearLayout4" />
+        android:text="Add Book"
+        android:textColor="@color/colorDark"
+        android:textSize="25dp" />
 
 </RelativeLayout>
