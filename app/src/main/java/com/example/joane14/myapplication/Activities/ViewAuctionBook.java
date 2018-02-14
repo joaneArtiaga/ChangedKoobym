@@ -246,6 +246,8 @@ ViewAuctionBook extends AppCompatActivity
 
 
                     Log.d("BidTriggered", "YES");
+                    Log.d("BidTriggered", auctionDetailModel.getAuctionStatus());
+
                     if (auctionDetailModel.getAuctionStatus().equals("start")) {
 
                         final Dialog dialogCustom = new Dialog(ViewAuctionBook.this);

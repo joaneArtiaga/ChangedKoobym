@@ -67,7 +67,6 @@ import com.example.joane14.myapplication.Model.RentalHeader;
 import com.example.joane14.myapplication.Model.SwapDetail;
 import com.example.joane14.myapplication.Model.TimeModel;
 import com.example.joane14.myapplication.Model.User;
-import com.example.joane14.myapplication.Model.UserDayTime;
 import com.example.joane14.myapplication.R;
 import com.example.joane14.myapplication.Utilities.SPUtility;
 import com.facebook.login.LoginManager;
@@ -696,9 +695,6 @@ public class ViewOwnBookAct extends AppCompatActivity
 
             final User user = (User) SPUtility.getSPUtil(ViewOwnBookAct.this).getObject("USER_OBJECT", User.class);
 
-            if(user.getUserId()==bookOwnerModel.getUserObj().getUserId()){
-                buttonLinear.setVisibility(View.GONE);
-            }
 
             String author = "";
 
@@ -1257,6 +1253,8 @@ public class ViewOwnBookAct extends AppCompatActivity
                         auctionToPost.setStartTime(mStartTime.getText().toString());
                         auctionToPost.setEndTime(mEndTime.getText().toString());
                     }
+
+                    auctionToPost.setAuctionStatus("start");
 
                     addAuctionDetail(auctionToPost);
                 }

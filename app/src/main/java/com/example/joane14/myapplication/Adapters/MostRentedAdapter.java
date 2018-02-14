@@ -54,7 +54,7 @@ public class MostRentedAdapter extends BaseAdapter {
             ImageView bookPic = (ImageView) grid.findViewById(R.id.displayBookPic);
             TextView bookTitle = (TextView) grid.findViewById(R.id.lpBookTitle);
             TextView bookAuthor = (TextView) grid.findViewById(R.id.lpAuthor);
-            TextView bookPrice = (TextView) grid.findViewById(R.id.bookPrice);
+            TextView bookPrice = (TextView) grid.findViewById(R.id.lpBookPrice);
 
             bookTitle.setText(rentalDetailList.get(position).getBookOwner().getBookObj().getBookTitle());
             bookPrice.setText(String.format("%.2f", rentalDetailList.get(position).getCalculatedPrice()));
