@@ -192,7 +192,7 @@ public class SignUp extends AppCompatActivity implements
                 SPUtility.getSPUtil(SignUp.this).putObject("USER_OBJECT", user);
                 Intent intent = new Intent(SignUp.this, LandingPage.class);
                 Bundle b = new Bundle();
-                b.putBoolean("fromRegister", true);
+                b.putBoolean("fromRegister", false);
                 b.putSerializable("userModel", user);
                 intent.putExtra("user",b);
                 startActivity(intent);

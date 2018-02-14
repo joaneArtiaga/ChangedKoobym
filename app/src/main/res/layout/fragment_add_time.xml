@@ -17,6 +17,19 @@
         android:background="@color/colorLightOrange"
         android:text="Add Time" />
 
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/remindTime"
+        android:text="Choose available time and day."
+        android:textStyle="bold"
+        android:layout_below="@+id/btnAddTime"
+        android:textSize="40dp"
+        android:gravity="center"
+        android:layout_marginTop="20dp"
+        android:layout_centerHorizontal="true"
+        android:textColor="@color/colorWhite"/>
+
     <android.support.v7.widget.RecyclerView
         android:id="@+id/recycler_view_timeDay"
         android:layout_width="match_parent"
@@ -26,7 +39,7 @@
         android:layout_above="@+id/btnNextTime"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
-        android:layout_below="@+id/btnAddTime" />
+        android:layout_below="@+id/btnAddTime"/>
 
     <Button
         android:id="@+id/btnNextTime"

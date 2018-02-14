@@ -16,7 +16,9 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.FrameLayout;
 import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.TimePicker;
 
 import com.example.joane14.myapplication.Adapters.TimeDayAdapter;
@@ -46,6 +48,7 @@ public class AddTimeFrag extends Fragment{
     TimeModel timeModel;
     UserDayTime userDayTime;
     EditText etTimeFrom, etTimeTo;
+    TextView tvRemind;
 
     public AddTimeFrag() {
     }
@@ -66,6 +69,7 @@ public class AddTimeFrag extends Fragment{
                              Bundle savedInstanceState) {
         View view =  inflater.inflate(R.layout.fragment_add_time, container, false);
 
+        RecyclerView layoutFrag = (RecyclerView) view.findViewById(R.id.recycler_view_timeDay);
 
         bundle = new Bundle();
         bundle = getArguments();
@@ -73,7 +77,12 @@ public class AddTimeFrag extends Fragment{
         userDayTimeList = new ArrayList<UserDayTime>();
         mNext = (Button) view.findViewById(R.id.btnNextTime);
         mAddTime = (Button) view.findViewById(R.id.btnAddTime);
+        tvRemind = (TextView) view.findViewById(R.id.remindTime);
 
+        if(userDayTimeList.size()==0){
+        }else{
+            tvRemind.setVisibility(View.GONE);
+        }
 
         MeetUpLocObj meetUpLocObj = new MeetUpLocObj();
         meetUpLocObj = (MeetUpLocObj) bundle.getSerializable("meetUpLocObj");
@@ -188,6 +197,7 @@ public class AddTimeFrag extends Fragment{
                 userDayTime.setTime(time);
                 userDayTimeList.add(userDayTime);
                 mAdapter.notifyDataSetChanged();
+                tvRemind.setVisibility(View.GONE);
                 dialog.cancel();
             }
         });
