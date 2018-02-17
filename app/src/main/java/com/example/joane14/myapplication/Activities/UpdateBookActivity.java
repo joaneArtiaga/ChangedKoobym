@@ -7,7 +7,9 @@ import android.app.TimePickerDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.icu.util.Calendar;
+import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.RequiresApi;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -819,6 +821,7 @@ public class UpdateBookActivity extends AppCompatActivity {
 
         d("BookOwnerPostVolley", mRequestBody);
         StringRequest stringRequest = new StringRequest(Request.Method.PUT, URL, new Response.Listener<String>() {
+            @RequiresApi(api = Build.VERSION_CODES.N)
             @Override
             public void onResponse(String response) {
                 Log.i("BookOwnerPutRes", response);
@@ -1034,12 +1037,17 @@ public class UpdateBookActivity extends AppCompatActivity {
         requestQueue.add(stringRequest);
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.N)
     private void addSwapDetail(SwapDetail swapDetailModel) {
         RequestQueue requestQueue = Volley.newRequestQueue(this);
 //        String URL = "http://104.197.4.32:8080/Koobym/user/add";
         String URL = Constants.POST_SWAP_DETAIL_1;
 
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+        Calendar c = Calendar.getInstance();
+
         swapDetailModel.setSwapStatus("Available");
+        swapDetailModel.setSwapTimeStamp(sdf.format(sdf.format(c)));
 
 //        user.setDayTimeModel();
         final Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd").registerTypeAdapter(Date.class, GsonDateDeserializer.getInstance()).create();
