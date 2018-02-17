@@ -179,6 +179,14 @@ public class ViewOwnBookAct extends AppCompatActivity
         mSpinnerDay.setVisibility(View.GONE);
         mRating = (RatingBar) findViewById(R.id.vbRating);
 
+        Calendar cal = Calendar.getInstance();
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+
+        swapToPost.setSwapTimeStamp(sdf.format(cal));
+        swapToPost.setSwapStatus("Available");
+
+        rentToPost.setRentalStatus("Available");
+
         if (getIntent().getExtras().getSerializable("viewBook")!=null){
 
             containerForCounter.setVisibility(View.GONE);
@@ -944,7 +952,8 @@ public class ViewOwnBookAct extends AppCompatActivity
                 Log.d("startDate", sdf.format(aucDate.getTime()));
 
                 auctionToPost.setStartDate(sdf.format(aucDate.getTime()));
-
+                auctionToPost.setAuctionStatus("start");
+                auctionToPost.setStatus("Available");
 
                 aucDate.add(java.util.Calendar.DAY_OF_MONTH, 1);
                 dateEnd.add(sdf.format(aucDate.getTime()));
@@ -1236,18 +1245,24 @@ public class ViewOwnBookAct extends AppCompatActivity
                 }else if(bookOwnerModelToPost.getStatus().equals("Auction")){
                     if(fromWhere.equals("NotAdvertised")){
                         auctionToPost.setBookOwner(bookOwnerModelToPost);
+                        auctionToPost.setAuctionStatus("start");
+                        auctionToPost.setStatus("Available");
                         auctionToPost.setAuctionDescription(bookOwnerModelToPost.getStatusDescription());
                         auctionToPost.setStartingPrice(Float.parseFloat(String.valueOf(calculatePrice(bookOwnerModelToPost.getBookObj()))));
                         auctionToPost.setStartTime(mStartTime.getText().toString());
                         auctionToPost.setEndTime(mEndTime.getText().toString());
                     }else if(fromWhere.equals("Swap")){
                         auctionToPost.setBookOwner(bookOwnerModelToPost);
+                        auctionToPost.setAuctionStatus("start");
+                        auctionToPost.setStatus("Available");
                         auctionToPost.setAuctionDescription(bookOwnerModelToPost.getStatusDescription());
                         auctionToPost.setStartingPrice(Float.parseFloat(String.valueOf(calculatePrice(bookOwnerModelToPost.getBookObj()))));
                         auctionToPost.setStartTime(mStartTime.getText().toString());
                         auctionToPost.setEndTime(mEndTime.getText().toString());
                     }else if(fromWhere.equals("Rent")){
                         auctionToPost.setBookOwner(bookOwnerModelToPost);
+                        auctionToPost.setAuctionStatus("start");
+                        auctionToPost.setStatus("Available");
                         auctionToPost.setAuctionDescription(bookOwnerModelToPost.getStatusDescription());
                         auctionToPost.setStartingPrice(Float.parseFloat(String.valueOf(calculatePrice(bookOwnerModelToPost.getBookObj()))));
                         auctionToPost.setStartTime(mStartTime.getText().toString());
@@ -1290,8 +1305,10 @@ public class ViewOwnBookAct extends AppCompatActivity
 //        String URL = "http://104.197.4.32:8080/Koobym/user/add";
         String URL = Constants.POST_AUCTION_DETAIL_1;
 
+        auctionDetailModel.setStatus("Available");
+        auctionDetailModel.setAuctionStatus("start");
 
-//        user.setDayTimeModel();
+
         final Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd").registerTypeAdapter(Date.class, GsonDateDeserializer.getInstance()).create();
         final String mRequestBody = gson.toJson(auctionDetailModel);
 
@@ -1346,6 +1363,7 @@ public class ViewOwnBookAct extends AppCompatActivity
 //        String URL = "http://104.197.4.32:8080/Koobym/user/add";
         String URL = Constants.POST_SWAP_DETAIL_1;
 
+        swapDetailModel.setSwapStatus("Available");
 
 //        user.setDayTimeModel();
         final Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd").registerTypeAdapter(Date.class, GsonDateDeserializer.getInstance()).create();
@@ -1395,6 +1413,9 @@ public class ViewOwnBookAct extends AppCompatActivity
         RequestQueue requestQueue = Volley.newRequestQueue(this);
 //        String URL = "http://104.197.4.32:8080/Koobym/user/add";
         String URL = Constants.POST_RENTAL_DETAIL_1;
+
+
+        postRental.setRentalStatus("Available");
 
 //        user.setDayTimeModel();
         final Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd").registerTypeAdapter(Date.class, GsonDateDeserializer.getInstance()).create();

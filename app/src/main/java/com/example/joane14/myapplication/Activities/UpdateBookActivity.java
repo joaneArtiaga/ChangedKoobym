@@ -522,6 +522,7 @@ public class UpdateBookActivity extends AppCompatActivity {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 rentToPost.setDaysForRent(Integer.parseInt(rangeDays.get(position)));
+                rentToPost.setRentalStatus("Available");
             }
 
             @Override
@@ -826,18 +827,18 @@ public class UpdateBookActivity extends AppCompatActivity {
                     if(fromWhere.equals("Swap")){
                         rentToPost.setBookOwner(bookOwnerModelToPost);
                         rentToPost.setCalculatedPrice(swapDetailModel.getSwapPrice());
-                        rentToPost.setDaysForRent(5);
+//                        rentToPost.setDaysForRent(5);
 
                         addRentalDetail(rentToPost);
                     }else if(fromWhere.equals("NotAdvertised")){
                         rentToPost.setBookOwner(bookOwnerModelToPost);
-                        rentToPost.setDaysForRent(5);
+//                        rentToPost.setDaysForRent(5);
                         rentToPost.setCalculatedPrice(calculatePrice(bookOwnerModelToPost.getBookObj()));
 
                         addRentalDetail(rentToPost);
                     }else if(fromWhere.equals("Auction")){
                         rentToPost.setBookOwner(bookOwnerModelToPost);
-                        rentToPost.setDaysForRent(5);
+//                        rentToPost.setDaysForRent(5);
                         rentToPost.setCalculatedPrice(calculatePrice(bookOwnerModelToPost.getBookObj()));
 
                         addRentalDetail(rentToPost);
@@ -1038,6 +1039,7 @@ public class UpdateBookActivity extends AppCompatActivity {
 //        String URL = "http://104.197.4.32:8080/Koobym/user/add";
         String URL = Constants.POST_SWAP_DETAIL_1;
 
+        swapDetailModel.setSwapStatus("Available");
 
 //        user.setDayTimeModel();
         final Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd").registerTypeAdapter(Date.class, GsonDateDeserializer.getInstance()).create();

@@ -448,6 +448,7 @@ public class AddBookOwner extends AppCompatActivity {
 
         bookOwnerModel.setBookObj(book);
         bookOwnerModel.setStatus("none");
+        bookOwnerModel.setBookStat("Available");
 
         Log.d("bookDate", bookOwnerModel.getDateBought());
 //        user.setDayTimeModel();

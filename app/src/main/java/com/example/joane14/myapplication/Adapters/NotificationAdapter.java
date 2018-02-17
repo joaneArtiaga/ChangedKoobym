@@ -129,6 +129,8 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
                         "your deposit will be deducted.";
             }else if(userNotification.getActionStatus().equals("return")){
                 message = userNotification.getUserPerformer().getUserFname()+" "+userNotification.getUserPerformer().getUserLname()+" wants to return the book earlier.";
+            }else if(userNotification.getActionStatus().equalsIgnoreCase("rejected")){
+                message = userNotification.getUserPerformer().getUserFname()+" "+userNotification.getUserPerformer().getUserLname()+" rejected your request.";
             }
         } else if (userNotification.getActionName().equals("swap")) {
             Log.d("notifSwap", "inside");
