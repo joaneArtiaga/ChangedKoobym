@@ -9,6 +9,14 @@ public class Constants {
 
     public static final String WEB_SERVICE_URL = "http://35.188.36.114/Koobym/";
 
+    public static final String ADD_MEET_UP = WEB_SERVICE_URL + "meetUp/add";
+
+    public static final String CONFIRM_RETURN = WEB_SERVICE_URL + "userNotification/confirmEarlyNotif/";
+
+    public static final String DENY_RETURN = WEB_SERVICE_URL + "userNotification/rejectEarlyNotif/";
+
+    public static final String SET_RETURN = WEB_SERVICE_URL + "rentalHeader/setReturnById/";
+
     public static final String IMAGE_URL = WEB_SERVICE_URL + "image/%s";
 
     public static final String RENT_BY_ID = WEB_SERVICE_URL + "rentalDetail/rentById/";

@@ -43,6 +43,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
 import java.io.UnsupportedEncodingException;
+import java.sql.Time;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Date;
@@ -155,6 +156,31 @@ public class TimeDateChooser extends AppCompatActivity {
                     userDayTimeModel = auctionHeader.getAuctionDetail().getBookOwner().getUserObj().getDayTimeModel().get(init);
                     userDayTimeList.add(userDayTimeModel);
                 }
+            }
+        }
+
+        if(getIntent().getExtras().getBoolean("return")==true){
+            Log.d("So this ", "is return");
+            fromWhere = "return";
+            rentalHeader = new RentalHeader();
+            if(getIntent().getExtras().getSerializable("rentHeader")!=null){
+                userDayTimeModel = new UserDayTime();
+                rentalHeader = (RentalHeader) getIntent().getExtras().getSerializable("rentHeader");
+                Log.d("TimeDateChooser", rentalHeader.getRentalDetail().getBookOwner().getUserObj().getDayTimeModel().toString());
+
+
+                for(int init=0; init<rentalHeader.getRentalDetail().getBookOwner().getUserObj().getDayTimeModel().size(); init++){
+                    userDayTimeModel = (UserDayTime) rentalHeader.getRentalDetail().getBookOwner().getUserObj().getDayTimeModel().get(init);
+                    userDayTimeList.add(userDayTimeModel);
+                }
+
+                if(!(userDayTimeList.isEmpty())){
+                    Log.d("userDayTimeList","not empty");
+                }else{
+                    Log.d("userDayTimeList","empty");
+                }
+            }else{
+                Log.d("rentalDetailPassed", "null");
             }
         }
 
@@ -344,6 +370,10 @@ public class TimeDateChooser extends AppCompatActivity {
                             bundle.putBoolean("fromRegister", false);
                             intent.putExtra("user", bundle);
                             startActivity(intent);
+                        }else if(fromWhere.equals("return")){
+                            rentalHeader.setReturnMeetUp(meetUp);
+
+                            addMeetUp("return");
                         }
 
                     }
@@ -527,6 +557,9 @@ public class TimeDateChooser extends AppCompatActivity {
                 }else if(status.equals("auction")){
                     auctionHeader.setMeetUp(meetUp);
                     updateAuction(auctionHeader.getAuctionDetail().getAuctionStatus());
+                }else if(status.equals("return")){
+                    rentalHeader.setReturnMeetUp(meetUp);
+                    updateRentalHeader(rentalHeader);
                 }
 
             }
@@ -752,13 +785,18 @@ public class TimeDateChooser extends AppCompatActivity {
         final String mRequestBody = gson.toJson(rentHeader);
 
 
-        d("LOG_VOLLEY", mRequestBody);
+        d("updateRentalHeader", mRequestBody);
         final User finalUser = user;
         StringRequest stringRequest = new StringRequest(Request.Method.PUT, URL, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
                 d("rentalHeaderResponseUD", response);
                 RentalHeader rentalHeaderMod = gson.fromJson(response, RentalHeader.class);
+                Intent intent = new Intent(TimeDateChooser.this, LandingPage.class);
+                Bundle bundle = new Bundle();
+                bundle.putBoolean("fromRegister", false);
+                intent.putExtra("user", bundle);
+                startActivity(intent);
 
             }
         }, new Response.ErrorListener() {

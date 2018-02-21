@@ -24,6 +24,7 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.bumptech.glide.Glide;
 import com.example.joane14.myapplication.Activities.GsonDateDeserializer;
+import com.example.joane14.myapplication.Activities.MeetUpChooser;
 import com.example.joane14.myapplication.Activities.ProfileActivity;
 import com.example.joane14.myapplication.Fragments.Constants;
 import com.example.joane14.myapplication.Fragments.VolleyUtil;
@@ -78,12 +79,6 @@ public class ToReturnAdapter extends RecyclerView.Adapter<ToReturnAdapter.BookHo
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-DD");
         String currDAte = sdf.format(c);
 
-        if(bookList.get(position).getRentalEndDate().equals(currDAte)){
-            holder.mNotify.setVisibility(View.GONE);
-        }
-
-
-
         holder.mBookTitle.setText(bookList.get(position).getRentalDetail().getBookOwner().getBookObj().getBookTitle());
         holder.mRenter.setText("Available "+bookList.get(position).getRentalDetail().getDaysForRent()+" days for rent.");
         holder.mPrice.setText(String.valueOf(bookList.get(position).getRentalDetail().getCalculatedPrice()));
@@ -103,57 +98,14 @@ public class ToReturnAdapter extends RecyclerView.Adapter<ToReturnAdapter.BookHo
             holder.mTime.setText(bookList.get(position).getMeetUp().getUserDayTime().getTime().getStrTime());
         }
 
-
-//        if(bookList.get(position).getUserId()==null){
-//            holder.mRenter.setText("Renter not Found");
-//        }else{
-//            holder.mRenter.setText(bookList.get(position).getUserId().getUserFname()+" "+bookList.get(position).getUserId().getUserLname());
-//        }
-//        DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
-//        Date date = null;
-//        String newDate="";
-//        try {
-//            date = df.parse(bookList.get(position).getRentalTimeStamp());
-//        } catch (ParseException e) {
-//            e.printStackTrace();
-//        }
-//        @SuppressLint({"NewApi", "LocalSuppress"})
-//        Calendar calendar = Calendar.getInstance();
-//        calendar.setTime(date);
-//        calendar.add(calendar.DATE, bookList.get(position).getRentalDetail().getDaysForRent());
-//        newDate = df.format(calendar.getTime());
-//
-//        holder.mDaysRent.setText("Due date of book will be on "+newDate);
-//        Picasso.with(context).load(bookList.get(position).getUserId().getImageFilename()).fit().into(holder.mIvRenter);
         Glide.with(context).load(bookList.get(position).getRentalDetail().getBookOwner().getBookObj().getBookFilename()).centerCrop().into(holder.mIvBookImg);
-
-//        Log.d("displayImage", bookList.get(position).getBookOwner().getBookObj().getBookFilename());
-
-//        Calendar c = Calendar.getInstance();
-//        SimpleDateFormat datef = new SimpleDateFormat("yyyy-MM-dd");
-//        String currDate = datef.format(c.getTime());
-//        Date d = null, d2 = null;
-//        try {
-//            d = datef.parse(newDate);
-//            d2 = datef.parse(currDate);
-//        } catch (ParseException e) {
-//            e.printStackTrace();
-//        }
-//
-//        long diff = d2.getTime() - d.getTime();
-//        long seconds = diff / 1000;
-//        long minutes = seconds /60;
-//        long hours = minutes / 60;
-//        long days = hours /24;
-//
-//        Log.d("daysAvailable", String.valueOf(days));
 
         holder.mProfile.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(context, ProfileActivity.class);
                 Bundle bundle = new Bundle();
-                bundle.putSerializable("userModelPass", bookList.get(position).getUserId());
+                bundle.putSerializable("userModelPass", bookList.get(position).getRentalDetail().getBookOwner().getUserObj());
                 intent.putExtras(bundle);
                 context.startActivity(intent);
             }
@@ -168,7 +120,13 @@ public class ToReturnAdapter extends RecyclerView.Adapter<ToReturnAdapter.BookHo
                 ad.setButton(AlertDialog.BUTTON_POSITIVE, "Yes", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        sendMailNotif(bookList.get(position));
+//                        sendMailNotif(bookList.get(position));
+                        Intent intent = new Intent(context, MeetUpChooser.class);
+                        Bundle bundle = new Bundle();
+                        bundle.putSerializable("rentalHeader", bookList.get(position));
+                        bundle.putBoolean("return", true);
+                        intent.putExtras(bundle);
+                        context.startActivity(intent);
                     }
                 });
                 ad.setButton(AlertDialog.BUTTON_NEGATIVE, "No", new DialogInterface.OnClickListener() {
@@ -202,18 +160,29 @@ public class ToReturnAdapter extends RecyclerView.Adapter<ToReturnAdapter.BookHo
 
     }
 
-    private void sendMailNotif(RentalHeader rentalHeader){
+    private void sendMailNotif(final RentalHeader rentalHeader){
 //        String URL = "http://104.198.152.85/Koobym/rentalDetail/suggested/%d";
 //        String URL = Constants.WEB_SERVICE_URL+"rentalDetail/suggested/%d";
         String URL = Constants.SEND_NOTIF_MAIL+rentalHeader.getRentalHeaderId();
 //        URL = String.format(URL, userId);
         Log.d("MailNotif", URL);
+        Log.d("MailNotif", rentalHeader.toString());
+
         StringRequest stringRequest = new StringRequest(Request.Method.GET, URL, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
                 Log.d("EarlyNotif", response);
                 Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd").registerTypeAdapter(Date.class, GsonDateDeserializer.getInstance()).create();
                 RentalHeader rentalHeaderMod = gson.fromJson(response, RentalHeader.class);
+
+//                rentalHeaderMod.setRentalDetail(rentalHeader.getRentalDetail());
+
+                Intent intent = new Intent(context, MeetUpChooser.class);
+                Bundle bundle = new Bundle();
+                bundle.putSerializable("rentalHeader", rentalHeader);
+                bundle.putBoolean("return", true);
+                intent.putExtras(bundle);
+                context.startActivity(intent);
 
 //                Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd").registerTypeAdapter(Date.class, GsonDateDeserializer.getInstance()).create();
 //                BookOwnerModel[] bookOwnerModels = gson.fromJson(response, BookOwnerModel[].class);

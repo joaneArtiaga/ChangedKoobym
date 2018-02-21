@@ -35,10 +35,18 @@ public class RentalHeader implements Serializable {
 
     UserDayTime userDayTime;
 
-    String dateApproved, dateConfirmed, rentalEndDate, dateDeliver;
+    String dateApproved, dateConfirmed, rentalEndDate, dateDeliver, rentalReturnDate;
 
     MeetUp meetUp, returnMeetUp;
 
+
+    public String getRentalReturnDate() {
+        return rentalReturnDate;
+    }
+
+    public void setRentalReturnDate(String rentalReturnDate) {
+        this.rentalReturnDate = rentalReturnDate;
+    }
 
     public MeetUp getReturnMeetUp() {
         return returnMeetUp;

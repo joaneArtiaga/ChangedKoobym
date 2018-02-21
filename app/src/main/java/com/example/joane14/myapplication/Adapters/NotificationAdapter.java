@@ -2,6 +2,7 @@ package com.example.joane14.myapplication.Adapters;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -11,10 +12,13 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -131,6 +135,10 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
                 message = userNotification.getUserPerformer().getUserFname()+" "+userNotification.getUserPerformer().getUserLname()+" wants to return the book earlier.";
             }else if(userNotification.getActionStatus().equalsIgnoreCase("rejected")){
                 message = userNotification.getUserPerformer().getUserFname()+" "+userNotification.getUserPerformer().getUserLname()+" rejected your request.";
+            }else if(userNotification.getActionStatus().equals("return-confirmed")){
+                message = userNotification.getUserPerformer().getUserFname()+" "+userNotification.getUserPerformer().getUserLname()+" accepted your request for the book, "+userNotification.getBookActionPerformedOn().getBookObj().getBookTitle()+", to be returned early.";
+            }else if(userNotification.getActionStatus().equals("return-rejected")){
+                message = userNotification.getUserPerformer().getUserFname()+" "+userNotification.getUserPerformer().getUserLname()+" rejected your request for the book, "+userNotification.getBookActionPerformedOn().getBookObj().getBookTitle()+", to be returned early.";
             }
         } else if (userNotification.getActionName().equals("swap")) {
             Log.d("notifSwap", "inside");
@@ -287,40 +295,13 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
                                 getRead(position);
                             }else if(userNotificationList.get(position).getActionStatus().equals("return")){
                                 getRead(position);
-                                AlertDialog ad = new AlertDialog.Builder(context).create();
-                                ad.setTitle("Confirmatioin");
-                                ad.setMessage(userNotificationList.get(position).getUserPerformer().getUserFname()+" "+userNotificationList.get(position).getUserPerformer().getUserLname()+" wants to return the book earlier at "+userNotificationList.get(position).getExtraMessage());
-                                ad.setButton(AlertDialog.BUTTON_POSITIVE, "Confirm", new DialogInterface.OnClickListener() {
-                                    @Override
-                                    public void onClick(DialogInterface dialog, int which) {
-                                        getRentalHeader(position, "return");
-                                        UserNotification un = new UserNotification();
-                                        un.setUser(userNotificationList.get(position).getUserPerformer());
-                                        un.setUserPerformer(userNotificationList.get(position).getUser());
-                                        un.setBookActionPerformedOn(userNotificationList.get(position).getBookActionPerformedOn());
-                                        un.setActionStatus("return");
-                                        un.setActionName("rental");
-                                        un.setExtraMessage("confirmed");
-                                        un.setActionId(userNotificationList.get(position).getActionId());
-
-                                        addUserNotif(un);
-                                    }
-                                });
-                                ad.setButton(AlertDialog.BUTTON_NEGATIVE, "Deny", new DialogInterface.OnClickListener() {
-                                    @Override
-                                    public void onClick(DialogInterface dialog, int which) {
-                                        UserNotification un = new UserNotification();
-                                        un.setUser(userNotificationList.get(position).getUserPerformer());
-                                        un.setUserPerformer(userNotificationList.get(position).getUser());
-                                        un.setActionStatus("return");
-                                        un.setExtraMessage("denied");
-                                        un.setActionId(userNotificationList.get(position).getActionId());
-                                        un.setActionName("rental");
-                                        un.setBookActionPerformedOn(userNotificationList.get(position).getBookActionPerformedOn());
-
-                                        addUserNotif(un);
-                                    }
-                                });
+                                getRentalHeader(position, "return");
+                            }else if(userNotificationList.get(position).getActionStatus().equals("return-confirmed")){
+                                getRead(position);
+                                getRentalHeader(position, "return-confirmed");
+                            }else if(userNotificationList.get(position).getActionStatus().equals("return-rejected")){
+                                getRead(position);
+                                getRentalHeader(position, "return-rejected");
                             }
 
                         } else if (userNotificationList.get(position).getActionName().equals("swap")) {
@@ -900,7 +881,7 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
                 @Override
                 public void onResponse(String response) {
                     Log.i("rentalHeaderResponseId", response);
-                    RentalHeader rentalHeaderMod = gson.fromJson(response, RentalHeader.class);
+                    final RentalHeader rentalHeaderMod = gson.fromJson(response, RentalHeader.class);
 
                     if (status.equals("view")) {
                         Intent intent = new Intent(context, ViewBookAct.class);
@@ -918,7 +899,53 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
                             context.startActivity(intent);
                         }
                     }else if(status.equals("return")){
-                        rentalHeaderObj = rentalHeaderMod;
+//                        rentalHeaderObj = rentalHeaderMod;
+                        AlertDialog ad = new AlertDialog.Builder(context).create();
+                        ad.setTitle("Confirmation");
+                        ad.setMessage("Location:\t"+rentalHeaderMod.getReturnMeetUp().getLocation().getLocationName()+
+                                "Date:\t" +rentalHeaderMod.getReturnMeetUp().getUserDayTime().getDay().getStrDay()+
+                                "\n\nTime:\t"+rentalHeaderMod.getReturnMeetUp().getUserDayTime().getTime().getStrTime());
+                        ad.setButton(AlertDialog.BUTTON_POSITIVE, "Confirm", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                confirmEarlyNotif(rentalHeaderMod);
+                                dialog.dismiss();
+                            }
+                        });
+                        ad.setButton(AlertDialog.BUTTON_NEGATIVE, "Deny", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(final DialogInterface dialog, int which) {
+
+                                final Dialog dialogCustom = new Dialog(context);
+                                dialogCustom.setContentView(R.layout.reject_custom_dialog);
+                                final EditText etReason = (EditText) dialogCustom.findViewById(R.id.etReason);
+                                Button mSubmitReason = (Button) dialogCustom.findViewById(R.id.submitReject);
+
+                                mSubmitReason.setOnClickListener(new View.OnClickListener() {
+                                    @Override
+                                    public void onClick(View v) {
+                                        if(etReason.getText().length()==0){
+                                            etReason.setError("Field should not be empty.");
+                                        }else{
+                                            UserNotification un = new UserNotification();
+                                            un.setUser(userNotificationList.get(position).getUserPerformer());
+                                            un.setUserPerformer(userNotificationList.get(position).getUser());
+                                            un.setActionStatus("return-denied");
+                                            un.setActionId(userNotificationList.get(position).getActionId());
+                                            un.setActionName("rental");
+                                            un.setBookActionPerformedOn(userNotificationList.get(position).getBookActionPerformedOn());
+                                            un.setExtraMessage(etReason.getText().toString());
+
+                                            addUserNotif(un);
+                                            dialog.dismiss();
+                                        }
+                                    }
+                                });
+                                dialogCustom.show();
+//                                denyEarlyNotif(rentalHeaderMod);
+                            }
+                        });
+                        ad.show();
                     }else if(status.equals("summary")){
                         AlertDialog ad = new AlertDialog.Builder(context).create();
                         ad.setTitle("Meet Up Summary");
@@ -937,7 +964,135 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
                         });
                         ad.show();
 
+                    }else if(status.equals("return-rejected")){
+                        AlertDialog ad = new AlertDialog.Builder(context).create();
+                        ad.setTitle("Request Accepted");
+                        ad.setMessage(userNotificationList.get(position).getUser().getUserFname()+" "+userNotificationList.get(position).getUser().getUserLname()+" rejected your request because of her reason: '"+userNotificationList.get(position).getExtraMessage()+"'.");
+                        ad.setButton(AlertDialog.BUTTON_NEUTRAL, "Okay", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                Intent intent = new Intent(context, NotificationAct.class);
+                                context.startActivity(intent);
+                            }
+                        });
+                        ad.show();
+                    }else if(status.equals("return-confirmed")){
+                        AlertDialog ad = new AlertDialog.Builder(context).create();
+                        ad.setTitle("Meet Up Summary");
+                        ad.setMessage("Location:\t\t"+rentalHeaderMod.getReturnMeetUp().getLocation().getLocationName()+
+                                "\n\nDate:\t\t" +rentalHeaderMod.getReturnMeetUp().getUserDayTime().getDay().getStrDay()+
+                                "\n\nTime:\t\t"+rentalHeaderMod.getReturnMeetUp().getUserDayTime().getTime().getStrTime());
+                        ad.setButton(AlertDialog.BUTTON_NEUTRAL, "Okay", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                Intent intent = new Intent(context, NotificationAct.class);
+                                context.startActivity(intent);
+                            }
+                        });
+                        ad.show();
                     }
+
+                }
+            }, new Response.ErrorListener() {
+                @Override
+                public void onErrorResponse(VolleyError error) {
+                    Log.e("LOG_VOLLEY", error.toString());
+                }
+            }) {
+                @Override
+                public String getBodyContentType() {
+                    return "application/json; charset=utf-8";
+                }
+
+                @Override
+                public byte[] getBody() throws AuthFailureError {
+                    try {
+                        return mRequestBody == null ? null : mRequestBody.getBytes("utf-8");
+                    } catch (UnsupportedEncodingException uee) {
+                        VolleyLog.wtf("Unsupported Encoding while trying to get the bytes of %s using %s", mRequestBody, "utf-8");
+                        return null;
+                    }
+                }
+            };
+
+            requestQueue.add(stringRequest);
+        }
+
+        public void confirmEarlyNotif(RentalHeader rentalHeaderMod) {
+            RequestQueue requestQueue = Volley.newRequestQueue(context);
+//        String URL = "http://104.197.4.32:8080/Koobym/user/add";
+            User user = new User();
+            user = (User) SPUtility.getSPUtil(context).getObject("USER_OBJECT", User.class);
+            d("UserIdReceive", String.valueOf(user.getUserId()));
+            String URL = Constants.CONFIRM_RETURN+rentalHeaderMod.getRentalHeaderId();
+
+            final RentalHeader rentalHeader = new RentalHeader();
+
+            final Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd").registerTypeAdapter(Date.class, GsonDateDeserializer.getInstance()).create();
+            final String mRequestBody = gson.toJson(rentalHeaderMod);
+
+
+            d("LOG_VOLLEY", mRequestBody);
+            StringRequest stringRequest = new StringRequest(Request.Method.GET, URL, new Response.Listener<String>() {
+                @Override
+                public void onResponse(String response) {
+                    Log.i("confirmEarlyNotif", response);
+                    Intent intent = new Intent(context, LandingPage.class);
+                    Bundle bundle = new Bundle();
+                    bundle.putBoolean("fromRegister", false);
+                    intent.putExtra("user", bundle);
+                    context.startActivity(intent);
+
+                }
+            }, new Response.ErrorListener() {
+                @Override
+                public void onErrorResponse(VolleyError error) {
+                    Log.e("LOG_VOLLEY", error.toString());
+                }
+            }) {
+                @Override
+                public String getBodyContentType() {
+                    return "application/json; charset=utf-8";
+                }
+
+                @Override
+                public byte[] getBody() throws AuthFailureError {
+                    try {
+                        return mRequestBody == null ? null : mRequestBody.getBytes("utf-8");
+                    } catch (UnsupportedEncodingException uee) {
+                        VolleyLog.wtf("Unsupported Encoding while trying to get the bytes of %s using %s", mRequestBody, "utf-8");
+                        return null;
+                    }
+                }
+            };
+
+            requestQueue.add(stringRequest);
+        }
+
+        public void denyEarlyNotif(RentalHeader rentalHeaderMod) {
+            RequestQueue requestQueue = Volley.newRequestQueue(context);
+//        String URL = "http://104.197.4.32:8080/Koobym/user/add";
+            User user = new User();
+            user = (User) SPUtility.getSPUtil(context).getObject("USER_OBJECT", User.class);
+            d("UserIdReceive", String.valueOf(user.getUserId()));
+            String URL = Constants.DENY_RETURN+rentalHeaderMod.getRentalHeaderId();
+
+            final RentalHeader rentalHeader = new RentalHeader();
+
+            final Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd").registerTypeAdapter(Date.class, GsonDateDeserializer.getInstance()).create();
+            final String mRequestBody = gson.toJson(rentalHeaderMod);
+
+
+            d("LOG_VOLLEY", mRequestBody);
+            StringRequest stringRequest = new StringRequest(Request.Method.GET, URL, new Response.Listener<String>() {
+                @Override
+                public void onResponse(String response) {
+                    Log.i("denyEarlyNotif", response);
+                    Intent intent = new Intent(context, LandingPage.class);
+                    Bundle bundle = new Bundle();
+                    bundle.putBoolean("fromRegister", false);
+                    intent.putExtra("user", bundle);
+                    context.startActivity(intent);
 
                 }
             }, new Response.ErrorListener() {
@@ -984,6 +1139,11 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
                 @Override
                 public void onResponse(String response) {
                     Log.i("userNotificationPost", response);
+                    Intent intent = new Intent(context, LandingPage.class);
+                    Bundle bundle = new Bundle();
+                    bundle.putBoolean("fromRegister", false);
+                    intent.putExtra("user", bundle);
+                    context.startActivity(intent);
                 }
             }, new Response.ErrorListener() {
                 @Override

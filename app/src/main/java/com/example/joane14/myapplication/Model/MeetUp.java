@@ -35,4 +35,12 @@ public class MeetUp implements Serializable {
     public void setUserDayTime(UserDayTime userDayTime) {
         this.userDayTime = userDayTime;
     }
+
+    @Override
+    public String toString() {
+        return "MeetUp{" +
+                "location=" + location.toString()+
+                ", userDayTime ='" + userDayTime.toString() + '\'' +
+                '}';
+    }
 }
