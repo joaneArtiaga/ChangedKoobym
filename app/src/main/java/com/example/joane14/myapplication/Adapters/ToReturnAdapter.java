@@ -5,6 +5,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.drawable.Drawable;
 import android.icu.util.Calendar;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
@@ -23,6 +24,7 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.bumptech.glide.Glide;
+import com.example.joane14.myapplication.Activities.BookActActivity;
 import com.example.joane14.myapplication.Activities.GsonDateDeserializer;
 import com.example.joane14.myapplication.Activities.MeetUpChooser;
 import com.example.joane14.myapplication.Activities.ProfileActivity;
@@ -73,16 +75,24 @@ public class ToReturnAdapter extends RecyclerView.Adapter<ToReturnAdapter.BookHo
 
     @SuppressLint("NewApi")
     @Override
-    public void onBindViewHolder(ToReturnAdapter.BookHolder holder, final int position) {
+    public void onBindViewHolder(final ToReturnAdapter.BookHolder holder, final int position) {
 
         Date c = Calendar.getInstance().getTime();
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-DD");
-        String currDAte = sdf.format(c);
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+        final String currDAte = sdf.format(c);
 
         holder.mBookTitle.setText(bookList.get(position).getRentalDetail().getBookOwner().getBookObj().getBookTitle());
         holder.mRenter.setText("Available "+bookList.get(position).getRentalDetail().getDaysForRent()+" days for rent.");
         holder.mPrice.setText(String.valueOf(bookList.get(position).getRentalDetail().getCalculatedPrice()));
         holder.mBookDate.setText(bookList.get(position).getRentalTimeStamp());
+
+
+        Log.d("CurrentDate: "+currDAte, "ReturnDate: "+bookList.get(position).getRentalReturnDate());
+        if(currDAte.equals(bookList.get(position).getRentalReturnDate())){
+            holder.mRate.setImageResource(R.drawable.checkbookact);
+        }else{
+            holder.mRate.setImageResource(R.drawable.notrate);
+        }
 
         if(bookList.get(position).getRentalEndDate()==null){
             Log.d("EndDateReturnRent", "walay sulod");
@@ -91,11 +101,11 @@ public class ToReturnAdapter extends RecyclerView.Adapter<ToReturnAdapter.BookHo
         }
 
 
-        if(bookList.get(position).getMeetUp()==null){
+        if(bookList.get(position).getReturnMeetUp()==null){
 
         }else{
-            holder.mLocation.setText(bookList.get(position).getMeetUp().getLocation().getLocationName());
-            holder.mTime.setText(bookList.get(position).getMeetUp().getUserDayTime().getTime().getStrTime());
+            holder.mLocation.setText(bookList.get(position).getReturnMeetUp().getLocation().getLocationName());
+            holder.mTime.setText(bookList.get(position).getReturnMeetUp().getUserDayTime().getTime().getStrTime());
         }
 
         Glide.with(context).load(bookList.get(position).getRentalDetail().getBookOwner().getBookObj().getBookFilename()).centerCrop().into(holder.mIvBookImg);
@@ -142,21 +152,54 @@ public class ToReturnAdapter extends RecyclerView.Adapter<ToReturnAdapter.BookHo
         holder.mRate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(bookList.get(position).getStatus().equals("return")){
 
+
+                if(currDAte.equals(bookList.get(position).getRentalReturnDate())){
+                    returnToReceive(bookList.get(position));
                 }else{
                     AlertDialog alertDialog = new AlertDialog.Builder(context).create();
                     alertDialog.setTitle("Alert!");
-                    alertDialog.setMessage("The renter has not yet confirmed that he/she received the book already.");
+                    alertDialog.setMessage("This is not yet done.");
                     alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "Okay", new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
                             dialog.dismiss();
                         }
                     });
+                    alertDialog.show();
                 }
+
             }
         });
+
+    }
+
+    private void returnToReceive(final RentalHeader rentalHeader){
+//        String URL = "http://104.198.152.85/Koobym/rentalDetail/suggested/%d";
+//        String URL = Constants.WEB_SERVICE_URL+"rentalDetail/suggested/%d";
+        String URL = Constants.RETURN_TO_RECEIVE+rentalHeader.getRentalHeaderId();
+//        URL = String.format(URL, userId);
+        Log.d("returnToReceiveURL", URL);
+        Log.d("returnToReceive", rentalHeader.toString());
+
+        StringRequest stringRequest = new StringRequest(Request.Method.GET, URL, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                Log.d("returnToReceiveResponse", response);
+                Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd").registerTypeAdapter(Date.class, GsonDateDeserializer.getInstance()).create();
+                RentalHeader rentalHeaderMod = gson.fromJson(response, RentalHeader.class);
+
+                Intent intent = new Intent(context, BookActActivity.class);
+                context.startActivity(intent);
+
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.e("LOG_VOLLEY", error.toString());
+            }
+        }) ;
+        VolleyUtil.volleyRQInstance(context).add(stringRequest);
 
     }
 

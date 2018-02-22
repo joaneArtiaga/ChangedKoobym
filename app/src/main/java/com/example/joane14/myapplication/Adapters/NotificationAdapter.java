@@ -20,7 +20,9 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.RatingBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
@@ -30,6 +32,7 @@ import com.android.volley.VolleyError;
 import com.android.volley.VolleyLog;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+import com.bumptech.glide.Glide;
 import com.example.joane14.myapplication.Activities.AuctionMeetUpChooser;
 import com.example.joane14.myapplication.Activities.BookActActivity;
 import com.example.joane14.myapplication.Activities.GsonDateDeserializer;
@@ -39,6 +42,7 @@ import com.example.joane14.myapplication.Activities.MeetUpChooser;
 import com.example.joane14.myapplication.Activities.MyShelf;
 import com.example.joane14.myapplication.Activities.NotificationAct;
 import com.example.joane14.myapplication.Activities.ProfileActivity;
+import com.example.joane14.myapplication.Activities.RequestActivity;
 import com.example.joane14.myapplication.Activities.SwapMeetUpChooser;
 import com.example.joane14.myapplication.Activities.TransactionActivity;
 import com.example.joane14.myapplication.Activities.ViewAuctionBook;
@@ -49,11 +53,14 @@ import com.example.joane14.myapplication.Model.AuctionDetailModel;
 import com.example.joane14.myapplication.Model.AuctionHeader;
 import com.example.joane14.myapplication.Model.BookOwnerModel;
 import com.example.joane14.myapplication.Model.BookOwnerReview;
+import com.example.joane14.myapplication.Model.Rate;
 import com.example.joane14.myapplication.Model.RentalDetail;
 import com.example.joane14.myapplication.Model.RentalHeader;
+import com.example.joane14.myapplication.Model.Review;
 import com.example.joane14.myapplication.Model.SwapHeader;
 import com.example.joane14.myapplication.Model.User;
 import com.example.joane14.myapplication.Model.UserNotification;
+import com.example.joane14.myapplication.Model.UserRating;
 import com.example.joane14.myapplication.R;
 import com.example.joane14.myapplication.Utilities.SPUtility;
 import com.google.gson.Gson;
@@ -139,6 +146,10 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
                 message = userNotification.getUserPerformer().getUserFname()+" "+userNotification.getUserPerformer().getUserLname()+" accepted your request for the book, "+userNotification.getBookActionPerformedOn().getBookObj().getBookTitle()+", to be returned early.";
             }else if(userNotification.getActionStatus().equals("return-rejected")){
                 message = userNotification.getUserPerformer().getUserFname()+" "+userNotification.getUserPerformer().getUserLname()+" rejected your request for the book, "+userNotification.getBookActionPerformedOn().getBookObj().getBookTitle()+", to be returned early.";
+            }else if(userNotification.getActionStatus().equals("returned")){
+                message = userNotification.getUserPerformer().getUserFname()+" "+userNotification.getUserPerformer().getUserLname()+" already returned the book, "+userNotification.getBookActionPerformedOn().getBookObj().getBookTitle()+".";
+            }else if(userNotification.getActionStatus().equals("Complete")){
+                message = userNotification.getUserPerformer().getUserFname()+" "+userNotification.getUserPerformer().getUserLname()+" received the book,"+userNotification.getBookActionPerformedOn().getBookObj().getBookTitle()+", and rated you.";
             }
         } else if (userNotification.getActionName().equals("swap")) {
             Log.d("notifSwap", "inside");
@@ -247,6 +258,7 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
         TextView mMessage;
         ImageView mPerformer, mBookPerformed;
         CardView mCardView;
+        float rateNumber;
         Context context;
 
 
@@ -254,6 +266,9 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
             super(itemView);
 
             this.context = context;
+//            final String rateNumber="";
+
+            rateNumber = 0f;
             mMessage = (TextView) itemView.findViewById(R.id.notifMessage);
             mPerformer = (ImageView) itemView.findViewById(R.id.notifPerformer);
             mBookPerformed = (ImageView) itemView.findViewById(R.id.notifBookPerformer);
@@ -302,6 +317,133 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
                             }else if(userNotificationList.get(position).getActionStatus().equals("return-rejected")){
                                 getRead(position);
                                 getRentalHeader(position, "return-rejected");
+                            }else if(userNotificationList.get(position).getActionStatus().equals("returned")){
+                                getRead(position);
+                                AlertDialog ad = new AlertDialog.Builder(context).create();
+                                ad.setTitle("Confirmation");
+                                ad.setMessage("Did you receive the book, "+ userNotificationList.get(position).getBookActionPerformedOn().getBookObj().getBookTitle()+"?");
+                                ad.setButton(AlertDialog.BUTTON_POSITIVE, "Yes", new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        final Dialog dialogCustom = new Dialog(context);
+                                        dialogCustom.setContentView(R.layout.review_custom_dialog);
+                                        TextView mTitle = (TextView) dialogCustom.findViewById(R.id.bookTitleReview);
+                                        TextView mAuthor = (TextView) dialogCustom.findViewById(R.id.bookAuthorReview);
+                                        ImageView ivBook = (ImageView) dialogCustom.findViewById(R.id.ivBookReview);
+                                        final EditText etReviewMessage = (EditText) dialogCustom.findViewById(R.id.etReviewReview);
+                                        final RatingBar mRateBar = (RatingBar) dialogCustom.findViewById(R.id.ratingReview);
+                                        Button mRateNow = (Button) dialogCustom.findViewById(R.id.btnRateReview);
+
+                                        etReviewMessage.setHint("Review renter");
+                                        mTitle.setText(userNotificationList.get(position).getBookActionPerformedOn().getBookObj().getBookTitle());
+
+                                        Glide.with(context).load(userNotificationList.get(position).getBookActionPerformedOn().getBookObj().getBookFilename()).centerCrop().into(ivBook);
+
+                                        String author = "";
+
+                                        if(userNotificationList.get(position).getBookActionPerformedOn().getBookObj().getBookAuthor().size()!=0){
+                                            for(int init=0; init<userNotificationList.get(position).getBookActionPerformedOn().getBookObj().getBookAuthor().size(); init++){
+                                                if(!(userNotificationList.get(position).getBookActionPerformedOn().getBookObj().getBookAuthor().get(init).getAuthorFName().equals(""))){
+                                                    author+=userNotificationList.get(position).getBookActionPerformedOn().getBookObj().getBookAuthor().get(init).getAuthorFName()+" ";
+                                                    if(!(userNotificationList.get(position).getBookActionPerformedOn().getBookObj().getBookAuthor().get(init).getAuthorLName().equals(""))){
+                                                        author+=userNotificationList.get(position).getBookActionPerformedOn().getBookObj().getBookAuthor().get(init).getAuthorLName();
+                                                        if(init+1<userNotificationList.get(position).getBookActionPerformedOn().getBookObj().getBookAuthor().size()){
+                                                            author+=", ";
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        }else{
+                                            author="Unknown Author";
+                                        }
+                                        mAuthor.setText(author);
+
+                                        mRateBar.setOnRatingBarChangeListener(new RatingBar.OnRatingBarChangeListener() {
+                                            @Override
+                                            public void onRatingChanged(RatingBar ratingBar, float rating, boolean fromUser) {
+                                                rateNumber = Math.round(rating);
+                                            }
+                                        });
+
+                                        mRateNow.setOnClickListener(new View.OnClickListener() {
+                                            @Override
+                                            public void onClick(View v) {
+                                                if(etReviewMessage.getText().length()==0){
+                                                    etReviewMessage.setError("Fill necessary fields.");
+                                                }
+                                                if(rateNumber==0){
+                                                    Toast.makeText(context, "Should rate.", Toast.LENGTH_LONG);
+                                                }
+
+                                                if(etReviewMessage.getText().length()>0&&rateNumber>0){
+                                                    Calendar c = Calendar.getInstance();
+                                                    SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+
+                                                    Rate rateMod = new Rate();
+                                                    rateMod.setRateNumber(rateNumber);
+                                                    rateMod.setRateTimeStamp(sdf.format(c.getTime()));
+
+                                                    Review reviewMod = new Review();
+                                                    reviewMod.setReviewTimeStamp(sdf.format(c.getTime()));
+
+                                                    UserRating userRatingMod = new UserRating();
+
+                                                    userRatingMod.setComment(etReviewMessage.getText().toString());
+                                                    userRatingMod.setUserRater(userNotificationList.get(position).getUser());
+                                                    userRatingMod.setUser(userNotificationList.get(position).getUserPerformer());
+                                                    userRatingMod.setReview(reviewMod);
+                                                    userRatingMod.setRate(rateMod);
+
+                                                    userRate(userRatingMod, position);
+                                                }
+
+                                            }
+                                        });
+
+                                        dialogCustom.show();
+                                    }
+                                });
+                                ad.setButton(AlertDialog.BUTTON_NEGATIVE, "No", new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(final DialogInterface dialog, int which) {
+
+                                        dialog.dismiss();
+
+                                        final Dialog dialogCustom = new Dialog(context);
+                                        dialogCustom.setContentView(R.layout.reject_custom_dialog);
+                                        final EditText etReason = (EditText) dialogCustom.findViewById(R.id.etReason);
+                                        TextView tvTitle = (TextView) dialogCustom.findViewById(R.id.titleReject);
+                                        Button mSubmitReason = (Button) dialogCustom.findViewById(R.id.submitReject);
+
+                                        tvTitle.setText("Why did you not receive the book?");
+                                        etReason.setHint("Reason");
+
+                                        mSubmitReason.setOnClickListener(new View.OnClickListener() {
+                                            @Override
+                                            public void onClick(View v) {
+                                                if(etReason.getText().length()==0){
+                                                    etReason.setError("Field should not be empty.");
+                                                }else{
+                                                    UserNotification un = new UserNotification();
+                                                    un.setUser(userNotificationList.get(position).getUserPerformer());
+                                                    un.setUserPerformer(userNotificationList.get(position).getUser());
+                                                    un.setActionStatus("return-not-received");
+                                                    un.setActionId(userNotificationList.get(position).getActionId());
+                                                    un.setActionName("rental");
+                                                    un.setBookActionPerformedOn(userNotificationList.get(position).getBookActionPerformedOn());
+                                                    un.setExtraMessage(etReason.getText().toString());
+
+                                                    addUserNotif(un);
+                                                    dialogCustom.dismiss();
+                                                }
+                                            }
+                                        });
+                                        dialogCustom.show();
+                                    }
+                                });
+                                ad.show();
+                            }else if(userNotificationList.get(position).getActionStatus().equals("Complete")){
+                                getUserRating(position);
                             }
 
                         } else if (userNotificationList.get(position).getActionName().equals("swap")) {
@@ -358,6 +500,179 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
             });
         }
 
+        public void getUserRating(final int position) {
+            RequestQueue requestQueue = Volley.newRequestQueue(context);
+//        String URL = "http://104.197.4.32:8080/Koobym/user/add";
+            String URL = Constants.GET_USER_RATING_BY_ID+userNotificationList.get(position).getExtraMessage();
+            String nextDateStr = "";
+
+            User user = new User();
+            user = (User) SPUtility.getSPUtil(context).getObject("USER_OBJECT", User.class);
+
+            Log.d("getUserRatingURL", URL);
+
+
+            final Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd").registerTypeAdapter(Date.class, GsonDateDeserializer.getInstance()).create();
+            final String mRequestBody = gson.toJson(userNotificationList);
+
+
+            Log.d("LOG_VOLLEY getUserRate", mRequestBody);
+            StringRequest stringRequest = new StringRequest(Request.Method.GET, URL, new Response.Listener<String>() {
+                @Override
+                public void onResponse(String response) {
+                    Log.i("getUserRatingResponse", response);
+                    final UserRating userRating = gson.fromJson(response, UserRating.class);
+
+                    AlertDialog ad = new AlertDialog.Builder(context).create();
+                    ad.setTitle("Complete Transaction");
+                    ad.setMessage("The book, "+userNotificationList.get(position).getBookActionPerformedOn().getBookObj().getBookTitle()+" was received and "+userNotificationList.get(position).getUserPerformer().getUserFname()+" "+userNotificationList.get(position).getUserPerformer().getUserLname()+" rated you.");
+                    ad.setButton(AlertDialog.BUTTON_POSITIVE, "See Rating", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            final Dialog dialogCustom = new Dialog(context);
+                            dialogCustom.setContentView(R.layout.review_custom_dialog);
+                            TextView mTitle = (TextView) dialogCustom.findViewById(R.id.bookTitleReview);
+                            TextView mAuthor = (TextView) dialogCustom.findViewById(R.id.bookAuthorReview);
+                            ImageView ivBook = (ImageView) dialogCustom.findViewById(R.id.ivBookReview);
+                            final EditText etReviewMessage = (EditText) dialogCustom.findViewById(R.id.etReviewReview);
+                            final RatingBar mRateBar = (RatingBar) dialogCustom.findViewById(R.id.ratingReview);
+                            Button mRateNow = (Button) dialogCustom.findViewById(R.id.btnRateReview);
+
+                            mRateNow.setText("Okay");
+                            etReviewMessage.setHint(userRating.getComment());
+                            etReviewMessage.setFocusable(false);
+
+                            mTitle.setText(userNotificationList.get(position).getBookActionPerformedOn().getBookObj().getBookTitle());
+
+                            Glide.with(context).load(userNotificationList.get(position).getBookActionPerformedOn().getBookObj().getBookFilename()).centerCrop().into(ivBook);
+
+                            String author = "";
+
+                            if(userNotificationList.get(position).getBookActionPerformedOn().getBookObj().getBookAuthor().size()!=0){
+                                for(int init=0; init<userNotificationList.get(position).getBookActionPerformedOn().getBookObj().getBookAuthor().size(); init++){
+                                    if(!(userNotificationList.get(position).getBookActionPerformedOn().getBookObj().getBookAuthor().get(init).getAuthorFName().equals(""))){
+                                        author+=userNotificationList.get(position).getBookActionPerformedOn().getBookObj().getBookAuthor().get(init).getAuthorFName()+" ";
+                                        if(!(userNotificationList.get(position).getBookActionPerformedOn().getBookObj().getBookAuthor().get(init).getAuthorLName().equals(""))){
+                                            author+=userNotificationList.get(position).getBookActionPerformedOn().getBookObj().getBookAuthor().get(init).getAuthorLName();
+                                            if(init+1<userNotificationList.get(position).getBookActionPerformedOn().getBookObj().getBookAuthor().size()){
+                                                author+=", ";
+                                            }
+                                        }
+                                    }
+                                }
+                            }else{
+                                author="Unknown Author";
+                            }
+                            mAuthor.setText(author);
+
+                            mRateBar.setRating(userRating.getRate().getRateNumber());
+
+                            mRateNow.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    Intent intent = new Intent(context, ProfileActivity.class);
+                                    Bundle bundle = new Bundle();
+                                    bundle.putSerializable("userModelPass", userRating.getUser());
+                                    intent.putExtras(bundle);
+                                    context.startActivity(intent);
+                                }
+                            });
+
+                            dialogCustom.show();
+                        }
+                    });
+                    ad.show();
+
+                }
+            }, new Response.ErrorListener() {
+                @Override
+                public void onErrorResponse(VolleyError error) {
+                    Log.e("LOG_VOLLEY", error.toString());
+                    error.printStackTrace();
+                }
+            }) {
+                @Override
+                public String getBodyContentType() {
+                    return "application/json; charset=utf-8";
+                }
+
+                @Override
+                public byte[] getBody() throws AuthFailureError {
+                    try {
+                        return mRequestBody == null ? null : mRequestBody.getBytes("utf-8");
+                    } catch (UnsupportedEncodingException uee) {
+                        VolleyLog.wtf("Unsupported Encoding while trying to get the bytes of %s using %s", mRequestBody, "utf-8");
+                        return null;
+                    }
+                }
+            };
+
+            requestQueue.add(stringRequest);
+        }
+
+        public void userRate(final UserRating userRating, final int position) {
+            RequestQueue requestQueue = Volley.newRequestQueue(context);
+//        String URL = "http://104.197.4.32:8080/Koobym/user/add";
+        String URL = Constants.POST_USER_RATE;
+
+
+            User user = new User();
+            user = (User) SPUtility.getSPUtil(context).getObject("USER_OBJECT", User.class);
+
+            Log.d("addUserRating", URL);
+            Log.d("addUserRatingModel", userRating.toString());
+
+
+            final Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd").registerTypeAdapter(Date.class, GsonDateDeserializer.getInstance()).create();
+            final String mRequestBody = gson.toJson(userRating);
+
+
+            Log.d("LOG_VOLLEYuserRating", mRequestBody);
+            StringRequest stringRequest = new StringRequest(Request.Method.POST, URL, new Response.Listener<String>() {
+                @Override
+                public void onResponse(String response) {
+                    Log.i("UserRatingResponse", response);
+
+                    UserRating ur = new UserRating();
+                    ur = gson.fromJson(response, UserRating.class);
+
+                    setToComplete(position, ur.getUserRatingId());
+
+                    Intent intent = new Intent(context, ProfileActivity.class);
+                    Bundle bundle = new Bundle();
+                    bundle.putSerializable("userModelPass", userRating.getUser());
+                    intent.putExtras(bundle);
+                    context.startActivity(intent);
+//                    if (bool == false) {
+//                        Intent intent = new Intent(context, HistoryActivity.class);
+//                        context.startActivity(intent);
+//                    }
+                }
+            }, new Response.ErrorListener() {
+                @Override
+                public void onErrorResponse(VolleyError error) {
+                    Log.e("LOG_VOLLEY", error.toString());
+                    error.printStackTrace();
+                }
+            }) {
+                @Override
+                public String getBodyContentType() {
+                    return "application/json; charset=utf-8";
+                }
+
+                @Override
+                public byte[] getBody() throws AuthFailureError {
+                    try {
+                        return mRequestBody == null ? null : mRequestBody.getBytes("utf-8");
+                    } catch (UnsupportedEncodingException uee) {
+                        VolleyLog.wtf("Unsupported Encoding while trying to get the bytes of %s using %s", mRequestBody, "utf-8");
+                        return null;
+                    }
+                }
+            };
+
+            requestQueue.add(stringRequest);
+        }
 
         public void updateBookOwner(int position, final boolean bool, SwapHeader swapHeader) {
             RequestQueue requestQueue = Volley.newRequestQueue(context);
@@ -966,7 +1281,7 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
 
                     }else if(status.equals("return-rejected")){
                         AlertDialog ad = new AlertDialog.Builder(context).create();
-                        ad.setTitle("Request Accepted");
+                        ad.setTitle("Request Rejected");
                         ad.setMessage(userNotificationList.get(position).getUser().getUserFname()+" "+userNotificationList.get(position).getUser().getUserLname()+" rejected your request because of her reason: '"+userNotificationList.get(position).getExtraMessage()+"'.");
                         ad.setButton(AlertDialog.BUTTON_NEUTRAL, "Okay", new DialogInterface.OnClickListener() {
                             @Override
@@ -991,7 +1306,52 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
                         });
                         ad.show();
                     }
+                }
+            }, new Response.ErrorListener() {
+                @Override
+                public void onErrorResponse(VolleyError error) {
+                    Log.e("LOG_VOLLEY", error.toString());
+                }
+            }) {
+                @Override
+                public String getBodyContentType() {
+                    return "application/json; charset=utf-8";
+                }
 
+                @Override
+                public byte[] getBody() throws AuthFailureError {
+                    try {
+                        return mRequestBody == null ? null : mRequestBody.getBytes("utf-8");
+                    } catch (UnsupportedEncodingException uee) {
+                        VolleyLog.wtf("Unsupported Encoding while trying to get the bytes of %s using %s", mRequestBody, "utf-8");
+                        return null;
+                    }
+                }
+            };
+
+            requestQueue.add(stringRequest);
+        }
+
+        public void setToComplete(int position, int userRatingId) {
+            Log.d("setToComplete", "inside");
+            RequestQueue requestQueue = Volley.newRequestQueue(context);
+            User user = new User();
+            user = (User) SPUtility.getSPUtil(context).getObject("USER_OBJECT", User.class);
+            d("UserIdReceive", String.valueOf(user.getUserId()));
+            String URL = Constants.SET_TO_COMPLETE+userNotificationList.get(position).getActionId()+"/"+userRatingId;
+            Log.d("setToComplete", URL);
+
+            final RentalHeader rentalHeader = new RentalHeader();
+
+            final Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd").registerTypeAdapter(Date.class, GsonDateDeserializer.getInstance()).create();
+            final String mRequestBody = gson.toJson(rentalHeader);
+
+
+            d("setToComplete", mRequestBody);
+            StringRequest stringRequest = new StringRequest(Request.Method.GET, URL, new Response.Listener<String>() {
+                @Override
+                public void onResponse(String response) {
+                    Log.i("setToCompleteResponse", response);
                 }
             }, new Response.ErrorListener() {
                 @Override

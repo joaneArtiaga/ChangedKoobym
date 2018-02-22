@@ -13,6 +13,10 @@ public class Constants {
 
     public static final String CONFIRM_RETURN = WEB_SERVICE_URL + "userNotification/confirmEarlyNotif/";
 
+    public static final String RETURN_TO_RECEIVE = WEB_SERVICE_URL + "rentalHeader/returnToReceive/";
+
+    public static final String SET_TO_COMPLETE = WEB_SERVICE_URL + "rentalHeader/setToComplete/";
+
     public static final String DENY_RETURN = WEB_SERVICE_URL + "userNotification/rejectEarlyNotif/";
 
     public static final String SET_RETURN = WEB_SERVICE_URL + "rentalHeader/setReturnById/";
@@ -46,6 +50,8 @@ public class Constants {
     public static final String GET_TRANSACTION_TO_RECEIVE_SWAP = WEB_SERVICE_URL + "swapHeader/toReceiveById/";
 
     public static final String GET_TRANSACTION_TO_RECEIVE_OWNER = WEB_SERVICE_URL + "rentalHeader/toReceiveByIdOwner/";
+
+    public static final String GET_TRANSACTION_TO_RECEIVE= WEB_SERVICE_URL + "rentalHeader/getAllReceive/";
 
     public static final String GET_TRANSACTION_COMPLETE_RENTER = WEB_SERVICE_URL + "rentalHeader/completeByIdRenter/";
 
@@ -188,5 +194,7 @@ public class Constants {
     public static final String SEND_NOTIF_MAIL = WEB_SERVICE_URL + "userNotification/sendEarlyNotif/";
 
     public static final String SWAP_OWNER = WEB_SERVICE_URL + "swapHeader/swapOwner/";
+
+    public static final String GET_USER_RATING_BY_ID = WEB_SERVICE_URL + "userRating/get/";
 
 }

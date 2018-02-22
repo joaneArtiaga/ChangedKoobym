@@ -27,4 +27,12 @@ public class Review implements Serializable {
     public void setReviewTimeStamp(String reviewTimeStamp) {
         this.reviewTimeStamp = reviewTimeStamp;
     }
+
+    @Override
+    public String toString() {
+        return "Review{" +
+                "reviewId=" + reviewId+
+                ", reviewTimeStamp ='" + reviewTimeStamp + '\'' +
+                '}';
+    }
 }

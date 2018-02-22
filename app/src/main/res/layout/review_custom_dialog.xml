@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="100dp"
+        android:background="@color/colorDark" />
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginRight="20dp"
+        android:layout_marginEnd="12dp"
+        android:layout_marginTop="50dp"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
+        android:id="@+id/linearLayout5">
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_marginRight="10dp">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textColor="@color/colorWhite"
+                android:text="Book Title"
+                android:textAlignment="gravity"
+                android:gravity="right"
+                android:id="@+id/bookTitleReview"
+                android:layout_gravity="right"/>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Book Author"
+                android:textAlignment="gravity"
+                android:gravity="right"
+                android:layout_gravity="right"
+                android:textColor="@color/colorWhite"
+                android:id="@+id/bookAuthorReview"/>
+
+        </LinearLayout>
+
+        <ImageView
+            android:id="@+id/ivBookReview"
+            android:layout_width="60dp"
+            android:layout_height="80dp"
+            android:layout_marginRight="20dp"/>
+
+    </LinearLayout>
+
+    <EditText
+        android:id="@+id/etReviewReview"
+        android:layout_width="250dp"
+        android:layout_height="80dp"
+        android:layout_below="@+id/linearLayout5"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="15dp"
+        android:ems="10"
+        android:gravity="top"
+        android:hint="Review"
+        android:inputType="textMultiLine"
+        android:padding="5dp" />
+
+    <Button
+        android:id="@+id/btnRateReview"
+        android:layout_width="100dp"
+        android:layout_height="50dp"
+        android:layout_marginTop="18dp"
+        android:text="Rate Now"
+        android:layout_alignParentRight="true"
+        android:layout_marginRight="20dp"
+        android:layout_below="@+id/ratingReview"/>
+
+    <RatingBar
+        android:id="@+id/ratingReview"
+        android:layout_width="wrap_content"
+        android:layout_height="50dp"
+        android:layout_below="@+id/etReviewReview"
+        android:layout_centerHorizontal="true"
+        android:stepSize="0.2"
+        android:theme="@style/RatingBar"
+        android:max="5"
+        android:numStars="5" />
+
+</RelativeLayout>

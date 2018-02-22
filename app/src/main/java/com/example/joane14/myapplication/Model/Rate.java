@@ -8,7 +8,8 @@ import java.io.Serializable;
 
 public class Rate implements Serializable {
 
-    private int rateId, rateNumber;
+    private int rateId;
+    private float rateNumber;
     private String rateTimeStamp;
 
     public int getRateId() {
@@ -19,11 +20,11 @@ public class Rate implements Serializable {
         this.rateId = rateId;
     }
 
-    public int getRateNumber() {
+    public float getRateNumber() {
         return rateNumber;
     }
 
-    public void setRateNumber(int rateNumber) {
+    public void setRateNumber(float rateNumber) {
         this.rateNumber = rateNumber;
     }
 
@@ -33,5 +34,14 @@ public class Rate implements Serializable {
 
     public void setRateTimeStamp(String rateTimeStamp) {
         this.rateTimeStamp = rateTimeStamp;
+    }
+
+    @Override
+    public String toString() {
+        return "Rate{" +
+                "RateId=" + rateId+
+                ", rateNumber ='" + rateNumber + '\'' +
+                ", rateTimeStamp =" + rateTimeStamp +
+                '}';
     }
 }

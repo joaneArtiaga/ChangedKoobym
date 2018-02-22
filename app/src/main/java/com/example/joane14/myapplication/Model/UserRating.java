@@ -63,4 +63,16 @@ public class UserRating implements Serializable {
     public void setComment(String comment) {
         this.comment = comment;
     }
+
+    @Override
+    public String toString() {
+        return "UserRating{" +
+                "userRatingId=" + userRatingId+
+                ", review ='" + review.toString() + '\'' +
+                ", rate =" + rate.toString() +
+                ", user =" + user.toString() +
+                ", userRater =" + userRater.toString() +
+                ", comment =" + comment +
+                '}';
+    }
 }
