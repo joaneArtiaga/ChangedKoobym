@@ -29,7 +29,6 @@ import com.android.volley.toolbox.Volley;
 import com.bumptech.glide.Glide;
 import com.example.joane14.myapplication.Activities.GsonDateDeserializer;
 import com.example.joane14.myapplication.Fragments.Constants;
-import com.example.joane14.myapplication.Model.AuctionHeader;
 import com.example.joane14.myapplication.Model.BookOwnerModel;
 import com.example.joane14.myapplication.Model.RentalHeader;
 import com.example.joane14.myapplication.Model.User;
@@ -46,16 +45,16 @@ import java.util.List;
  * Created by Joane14 on 20/10/2017.
  */
 
-public class HistoryAuctionAdapter extends BaseAdapter {
+public class HistoryRentAdapter extends BaseAdapter {
 
     private Context context;
-    List<AuctionHeader> bookOwnerModelList;
+    List<RentalHeader> bookOwnerModelList;
     BookOwnerModel bookOwnerModel;
     private LayoutInflater mInflater;
     RatingBar mRating;
 
 
-    public HistoryAuctionAdapter(Context context, List<AuctionHeader> bookOwnerModelList){
+    public HistoryRentAdapter(Context context, List<RentalHeader> bookOwnerModelList){
         this.context = context;
         this.bookOwnerModelList = bookOwnerModelList;
         mInflater = LayoutInflater.from(context);
@@ -85,7 +84,7 @@ public class HistoryAuctionAdapter extends BaseAdapter {
             convertView = mInflater.inflate(R.layout.item_shelf, null);
         }
 
-        bookOwnerModel = bookOwnerModelList.get(position).getAuctionDetail().getBookOwner();
+        bookOwnerModel = bookOwnerModelList.get(position).getRentalDetail().getBookOwner();
 
         ImageView bookPic = (ImageView) convertView.findViewById(R.id.displayBookPic);
         TextView bookTitle = (TextView) convertView.findViewById(R.id.lpBookTitle);

@@ -17,17 +17,30 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.android.volley.Request;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
 import com.bumptech.glide.Glide;
+import com.example.joane14.myapplication.Activities.BookActActivity;
+import com.example.joane14.myapplication.Activities.GsonDateDeserializer;
 import com.example.joane14.myapplication.Activities.ProfileActivity;
+import com.example.joane14.myapplication.Fragments.Constants;
+import com.example.joane14.myapplication.Fragments.VolleyUtil;
+import com.example.joane14.myapplication.Model.BookActivity;
 import com.example.joane14.myapplication.Model.RentalHeader;
 import com.example.joane14.myapplication.Model.SwapHeader;
 import com.example.joane14.myapplication.R;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
+
+import static com.example.joane14.myapplication.Adapters.BookChooserAdapter.d;
 
 /**
  * Created by Joane14 on 03/02/2018.
@@ -59,13 +72,23 @@ public class ToDeliverSwapAdapter extends RecyclerView.Adapter<ToDeliverSwapAdap
     @SuppressLint("NewApi")
     @Override
     public void onBindViewHolder(ToDeliverSwapAdapter.BookHolder holder, final int position) {
+        Date c = Calendar.getInstance().getTime();
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+        final String currDAte = sdf.format(c);
 
+        d("swapHeader", bookList.get(position).toString());
+        Log.d("CurrentDate: "+currDAte, "ReturnDate: "+bookList.get(position).getDateDelivered());
+        if(currDAte.equals(bookList.get(position).getDateDelivered())){
+            holder.mRate.setImageResource(R.drawable.checkbookact);
+        }else{
+            holder.mRate.setImageResource(R.drawable.notrate);
+        }
 
         holder.mNotify.setVisibility(View.GONE);
         holder.mBookTitle.setText(bookList.get(position).getSwapDetail().getBookOwner().getBookObj().getBookTitle());
         holder.mBookDate.setText(bookList.get(position).getDateTimeStamp());
         holder.mPrice.setText(String.valueOf(bookList.get(position).getSwapDetail().getSwapPrice()));
-        holder.mRenterName.setText(bookList.get(position).getUser().getUserFname()+" "+bookList.get(position).getUser().getUserLname());
+        holder.mRenterName.setText(bookList.get(position).getRequestedSwapDetail().getBookOwner().getUserObj().getUserFname()+" "+bookList.get(position).getRequestedSwapDetail().getBookOwner().getUserObj().getUserLname());
         if(bookList.get(position).getDateDelivered()==null){
             Log.d("EndDateDeliverSwap", "walay sulod");
         }else{
@@ -78,38 +101,14 @@ public class ToDeliverSwapAdapter extends RecyclerView.Adapter<ToDeliverSwapAdap
             holder.mLocation.setText(bookList.get(position).getMeetUp().getLocation().getLocationName());
         }
 
-//        if(bookList.get(position).getUserId()==null){
-//            holder.mRenter.setText("Renter not Found");
-//        }else{
-//            holder.mRenter.setText(bookList.get(position).getUserId().getUserFname()+" "+bookList.get(position).getUserId().getUserLname());
-//        }
-
-
-//        DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
-//        Date date = null;
-//        String newDate="";
-//        try {
-//            date = df.parse(bookList.get(position).getDateTimeStamp());
-//        } catch (ParseException e) {
-//            e.printStackTrace();
-//        }
-//        @SuppressLint({"NewApi", "LocalSuppress"})
-//        Calendar calendar = Calendar.getInstance();
-//        calendar.setTime(date);
-//        calendar.add(calendar.DATE, bookList.get(position).getSwapDetail().getDaysForRent());
-//        newDate = df.format(calendar.getTime());
-
-//        Picasso.with(context).load(bookList.get(position).getUserId().getImageFilename()).fit().into(holder.mIvRenter);
-        Glide.with(context).load(bookList.get(position).getSwapDetail().getBookOwner().getBookObj().getBookFilename()).centerCrop().into(holder.mIvBookImg);
-
-//        Log.d("displayImage", bookList.get(position).getBookOwner().getBookObj().getBookFilename());
+       Glide.with(context).load(bookList.get(position).getSwapDetail().getBookOwner().getBookObj().getBookFilename()).centerCrop().into(holder.mIvBookImg);
 
         holder.mProfile.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(context, ProfileActivity.class);
                 Bundle bundle = new Bundle();
-                bundle.putSerializable("userModelPass", bookList.get(position).getSwapDetail().getBookOwner().getUserObj());
+                bundle.putSerializable("userModelPass", bookList.get(position).getRequestedSwapDetail().getBookOwner().getUserObj());
                 intent.putExtras(bundle);
                 context.startActivity(intent);
             }
@@ -118,17 +117,65 @@ public class ToDeliverSwapAdapter extends RecyclerView.Adapter<ToDeliverSwapAdap
         holder.mRate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                AlertDialog alertDialog = new AlertDialog.Builder(context).create();
-                alertDialog.setTitle("Alert!");
-                alertDialog.setMessage("The renter has not yet confirmed that he/she received the book already.");
-                alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "Okay", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        dialog.dismiss();
-                    }
-                });
+                if(currDAte.equals(bookList.get(position).getDateDelivered())){
+                    final AlertDialog ad = new AlertDialog.Builder(context).create();
+                    ad.setTitle("Confirmation");
+                    ad.setMessage("Did you deliver the book?");
+                    ad.setButton(AlertDialog.BUTTON_POSITIVE, "Yes", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            setDelivered(bookList.get(position));
+                            ad.dismiss();
+                        }
+                    });
+                    ad.setButton(AlertDialog.BUTTON_NEGATIVE, "Not Yet", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            ad.dismiss();
+                        }
+                    });
+                    ad.show();
+                }else{
+                    AlertDialog alertDialog = new AlertDialog.Builder(context).create();
+                    alertDialog.setTitle("Alert!");
+                    alertDialog.setMessage("Not yet time for delivery.");
+                    alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "Okay", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            dialog.dismiss();
+                        }
+                    });
+                    alertDialog.show();
+                }
             }
         });
+
+
+    }
+
+    private void setDelivered(SwapHeader swapHeaderMod){
+        String URL = Constants.SET_DELIVERED_SWAP+swapHeaderMod.getSwapHeaderId();
+
+        Log.d("setDeliveredURL", URL);
+        Log.d("setDelivered", swapHeaderMod.toString());
+
+        StringRequest stringRequest = new StringRequest(Request.Method.GET, URL, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                Log.d("setDeliveredResponse", response);
+                Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd").registerTypeAdapter(Date.class, GsonDateDeserializer.getInstance()).create();
+
+                Intent intent = new Intent(context, BookActivity.class);
+                context.startActivity(intent);
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.e("LOG_VOLLEY", error.toString());
+            }
+        }) ;
+        VolleyUtil.volleyRQInstance(context).add(stringRequest);
+
     }
 
     @Override

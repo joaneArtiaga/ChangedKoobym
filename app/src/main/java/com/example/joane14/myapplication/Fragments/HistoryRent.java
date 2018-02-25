@@ -10,6 +10,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.GridView;
 
 import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
@@ -20,6 +21,7 @@ import com.android.volley.VolleyLog;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.example.joane14.myapplication.Activities.GsonDateDeserializer;
+import com.example.joane14.myapplication.Adapters.HistoryRentAdapter;
 import com.example.joane14.myapplication.Adapters.ToDeliverAuctionAdapter;
 import com.example.joane14.myapplication.Model.AuctionHeader;
 import com.example.joane14.myapplication.Model.RentalHeader;
@@ -40,8 +42,8 @@ public class HistoryRent extends Fragment {
     private OnHistoryRentInteractionListener mListener;
 
     List<RentalHeader> rentalHeaderList;
-    private RecyclerView mRecyclerView;
-    private RecyclerView.Adapter mAdapter;
+    private GridView mGridView;
+    private HistoryRentAdapter mAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
 
     public HistoryRent() {
@@ -66,12 +68,11 @@ public class HistoryRent extends Fragment {
         View view = inflater.inflate(R.layout.fragment_history_rent, container, false);
 
         rentalHeaderList = new ArrayList<RentalHeader>();
-        mRecyclerView = (RecyclerView) view.findViewById(R.id.my_recycler_view_history_rent);
-        mRecyclerView.setHasFixedSize(true);
+        mGridView = (GridView) view.findViewById(R.id.hRent_gridview);
+
         mLayoutManager = new LinearLayoutManager(getContext());
-        mRecyclerView.setLayoutManager(mLayoutManager);
-//        mAdapter = new ToDeliverAuctionAdapter(auctionHeaderList);
-        mRecyclerView.setAdapter(mAdapter);
+        mAdapter = new HistoryRentAdapter(getContext(), rentalHeaderList);
+        mGridView.setAdapter(mAdapter);
 
         getHistory();
 
@@ -83,9 +84,9 @@ public class HistoryRent extends Fragment {
 //        String URL = "http://104.197.4.32:8080/Koobym/user/add";
         User user = new User();
         user = (User) SPUtility.getSPUtil(getContext()).getObject("USER_OBJECT", User.class);
-        Log.d("UserIdReceive", String.valueOf(user.getUserId()));
+        Log.d("rentHistory", String.valueOf(user.getUserId()));
         String URL = Constants.TO_DELIVER_AUCTION+user.getUserId();
-        Log.d("UserIdURL", URL);
+        Log.d("rentHistoryURL", URL);
 //        String URL = Constants.WEB_SERVICE_URL+"user/add";
 
         final RentalHeader rentalHeader =new RentalHeader();
@@ -94,11 +95,11 @@ public class HistoryRent extends Fragment {
         final String mRequestBody = gson.toJson(rentalHeader);
 
 
-        Log.d("LOG_VOLLEY", mRequestBody);
+        Log.d("rentHistory", mRequestBody);
         StringRequest stringRequest = new StringRequest(Request.Method.GET, URL, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
-                Log.i("ResponseRequestReceived", response);
+                Log.i("rentHistoryResponse", response);
 //                RentalHeader rentalHeaderModel = gson.fromJson(response, RentalHeader.class);
                 rentalHeaderList.clear();
                 rentalHeaderList.addAll(Arrays.asList(gson.fromJson(response, RentalHeader[].class)));

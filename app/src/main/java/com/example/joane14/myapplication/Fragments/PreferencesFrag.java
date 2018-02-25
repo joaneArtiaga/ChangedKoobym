@@ -104,10 +104,8 @@ public class PreferencesFrag extends Fragment {
     }
 
     private void getAuctionDetail(int bookOwnerId){
-//        String URL = "http://104.198.152.85/Koobym/rentalDetail/suggested/%d";
-//        String URL = Constants.WEB_SERVICE_URL+"rentalDetail/suggested/%d";
         String URL = Constants.GET_BOOK_OWNER_AUCTION_DETAIL+bookOwnerId;
-//        URL = String.format(URL, userId);
+
         Log.d("PreferenceURL", URL);
         StringRequest stringRequest = new StringRequest(Request.Method.GET, URL, new Response.Listener<String>() {
             @Override

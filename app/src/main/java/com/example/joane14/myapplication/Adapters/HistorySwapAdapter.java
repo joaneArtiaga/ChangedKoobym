@@ -29,9 +29,9 @@ import com.android.volley.toolbox.Volley;
 import com.bumptech.glide.Glide;
 import com.example.joane14.myapplication.Activities.GsonDateDeserializer;
 import com.example.joane14.myapplication.Fragments.Constants;
-import com.example.joane14.myapplication.Model.AuctionHeader;
 import com.example.joane14.myapplication.Model.BookOwnerModel;
 import com.example.joane14.myapplication.Model.RentalHeader;
+import com.example.joane14.myapplication.Model.SwapHeader;
 import com.example.joane14.myapplication.Model.User;
 import com.example.joane14.myapplication.R;
 import com.example.joane14.myapplication.Utilities.SPUtility;
@@ -46,16 +46,16 @@ import java.util.List;
  * Created by Joane14 on 20/10/2017.
  */
 
-public class HistoryAuctionAdapter extends BaseAdapter {
+public class HistorySwapAdapter extends BaseAdapter {
 
     private Context context;
-    List<AuctionHeader> bookOwnerModelList;
+    List<SwapHeader> bookOwnerModelList;
     BookOwnerModel bookOwnerModel;
     private LayoutInflater mInflater;
     RatingBar mRating;
 
 
-    public HistoryAuctionAdapter(Context context, List<AuctionHeader> bookOwnerModelList){
+    public HistorySwapAdapter(Context context, List<SwapHeader> bookOwnerModelList){
         this.context = context;
         this.bookOwnerModelList = bookOwnerModelList;
         mInflater = LayoutInflater.from(context);
@@ -85,7 +85,13 @@ public class HistoryAuctionAdapter extends BaseAdapter {
             convertView = mInflater.inflate(R.layout.item_shelf, null);
         }
 
-        bookOwnerModel = bookOwnerModelList.get(position).getAuctionDetail().getBookOwner();
+        User user = (User) SPUtility.getSPUtil(context).getObject("USER_OBJECT", User.class);
+
+        if(bookOwnerModelList.get(position).getSwapDetail().getBookOwner().getUserObj().getUserId()==user.getUserId()){
+            bookOwnerModel = bookOwnerModelList.get(position).getSwapDetail().getBookOwner();
+        }else{
+            bookOwnerModel = bookOwnerModelList.get(position).getRequestedSwapDetail().getBookOwner();
+        }
 
         ImageView bookPic = (ImageView) convertView.findViewById(R.id.displayBookPic);
         TextView bookTitle = (TextView) convertView.findViewById(R.id.lpBookTitle);

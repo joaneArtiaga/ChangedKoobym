@@ -1,0 +1,148 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="70dp"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:background="@color/colorDark"
+        android:orientation="vertical" />
+
+    <ImageView
+        android:layout_width="70dp"
+        android:layout_height="90dp"
+        android:id="@+id/ivBookDeliver"
+        android:layout_marginTop="22dp"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/bookTitleDelivery"
+        android:textSize="20dp"
+        android:textColor="@color/colorLightOrange"
+        android:text="Book Title"
+        android:gravity="center"
+        android:textStyle="bold"
+        android:layout_below="@+id/ivBookDeliver"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_marginTop="15dp" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:id="@+id/linearLayout6"
+        android:layout_marginTop="50dp"
+        android:layout_marginLeft="20dp"
+        android:padding="10dp"
+        android:layout_below="@+id/ivBookDeliver"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Delivered by:" />
+
+            <TextView
+                android:layout_marginLeft="10dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/deliveredBy"
+                android:textStyle="bold"
+                android:text="Anonymous"/>
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Location:"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_marginLeft="30dp"
+                android:layout_height="wrap_content"
+                android:text="Somewhere"
+                android:id="@+id/locationDelivery"/>
+
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Deliver Date:"/>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_marginLeft="10dp"
+                android:layout_height="wrap_content"
+                android:text="Someday"
+                android:id="@+id/dateDelivery"/>
+
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Deliver Time:"/>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Future"
+                android:layout_marginLeft="10dp"
+                android:id="@+id/timeDelivery"/>
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center_horizontal"
+        android:layout_below="@+id/linearLayout6"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true">
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/btnSeeRating"
+            android:text="See Rating"/>
+
+        <Button
+            android:id="@+id/btnDeliveryOkay"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:text="Okay" />
+
+    </LinearLayout>
+
+</RelativeLayout>

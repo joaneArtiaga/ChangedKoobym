@@ -13,9 +13,21 @@ public class Constants {
 
     public static final String CONFIRM_RETURN = WEB_SERVICE_URL + "userNotification/confirmEarlyNotif/";
 
+    public static final String SET_DELIVERED_SWAP = WEB_SERVICE_URL + "swapHeader/setDelivered/";
+
     public static final String RETURN_TO_RECEIVE = WEB_SERVICE_URL + "rentalHeader/returnToReceive/";
 
+    public static final String RENT_RECEIVE = WEB_SERVICE_URL + "rentalHeader/received/";
+
+    public static final String RENT_COMPLETE = WEB_SERVICE_URL + "rentalHeader/complete/";
+
+    public static final String RENT_DELIVERED = WEB_SERVICE_URL + "rentalHeader/delivered/";
+
     public static final String SET_TO_COMPLETE = WEB_SERVICE_URL + "rentalHeader/setToComplete/";
+
+    public static final String GET_BOOK_REVIEW = WEB_SERVICE_URL + "bookOwnerReview/get/";
+
+    public static final String GET_BOOK_RATINGS = WEB_SERVICE_URL + "bookOwnerRating/get/";
 
     public static final String DENY_RETURN = WEB_SERVICE_URL + "userNotification/rejectEarlyNotif/";
 
@@ -178,6 +190,12 @@ public class Constants {
     public static final String GET_AUCTION_BID = WEB_SERVICE_URL + "auctionCommentDetail/getAuctionCommentDetailsOfAuctionDetail/";
 
     public static final String GET_MAXIMUM_BID = WEB_SERVICE_URL + "auctionComment/getMaximumBid/";
+
+    public static final String AUCTION_DELIVERED = WEB_SERVICE_URL + "auctionHeader/deliveredBook/";
+
+    public static final String AUCTION_COMPLETED = WEB_SERVICE_URL + "auctionHeader/completeBook/";
+
+    public static final String SWAP_COMPLETED = WEB_SERVICE_URL + "swapHeader/setComplete/";
 
     public static final String PUT_AUCTION_HEADER = WEB_SERVICE_URL + "auctionHeader/update";
 

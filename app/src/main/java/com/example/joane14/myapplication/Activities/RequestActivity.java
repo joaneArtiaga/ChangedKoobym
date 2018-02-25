@@ -10,6 +10,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v4.view.ViewPager;
@@ -23,6 +24,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -98,6 +100,21 @@ public class RequestActivity extends AppCompatActivity
             mEmail.setText(userModel.getEmail());
             Picasso.with(RequestActivity.this).load(userModel.getImageFilename()).fit().into(profileImg);
         }
+
+        ImageButton mRent = (ImageButton) findViewById(R.id.rentRequest);
+        ImageButton mSwap = (ImageButton) findViewById(R.id.swapRequest);
+        final TextView tvRent = (TextView) findViewById(R.id.tvRentRequest);
+        final TextView tvSwap = (TextView) findViewById(R.id.tvSwapRequest);
+
+        tvRent.setTextColor(ContextCompat.getColor(RequestActivity.this, R.color.colorLightOrange));
+
+        mRent.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                tvRent.setTextColor(ContextCompat.getColor(RequestActivity.this, R.color.colorLightOrange));
+
+            }
+        });
 
     }
 

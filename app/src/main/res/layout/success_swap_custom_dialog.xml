@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="10dp">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Success Swap"
+            android:textSize="20dp"
+            android:layout_marginTop="20dp"
+            android:layout_marginLeft="20dp"
+            android:textStyle="bold"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:layout_width="50dp"
+                android:layout_height="80dp"
+                android:id="@+id/successBook"/>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="15dp">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Book Title"
+                    android:textColor="@color/colorLightOrange"
+                    android:textSize="15dp"
+                    android:textStyle="bold"
+                    android:id="@+id/successBookTitle"/>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Delivered by:"/>
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Anonymous"
+                        android:textSize="10dp"
+                        android:textStyle="bold"
+                        android:id="@+id/successBookOwner"/>
+                </LinearLayout>
+            </LinearLayout>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_gravity="right"
+            android:gravity="right"
+            android:layout_marginRight="10dp">
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:gravity="right"
+                android:layout_gravity="right"
+                android:padding="15dp">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Book Title"
+                    android:textColor="@color/colorLightOrange"
+                    android:textSize="15dp"
+                    android:textStyle="bold"
+                    android:id="@+id/successBookTitle2"/>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Received by:"/>
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Anonymous"
+                        android:textSize="10dp"
+                        android:textStyle="bold"
+                        android:id="@+id/successBookOwner2"/>
+                </LinearLayout>
+            </LinearLayout>
+            <ImageView
+                android:layout_width="50dp"
+                android:layout_height="80dp"
+                android:id="@+id/successBook2"/>
+
+        </LinearLayout>
+
+        <Button
+            android:layout_width="70dp"
+            android:layout_height="50dp"
+            android:text="Okay"
+            android:id="@+id/btnOkaySuccess"
+            android:layout_marginTop="10dp"
+            android:layout_marginRight="20dp"
+            android:layout_gravity="right"/>
+
+    </LinearLayout>
+
+</RelativeLayout>

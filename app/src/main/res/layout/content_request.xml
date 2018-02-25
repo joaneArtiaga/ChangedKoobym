@@ -1,12 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
-    tools:context="com.example.joane14.myapplication.Activities.HistoryActivity"
-    tools:showIn="@layout/app_bar_history">
+    tools:context="com.example.joane14.myapplication.Activities.RequestActivity"
+    tools:showIn="@layout/app_bar_book_activity">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -24,22 +26,22 @@
             android:padding="10dp">
 
             <ImageButton
-                android:id="@+id/rentHistory"
+                android:id="@+id/rentRequest"
                 android:layout_gravity="center_horizontal"
-                android:layout_width="50dp"
-                android:layout_height="50dp"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
                 android:background="@null"
                 android:adjustViewBounds="true"
                 android:scaleType="fitXY"
                 android:src="@drawable/rentrequest"/>
 
             <TextView
-                android:id="@+id/tvRentHistory"
+                android:id="@+id/tvRentRequest"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
                 android:gravity="center_horizontal"
                 android:text="Rent"
+                android:layout_gravity="center_horizontal"
                 android:textColor="@color/colorDark"/>
 
         </LinearLayout>
@@ -47,10 +49,11 @@
             android:layout_width="100dp"
             android:layout_height="match_parent"
             android:orientation="vertical"
+            android:gravity="center_horizontal"
             android:padding="10dp">
 
             <ImageButton
-                android:id="@+id/swapHistory"
+                android:id="@+id/swapRequest"
                 android:layout_gravity="center_horizontal"
                 android:layout_width="30dp"
                 android:layout_height="30dp"
@@ -60,48 +63,20 @@
                 android:src="@drawable/swaprequest"/>
 
             <TextView
-                android:id="@+id/tvSwapHistory"
+                android:id="@+id/tvSwapRequest"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
                 android:gravity="center_horizontal"
+                android:layout_gravity="center_horizontal"
                 android:text="Swap"
                 android:textColor="@color/colorDark"/>
 
         </LinearLayout>
-        <LinearLayout
-            android:layout_width="100dp"
-            android:layout_height="match_parent"
-            android:orientation="vertical"
-            android:padding="10dp">
-
-            <ImageButton
-                android:id="@+id/auctionHistory"
-                android:layout_width="30dp"
-                android:layout_height="30dp"
-                android:layout_gravity="center_horizontal"
-                android:adjustViewBounds="true"
-                android:background="@null"
-                android:scaleType="fitXY"
-                android:src="@drawable/auction" />
-
-
-            <TextView
-                android:id="@+id/tvAuctionHistory"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Auction"
-                android:layout_gravity="center_horizontal"
-                android:gravity="center_horizontal"
-                android:textColor="@color/colorDark" />
-
-        </LinearLayout>
-
     </LinearLayout>
 
     <FrameLayout
-        android:id="@+id/fragment_history_container"
+        android:id="@+id/fragment_container_request"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
+        android:layout_height="wrap_content" />
 
-</RelativeLayout>
+</LinearLayout>

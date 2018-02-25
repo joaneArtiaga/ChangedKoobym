@@ -11,11 +11,18 @@ public class AuctionHeader implements Serializable {
     private int auctionHeaderId;
     private User user;
     private AuctionDetailModel auctionDetail;
-    private String auctionHeaderDateStamp;
+    private String auctionHeaderDateStamp, auctionExtraMessage;
     private MeetUp meetUp;
     private String dateDelivered;
     private String status;
 
+    public String getAuctionExtraMessage() {
+        return auctionExtraMessage;
+    }
+
+    public void setAuctionExtraMessage(String auctionExtraMessage) {
+        this.auctionExtraMessage = auctionExtraMessage;
+    }
 
     public String getStatus() {
         return status;

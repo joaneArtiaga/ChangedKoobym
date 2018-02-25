@@ -10,6 +10,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.GridView;
 
 import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
@@ -20,6 +21,8 @@ import com.android.volley.VolleyLog;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.example.joane14.myapplication.Activities.GsonDateDeserializer;
+import com.example.joane14.myapplication.Adapters.HistoryRentAdapter;
+import com.example.joane14.myapplication.Adapters.HistorySwapAdapter;
 import com.example.joane14.myapplication.Adapters.ToDeliverAuctionAdapter;
 import com.example.joane14.myapplication.Model.AuctionHeader;
 import com.example.joane14.myapplication.Model.RentalHeader;
@@ -40,8 +43,8 @@ public class HistorySwap extends Fragment {
     private OnHistorySwapInteractionListener mListener;
 
     List<SwapHeader> swapHeaderList;
-    private RecyclerView mRecyclerView;
-    private RecyclerView.Adapter mAdapter;
+    private GridView mGridView;
+    private HistorySwapAdapter mAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
 
     public HistorySwap() {
@@ -65,12 +68,10 @@ public class HistorySwap extends Fragment {
         View view = inflater.inflate(R.layout.fragment_history_swap, container, false);
 
         swapHeaderList = new ArrayList<SwapHeader>();
-        mRecyclerView = (RecyclerView) view.findViewById(R.id.my_recycler_view_history_swap);
-        mRecyclerView.setHasFixedSize(true);
+        mGridView = (GridView) view.findViewById(R.id.hSwap_gridview);
         mLayoutManager = new LinearLayoutManager(getContext());
-        mRecyclerView.setLayoutManager(mLayoutManager);
-//        mAdapter = new ToDeliverAuctionAdapter(swapHeaderList);
-        mRecyclerView.setAdapter(mAdapter);
+        mAdapter = new HistorySwapAdapter(getContext(), swapHeaderList);
+        mGridView.setAdapter(mAdapter);
 
         getHistory();
 

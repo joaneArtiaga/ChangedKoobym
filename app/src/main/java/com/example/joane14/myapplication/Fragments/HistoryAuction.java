@@ -10,6 +10,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.GridView;
 
 import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
@@ -21,7 +22,6 @@ import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.example.joane14.myapplication.Activities.GsonDateDeserializer;
 import com.example.joane14.myapplication.Adapters.HistoryAuctionAdapter;
-import com.example.joane14.myapplication.Adapters.ToDeliverAuctionAdapter;
 import com.example.joane14.myapplication.Model.AuctionHeader;
 import com.example.joane14.myapplication.Model.RentalHeader;
 import com.example.joane14.myapplication.Model.User;
@@ -39,8 +39,8 @@ import java.util.List;
 public class HistoryAuction extends Fragment {
     private OnHistoryAuctionInteractionListener mListener;
     List<AuctionHeader> auctionHeaderList;
-    private RecyclerView mRecyclerView;
-    private RecyclerView.Adapter mAdapter;
+    private GridView mGridView;
+    private HistoryAuctionAdapter mAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
 
     public HistoryAuction() {
@@ -64,12 +64,10 @@ public class HistoryAuction extends Fragment {
         View view = inflater.inflate(R.layout.fragment_history_auction, container, false);
 
         auctionHeaderList = new ArrayList<AuctionHeader>();
-        mRecyclerView = (RecyclerView) view.findViewById(R.id.my_recycler_view_history_auction);
-        mRecyclerView.setHasFixedSize(true);
+        mGridView = (GridView) view.findViewById(R.id.hAuction_gridview);
         mLayoutManager = new LinearLayoutManager(getContext());
-        mRecyclerView.setLayoutManager(mLayoutManager);
-        mAdapter = new HistoryAuctionAdapter(auctionHeaderList);
-        mRecyclerView.setAdapter(mAdapter);
+        mAdapter = new HistoryAuctionAdapter(getContext(), auctionHeaderList);
+        mGridView.setAdapter(mAdapter);
 
         getHistory();
 

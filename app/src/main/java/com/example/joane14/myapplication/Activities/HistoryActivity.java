@@ -9,6 +9,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v4.view.ViewPager;
@@ -22,6 +23,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -33,6 +35,8 @@ import com.example.joane14.myapplication.Fragments.CompletedSwapHistory;
 import com.example.joane14.myapplication.Fragments.Constants;
 import com.example.joane14.myapplication.Fragments.HistoryAuction;
 import com.example.joane14.myapplication.Fragments.HistoryFragment;
+import com.example.joane14.myapplication.Fragments.HistoryRent;
+import com.example.joane14.myapplication.Fragments.HistorySwap;
 import com.example.joane14.myapplication.Fragments.MyRequestFrag;
 import com.example.joane14.myapplication.Fragments.RejectedHistory;
 import com.example.joane14.myapplication.Fragments.RejectedOwnerHistory;
@@ -41,6 +45,7 @@ import com.example.joane14.myapplication.Fragments.RejectedSwapHistory;
 import com.example.joane14.myapplication.Fragments.RentHistoryFrag;
 import com.example.joane14.myapplication.Fragments.RequestReceivedFrag;
 import com.example.joane14.myapplication.Fragments.SwapHistory;
+import com.example.joane14.myapplication.Fragments.ToDeliver;
 import com.example.joane14.myapplication.Model.User;
 import com.example.joane14.myapplication.R;
 import com.example.joane14.myapplication.Utilities.SPUtility;
@@ -62,7 +67,10 @@ public class HistoryActivity extends AppCompatActivity
         SwapHistory.OnSwapHistoryInteractionListener,
         CompletedSwapHistory.OnCompletedSwapHistoryInteractionListener,
         RejectedSwapHistory.OnRejectedSwapHistoryInteractionListener,
-        HistoryFragment.OnHistoryFragmentInteractionListener, HistoryAuction.OnHistoryAuctionInteractionListener{
+        HistoryFragment.OnHistoryFragmentInteractionListener,
+        HistoryAuction.OnHistoryAuctionInteractionListener,
+        HistoryRent.OnHistoryRentInteractionListener,
+        HistorySwap.OnHistorySwapInteractionListener{
 
     User userModel;
     private TabLayout tabLayout;
@@ -105,9 +113,62 @@ public class HistoryActivity extends AppCompatActivity
             Picasso.with(HistoryActivity.this).load(userModel.getImageFilename()).fit().into(profileImg);
         }
 
-        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-        ft.replace(R.id.fragment_history_container, HistoryFragment.newInstance());
-        ft.commit();
+        ImageButton mRent = (ImageButton) findViewById(R.id.rentHistory);
+        ImageButton mSwap = (ImageButton) findViewById(R.id.swapHistory);
+        ImageButton mAuction = (ImageButton) findViewById(R.id.auctionHistory);
+        final TextView tvRent = (TextView) findViewById(R.id.tvRentHistory);
+        final TextView tvSwap = (TextView) findViewById(R.id.tvSwapHistory);
+        final TextView tvAuction = (TextView) findViewById(R.id.tvAuctionHistory);
+
+        tvRent.setTextColor(ContextCompat.getColor(HistoryActivity.this, R.color.colorLightOrange));
+        tvSwap.setTextColor(ContextCompat.getColor(HistoryActivity.this, R.color.colorDark));
+        tvAuction.setTextColor(ContextCompat.getColor(HistoryActivity.this, R.color.colorDark));
+
+        FragmentTransaction fragt = getSupportFragmentManager().beginTransaction();
+        fragt.replace(R.id.fragment_history_container, HistoryRent.newInstance());
+        fragt.commit();
+
+        mRent.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Log.d("HistoryBtn", "Rent");
+                tvRent.setTextColor(ContextCompat.getColor(HistoryActivity.this, R.color.colorLightOrange));
+                tvSwap.setTextColor(ContextCompat.getColor(HistoryActivity.this, R.color.colorDark));
+                tvAuction.setTextColor(ContextCompat.getColor(HistoryActivity.this, R.color.colorDark));
+
+                FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+                ft.replace(R.id.fragment_history_container, HistoryRent.newInstance());
+                ft.commit();
+            }
+        });
+
+        mSwap.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Log.d("HistoryBtn", "Swap");
+                tvRent.setTextColor(ContextCompat.getColor(HistoryActivity.this, R.color.colorDark));
+                tvSwap.setTextColor(ContextCompat.getColor(HistoryActivity.this, R.color.colorLightOrange));
+                tvAuction.setTextColor(ContextCompat.getColor(HistoryActivity.this, R.color.colorDark));
+
+                FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+                ft.replace(R.id.fragment_history_container, HistorySwap.newInstance());
+                ft.commit();
+            }
+        });
+
+        mAuction.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Log.d("HistoryBtn", "Auction");
+                tvRent.setTextColor(ContextCompat.getColor(HistoryActivity.this, R.color.colorDark));
+                tvSwap.setTextColor(ContextCompat.getColor(HistoryActivity.this, R.color.colorDark));
+                tvAuction.setTextColor(ContextCompat.getColor(HistoryActivity.this, R.color.colorLightOrange));
+
+                FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+                ft.replace(R.id.fragment_history_container, HistoryAuction.newInstance());
+                ft.commit();
+            }
+        });
     }
 
 
@@ -228,4 +289,13 @@ public class HistoryActivity extends AppCompatActivity
 
     }
 
+    @Override
+    public void onHistorySwapOnClick(Uri uri) {
+
+    }
+
+    @Override
+    public void onHistoryRentOnClick(Uri uri) {
+
+    }
 }

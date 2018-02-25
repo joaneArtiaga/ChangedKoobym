@@ -52,7 +52,18 @@ public class SwapHeader implements Serializable {
     @SerializedName("dateReceived")
     private String dateReceived;
 
+    @SerializedName("swapExtraMessage")
+    private String swapExtraMessage;
+
     private MeetUp meetUp;
+
+    public String getSwapExtraMessage() {
+        return swapExtraMessage;
+    }
+
+    public void setSwapExtraMessage(String swapExtraMessage) {
+        this.swapExtraMessage = swapExtraMessage;
+    }
 
     public String getDateDelivered() {
         return dateDelivered;

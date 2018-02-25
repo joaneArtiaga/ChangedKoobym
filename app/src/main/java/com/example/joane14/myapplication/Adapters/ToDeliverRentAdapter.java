@@ -17,10 +17,20 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.android.volley.Request;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
 import com.bumptech.glide.Glide;
+import com.example.joane14.myapplication.Activities.BookActActivity;
+import com.example.joane14.myapplication.Activities.GsonDateDeserializer;
 import com.example.joane14.myapplication.Activities.ProfileActivity;
+import com.example.joane14.myapplication.Fragments.Constants;
+import com.example.joane14.myapplication.Fragments.VolleyUtil;
 import com.example.joane14.myapplication.Model.RentalHeader;
 import com.example.joane14.myapplication.R;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 
 import java.text.DateFormat;
 import java.text.ParseException;
@@ -58,7 +68,16 @@ public class ToDeliverRentAdapter extends RecyclerView.Adapter<ToDeliverRentAdap
     @SuppressLint("NewApi")
     @Override
     public void onBindViewHolder(final ToDeliverRentAdapter.BookHolder holder, final int position) {
+        Calendar cal = Calendar.getInstance();
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+        final String currDate = sdf.format(cal.getTime());
 
+        Log.d("DeliverRent\t"+"CurrDate:"+currDate, "DeliveryDate:"+bookList.get(position).getDateDeliver());
+        if(currDate.equals(bookList.get(position).getDateDeliver())){
+            holder.mRate.setImageResource(R.drawable.checkbookact);
+        }else{
+            holder.mRate.setImageResource(R.drawable.notrate);
+        }
 
         holder.mNotify.setVisibility(View.GONE);
 
@@ -78,12 +97,6 @@ public class ToDeliverRentAdapter extends RecyclerView.Adapter<ToDeliverRentAdap
             holder.mLocation.setText(bookList.get(position).getMeetUp().getLocation().getLocationName());
         }
 
-//        if(bookList.get(position).getUserId()==null){
-//            holder.mRenter.setText("Renter not Found");
-//        }else{
-//            holder.mRenter.setText(bookList.get(position).getUserId().getUserFname()+" "+bookList.get(position).getUserId().getUserLname());
-//        }
-
 
         DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
         Date date = null;
@@ -99,10 +112,14 @@ public class ToDeliverRentAdapter extends RecyclerView.Adapter<ToDeliverRentAdap
         calendar.add(calendar.DATE, bookList.get(position).getRentalDetail().getDaysForRent());
         newDate = df.format(calendar.getTime());
 
-//        Picasso.with(context).load(bookList.get(position).getUserId().getImageFilename()).fit().into(holder.mIvRenter);
-        Glide.with(context).load(bookList.get(position).getRentalDetail().getBookOwner().getBookObj().getBookFilename()).centerCrop().into(holder.mIvBookImg);
+        Log.d("CurrentDate: "+newDate, "ReturnDate: "+bookList.get(position).getDateDeliver());
+        if(newDate.equals(bookList.get(position).getDateDeliver())){
+            holder.mRate.setImageResource(R.drawable.checkbookact);
+        }else{
+            holder.mRate.setImageResource(R.drawable.notrate);
+        }
 
-//        Log.d("displayImage", bookList.get(position).getBookOwner().getBookObj().getBookFilename());
+        Glide.with(context).load(bookList.get(position).getRentalDetail().getBookOwner().getBookObj().getBookFilename()).centerCrop().into(holder.mIvBookImg);
 
         holder.mProfile.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -122,15 +139,16 @@ public class ToDeliverRentAdapter extends RecyclerView.Adapter<ToDeliverRentAdap
             holder.mRate.setImageResource(R.drawable.notrate);
         }
 
+        final String finalNewDate = newDate;
         holder.mRate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(bookList.get(position).getStatus().equals(bookList.get(position).getStatus())){
-                    Log.d("rateButton", "inside");
+                if(currDate.equals(bookList.get(position).getDateDeliver())){
+                    delivered(bookList.get(position));
                 }else{
                     AlertDialog alertDialog = new AlertDialog.Builder(context).create();
                     alertDialog.setTitle("Alert!");
-                    alertDialog.setMessage("The renter has not yet confirmed that he/she received the book already.");
+                    alertDialog.setMessage("Not yet time to deliver.");
                     alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "Okay", new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
@@ -141,6 +159,35 @@ public class ToDeliverRentAdapter extends RecyclerView.Adapter<ToDeliverRentAdap
                 }
             }
         });
+    }
+
+    private void delivered(final RentalHeader rentalHeader){
+//        String URL = "http://104.198.152.85/Koobym/rentalDetail/suggested/%d";
+//        String URL = Constants.WEB_SERVICE_URL+"rentalDetail/suggested/%d";
+        String URL = Constants.RENT_DELIVERED+rentalHeader.getRentalHeaderId();
+//        URL = String.format(URL, userId);
+        Log.d("deliverToReceiveURL", URL);
+        Log.d("deliverToReceive", rentalHeader.toString());
+
+        StringRequest stringRequest = new StringRequest(Request.Method.GET, URL, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                Log.d("deliverToReceiveRes", response);
+                Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd").registerTypeAdapter(Date.class, GsonDateDeserializer.getInstance()).create();
+                RentalHeader rentalHeaderMod = gson.fromJson(response, RentalHeader.class);
+
+                Intent intent = new Intent(context, BookActActivity.class);
+                context.startActivity(intent);
+
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.e("LOG_VOLLEY", error.toString());
+            }
+        }) ;
+        VolleyUtil.volleyRQInstance(context).add(stringRequest);
+
     }
 
     @Override

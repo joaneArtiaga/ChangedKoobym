@@ -52,6 +52,7 @@ import com.example.joane14.myapplication.Fragments.Constants;
 import com.example.joane14.myapplication.Model.AuctionDetailModel;
 import com.example.joane14.myapplication.Model.AuctionHeader;
 import com.example.joane14.myapplication.Model.BookOwnerModel;
+import com.example.joane14.myapplication.Model.BookOwnerRating;
 import com.example.joane14.myapplication.Model.BookOwnerReview;
 import com.example.joane14.myapplication.Model.Rate;
 import com.example.joane14.myapplication.Model.RentalDetail;
@@ -68,7 +69,9 @@ import com.google.gson.GsonBuilder;
 import com.squareup.picasso.Picasso;
 
 import java.io.UnsupportedEncodingException;
+import java.lang.reflect.Array;
 import java.text.SimpleDateFormat;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -146,10 +149,12 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
                 message = userNotification.getUserPerformer().getUserFname()+" "+userNotification.getUserPerformer().getUserLname()+" accepted your request for the book, "+userNotification.getBookActionPerformedOn().getBookObj().getBookTitle()+", to be returned early.";
             }else if(userNotification.getActionStatus().equals("return-rejected")){
                 message = userNotification.getUserPerformer().getUserFname()+" "+userNotification.getUserPerformer().getUserLname()+" rejected your request for the book, "+userNotification.getBookActionPerformedOn().getBookObj().getBookTitle()+", to be returned early.";
-            }else if(userNotification.getActionStatus().equals("returned")){
-                message = userNotification.getUserPerformer().getUserFname()+" "+userNotification.getUserPerformer().getUserLname()+" already returned the book, "+userNotification.getBookActionPerformedOn().getBookObj().getBookTitle()+".";
             }else if(userNotification.getActionStatus().equals("Complete")){
                 message = userNotification.getUserPerformer().getUserFname()+" "+userNotification.getUserPerformer().getUserLname()+" received the book,"+userNotification.getBookActionPerformedOn().getBookObj().getBookTitle()+", and rated you.";
+            }else if(userNotification.getActionStatus().equals("delivered")){
+                message = userNotification.getUserPerformer().getUserFname()+" "+userNotification.getUserPerformer().getUserLname()+" delivered the book,"+userNotification.getBookActionPerformedOn().getBookObj().getBookTitle()+".";
+            }else if(userNotification.getActionStatus().equals("returned")){
+                message = userNotification.getUserPerformer().getUserFname()+" "+userNotification.getUserPerformer().getUserLname()+" returned the book,"+userNotification.getBookActionPerformedOn().getBookObj().getBookTitle()+" and rated the book.";
             }
         } else if (userNotification.getActionName().equals("swap")) {
             Log.d("notifSwap", "inside");
@@ -166,8 +171,10 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
                 message = "The book " + userNotification.getBookActionPerformedOn().getBookObj().getBookTitle() + " was delivered  by " + userNotification.getUserPerformer().getUserFname() + " " + userNotification.getUserPerformer().getUserLname();
             } else if (userNotification.getActionStatus().equals("Rejected")) {
                 message = "The book " + userNotification.getBookActionPerformedOn().getBookObj().getBookTitle() + " was Rejected by " + userNotification.getUserPerformer().getUserFname() + " " + userNotification.getUserPerformer().getUserLname();
-            } else if (userNotification.getActionStatus().equals("Complete")) {
+            } else if (userNotification.getActionStatus().equals("Completed")) {
                 message = "The transaction of the book that you want to " + userNotification.getActionName() + " is completed";
+            } else if(userNotification.getActionStatus().equals("delivered")){
+                message = userNotification.getUserPerformer().getUserFname()+" "+userNotification.getUserPerformer().getUserLname()+" delivered the book, "+userNotification.getBookActionPerformedOn().getBookObj().getBookTitle()+".";
             }
         } else if(userNotification.getActionName().equals("auction")){
             User winner = new User();
@@ -180,6 +187,10 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
                 message = "The book, "+userNotification.getBookActionPerformedOn().getBookObj().getBookTitle()+", you tried bidding just ended. Your bid unfortunately lost.";
             }else if(userNotificationList.get(position).getActionStatus().equals("own")){
                 message = "The book, "+userNotification.getBookActionPerformedOn().getBookObj().getBookTitle()+", you auctioned just ended. The highest bid is "+userNotification.getExtraMessage()+" by "+userNotification.getUserPerformer().getUserFname()+" "+userNotification.getUserPerformer().getUserLname();
+            }else if(userNotification.getActionStatus().equals("delivered")){
+                message = userNotification.getUserPerformer().getUserFname()+" "+userNotification.getUserPerformer().getUserLname()+" delivered the book, "+userNotification.getBookActionPerformedOn().getBookObj().getBookTitle()+".";
+            }else if(userNotification.getActionStatus().equals("Complete")){
+                message = "The transaction of the book that you want to " + userNotification.getActionName() + " is completed";
             }
         }
 
@@ -319,131 +330,12 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
                                 getRentalHeader(position, "return-rejected");
                             }else if(userNotificationList.get(position).getActionStatus().equals("returned")){
                                 getRead(position);
-                                AlertDialog ad = new AlertDialog.Builder(context).create();
-                                ad.setTitle("Confirmation");
-                                ad.setMessage("Did you receive the book, "+ userNotificationList.get(position).getBookActionPerformedOn().getBookObj().getBookTitle()+"?");
-                                ad.setButton(AlertDialog.BUTTON_POSITIVE, "Yes", new DialogInterface.OnClickListener() {
-                                    @Override
-                                    public void onClick(DialogInterface dialog, int which) {
-                                        final Dialog dialogCustom = new Dialog(context);
-                                        dialogCustom.setContentView(R.layout.review_custom_dialog);
-                                        TextView mTitle = (TextView) dialogCustom.findViewById(R.id.bookTitleReview);
-                                        TextView mAuthor = (TextView) dialogCustom.findViewById(R.id.bookAuthorReview);
-                                        ImageView ivBook = (ImageView) dialogCustom.findViewById(R.id.ivBookReview);
-                                        final EditText etReviewMessage = (EditText) dialogCustom.findViewById(R.id.etReviewReview);
-                                        final RatingBar mRateBar = (RatingBar) dialogCustom.findViewById(R.id.ratingReview);
-                                        Button mRateNow = (Button) dialogCustom.findViewById(R.id.btnRateReview);
-
-                                        etReviewMessage.setHint("Review renter");
-                                        mTitle.setText(userNotificationList.get(position).getBookActionPerformedOn().getBookObj().getBookTitle());
-
-                                        Glide.with(context).load(userNotificationList.get(position).getBookActionPerformedOn().getBookObj().getBookFilename()).centerCrop().into(ivBook);
-
-                                        String author = "";
-
-                                        if(userNotificationList.get(position).getBookActionPerformedOn().getBookObj().getBookAuthor().size()!=0){
-                                            for(int init=0; init<userNotificationList.get(position).getBookActionPerformedOn().getBookObj().getBookAuthor().size(); init++){
-                                                if(!(userNotificationList.get(position).getBookActionPerformedOn().getBookObj().getBookAuthor().get(init).getAuthorFName().equals(""))){
-                                                    author+=userNotificationList.get(position).getBookActionPerformedOn().getBookObj().getBookAuthor().get(init).getAuthorFName()+" ";
-                                                    if(!(userNotificationList.get(position).getBookActionPerformedOn().getBookObj().getBookAuthor().get(init).getAuthorLName().equals(""))){
-                                                        author+=userNotificationList.get(position).getBookActionPerformedOn().getBookObj().getBookAuthor().get(init).getAuthorLName();
-                                                        if(init+1<userNotificationList.get(position).getBookActionPerformedOn().getBookObj().getBookAuthor().size()){
-                                                            author+=", ";
-                                                        }
-                                                    }
-                                                }
-                                            }
-                                        }else{
-                                            author="Unknown Author";
-                                        }
-                                        mAuthor.setText(author);
-
-                                        mRateBar.setOnRatingBarChangeListener(new RatingBar.OnRatingBarChangeListener() {
-                                            @Override
-                                            public void onRatingChanged(RatingBar ratingBar, float rating, boolean fromUser) {
-                                                rateNumber = Math.round(rating);
-                                            }
-                                        });
-
-                                        mRateNow.setOnClickListener(new View.OnClickListener() {
-                                            @Override
-                                            public void onClick(View v) {
-                                                if(etReviewMessage.getText().length()==0){
-                                                    etReviewMessage.setError("Fill necessary fields.");
-                                                }
-                                                if(rateNumber==0){
-                                                    Toast.makeText(context, "Should rate.", Toast.LENGTH_LONG);
-                                                }
-
-                                                if(etReviewMessage.getText().length()>0&&rateNumber>0){
-                                                    Calendar c = Calendar.getInstance();
-                                                    SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-
-                                                    Rate rateMod = new Rate();
-                                                    rateMod.setRateNumber(rateNumber);
-                                                    rateMod.setRateTimeStamp(sdf.format(c.getTime()));
-
-                                                    Review reviewMod = new Review();
-                                                    reviewMod.setReviewTimeStamp(sdf.format(c.getTime()));
-
-                                                    UserRating userRatingMod = new UserRating();
-
-                                                    userRatingMod.setComment(etReviewMessage.getText().toString());
-                                                    userRatingMod.setUserRater(userNotificationList.get(position).getUser());
-                                                    userRatingMod.setUser(userNotificationList.get(position).getUserPerformer());
-                                                    userRatingMod.setReview(reviewMod);
-                                                    userRatingMod.setRate(rateMod);
-
-                                                    userRate(userRatingMod, position);
-                                                }
-
-                                            }
-                                        });
-
-                                        dialogCustom.show();
-                                    }
-                                });
-                                ad.setButton(AlertDialog.BUTTON_NEGATIVE, "No", new DialogInterface.OnClickListener() {
-                                    @Override
-                                    public void onClick(final DialogInterface dialog, int which) {
-
-                                        dialog.dismiss();
-
-                                        final Dialog dialogCustom = new Dialog(context);
-                                        dialogCustom.setContentView(R.layout.reject_custom_dialog);
-                                        final EditText etReason = (EditText) dialogCustom.findViewById(R.id.etReason);
-                                        TextView tvTitle = (TextView) dialogCustom.findViewById(R.id.titleReject);
-                                        Button mSubmitReason = (Button) dialogCustom.findViewById(R.id.submitReject);
-
-                                        tvTitle.setText("Why did you not receive the book?");
-                                        etReason.setHint("Reason");
-
-                                        mSubmitReason.setOnClickListener(new View.OnClickListener() {
-                                            @Override
-                                            public void onClick(View v) {
-                                                if(etReason.getText().length()==0){
-                                                    etReason.setError("Field should not be empty.");
-                                                }else{
-                                                    UserNotification un = new UserNotification();
-                                                    un.setUser(userNotificationList.get(position).getUserPerformer());
-                                                    un.setUserPerformer(userNotificationList.get(position).getUser());
-                                                    un.setActionStatus("return-not-received");
-                                                    un.setActionId(userNotificationList.get(position).getActionId());
-                                                    un.setActionName("rental");
-                                                    un.setBookActionPerformedOn(userNotificationList.get(position).getBookActionPerformedOn());
-                                                    un.setExtraMessage(etReason.getText().toString());
-
-                                                    addUserNotif(un);
-                                                    dialogCustom.dismiss();
-                                                }
-                                            }
-                                        });
-                                        dialogCustom.show();
-                                    }
-                                });
-                                ad.show();
+                                getRentalHeader(position, "returned");
                             }else if(userNotificationList.get(position).getActionStatus().equals("Complete")){
                                 getUserRating(position);
+                            }else if(userNotificationList.get(position).getActionStatus().equals("delivered")){
+                                getRead(position);
+                                getRentalHeader(position, "delivered");
                             }
 
                         } else if (userNotificationList.get(position).getActionName().equals("swap")) {
@@ -467,10 +359,14 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
                                     toGiveDialog(position);
                                     getRead(position);
                                     getSwapHeader(position, "change");
-                                } else if (userNotificationList.get(position).getActionStatus().equals("Complete")) {
+                                } else if (userNotificationList.get(position).getActionStatus().equals("Completed")) {
                                     Log.d("CompletedNotif", "Inside");
                                     getRead(position);
+                                    getSwapHeader(position, "Completed");
 //                                    getSwapHeader(position, "change");
+                                }else if(userNotificationList.get(position).getActionStatus().equals("delivered")){
+                                    getRead(position);
+                                    getSwapHeader(position, "delivered");
                                 }
                             }
                         }else if(userNotificationList.get(position).getActionName().equals("auction")){
@@ -483,6 +379,12 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
                             }else if(userNotificationList.get(position).getActionStatus().equals("own")){
                                 getRead(position);
                                 getAuctionHeader(position, userNotificationList.get(position).getActionStatus());
+                            }else if(userNotificationList.get(position).getActionStatus().equals("delivered")){
+                                getRead(position);
+                                getAuctionHeader(position, "delivered");
+                            }else if(userNotificationList.get(position).getActionStatus().equals("Complete")){
+                                getRead(position);
+                                getAuctionHeader(position, "Completed");
                             }
                         }
                     } else {
@@ -1305,7 +1207,230 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
                             }
                         });
                         ad.show();
+                    }else if(status.equals("returned")){
+                        final Dialog dialogCustom = new Dialog(context);
+                        dialogCustom.setContentView(R.layout.rent_delivered_book_custom_dialog);
+                        TextView mTitle = (TextView) dialogCustom.findViewById(R.id.bookTitleDelivery);
+                        TextView mOwner = (TextView) dialogCustom.findViewById(R.id.deliveredBy);
+                        TextView mLocation = (TextView) dialogCustom.findViewById(R.id.locationDelivery);
+                        TextView mDate = (TextView) dialogCustom.findViewById(R.id.dateDelivery);
+                        TextView mTime = (TextView) dialogCustom.findViewById(R.id.timeDelivery);
+                        ImageView ivBook = (ImageView) dialogCustom.findViewById(R.id.ivBookDeliver);
+                        Button btnOkay = (Button) dialogCustom.findViewById(R.id.btnDeliveryOkay);
+                        Button btnSeeRating = (Button) dialogCustom.findViewById(R.id.btnSeeRating);
+
+
+                        Glide.with(context).load(rentalHeaderMod.getRentalDetail().getBookOwner().getBookObj().getBookFilename()).centerCrop().into(ivBook);
+
+                        mTitle.setText(rentalHeaderMod.getRentalDetail().getBookOwner().getBookObj().getBookTitle());
+                        mOwner.setText(rentalHeaderMod.getRentalDetail().getBookOwner().getUserObj().getUserFname()+" "+rentalHeaderMod.getRentalDetail().getBookOwner().getUserObj().getUserLname());
+                        mLocation.setText(rentalHeaderMod.getReturnMeetUp().getLocation().getLocationName());
+                        mDate.setText(rentalHeaderMod.getRentalReturnDate().toString());
+                        mTime.setText(rentalHeaderMod.getReturnMeetUp().getUserDayTime().getTime().getStrTime());
+
+                        btnOkay.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                Intent intent = new Intent(context, NotificationAct.class);
+                                context.startActivity(intent);
+                            }
+                        });
+
+                        btnSeeRating.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                getBookReview(position, rentalHeaderMod);
+                            }
+                        });
+
+                        dialogCustom.show();
+                    }else if(status.equals("delivered")){
+                        final Dialog dialogCustom = new Dialog(context);
+                        dialogCustom.setContentView(R.layout.delivered_book_custom_dialog);
+                        TextView mTitle = (TextView) dialogCustom.findViewById(R.id.bookTitleDelivery);
+                        TextView mOwner = (TextView) dialogCustom.findViewById(R.id.deliveredBy);
+                        TextView mLocation = (TextView) dialogCustom.findViewById(R.id.locationDelivery);
+                        TextView mDate = (TextView) dialogCustom.findViewById(R.id.dateDelivery);
+                        TextView mTime = (TextView) dialogCustom.findViewById(R.id.timeDelivery);
+                        ImageView ivBook = (ImageView) dialogCustom.findViewById(R.id.ivBookDeliver);
+                        Button btnOkay = (Button) dialogCustom.findViewById(R.id.btnDeliveryOkay);
+
+                        Glide.with(context).load(rentalHeaderMod.getRentalDetail().getBookOwner().getBookObj().getBookFilename()).centerCrop().into(ivBook);
+
+                        mTitle.setText(rentalHeaderMod.getRentalDetail().getBookOwner().getBookObj().getBookTitle());
+                        mOwner.setText(rentalHeaderMod.getRentalDetail().getBookOwner().getUserObj().getUserFname()+" "+rentalHeaderMod.getRentalDetail().getBookOwner().getUserObj().getUserLname());
+                        mLocation.setText(rentalHeaderMod.getMeetUp().getLocation().getLocationName());
+                        mDate.setText(rentalHeaderMod.getDateDeliver().toString());
+                        mTime.setText(rentalHeaderMod.getMeetUp().getUserDayTime().getTime().getStrTime());
+
+                        btnOkay.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                Intent intent = new Intent(context, NotificationAct.class);
+                                context.startActivity(intent);
+                            }
+                        });
+
+                        dialogCustom.show();
                     }
+                }
+            }, new Response.ErrorListener() {
+                @Override
+                public void onErrorResponse(VolleyError error) {
+                    Log.e("LOG_VOLLEY", error.toString());
+                }
+            }) {
+                @Override
+                public String getBodyContentType() {
+                    return "application/json; charset=utf-8";
+                }
+
+                @Override
+                public byte[] getBody() throws AuthFailureError {
+                    try {
+                        return mRequestBody == null ? null : mRequestBody.getBytes("utf-8");
+                    } catch (UnsupportedEncodingException uee) {
+                        VolleyLog.wtf("Unsupported Encoding while trying to get the bytes of %s using %s", mRequestBody, "utf-8");
+                        return null;
+                    }
+                }
+            };
+
+            requestQueue.add(stringRequest);
+        }
+
+        public void getBookReview(final int position, final RentalHeader rentalHeader1) {
+            Log.d("setToComplete", "inside");
+            RequestQueue requestQueue = Volley.newRequestQueue(context);
+            User user = new User();
+            user = (User) SPUtility.getSPUtil(context).getObject("USER_OBJECT", User.class);
+
+            List<String> rateStr = Arrays.asList(userNotificationList.get(position).getExtraMessage().split(","));
+
+            d("UserIdReceive", String.valueOf(user.getUserId()));
+            String URL = Constants.GET_BOOK_REVIEW+rateStr.get(1).replaceAll("\\s+","");
+            Log.d("getBookReview", URL);
+
+            final RentalHeader rentalHeader = new RentalHeader();
+
+            final Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd").registerTypeAdapter(Date.class, GsonDateDeserializer.getInstance()).create();
+            final String mRequestBody = gson.toJson(rentalHeader);
+
+
+            d("setToComplete", mRequestBody);
+            StringRequest stringRequest = new StringRequest(Request.Method.GET, URL, new Response.Listener<String>() {
+                @Override
+                public void onResponse(String response) {
+                    Log.i("setToCompleteResponse", response);
+
+                    BookOwnerReview bookOwnerReview = gson.fromJson(response, BookOwnerReview.class);
+
+                    getBookRating(position, bookOwnerReview, rentalHeader1);
+
+                }
+            }, new Response.ErrorListener() {
+                @Override
+                public void onErrorResponse(VolleyError error) {
+                    Log.e("LOG_VOLLEY", error.toString());
+                }
+            }) {
+                @Override
+                public String getBodyContentType() {
+                    return "application/json; charset=utf-8";
+                }
+
+                @Override
+                public byte[] getBody() throws AuthFailureError {
+                    try {
+                        return mRequestBody == null ? null : mRequestBody.getBytes("utf-8");
+                    } catch (UnsupportedEncodingException uee) {
+                        VolleyLog.wtf("Unsupported Encoding while trying to get the bytes of %s using %s", mRequestBody, "utf-8");
+                        return null;
+                    }
+                }
+            };
+
+            requestQueue.add(stringRequest);
+        }
+
+        public void getBookRating(final int position, final BookOwnerReview bookOwnerReviewMod, RentalHeader rentalHeader1) {
+            Log.d("setToComplete", "inside");
+            RequestQueue requestQueue = Volley.newRequestQueue(context);
+            User user = new User();
+            user = (User) SPUtility.getSPUtil(context).getObject("USER_OBJECT", User.class);
+
+            List<String> rateStr = Arrays.asList(userNotificationList.get(position).getExtraMessage().split(","));
+
+            d("UserIdReceive", String.valueOf(user.getUserId()));
+            String URL = Constants.GET_BOOK_RATINGS+rateStr.get(0).replaceAll("\\s+","");
+            Log.d("getBookRating", URL);
+
+            final RentalHeader rentalHeader = new RentalHeader();
+
+            final Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd").registerTypeAdapter(Date.class, GsonDateDeserializer.getInstance()).create();
+            final String mRequestBody = gson.toJson(rentalHeader);
+
+
+            d("setToComplete", mRequestBody);
+            StringRequest stringRequest = new StringRequest(Request.Method.GET, URL, new Response.Listener<String>() {
+                @Override
+                public void onResponse(String response) {
+                    Log.i("setToCompleteResponse", response);
+
+                    final BookOwnerRating bookOwnerRating = gson.fromJson(response, BookOwnerRating.class);
+
+                    final Dialog dialogCustom = new Dialog(context);
+                    dialogCustom.setContentView(R.layout.review_custom_dialog);
+                    TextView mTitle = (TextView) dialogCustom.findViewById(R.id.bookTitleReview);
+                    TextView mAuthor = (TextView) dialogCustom.findViewById(R.id.bookAuthorReview);
+                    ImageView ivBook = (ImageView) dialogCustom.findViewById(R.id.ivBookReview);
+                    final EditText etReviewMessage = (EditText) dialogCustom.findViewById(R.id.etReviewReview);
+                    final RatingBar mRateBar = (RatingBar) dialogCustom.findViewById(R.id.ratingReview);
+                    Button mRateNow = (Button) dialogCustom.findViewById(R.id.btnRateReview);
+
+                    mRateNow.setText("Okay");
+                    etReviewMessage.setHint(bookOwnerReviewMod.getComment());
+                    etReviewMessage.setFocusable(false);
+
+                    mTitle.setText(userNotificationList.get(position).getBookActionPerformedOn().getBookObj().getBookTitle());
+
+                    Glide.with(context).load(userNotificationList.get(position).getBookActionPerformedOn().getBookObj().getBookFilename()).centerCrop().into(ivBook);
+
+                    String author = "";
+
+                    if(userNotificationList.get(position).getBookActionPerformedOn().getBookObj().getBookAuthor().size()!=0){
+                        for(int init=0; init<userNotificationList.get(position).getBookActionPerformedOn().getBookObj().getBookAuthor().size(); init++){
+                            if(!(userNotificationList.get(position).getBookActionPerformedOn().getBookObj().getBookAuthor().get(init).getAuthorFName().equals(""))){
+                                author+=userNotificationList.get(position).getBookActionPerformedOn().getBookObj().getBookAuthor().get(init).getAuthorFName()+" ";
+                                if(!(userNotificationList.get(position).getBookActionPerformedOn().getBookObj().getBookAuthor().get(init).getAuthorLName().equals(""))){
+                                    author+=userNotificationList.get(position).getBookActionPerformedOn().getBookObj().getBookAuthor().get(init).getAuthorLName();
+                                    if(init+1<userNotificationList.get(position).getBookActionPerformedOn().getBookObj().getBookAuthor().size()){
+                                        author+=", ";
+                                    }
+                                }
+                            }
+                        }
+                    }else{
+                        author="Unknown Author";
+                    }
+                    mAuthor.setText(author);
+
+                    mRateBar.setRating(bookOwnerRating.getRate().getRateNumber());
+
+                    mRateNow.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            Intent intent = new Intent(context, ProfileActivity.class);
+                            Bundle bundle = new Bundle();
+                            bundle.putSerializable("userModelPass", bookOwnerRating.getUser());
+                            intent.putExtras(bundle);
+                            context.startActivity(intent);
+                        }
+                    });
+
+                    dialogCustom.show();
+
+
                 }
             }, new Response.ErrorListener() {
                 @Override
@@ -1593,6 +1718,57 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
                         bundle.putSerializable("auctionBook", auctionHeader.getAuctionDetail());
                         intent.putExtras(bundle);
                         context.startActivity(intent);
+                    }else if(status.equals("delivered")){
+                        final Dialog dialogCustom = new Dialog(context);
+                        dialogCustom.setContentView(R.layout.delivered_book_custom_dialog);
+                        TextView mTitle = (TextView) dialogCustom.findViewById(R.id.bookTitleDelivery);
+                        TextView mOwner = (TextView) dialogCustom.findViewById(R.id.deliveredBy);
+                        TextView mLocation = (TextView) dialogCustom.findViewById(R.id.locationDelivery);
+                        TextView mDate = (TextView) dialogCustom.findViewById(R.id.dateDelivery);
+                        TextView mTime = (TextView) dialogCustom.findViewById(R.id.timeDelivery);
+                        ImageView ivBook = (ImageView) dialogCustom.findViewById(R.id.ivBookDeliver);
+                        Button btnOkay = (Button) dialogCustom.findViewById(R.id.btnDeliveryOkay);
+
+                        Glide.with(context).load(auctionHeaderMod.getAuctionDetail().getBookOwner().getBookObj().getBookFilename()).centerCrop().into(ivBook);
+
+                        mTitle.setText(auctionHeaderMod.getAuctionDetail().getBookOwner().getBookObj().getBookTitle());
+                        mOwner.setText(auctionHeaderMod.getAuctionDetail().getBookOwner().getUserObj().getUserFname()+" "+auctionHeaderMod.getAuctionDetail().getBookOwner().getUserObj().getUserLname());
+                        mLocation.setText(auctionHeaderMod.getMeetUp().getLocation().getLocationName());
+                        mDate.setText(auctionHeaderMod.getDateDelivered());
+                        mTime.setText(auctionHeaderMod.getMeetUp().getUserDayTime().getTime().getStrTime());
+
+                        btnOkay.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                Intent intent = new Intent(context, NotificationAct.class);
+                                context.startActivity(intent);
+                            }
+                        });
+
+                        dialogCustom.show();
+
+                    }else if(status.equals("Completed")){
+                        final Dialog dialogCustom = new Dialog(context);
+                        dialogCustom.setContentView(R.layout.auction_complete_book_custom_dialog);
+                        TextView mTitle = (TextView) dialogCustom.findViewById(R.id.bookTitleDelivery);
+                        TextView mOwner = (TextView) dialogCustom.findViewById(R.id.deliveredBy);
+                        ImageView ivBook = (ImageView) dialogCustom.findViewById(R.id.ivBookDeliver);
+                        Button btnOkay = (Button) dialogCustom.findViewById(R.id.btnDeliveryOkay);
+
+                        Glide.with(context).load(auctionHeaderMod.getAuctionDetail().getBookOwner().getBookObj().getBookFilename()).centerCrop().into(ivBook);
+
+                        mTitle.setText(auctionHeaderMod.getAuctionDetail().getBookOwner().getBookObj().getBookTitle());
+                        mOwner.setText(auctionHeaderMod.getAuctionDetail().getBookOwner().getUserObj().getUserFname()+" "+auctionHeaderMod.getAuctionDetail().getBookOwner().getUserObj().getUserLname());
+
+                        btnOkay.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                Intent intent = new Intent(context, NotificationAct.class);
+                                context.startActivity(intent);
+                            }
+                        });
+
+                        dialogCustom.show();
                     }
                 }
 
@@ -1666,6 +1842,60 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
 //                        updateBookOwner(position, false, swapHeaderMod);
                     }else if(status.equals("summ")){
                         meetUpSumm(position, swapHeaderMod);
+                    }else if(status.equals("delivered")){
+                        final Dialog dialogCustom = new Dialog(context);
+                        dialogCustom.setContentView(R.layout.delivered_book_custom_dialog);
+                        TextView mTitle = (TextView) dialogCustom.findViewById(R.id.bookTitleDelivery);
+                        TextView mOwner = (TextView) dialogCustom.findViewById(R.id.deliveredBy);
+                        TextView mLocation = (TextView) dialogCustom.findViewById(R.id.locationDelivery);
+                        TextView mDate = (TextView) dialogCustom.findViewById(R.id.dateDelivery);
+                        TextView mTime = (TextView) dialogCustom.findViewById(R.id.timeDelivery);
+                        ImageView ivBook = (ImageView) dialogCustom.findViewById(R.id.ivBookDeliver);
+                        Button btnOkay = (Button) dialogCustom.findViewById(R.id.btnDeliveryOkay);
+
+                        Glide.with(context).load(swapHeaderMod.getSwapDetail().getBookOwner().getBookObj().getBookFilename()).centerCrop().into(ivBook);
+
+                        mTitle.setText(swapHeaderMod.getSwapDetail().getBookOwner().getBookObj().getBookTitle());
+                        mOwner.setText(swapHeaderMod.getSwapDetail().getBookOwner().getUserObj().getUserFname()+" "+swapHeaderMod.getSwapDetail().getBookOwner().getUserObj().getUserLname());
+                        mLocation.setText(swapHeaderMod.getMeetUp().getLocation().getLocationName());
+                        mDate.setText(swapHeaderMod.getDateDelivered());
+                        mTime.setText(swapHeaderMod.getMeetUp().getUserDayTime().getTime().getStrTime());
+
+                        btnOkay.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                dialogCustom.dismiss();
+                            }
+                        });
+
+                        dialogCustom.show();
+                    }else if(status.equals("Completed")){
+                        final Dialog dialogCustom = new Dialog(context);
+                        dialogCustom.setContentView(R.layout.success_swap_custom_dialog);
+                        TextView mTitle = (TextView) dialogCustom.findViewById(R.id.successBookTitle);
+                        TextView mTitle2 = (TextView) dialogCustom.findViewById(R.id.successBookTitle2);
+                        TextView mOwner = (TextView) dialogCustom.findViewById(R.id.successBookOwner);
+                        TextView mOwner2 = (TextView) dialogCustom.findViewById(R.id.successBookOwner2);
+                        ImageView ivBook = (ImageView) dialogCustom.findViewById(R.id.successBook);
+                        ImageView ivBook2 = (ImageView) dialogCustom.findViewById(R.id.successBook2);
+                        Button btnOkay = (Button) dialogCustom.findViewById(R.id.btnOkaySuccess);
+
+                        Glide.with(context).load(swapHeaderMod.getSwapDetail().getBookOwner().getBookObj().getBookFilename()).centerCrop().into(ivBook);
+                        Glide.with(context).load(swapHeaderMod.getRequestedSwapDetail().getBookOwner().getBookObj().getBookFilename()).centerCrop().into(ivBook2);
+
+                        mTitle.setText(swapHeaderMod.getSwapDetail().getBookOwner().getBookObj().getBookTitle());
+                        mOwner.setText(swapHeaderMod.getRequestedSwapDetail().getBookOwner().getUserObj().getUserFname()+" "+swapHeaderMod.getRequestedSwapDetail().getBookOwner().getUserObj().getUserLname());
+                        mTitle2.setText(swapHeaderMod.getRequestedSwapDetail().getBookOwner().getBookObj().getBookTitle());
+                        mOwner2.setText(swapHeaderMod.getSwapDetail().getBookOwner().getUserObj().getUserFname()+" "+swapHeaderMod.getSwapDetail().getBookOwner().getUserObj().getUserLname());
+
+                        btnOkay.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                dialogCustom.dismiss();
+                            }
+                        });
+
+                        dialogCustom.show();
                     }
 
                 }

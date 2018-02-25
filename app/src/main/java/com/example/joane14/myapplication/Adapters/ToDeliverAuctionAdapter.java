@@ -82,13 +82,28 @@ public class ToDeliverAuctionAdapter extends RecyclerView.Adapter<ToDeliverAucti
     public void onBindViewHolder(ToDeliverAuctionAdapter.BookHolder holder, final int position) {
 
 
+        Date c = Calendar.getInstance().getTime();
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+        final String currDAte = sdf.format(c);
+
         holder.mNotify.setVisibility(View.GONE);
 
         holder.mBookTitle.setText(bookList.get(position).getAuctionDetail().getBookOwner().getBookObj().getBookTitle());
         holder.mBookDate.setText(bookList.get(position).getAuctionHeaderDateStamp());
-        holder.mTime.setText(bookList.get(position).getMeetUp().getUserDayTime().getTime().getStrTime());
-        holder.mLocation.setText(bookList.get(position).getMeetUp().getLocation().getLocationName());
         holder.mRenterName.setText(bookList.get(position).getUser().getUserFname()+" "+bookList.get(position).getUser().getUserLname());
+
+        Log.d("CurrentDate: "+currDAte, "ReturnDate: "+bookList.get(position).getDateDelivered());
+        if(currDAte.equals(bookList.get(position).getDateDelivered())){
+            holder.mRate.setImageResource(R.drawable.checkbookact);
+        }else{
+            holder.mRate.setImageResource(R.drawable.notrate);
+        }
+
+        if(bookList.get(position).getMeetUp()==null){
+
+        }else{
+            holder.mTime.setText(bookList.get(position).getMeetUp().getUserDayTime().getTime().getStrTime());
+            holder.mLocation.setText(bookList.get(position).getMeetUp().getLocation().getLocationName());        }
         if(bookList.get(position).getDateDelivered()==null){
             Log.d("EndDateDeliverAuction", "walay sulod");
         }else{
@@ -96,29 +111,8 @@ public class ToDeliverAuctionAdapter extends RecyclerView.Adapter<ToDeliverAucti
         }
 
         getMaximumBid(bookList.get(position).getAuctionDetail());
-        holder.mPrice.setText(maxBid);
-//        if(bookList.get(position).getUserId()==null){
-//            holder.mRenter.setText("Renter not Found");
-//        }else{
-//            holder.mRenter.setText(bookList.get(position).getUserId().getUserFname()+" "+bookList.get(position).getUserId().getUserLname());
-//        }
+        holder.mPrice.setVisibility(View.GONE);
 
-
-//        DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
-//        Date date = null;
-//        String newDate="";
-//        try {
-//            date = df.parse(bookList.get(position).getRentalTimeStamp());
-//        } catch (ParseException e) {
-//            e.printStackTrace();
-//        }
-//        @SuppressLint({"NewApi", "LocalSuppress"})
-//        Calendar calendar = Calendar.getInstance();
-//        calendar.setTime(date);
-//        calendar.add(calendar.DATE, bookList.get(position).getRentalDetail().getDaysForRent());
-//        newDate = df.format(calendar.getTime());
-//
-////        Picasso.with(context).load(bookList.get(position).getUserId().getImageFilename()).fit().into(holder.mIvRenter);
         Glide.with(context).load(bookList.get(position).getAuctionDetail().getBookOwner().getBookObj().getBookFilename()).centerCrop().into(holder.mIvBookImg);
 
 //        Log.d("displayImage", bookList.get(position).getBookOwner().getBookObj().getBookFilename());
@@ -128,7 +122,7 @@ public class ToDeliverAuctionAdapter extends RecyclerView.Adapter<ToDeliverAucti
             public void onClick(View v) {
                 Intent intent = new Intent(context, ProfileActivity.class);
                 Bundle bundle = new Bundle();
-                bundle.putSerializable("userModelPass", bookList.get(position).getAuctionDetail().getBookOwner().getUserObj());
+                bundle.putSerializable("userModelPass", bookList.get(position).getUser());
                 intent.putExtras(bundle);
                 context.startActivity(intent);
             }
@@ -148,6 +142,90 @@ public class ToDeliverAuctionAdapter extends RecyclerView.Adapter<ToDeliverAucti
                 });
             }
         });
+
+        holder.mRate.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(currDAte.equals(bookList.get(position).getDateDelivered())){
+                    AlertDialog alertDialog = new AlertDialog.Builder(context).create();
+                    alertDialog.setTitle("Confirmation");
+                    alertDialog.setMessage("Did you deliver the book?");
+                    alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, "Yes", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            delivered(bookList.get(position));
+                        }
+                    });
+                    alertDialog.setButton(AlertDialog.BUTTON_NEGATIVE, "Not Yet", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            dialog.dismiss();
+                        }
+                    });
+                    alertDialog.show();
+                }else{
+                    AlertDialog alertDialog = new AlertDialog.Builder(context).create();
+                    alertDialog.setTitle("Alert!");
+                    alertDialog.setMessage("Not time for delivery yet.");
+                    alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "Okay", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            dialog.dismiss();
+                        }
+                    });
+                    alertDialog.show();
+                }
+            }
+        });
+    }
+
+    public void delivered(AuctionHeader auctionHeader) {
+        RequestQueue requestQueue = Volley.newRequestQueue(context);
+//        String URL = "http://192.168.1.6:8080/Koobym/swapHeader/add";
+        String URL = Constants.AUCTION_DELIVERED + auctionHeader.getAuctionHeaderId();
+
+        Log.d("auctionDeliveredURL", URL);
+        final Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd").registerTypeAdapter(Date.class, GsonDateDeserializer.getInstance()).create();
+        final String mRequestBody = gson.toJson(auctionHeader);
+
+        d("auctionDelivered", mRequestBody);
+        int maxLogSize = 2000;
+        for (int i = 0; i <= mRequestBody.length() / maxLogSize; i++) {
+            int start = i * maxLogSize;
+            int end = (i + 1) * maxLogSize;
+            end = end > mRequestBody.length() ? mRequestBody.length() : end;
+            Log.d("auctionDelivered", mRequestBody.substring(start, end));
+        }
+        StringRequest stringRequest = new StringRequest(Request.Method.GET, URL, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                d("auctionDeliverResponse", response);
+
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.e("LOG_VOLLEY", error.toString());
+                error.printStackTrace();
+            }
+        }) {
+            @Override
+            public String getBodyContentType() {
+                return "application/json; charset=utf-8";
+            }
+
+            @Override
+            public byte[] getBody() throws AuthFailureError {
+                try {
+                    return mRequestBody == null ? null : mRequestBody.getBytes("utf-8");
+                } catch (UnsupportedEncodingException uee) {
+                    VolleyLog.wtf("Unsupported Encoding while trying to get the bytes of %s using %s", mRequestBody, "utf-8");
+                    return null;
+                }
+            }
+        };
+
+        requestQueue.add(stringRequest);
     }
 
     public void getMaximumBid(AuctionDetailModel auctionDetailModel) {

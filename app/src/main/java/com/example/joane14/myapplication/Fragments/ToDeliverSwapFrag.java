@@ -98,7 +98,7 @@ public class ToDeliverSwapFrag extends Fragment {
         StringRequest stringRequest = new StringRequest(Request.Method.GET, URL, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
-                Log.i("ResponseRequestReceived", response);
+                Log.i("ToDeliverSwapRes", response);
 //                RentalHeader rentalHeaderModel = gson.fromJson(response, RentalHeader.class);
                 swapHeaderList.clear();
                 swapHeaderList.addAll(Arrays.asList(gson.fromJson(response, SwapHeader[].class)));
