@@ -1,5 +1,6 @@
 package com.example.joane14.myapplication.Fragments;
 
+import android.app.Dialog;
 import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
@@ -10,7 +11,11 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.Button;
 import android.widget.GridView;
+import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
@@ -20,10 +25,9 @@ import com.android.volley.VolleyError;
 import com.android.volley.VolleyLog;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+import com.bumptech.glide.Glide;
 import com.example.joane14.myapplication.Activities.GsonDateDeserializer;
 import com.example.joane14.myapplication.Adapters.HistoryRentAdapter;
-import com.example.joane14.myapplication.Adapters.ToDeliverAuctionAdapter;
-import com.example.joane14.myapplication.Model.AuctionHeader;
 import com.example.joane14.myapplication.Model.RentalHeader;
 import com.example.joane14.myapplication.Model.User;
 import com.example.joane14.myapplication.R;
@@ -76,6 +80,62 @@ public class HistoryRent extends Fragment {
 
         getHistory();
 
+        mGridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                RentalHeader rentHead = rentalHeaderList.get(position);
+
+                if(rentHead.getStatus().equals("Complete")){
+                    final Dialog dialogCustom = new Dialog(getContext());
+                    dialogCustom.setContentView(R.layout.rent_history_complete);
+                    TextView mTitle = (TextView) dialogCustom.findViewById(R.id.bookTitleDelivery);
+                    TextView mOwner = (TextView) dialogCustom.findViewById(R.id.deliveredBy);
+                    TextView mDateDelivered = (TextView) dialogCustom.findViewById(R.id.dateDelivery);
+                    TextView mDateReturned = (TextView) dialogCustom.findViewById(R.id.dateReturned);
+                    TextView mPrice = (TextView) dialogCustom.findViewById(R.id.rentalPrice);
+                    ImageView ivBook = (ImageView) dialogCustom.findViewById(R.id.ivBookDelivery);
+                    Button btnOkay = (Button) dialogCustom.findViewById(R.id.btnDeliveryOkay);
+
+
+                    Glide.with(getContext()).load(rentHead.getRentalDetail().getBookOwner().getBookObj().getBookFilename()).centerCrop().into(ivBook);
+
+                    mTitle.setText(rentHead.getRentalDetail().getBookOwner().getBookObj().getBookTitle());
+                    mOwner.setText(rentHead.getRentalDetail().getBookOwner().getUserObj().getUserFname()+" "+rentHead.getRentalDetail().getBookOwner().getUserObj().getUserLname());
+                    mDateDelivered.setText(rentHead.getDateDeliver());
+                    mDateReturned.setText(rentHead.getRentalReturnDate().toString());
+                    mPrice.setText(rentHead.getReturnMeetUp().getUserDayTime().getTime().getStrTime());
+
+                    btnOkay.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                          dialogCustom.dismiss();
+                        }
+                    });
+                    dialogCustom.show();
+                }else{
+                    final Dialog dialogCustom = new Dialog(getContext());
+                    dialogCustom.setContentView(R.layout.rent_history_rejected);
+
+                    TextView mTitle = (TextView) dialogCustom.findViewById(R.id.bookTitleDelivery);
+                    TextView mRejected = (TextView) dialogCustom.findViewById(R.id.rejectReason);
+                    ImageView ivBook = (ImageView) dialogCustom.findViewById(R.id.ivBookDelivery);
+                    Button btnOkay = (Button) dialogCustom.findViewById(R.id.btnDeliveryOkay);
+
+                    Glide.with(getContext()).load(rentHead.getRentalDetail().getBookOwner().getBookObj().getBookFilename()).centerCrop().into(ivBook);
+
+                    mTitle.setText(rentHead.getRentalDetail().getBookOwner().getBookObj().getBookTitle());
+                    mRejected.setText(rentHead.getRentalExtraMessage());
+
+                    btnOkay.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            dialogCustom.dismiss();
+                        }
+                    });
+                    dialogCustom.show();
+                }
+            }
+        });
         return view;
     }
 
@@ -85,7 +145,7 @@ public class HistoryRent extends Fragment {
         User user = new User();
         user = (User) SPUtility.getSPUtil(getContext()).getObject("USER_OBJECT", User.class);
         Log.d("rentHistory", String.valueOf(user.getUserId()));
-        String URL = Constants.TO_DELIVER_AUCTION+user.getUserId();
+        String URL = Constants.HISTORY_RENT_NAV+user.getUserId();
         Log.d("rentHistoryURL", URL);
 //        String URL = Constants.WEB_SERVICE_URL+"user/add";
 

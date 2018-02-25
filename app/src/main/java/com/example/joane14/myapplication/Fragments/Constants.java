@@ -203,6 +203,12 @@ public class Constants {
 
     public static final String TO_DELIVER_AUCTION = WEB_SERVICE_URL + "auctionHeader/toDeliverById/";
 
+    public static final String HISTORY_RENT_NAV = WEB_SERVICE_URL + "rentalHeader/history/";
+
+    public static final String HISTORY_AUCTION_NAV = WEB_SERVICE_URL + "auctionHeader/history/";
+
+    public static final String HISTORY_SWAP_NAV = WEB_SERVICE_URL + "swapHeader/history/";
+
     public static final String HISTORY_AUCTION = WEB_SERVICE_URL + "auctionHeader/getWinById/";
 
     public static final String TO_RECEIVE_AUCTION = WEB_SERVICE_URL + "auctionHeader/toReceiveById/";

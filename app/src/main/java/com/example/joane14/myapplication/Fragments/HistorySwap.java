@@ -1,5 +1,6 @@
 package com.example.joane14.myapplication.Fragments;
 
+import android.app.Dialog;
 import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
@@ -10,7 +11,11 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.Button;
 import android.widget.GridView;
+import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
@@ -20,11 +25,9 @@ import com.android.volley.VolleyError;
 import com.android.volley.VolleyLog;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+import com.bumptech.glide.Glide;
 import com.example.joane14.myapplication.Activities.GsonDateDeserializer;
-import com.example.joane14.myapplication.Adapters.HistoryRentAdapter;
 import com.example.joane14.myapplication.Adapters.HistorySwapAdapter;
-import com.example.joane14.myapplication.Adapters.ToDeliverAuctionAdapter;
-import com.example.joane14.myapplication.Model.AuctionHeader;
 import com.example.joane14.myapplication.Model.RentalHeader;
 import com.example.joane14.myapplication.Model.SwapHeader;
 import com.example.joane14.myapplication.Model.User;
@@ -75,6 +78,74 @@ public class HistorySwap extends Fragment {
 
         getHistory();
 
+        mGridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                SwapHeader swapHeader = swapHeaderList.get(position);
+
+                if(swapHeader.getStatus().equals("Complete")){
+                    final Dialog dialogCustom = new Dialog(getContext());
+                    dialogCustom.setContentView(R.layout.swap_history_complete);
+
+                    TextView mTitleSwap = (TextView) dialogCustom.findViewById(R.id.bookTitleSwap);
+                    TextView mTitleSwapReq = (TextView) dialogCustom.findViewById(R.id.bookTitleSwapReq);
+                    TextView mSwappedWith = (TextView) dialogCustom.findViewById(R.id.swappedWith);
+                    TextView mSwappedOn = (TextView) dialogCustom.findViewById(R.id.swappedOn);
+                    ImageView ivBookSwap = (ImageView) dialogCustom.findViewById(R.id.ivSwap);
+                    ImageView ivBookSwapReq = (ImageView) dialogCustom.findViewById(R.id.ivBookDelivery);
+                    Button btnOkay = (Button) dialogCustom.findViewById(R.id.btnDeliveryOkay);
+
+                    Glide.with(getContext()).load(swapHeader.getSwapDetail().getBookOwner().getBookObj().getBookFilename()).centerCrop().into(ivBookSwap);
+                    Glide.with(getContext()).load(swapHeader.getRequestedSwapDetail().getBookOwner().getBookObj().getBookFilename()).centerCrop().into(ivBookSwapReq);
+
+                    mTitleSwap.setText(swapHeader.getSwapDetail().getBookOwner().getBookObj().getBookTitle());
+                    mTitleSwapReq.setText(swapHeader.getRequestedSwapDetail().getBookOwner().getBookObj().getBookTitle());
+
+                    User user = (User) SPUtility.getSPUtil(getContext()).getObject("USER_OBJECT", User.class);
+
+                    if(swapHeader.getRequestedSwapDetail().getBookOwner().getUserObj().getUserId()!=user.getUserId()){
+                        mSwappedWith.setText(swapHeader.getRequestedSwapDetail().getBookOwner().getUserObj().getUserFname()+" "+swapHeader.getRequestedSwapDetail().getBookOwner().getUserObj().getUserLname());
+                    }else{
+                        mSwappedWith.setText(swapHeader.getSwapDetail().getBookOwner().getUserObj().getUserFname()+" "+swapHeader.getSwapDetail().getBookOwner().getUserObj().getUserLname());
+                    }
+
+                    mSwappedOn.setText(swapHeader.getDateDelivered());
+
+                    btnOkay.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            dialogCustom.dismiss();
+                        }
+                    });
+                    dialogCustom.show();
+                }else{
+                    final Dialog dialogCustom = new Dialog(getContext());
+                    dialogCustom.setContentView(R.layout.swap_history_rejected);
+                    TextView mTitleSwap = (TextView) dialogCustom.findViewById(R.id.bookTitleSwap);
+                    TextView mTitleSwapReq = (TextView) dialogCustom.findViewById(R.id.bookTitleSwapReq);
+                    TextView mRejection = (TextView) dialogCustom.findViewById(R.id.rejectReason);
+                    ImageView ivBookSwap = (ImageView) dialogCustom.findViewById(R.id.ivSwap);
+                    ImageView ivBookSwapReq = (ImageView) dialogCustom.findViewById(R.id.ivBookDelivery);
+                    Button btnOkay = (Button) dialogCustom.findViewById(R.id.btnDeliveryOkay);
+
+
+                    Glide.with(getContext()).load(swapHeader.getSwapDetail().getBookOwner().getBookObj().getBookFilename()).centerCrop().into(ivBookSwap);
+                    Glide.with(getContext()).load(swapHeader.getRequestedSwapDetail().getBookOwner().getBookObj().getBookFilename()).centerCrop().into(ivBookSwapReq);
+
+                    mTitleSwap.setText(swapHeader.getSwapDetail().getBookOwner().getBookObj().getBookTitle());
+                    mTitleSwapReq.setText(swapHeader.getRequestedSwapDetail().getBookOwner().getBookObj().getBookTitle());
+                    mRejection.setText(swapHeader.getSwapExtraMessage());
+
+                    btnOkay.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            dialogCustom.dismiss();
+                        }
+                    });
+                    dialogCustom.show();
+                }
+            }
+        });
         return view;
     }
 
@@ -84,7 +155,7 @@ public class HistorySwap extends Fragment {
         User user = new User();
         user = (User) SPUtility.getSPUtil(getContext()).getObject("USER_OBJECT", User.class);
         Log.d("UserIdReceive", String.valueOf(user.getUserId()));
-        String URL = Constants.TO_DELIVER_AUCTION+user.getUserId();
+        String URL = Constants.HISTORY_SWAP_NAV+user.getUserId();
         Log.d("UserIdURL", URL);
 //        String URL = Constants.WEB_SERVICE_URL+"user/add";
 

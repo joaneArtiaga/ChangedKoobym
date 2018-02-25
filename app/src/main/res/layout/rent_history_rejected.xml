@@ -55,79 +55,35 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Delivered by:" />
+                android:text="Reason of rejection:" />
 
             <TextView
                 android:layout_marginLeft="10dp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:id="@+id/deliveredBy"
+                android:id="@+id/rejectReason"
                 android:textStyle="bold"
                 android:text="Anonymous"/>
-        </LinearLayout>
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Location:"/>
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_marginLeft="30dp"
-                android:layout_height="wrap_content"
-                android:text="Somewhere"
-                android:id="@+id/locationDelivery"/>
-
-        </LinearLayout>
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Deliver Date:"/>
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_marginLeft="10dp"
-                android:layout_height="wrap_content"
-                android:text="Someday"
-                android:id="@+id/dateDelivery"/>
-
-        </LinearLayout>
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Deliver Time:"/>
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Future"
-                android:layout_marginLeft="10dp"
-                android:id="@+id/timeDelivery"/>
         </LinearLayout>
 
     </LinearLayout>
 
-    <Button
-        android:id="@+id/btnDeliveryOkay"
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center_horizontal"
         android:layout_below="@+id/linearLayout6"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="21dp"
-        android:text="Okay" />
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true">
+
+        <Button
+            android:id="@+id/btnDeliveryOkay"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:text="Okay" />
+
+    </LinearLayout>
 
 </RelativeLayout>

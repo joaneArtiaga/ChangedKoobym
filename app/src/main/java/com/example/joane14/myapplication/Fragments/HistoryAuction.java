@@ -1,5 +1,6 @@
 package com.example.joane14.myapplication.Fragments;
 
+import android.app.Dialog;
 import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
@@ -10,7 +11,11 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.Button;
 import android.widget.GridView;
+import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
@@ -20,6 +25,7 @@ import com.android.volley.VolleyError;
 import com.android.volley.VolleyLog;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+import com.bumptech.glide.Glide;
 import com.example.joane14.myapplication.Activities.GsonDateDeserializer;
 import com.example.joane14.myapplication.Adapters.HistoryAuctionAdapter;
 import com.example.joane14.myapplication.Model.AuctionHeader;
@@ -71,6 +77,34 @@ public class HistoryAuction extends Fragment {
 
         getHistory();
 
+        mGridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                final Dialog dialogCustom = new Dialog(getContext());
+                dialogCustom.setContentView(R.layout.auction_history_complete);
+                TextView mTitle = (TextView) dialogCustom.findViewById(R.id.bookTitleDelivery);
+                TextView mDateDelivered = (TextView) dialogCustom.findViewById(R.id.dateDelivery);
+                TextView mPrice = (TextView) dialogCustom.findViewById(R.id.auctionPrice);
+                ImageView ivBook = (ImageView) dialogCustom.findViewById(R.id.ivBookDelivery);
+                Button btnOkay = (Button) dialogCustom.findViewById(R.id.btnDeliveryOkay);
+
+                AuctionHeader ah = auctionHeaderList.get(position);
+
+                Glide.with(getContext()).load(ah.getAuctionDetail().getBookOwner().getBookObj().getBookFilename()).centerCrop().into(ivBook);
+
+                mTitle.setText(ah.getAuctionDetail().getBookOwner().getBookObj().getBookTitle());
+                mDateDelivered.setText(ah.getDateDelivered());
+                mPrice.setText(ah.getAuctionExtraMessage());
+
+                btnOkay.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        dialogCustom.dismiss();
+                    }
+                });
+                dialogCustom.show();
+            }
+        });
         return view;
 
     }
@@ -81,7 +115,7 @@ public class HistoryAuction extends Fragment {
         User user = new User();
         user = (User) SPUtility.getSPUtil(getContext()).getObject("USER_OBJECT", User.class);
         Log.d("UserIdReceive", String.valueOf(user.getUserId()));
-        String URL = Constants.HISTORY_AUCTION+user.getUserId();
+        String URL = Constants.HISTORY_AUCTION_NAV+user.getUserId();
         Log.d("UserIdURL", URL);
 //        String URL = Constants.WEB_SERVICE_URL+"user/add";
 

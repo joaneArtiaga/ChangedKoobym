@@ -12,7 +12,6 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
-import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -22,7 +21,6 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
@@ -34,30 +32,20 @@ import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.bumptech.glide.Glide;
 import com.example.joane14.myapplication.Activities.AuctionMeetUpChooser;
-import com.example.joane14.myapplication.Activities.BookActActivity;
 import com.example.joane14.myapplication.Activities.GsonDateDeserializer;
-import com.example.joane14.myapplication.Activities.HistoryActivity;
 import com.example.joane14.myapplication.Activities.LandingPage;
 import com.example.joane14.myapplication.Activities.MeetUpChooser;
-import com.example.joane14.myapplication.Activities.MyShelf;
 import com.example.joane14.myapplication.Activities.NotificationAct;
 import com.example.joane14.myapplication.Activities.ProfileActivity;
-import com.example.joane14.myapplication.Activities.RequestActivity;
 import com.example.joane14.myapplication.Activities.SwapMeetUpChooser;
-import com.example.joane14.myapplication.Activities.TransactionActivity;
 import com.example.joane14.myapplication.Activities.ViewAuctionBook;
 import com.example.joane14.myapplication.Activities.ViewBookAct;
-import com.example.joane14.myapplication.Activities.ViewBookActivity;
 import com.example.joane14.myapplication.Fragments.Constants;
 import com.example.joane14.myapplication.Model.AuctionDetailModel;
 import com.example.joane14.myapplication.Model.AuctionHeader;
-import com.example.joane14.myapplication.Model.BookOwnerModel;
 import com.example.joane14.myapplication.Model.BookOwnerRating;
 import com.example.joane14.myapplication.Model.BookOwnerReview;
-import com.example.joane14.myapplication.Model.Rate;
-import com.example.joane14.myapplication.Model.RentalDetail;
 import com.example.joane14.myapplication.Model.RentalHeader;
-import com.example.joane14.myapplication.Model.Review;
 import com.example.joane14.myapplication.Model.SwapHeader;
 import com.example.joane14.myapplication.Model.User;
 import com.example.joane14.myapplication.Model.UserNotification;
@@ -69,8 +57,6 @@ import com.google.gson.GsonBuilder;
 import com.squareup.picasso.Picasso;
 
 import java.io.UnsupportedEncodingException;
-import java.lang.reflect.Array;
-import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
@@ -1215,7 +1201,7 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
                         TextView mLocation = (TextView) dialogCustom.findViewById(R.id.locationDelivery);
                         TextView mDate = (TextView) dialogCustom.findViewById(R.id.dateDelivery);
                         TextView mTime = (TextView) dialogCustom.findViewById(R.id.timeDelivery);
-                        ImageView ivBook = (ImageView) dialogCustom.findViewById(R.id.ivBookDeliver);
+                        ImageView ivBook = (ImageView) dialogCustom.findViewById(R.id.ivBookDelivery);
                         Button btnOkay = (Button) dialogCustom.findViewById(R.id.btnDeliveryOkay);
                         Button btnSeeRating = (Button) dialogCustom.findViewById(R.id.btnSeeRating);
 
@@ -1252,7 +1238,7 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
                         TextView mLocation = (TextView) dialogCustom.findViewById(R.id.locationDelivery);
                         TextView mDate = (TextView) dialogCustom.findViewById(R.id.dateDelivery);
                         TextView mTime = (TextView) dialogCustom.findViewById(R.id.timeDelivery);
-                        ImageView ivBook = (ImageView) dialogCustom.findViewById(R.id.ivBookDeliver);
+                        ImageView ivBook = (ImageView) dialogCustom.findViewById(R.id.ivBookDelivery);
                         Button btnOkay = (Button) dialogCustom.findViewById(R.id.btnDeliveryOkay);
 
                         Glide.with(context).load(rentalHeaderMod.getRentalDetail().getBookOwner().getBookObj().getBookFilename()).centerCrop().into(ivBook);
@@ -1726,7 +1712,7 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
                         TextView mLocation = (TextView) dialogCustom.findViewById(R.id.locationDelivery);
                         TextView mDate = (TextView) dialogCustom.findViewById(R.id.dateDelivery);
                         TextView mTime = (TextView) dialogCustom.findViewById(R.id.timeDelivery);
-                        ImageView ivBook = (ImageView) dialogCustom.findViewById(R.id.ivBookDeliver);
+                        ImageView ivBook = (ImageView) dialogCustom.findViewById(R.id.ivBookDelivery);
                         Button btnOkay = (Button) dialogCustom.findViewById(R.id.btnDeliveryOkay);
 
                         Glide.with(context).load(auctionHeaderMod.getAuctionDetail().getBookOwner().getBookObj().getBookFilename()).centerCrop().into(ivBook);
@@ -1752,7 +1738,7 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
                         dialogCustom.setContentView(R.layout.auction_complete_book_custom_dialog);
                         TextView mTitle = (TextView) dialogCustom.findViewById(R.id.bookTitleDelivery);
                         TextView mOwner = (TextView) dialogCustom.findViewById(R.id.deliveredBy);
-                        ImageView ivBook = (ImageView) dialogCustom.findViewById(R.id.ivBookDeliver);
+                        ImageView ivBook = (ImageView) dialogCustom.findViewById(R.id.ivBookDelivery);
                         Button btnOkay = (Button) dialogCustom.findViewById(R.id.btnDeliveryOkay);
 
                         Glide.with(context).load(auctionHeaderMod.getAuctionDetail().getBookOwner().getBookObj().getBookFilename()).centerCrop().into(ivBook);
@@ -1850,7 +1836,7 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
                         TextView mLocation = (TextView) dialogCustom.findViewById(R.id.locationDelivery);
                         TextView mDate = (TextView) dialogCustom.findViewById(R.id.dateDelivery);
                         TextView mTime = (TextView) dialogCustom.findViewById(R.id.timeDelivery);
-                        ImageView ivBook = (ImageView) dialogCustom.findViewById(R.id.ivBookDeliver);
+                        ImageView ivBook = (ImageView) dialogCustom.findViewById(R.id.ivBookDelivery);
                         Button btnOkay = (Button) dialogCustom.findViewById(R.id.btnDeliveryOkay);
 
                         Glide.with(context).load(swapHeaderMod.getSwapDetail().getBookOwner().getBookObj().getBookFilename()).centerCrop().into(ivBook);

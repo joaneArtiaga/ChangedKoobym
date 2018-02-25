@@ -98,15 +98,13 @@ public class HistoryRentAdapter extends BaseAdapter {
         Log.d("inside", "PrefferedAdapter");
         bookTitle.setText(bookOwnerModel.getBookObj().getBookTitle());
 
-        statusBook.setText(bookOwnerModel.getStatus());
-        if(bookOwnerModel.getStatus().equals("Rent")){
+
+        if(bookOwnerModelList.get(position).getStatus().equals("Complete")){
+            statusBook.setText("Complete");
             statusLinear.setBackgroundColor(ContextCompat.getColor(context, R.color.colorRent));
-        }else if(bookOwnerModel.getStatus().equals("Swap")){
-            statusLinear.setBackgroundColor(ContextCompat.getColor(context, R.color.colorSwap));
-        }else if(bookOwnerModel.getStatus().equals("Auction")){
+        }else {
+            statusBook.setText("Rejected");
             statusLinear.setBackgroundColor(ContextCompat.getColor(context, R.color.colorAuction));
-        }else{
-            statusLinear.setBackgroundColor(ContextCompat.getColor(context, R.color.colorGray));
         }
 
         String author = " ";
