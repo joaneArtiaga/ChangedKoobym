@@ -1,13 +1,44 @@
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="com.example.joane14.myapplication.Fragments.RequestReceivedFrag">
 
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/my_recycler_view_request_received"
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Rent"
+        android:layout_gravity="right"
+        android:gravity="right"
+        android:textColor="@color/colorWhite"
+        android:background="@color/colorRent"
+        android:layout_marginRight="5dp"/>
+
+    <GridView
+        android:id="@+id/rentRR_gridview"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:scrollbars="vertical"/>
+        android:numColumns="2"
+        android:horizontalSpacing="10dp"
+        android:verticalSpacing="10dp"
+        android:padding="10dp"/>
 
-</FrameLayout>
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Swap"
+        android:layout_gravity="right"
+        android:gravity="right"
+        android:textColor="@color/colorWhite"
+        android:background="@color/colorSwap"
+        android:layout_marginRight="5dp"/>
+
+    <GridView
+        android:id="@+id/swapRR_gridview"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:numColumns="2"
+        android:horizontalSpacing="10dp"
+        android:verticalSpacing="10dp"
+        android:padding="10dp"/>
+</RelativeLayout>

@@ -87,6 +87,8 @@ public class Constants {
 
     public static final String GET_REQUEST_RECEIVED = WEB_SERVICE_URL + "rentalHeader/requestReceivedById/";
 
+    public static final String SWAP_REQUEST_RECEIVED = WEB_SERVICE_URL + "swapHeader/swapRequests/";
+
     public static final String GET_MY_SWAP = WEB_SERVICE_URL + "swapDetail/mySwapBooks/";
 
     public static final String GET_MY_SWAP_RECOMMENDED = WEB_SERVICE_URL + "swapDetail/mySwapBooksPrice/";

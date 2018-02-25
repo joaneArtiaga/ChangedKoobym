@@ -29,11 +29,14 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.example.joane14.myapplication.Adapters.RequestRentAdapter;
 import com.example.joane14.myapplication.Fragments.ApprovedSwapFrag;
 import com.example.joane14.myapplication.Fragments.Constants;
 import com.example.joane14.myapplication.Fragments.MyRequestFrag;
 import com.example.joane14.myapplication.Fragments.RequestFrag;
 import com.example.joane14.myapplication.Fragments.RequestReceivedFrag;
+import com.example.joane14.myapplication.Fragments.RequestRentFrag;
+import com.example.joane14.myapplication.Fragments.RequestSwapFrag;
 import com.example.joane14.myapplication.Fragments.SwapRequestFrag;
 import com.example.joane14.myapplication.Fragments.ToApproveFrag;
 import com.example.joane14.myapplication.Model.User;
@@ -52,7 +55,9 @@ public class RequestActivity extends AppCompatActivity
         SwapRequestFrag.OnSwapRequestInteractionListener,
         RequestFrag.OnRequestFragInteractionListener,
         ApprovedSwapFrag.OnApprovedSwapInteractionListener,
-        ToApproveFrag.OnToApproveInteractionListener{
+        ToApproveFrag.OnToApproveInteractionListener,
+        RequestRentFrag.OnRequestRentInteractionListener,
+        RequestSwapFrag.OnSwapRequestInteractionListener{
 
 
     ImageView profileImg;
@@ -106,16 +111,34 @@ public class RequestActivity extends AppCompatActivity
         final TextView tvRent = (TextView) findViewById(R.id.tvRentRequest);
         final TextView tvSwap = (TextView) findViewById(R.id.tvSwapRequest);
 
+        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+        ft.replace(R.id.fragment_container_request, RequestRentFrag.newInstance());
+        ft.commit();
+
+
         tvRent.setTextColor(ContextCompat.getColor(RequestActivity.this, R.color.colorLightOrange));
 
         mRent.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 tvRent.setTextColor(ContextCompat.getColor(RequestActivity.this, R.color.colorLightOrange));
-
+                tvSwap.setTextColor(ContextCompat.getColor(RequestActivity.this, R.color.colorDark));
+                FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
+                fragmentTransaction.replace(R.id.fragment_container_request, RequestRentFrag.newInstance());
+                fragmentTransaction.commit();
             }
         });
 
+        mSwap.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                tvRent.setTextColor(ContextCompat.getColor(RequestActivity.this, R.color.colorDark));
+                tvSwap.setTextColor(ContextCompat.getColor(RequestActivity.this, R.color.colorLightOrange));
+                FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
+                fragmentTransaction.replace(R.id.fragment_container_request, RequestSwapFrag.newInstance());
+                fragmentTransaction.commit();
+            }
+        });
     }
 
 
@@ -215,6 +238,16 @@ public class RequestActivity extends AppCompatActivity
 
     @Override
     public void ontToApproveOnClick(Uri uri) {
+
+    }
+
+    @Override
+    public void onSwapRequestInteraction(Uri uri) {
+
+    }
+
+    @Override
+    public void onRequestRentInteraction(Uri uri) {
 
     }
 }

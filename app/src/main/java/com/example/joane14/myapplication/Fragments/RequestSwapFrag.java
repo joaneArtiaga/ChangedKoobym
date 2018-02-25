@@ -22,9 +22,6 @@ import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.example.joane14.myapplication.Activities.GsonDateDeserializer;
 import com.example.joane14.myapplication.Adapters.RequestSwapAdapter;
-import com.example.joane14.myapplication.Adapters.RequestReceivedAdapter;
-import com.example.joane14.myapplication.Adapters.RequestRentAdapter;
-import com.example.joane14.myapplication.Model.RentalHeader;
 import com.example.joane14.myapplication.Model.SwapHeader;
 import com.example.joane14.myapplication.Model.User;
 import com.example.joane14.myapplication.R;
@@ -38,25 +35,22 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
-public class RequestReceivedFrag extends Fragment {
+public class RequestSwapFrag extends Fragment {
 
-
-    private OnRequestReceivedInteractionListener mListener;
-    List<RentalHeader> rentalHeaderList;
     List<SwapHeader> swapHeaderList;
-    private GridView mGridViewRent;
     private GridView mGridViewSwap;
-    private RequestRentAdapter mAdapterRent;
     private RequestSwapAdapter mAdapterRentSwap;
-    private RecyclerView.LayoutManager mLayoutManagerRent;
     private RecyclerView.LayoutManager mLayoutManagerSwap;
 
+    private OnSwapRequestInteractionListener mListener;
 
-    public RequestReceivedFrag() {
+    public RequestSwapFrag() {
     }
 
-    public static RequestReceivedFrag newInstance() {
-        RequestReceivedFrag fragment = new RequestReceivedFrag();
+    public static RequestSwapFrag newInstance() {
+        RequestSwapFrag fragment = new RequestSwapFrag();
+        Bundle args = new Bundle();
+        fragment.setArguments(args);
         return fragment;
     }
 
@@ -68,20 +62,14 @@ public class RequestReceivedFrag extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_request_received, container, false);
+        View view = inflater.inflate(R.layout.fragment_request_swap, container, false);
 
-        rentalHeaderList = new ArrayList<RentalHeader>();
         swapHeaderList = new ArrayList<SwapHeader>();
-
-        mGridViewRent = (GridView) view.findViewById(R.id.rentRR_gridview);
         mGridViewSwap = (GridView) view.findViewById(R.id.swapRR_gridview);
-        mLayoutManagerRent = new LinearLayoutManager(getContext());
         mLayoutManagerSwap = new LinearLayoutManager(getContext());
-        mAdapterRent = new RequestRentAdapter(getContext(), rentalHeaderList);
         mAdapterRentSwap = new RequestSwapAdapter(getContext(), swapHeaderList);
-        mGridViewRent.setAdapter(mAdapterRent);
         mGridViewSwap.setAdapter(mAdapterRentSwap);
-        getRequestReceived();
+
         getRequestReceivedSwap();
 
 
@@ -96,70 +84,21 @@ public class RequestReceivedFrag extends Fragment {
         String URL = Constants.SWAP_REQUEST_RECEIVED + user.getUserId();
 //        String URL = Constants.WEB_SERVICE_URL+"user/add";
 
+        Log.d("RequestSwap", URL);
         final SwapHeader swapHeader = new SwapHeader();
 
         final Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd").registerTypeAdapter(Date.class, GsonDateDeserializer.getInstance()).create();
         final String mRequestBody = gson.toJson(swapHeader);
 
 
-        Log.d("SwapRequests", mRequestBody);
+        Log.d("RequestSwap", mRequestBody);
         StringRequest stringRequest = new StringRequest(Request.Method.GET, URL, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
                 Log.i("SwapRequestsRes", response);
                 swapHeaderList.clear();
                 swapHeaderList.addAll(Arrays.asList(gson.fromJson(response, SwapHeader[].class)));
-                mAdapterRent.notifyDataSetChanged();
-            }
-        }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                Log.e("LOG_VOLLEY", error.toString());
-            }
-        }) {
-            @Override
-            public String getBodyContentType() {
-                return "application/json; charset=utf-8";
-            }
-
-            @Override
-            public byte[] getBody() throws AuthFailureError {
-                try {
-                    return mRequestBody == null ? null : mRequestBody.getBytes("utf-8");
-                } catch (UnsupportedEncodingException uee) {
-                    VolleyLog.wtf("Unsupported Encoding while trying to get the bytes of %s using %s", mRequestBody, "utf-8");
-                    return null;
-                }
-            }
-        };
-
-        requestQueue.add(stringRequest);
-    }
-
-
-    public void getRequestReceived(){
-        RequestQueue requestQueue = Volley.newRequestQueue(getContext());
-//        String URL = "http://104.197.4.32:8080/Koobym/user/add";
-        User user = new User();
-        user = (User) SPUtility.getSPUtil(getContext()).getObject("USER_OBJECT", User.class);
-        String URL = Constants.GET_REQUEST_RECEIVED+user.getUserId();
-//        String URL = Constants.WEB_SERVICE_URL+"user/add";
-
-        final RentalHeader rentalHeader =new RentalHeader();
-
-        final Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd").registerTypeAdapter(Date.class, GsonDateDeserializer.getInstance()).create();
-        final String mRequestBody = gson.toJson(rentalHeader);
-
-
-        Log.d("LOG_VOLLEY", mRequestBody);
-        StringRequest stringRequest = new StringRequest(Request.Method.GET, URL, new Response.Listener<String>() {
-            @Override
-            public void onResponse(String response) {
-                Log.i("ResponseRequestReceived", response);
-//                RentalHeader rentalHeaderModel = gson.fromJson(response, RentalHeader.class);
-                rentalHeaderList.clear();
-                rentalHeaderList.addAll(Arrays.asList(gson.fromJson(response, RentalHeader[].class)));
-                mAdapterRent.notifyDataSetChanged();
+                mAdapterRentSwap.notifyDataSetChanged();
             }
         }, new Response.ErrorListener() {
             @Override
@@ -188,15 +127,15 @@ public class RequestReceivedFrag extends Fragment {
 
     public void onButtonPressed(Uri uri) {
         if (mListener != null) {
-            mListener.onRequestReceivedOnClick(uri);
+            mListener.onSwapRequestInteraction(uri);
         }
     }
 
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        if (context instanceof OnRequestReceivedInteractionListener) {
-            mListener = (OnRequestReceivedInteractionListener) context;
+        if (context instanceof OnSwapRequestInteractionListener) {
+            mListener = (OnSwapRequestInteractionListener) context;
         } else {
             throw new RuntimeException(context.toString()
                     + " must implement OnFragmentInteractionListener");
@@ -209,9 +148,8 @@ public class RequestReceivedFrag extends Fragment {
         mListener = null;
     }
 
-    public interface OnRequestReceivedInteractionListener {
-        void onRequestReceivedOnClick(Uri uri);
+
+    public interface OnSwapRequestInteractionListener {
+        void onSwapRequestInteraction(Uri uri);
     }
-
-
 }
