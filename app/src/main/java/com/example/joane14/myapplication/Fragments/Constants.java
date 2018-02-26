@@ -87,6 +87,18 @@ public class Constants {
 
     public static final String GET_REQUEST_RECEIVED = WEB_SERVICE_URL + "rentalHeader/requestReceivedById/";
 
+    public static final String ACCEPT_REQUEST_RENT = WEB_SERVICE_URL + "rentalHeader/acceptRequest/";
+
+    public static final String ACCEPT_REQUEST_SWAP = WEB_SERVICE_URL + "swapHeader/approveRequests/";
+
+    public static final String REJECT_REQUEST_SWAP = WEB_SERVICE_URL + "swapHeader/rejectedRequests/";
+
+    public static final String REJECT_REQUEST_RENT = WEB_SERVICE_URL + "rentalHeader/rejectRequest/";
+
+    public static final String UPDATE_RENTAL_EXTRA = WEB_SERVICE_URL + "userNotification/updateRentalExtra/";
+
+    public static final String UPDATE_SWAP_EXTRA = WEB_SERVICE_URL + "userNotification/updateSwapExtra/";
+
     public static final String SWAP_REQUEST_RECEIVED = WEB_SERVICE_URL + "swapHeader/swapRequests/";
 
     public static final String GET_MY_SWAP = WEB_SERVICE_URL + "swapDetail/mySwapBooks/";

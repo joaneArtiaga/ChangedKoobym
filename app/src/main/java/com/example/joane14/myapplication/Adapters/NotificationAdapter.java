@@ -141,6 +141,8 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
                 message = userNotification.getUserPerformer().getUserFname()+" "+userNotification.getUserPerformer().getUserLname()+" delivered the book,"+userNotification.getBookActionPerformedOn().getBookObj().getBookTitle()+".";
             }else if(userNotification.getActionStatus().equals("returned")){
                 message = userNotification.getUserPerformer().getUserFname()+" "+userNotification.getUserPerformer().getUserLname()+" returned the book,"+userNotification.getBookActionPerformedOn().getBookObj().getBookTitle()+" and rated the book.";
+            }else if(userNotification.getActionStatus().equals("Rejected")){
+                message = userNotification.getUserPerformer().getUserFname()+" "+userNotification.getUserPerformer().getUserLname()+" returned the book,"+userNotification.getBookActionPerformedOn().getBookObj().getBookTitle()+" and rejected your request to the book, "+userNotification.getBookActionPerformedOn().getBookObj().getBookTitle();
             }
         } else if (userNotification.getActionName().equals("swap")) {
             Log.d("notifSwap", "inside");
@@ -322,6 +324,9 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
                             }else if(userNotificationList.get(position).getActionStatus().equals("delivered")){
                                 getRead(position);
                                 getRentalHeader(position, "delivered");
+                            }else if(userNotificationList.get(position).getActionStatus().equals("Rejected")){
+                                getRead(position);
+                                getRentalHeader(position, "Rejected");
                             }
 
                         } else if (userNotificationList.get(position).getActionName().equals("swap")) {
@@ -1248,6 +1253,28 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
                         mLocation.setText(rentalHeaderMod.getMeetUp().getLocation().getLocationName());
                         mDate.setText(rentalHeaderMod.getDateDeliver().toString());
                         mTime.setText(rentalHeaderMod.getMeetUp().getUserDayTime().getTime().getStrTime());
+
+                        btnOkay.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                Intent intent = new Intent(context, NotificationAct.class);
+                                context.startActivity(intent);
+                            }
+                        });
+
+                        dialogCustom.show();
+                    }else if(status.equals("Rejected")){
+                        final Dialog dialogCustom = new Dialog(context);
+                        dialogCustom.setContentView(R.layout.rent_history_rejected);
+                        TextView mTitle = (TextView) dialogCustom.findViewById(R.id.bookTitleDelivery);
+                        TextView mReason = (TextView) dialogCustom.findViewById(R.id.rejectReason);
+                        ImageView ivBook = (ImageView) dialogCustom.findViewById(R.id.ivBookDelivery);
+                        Button btnOkay = (Button) dialogCustom.findViewById(R.id.btnDeliveryOkay);
+
+                        Glide.with(context).load(rentalHeaderMod.getRentalDetail().getBookOwner().getBookObj().getBookFilename()).centerCrop().into(ivBook);
+
+                        mTitle.setText(rentalHeaderMod.getRentalDetail().getBookOwner().getBookObj().getBookTitle());
+                        mReason.setText(userNotificationList.get(position).getExtraMessage());
 
                         btnOkay.setOnClickListener(new View.OnClickListener() {
                             @Override
