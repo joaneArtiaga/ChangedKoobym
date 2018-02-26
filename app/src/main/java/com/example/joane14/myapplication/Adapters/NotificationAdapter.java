@@ -358,6 +358,9 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
                                 }else if(userNotificationList.get(position).getActionStatus().equals("delivered")){
                                     getRead(position);
                                     getSwapHeader(position, "delivered");
+                                }else if(userNotificationList.get(position).getActionStatus().equals("Rejected")){
+                                    getRead(position);
+                                    getSwapHeader(position, "Rejected");
                                 }
                             }
                         }else if(userNotificationList.get(position).getActionName().equals("auction")){
@@ -1908,6 +1911,31 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
                             }
                         });
 
+                        dialogCustom.show();
+                    }else if(status.equals("Rejected")){
+                        final Dialog dialogCustom = new Dialog(context);
+                        dialogCustom.setContentView(R.layout.swap_history_rejected);
+                        TextView mTitleSwap = (TextView) dialogCustom.findViewById(R.id.bookTitleSwap);
+                        TextView mTitleSwapReq = (TextView) dialogCustom.findViewById(R.id.bookTitleSwapReq);
+                        TextView mRejection = (TextView) dialogCustom.findViewById(R.id.rejectReason);
+                        ImageView ivBookSwap = (ImageView) dialogCustom.findViewById(R.id.ivSwap);
+                        ImageView ivBookSwapReq = (ImageView) dialogCustom.findViewById(R.id.ivBookDelivery);
+                        Button btnOkay = (Button) dialogCustom.findViewById(R.id.btnDeliveryOkay);
+
+
+                        Glide.with(context).load(swapHeaderMod.getSwapDetail().getBookOwner().getBookObj().getBookFilename()).centerCrop().into(ivBookSwap);
+                        Glide.with(context).load(swapHeaderMod.getRequestedSwapDetail().getBookOwner().getBookObj().getBookFilename()).centerCrop().into(ivBookSwapReq);
+
+                        mTitleSwap.setText(swapHeaderMod.getSwapDetail().getBookOwner().getBookObj().getBookTitle());
+                        mTitleSwapReq.setText(swapHeaderMod.getRequestedSwapDetail().getBookOwner().getBookObj().getBookTitle());
+                        mRejection.setText(swapHeaderMod.getSwapExtraMessage());
+
+                        btnOkay.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                dialogCustom.dismiss();
+                            }
+                        });
                         dialogCustom.show();
                     }
 
