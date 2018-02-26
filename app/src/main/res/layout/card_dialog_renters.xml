@@ -16,6 +16,7 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:background="@color/colorTuftBrush"
             android:orientation="horizontal"
             android:padding="7dp">
 
@@ -31,10 +32,10 @@
                 android:id="@+id/renterName"
                 android:layout_width="300dp"
                 android:layout_height="wrap_content"
-                android:gravity="center_vertical"
                 android:layout_gravity="center_vertical"
-                android:text="Renter's Name"
-                android:layout_marginLeft="8dp"/>
+                android:layout_marginLeft="8dp"
+                android:gravity="center_vertical"
+                android:text="Renter's Name" />
 
         </LinearLayout>
 

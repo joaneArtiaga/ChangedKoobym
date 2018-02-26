@@ -131,16 +131,18 @@
         android:layout_alignParentStart="true">
 
         <Button
+            android:id="@+id/btnSeeRating"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/btnSeeRating"
-            android:text="See Rating"/>
+            android:background="@color/colorLightOrange"
+            android:text="See Rating" />
 
         <Button
             android:id="@+id/btnDeliveryOkay"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
+            android:background="@color/colorLightOrange"
             android:text="Okay" />
 
     </LinearLayout>

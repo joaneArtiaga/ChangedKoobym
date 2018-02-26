@@ -66,10 +66,11 @@
         android:id="@+id/btnDeliveryOkay"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="18dp"
-        android:text="Okay"
         android:layout_below="@+id/textView11"
-        android:layout_centerHorizontal="true" />
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="18dp"
+        android:background="@color/colorTuftBrush"
+        android:text="Okay" />
 
     <TextView
         android:id="@+id/textView11"

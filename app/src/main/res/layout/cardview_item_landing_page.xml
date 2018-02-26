@@ -21,13 +21,13 @@
         android:id="@+id/lpBookTitle"
         android:layout_width="150dp"
         android:layout_height="wrap_content"
+        android:layout_marginTop="3dp"
         android:gravity="center_horizontal"
         android:lines="1"
         android:text="Book Title"
-        android:textColor="@color/colorOrange"
+        android:textColor="@color/colorLightOrange"
         android:textSize="16sp"
-        android:textStyle="bold"
-        android:layout_marginTop="3dp"/>
+        android:textStyle="bold" />
 
     <TextView
         android:id="@+id/lpAuthor"

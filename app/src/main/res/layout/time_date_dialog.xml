@@ -98,21 +98,23 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:layout_marginTop="11dp"
+        android:gravity="center_horizontal"
         android:layout_below="@+id/tcFrom"
         android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:gravity="center_horizontal">
+        android:layout_alignParentStart="true">
 
         <Button
             android:id="@+id/btnOkay"
             android:layout_width="150dp"
             android:layout_height="wrap_content"
+            android:background="@color/colorLightOrange"
             android:text="Okay" />
 
         <Button
             android:id="@+id/btnCancel"
             android:layout_width="150dp"
             android:layout_height="wrap_content"
+            android:background="@color/colorLightOrange"
             android:text="Cancel" />
 
     </LinearLayout>

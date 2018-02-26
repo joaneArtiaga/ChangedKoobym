@@ -47,7 +47,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="5dp"
                     android:text="Book Title"
-                    android:textColor="@color/colorOrange"
+                    android:textColor="@color/colorLightOrange"
                     android:textSize="18sp"
                     android:textStyle="bold" />
 

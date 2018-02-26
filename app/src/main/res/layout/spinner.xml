@@ -8,7 +8,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Choose Day Range:"
-        android:textSize="20dp"/>
+        android:textColor="@color/colorLightOrange"
+        android:textSize="20dp" />
 
     <Spinner
         android:id="@+id/spinnerDay"
@@ -27,16 +28,20 @@
         android:layout_height="wrap_content"
         android:id="@+id/buttonLL"
         android:orientation="horizontal">
+
         <Button
+            android:id="@+id/btnOkay"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Okay"
-            android:id="@+id/btnOkay"/>
+            android:background="@color/colorLightOrange"
+            android:text="Okay" />
+
         <Button
+            android:id="@+id/btnCancel"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Cancel"
-            android:id="@+id/btnCancel"/>
+            android:background="@color/colorLightOrange"
+            android:text="Cancel" />
     </LinearLayout>
 
 </LinearLayout>

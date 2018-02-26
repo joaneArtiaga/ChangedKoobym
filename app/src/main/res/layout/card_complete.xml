@@ -9,10 +9,14 @@
         android:layout_width="360dp"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:layout_marginLeft="5dp"
-        android:layout_margin="5dp"
+        app:cardBackgroundColor="@color/colorTuftBrush"
         app:contentPadding="8dp"
-        app:cardBackgroundColor="@color/colorMint">
+        android:layout_marginTop="5dp"
+        android:layout_marginBottom="5dp"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -21,51 +25,51 @@
 
 
             <!--<LinearLayout-->
-                <!--android:layout_width="match_parent"-->
-                <!--android:layout_height="60dp"-->
-                <!--android:orientation="horizontal">-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="60dp"-->
+            <!--android:orientation="horizontal">-->
 
-                <!--<ImageView-->
-                    <!--android:id="@+id/completeRenterImage"-->
-                    <!--android:layout_width="50dp"-->
-                    <!--android:layout_height="match_parent"-->
-                    <!--app:srcCompat="@drawable/com_facebook_profile_picture_blank_square" />-->
+            <!--<ImageView-->
+            <!--android:id="@+id/completeRenterImage"-->
+            <!--android:layout_width="50dp"-->
+            <!--android:layout_height="match_parent"-->
+            <!--app:srcCompat="@drawable/com_facebook_profile_picture_blank_square" />-->
 
-                <!--<LinearLayout-->
-                    <!--android:layout_width="280dp"-->
-                    <!--android:layout_height="match_parent"-->
-                    <!--android:layout_marginTop="5dp"-->
-                    <!--android:orientation="vertical">-->
+            <!--<LinearLayout-->
+            <!--android:layout_width="280dp"-->
+            <!--android:layout_height="match_parent"-->
+            <!--android:layout_marginTop="5dp"-->
+            <!--android:orientation="vertical">-->
 
-                    <!--<TextView-->
-                        <!--android:id="@+id/completeRenter"-->
-                        <!--android:layout_width="match_parent"-->
-                        <!--android:layout_height="wrap_content"-->
-                        <!--android:gravity="right"-->
-                        <!--android:text="TextView" />-->
+            <!--<TextView-->
+            <!--android:id="@+id/completeRenter"-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:gravity="right"-->
+            <!--android:text="TextView" />-->
 
-                    <!--<TextView-->
-                        <!--android:id="@+id/textRenter"-->
-                        <!--android:layout_width="match_parent"-->
-                        <!--android:layout_height="wrap_content"-->
-                        <!--android:gravity="right"-->
-                        <!--android:text="RENTER" />-->
+            <!--<TextView-->
+            <!--android:id="@+id/textRenter"-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:gravity="right"-->
+            <!--android:text="RENTER" />-->
 
-                <!--</LinearLayout>-->
+            <!--</LinearLayout>-->
 
             <!--</LinearLayout>-->
 
             <!--<View-->
-                <!--android:layout_width="match_parent"-->
-                <!--android:layout_height="1dp"-->
-                <!--android:background="@color/colorOrange"/>-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="1dp"-->
+            <!--android:background="@color/colorOrange"/>-->
 
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="60dp"
-                android:orientation="horizontal"
-                android:layout_marginTop="5dp">
+                android:layout_marginTop="5dp"
+                android:orientation="horizontal">
 
                 <LinearLayout
                     android:layout_width="290dp"
@@ -85,6 +89,7 @@
                         android:text="BOOK" />
 
                 </LinearLayout>
+
                 <ImageView
                     android:id="@+id/completeBookImage"
                     android:layout_width="50dp"
@@ -96,22 +101,22 @@
             <View
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
-                android:background="@color/colorOrange"
-                android:layout_marginTop="5dp"/>
+                android:layout_marginTop="5dp"
+                android:background="@color/colorOrange" />
 
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
                 android:layout_marginTop="5dp"
+                android:orientation="horizontal"
                 android:padding="5dp">
 
                 <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="2dp"
-                    android:orientation="horizontal"
-                    android:gravity="center_horizontal">
+                    android:gravity="center_horizontal"
+                    android:orientation="horizontal">
 
                     <LinearLayout
                         android:layout_width="160dp"
@@ -139,6 +144,7 @@
                             android:text="time in here" />
 
                     </LinearLayout>
+
                     <LinearLayout
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -152,17 +158,17 @@
                             android:textColor="@color/colorPrimaryDark" />
 
                         <TextView
+                            android:id="@+id/returnedDate"
                             android:layout_width="wrap_content"
-                            android:textColor="@color/colorPrimaryDark"
                             android:layout_height="wrap_content"
                             android:text="date in here"
-                            android:id="@+id/returnedDate"/>
+                            android:textColor="@color/colorPrimaryDark" />
 
                         <TextView
+                            android:id="@+id/returnedTime"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:id="@+id/returnedTime"
-                            android:text="date in here"/>
+                            android:text="date in here" />
 
                     </LinearLayout>
 

@@ -73,11 +73,12 @@
         android:id="@+id/btnRateReview"
         android:layout_width="100dp"
         android:layout_height="50dp"
-        android:layout_marginTop="18dp"
-        android:text="Rate Now"
         android:layout_alignParentRight="true"
+        android:layout_below="@+id/ratingReview"
         android:layout_marginRight="20dp"
-        android:layout_below="@+id/ratingReview"/>
+        android:layout_marginTop="18dp"
+        android:background="@color/colorLightOrange"
+        android:text="Rate Now" />
 
     <RatingBar
         android:id="@+id/ratingReview"
