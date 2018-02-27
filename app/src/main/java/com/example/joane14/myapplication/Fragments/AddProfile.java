@@ -1,5 +1,4 @@
 package com.example.joane14.myapplication.Fragments;
-
 import android.app.DatePickerDialog;
 import android.content.Context;
 import android.content.Intent;
@@ -8,14 +7,21 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.v4.app.Fragment;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.ListPopupWindow;
 
 import com.android.volley.NetworkResponse;
 import com.android.volley.Request;
@@ -25,11 +31,17 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.Volley;
 import com.esafirm.imagepicker.features.ImagePicker;
 import com.esafirm.imagepicker.model.Image;
+import com.example.joane14.myapplication.Adapters.PlaceAutoCompleteAdapter;
+import com.example.joane14.myapplication.Model.Place;
 import com.example.joane14.myapplication.Model.User;
 import com.example.joane14.myapplication.R;
+import com.example.joane14.myapplication.Utilities.PlacesUtility;
+import com.google.android.gms.maps.model.LatLng;
 import com.squareup.picasso.Picasso;
 
 import org.apache.commons.io.FileUtils;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -41,16 +53,17 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
 import static android.app.Activity.RESULT_OK;
-
-public class AddProfile extends Fragment {
+public class AddProfile extends Fragment implements AdapterView.OnItemClickListener {
 
     private OnFragmentInteractionListener mListener;
 
-    EditText mFirstName, mLastName, mUsername, mAddress, mEmail, mContactNumber, mPassword, mConfirmPassword, mBirthdate;
+    EditText mFirstName, mLastName, mUsername, mEmail, mContactNumber, mPassword, mConfirmPassword, mBirthdate;
+    AutoCompleteTextView mAddress;
     Button mNextAdd;
     User userModel;
     ImageView slctImage;
@@ -59,6 +72,9 @@ public class AddProfile extends Fragment {
     private DatePicker datePicker;
     private Calendar calendar;
     DatePickerDialog.OnDateSetListener date;
+    PlaceAutoCompleteAdapter placeAutoCompleteAdapter;
+    ListPopupWindow placeAutoCompletePopupWindow;
+    List<Place> places;
 
     public AddProfile() {
 
@@ -87,7 +103,6 @@ public class AddProfile extends Fragment {
         Log.d("Inside", "onCreateView");
 
         userModel = new User();
-
 //        String filename = "123-1501684832903Screenshot_20170802-014107.jpg";
 
         slctImage = (ImageView) view.findViewById(R.id.displayPic);
@@ -97,7 +112,43 @@ public class AddProfile extends Fragment {
         mFirstName = (EditText) view.findViewById(R.id.firstName);
         mLastName = (EditText) view.findViewById(R.id.lastName);
         mUsername = (EditText) view.findViewById(R.id.username);
-        mAddress = (EditText) view.findViewById(R.id.address);
+        mAddress = (AutoCompleteTextView) view.findViewById(R.id.address);
+        places = new ArrayList<>();
+        placeAutoCompleteAdapter = new PlaceAutoCompleteAdapter(getContext(), places);
+        placeAutoCompletePopupWindow = new ListPopupWindow(getContext());
+        placeAutoCompletePopupWindow.setAdapter(placeAutoCompleteAdapter);
+        placeAutoCompletePopupWindow.setAnchorView(mAddress);
+        placeAutoCompletePopupWindow.setModal(false);
+        placeAutoCompletePopupWindow.setOnItemClickListener(this);
+
+        mAddress.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+                final String val = editable.toString();
+                if (!fromSelected) {
+                    if (val.length() > 4) {
+                        new Thread(new Runnable() {
+                            @Override
+                            public void run() {
+                                PlacesUtility.getPredictions(getActivity(), val, new LatLng(10.289218, 123.857058), autocompleteplaceListener);
+                            }
+                        }).start();
+                    }
+                } else {
+                    fromSelected = false;
+                }
+            }
+        });
         mEmail = (EditText) view.findViewById(R.id.email);
         mContactNumber = (EditText) view.findViewById(R.id.contactNumber);
         mPassword = (EditText) view.findViewById(R.id.password);
@@ -186,7 +237,6 @@ public class AddProfile extends Fragment {
                     Log.d("Add Profile", "Password:" + mPassword.getText().toString());
 
 
-
                     userModel.setUserFname(mFirstName.getText().toString());
                     userModel.setUserLname(mLastName.getText().toString());
                     userModel.setUsername(mUsername.getText().toString());
@@ -211,7 +261,21 @@ public class AddProfile extends Fragment {
         return view;
     }
 
+    Response.Listener<String> autocompleteplaceListener = new Response.Listener<String>() {
+        @Override
+        public void onResponse(String response) {
+            Log.d("response", response);
+            places.clear();
+            places.addAll(PlacesUtility.parsePredictionResult(response));
+            changeSuggestedPlaces();
+        }
+    };
 
+    private void changeSuggestedPlaces() {
+        placeAutoCompletePopupWindow.show();
+        placeAutoCompleteAdapter.notifyDataSetChanged();
+        Log.d("size of result", Integer.toString(places.size()));
+    }
 
 
     private void updateLabel() {
@@ -338,6 +402,32 @@ public class AddProfile extends Fragment {
         mListener = null;
     }
 
+    @Override
+    public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+        fromSelected = true;
+        mAddress.setText(places.get(i).getDescription());
+        placeAutoCompletePopupWindow.dismiss();
+        PlacesUtility.getPlaceDetails(getActivity(), places.get(i).getId(), getPlaceDetails);
+    }
+
+    boolean fromSelected;
+
+    Response.Listener<String> getPlaceDetails = new Response.Listener<String>() {
+        @Override
+        public void onResponse(String response) {
+            Log.d("place details = ", response);
+            try {
+                JSONObject object = new JSONObject(response);
+                JSONObject obj = object.getJSONObject("result");
+                obj = obj.getJSONObject("geometry");
+                obj = obj.getJSONObject("location");
+                Log.d("lat", Double.toString(obj.getDouble("lat")));
+                Log.d("lng", Double.toString(obj.getDouble("lng")));
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
+    };
 
     public interface OnFragmentInteractionListener {
         void onUserSelected(User user);
