@@ -1,12 +1,20 @@
 package com.example.joane14.myapplication.Fragments;
+
 import android.app.DatePickerDialog;
+import android.app.Dialog;
+import android.app.TimePickerDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.AlertDialog;
+import android.support.v7.widget.DefaultItemAnimator;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
@@ -18,10 +26,14 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListPopupWindow;
+import android.widget.Spinner;
+import android.widget.TimePicker;
 
 import com.android.volley.NetworkResponse;
 import com.android.volley.Request;
@@ -32,8 +44,13 @@ import com.android.volley.toolbox.Volley;
 import com.esafirm.imagepicker.features.ImagePicker;
 import com.esafirm.imagepicker.model.Image;
 import com.example.joane14.myapplication.Adapters.PlaceAutoCompleteAdapter;
+import com.example.joane14.myapplication.Adapters.TimeDayAdapter;
+import com.example.joane14.myapplication.Model.DayModel;
+import com.example.joane14.myapplication.Model.LocationModel;
 import com.example.joane14.myapplication.Model.Place;
+import com.example.joane14.myapplication.Model.TimeModel;
 import com.example.joane14.myapplication.Model.User;
+import com.example.joane14.myapplication.Model.UserDayTime;
 import com.example.joane14.myapplication.R;
 import com.example.joane14.myapplication.Utilities.PlacesUtility;
 import com.google.android.gms.maps.model.LatLng;
@@ -58,13 +75,15 @@ import java.util.Locale;
 import java.util.Map;
 
 import static android.app.Activity.RESULT_OK;
+
 public class AddProfile extends Fragment implements AdapterView.OnItemClickListener {
 
     private OnFragmentInteractionListener mListener;
 
     EditText mFirstName, mLastName, mUsername, mEmail, mContactNumber, mPassword, mConfirmPassword, mBirthdate;
-    AutoCompleteTextView mAddress;
+    AutoCompleteTextView mAddress, mFirstLoc, mSecondLoc, mThirdLoc;
     Button mNextAdd;
+    UserDayTime userDayTime;
     User userModel;
     ImageView slctImage;
     ImageView imageView;
@@ -75,6 +94,15 @@ public class AddProfile extends Fragment implements AdapterView.OnItemClickListe
     PlaceAutoCompleteAdapter placeAutoCompleteAdapter;
     ListPopupWindow placeAutoCompletePopupWindow;
     List<Place> places;
+    EditText etTimeFrom, etTimeTo;
+    List<String> selectedDays;
+    List<UserDayTime> userDayTimeList;
+    List<LocationModel> locationList;
+    private static RecyclerView.Adapter mAdapter;
+    private RecyclerView.LayoutManager layoutManager;
+    private static RecyclerView recyclerView;
+
+    Boolean firstLocBool, secondLocBool, thirdLocBool, addressBool, mMondayBool, mTuesdayBool, mWednesdayBool, mThursdayBool, mFridayBool;
 
     public AddProfile() {
 
@@ -102,6 +130,22 @@ public class AddProfile extends Fragment implements AdapterView.OnItemClickListe
 
         Log.d("Inside", "onCreateView");
 
+        selectedDays = new ArrayList<String>();
+
+        firstLocBool = false;
+        secondLocBool = false;
+        thirdLocBool = false;
+        addressBool = false;
+        mMondayBool = false;
+        mTuesdayBool = false;
+        mWednesdayBool = false;
+        mThursdayBool = false;
+        mFridayBool = false;
+
+        locationList = new ArrayList<LocationModel>();
+        userDayTimeList = new ArrayList<UserDayTime>();
+        userDayTime = new UserDayTime();
+
         userModel = new User();
 //        String filename = "123-1501684832903Screenshot_20170802-014107.jpg";
 
@@ -113,6 +157,17 @@ public class AddProfile extends Fragment implements AdapterView.OnItemClickListe
         mLastName = (EditText) view.findViewById(R.id.lastName);
         mUsername = (EditText) view.findViewById(R.id.username);
         mAddress = (AutoCompleteTextView) view.findViewById(R.id.address);
+        mFirstLoc = (AutoCompleteTextView) view.findViewById(R.id.firstLoc);
+        mSecondLoc = (AutoCompleteTextView) view.findViewById(R.id.secondLoc);
+        mThirdLoc = (AutoCompleteTextView) view.findViewById(R.id.thirdLoc);
+        Button mBtnAddTime = (Button) view.findViewById(R.id.addTime);
+
+        final CheckBox mMonday = (CheckBox) view.findViewById(R.id.cbMonday);
+        final CheckBox mTuesday = (CheckBox) view.findViewById(R.id.cbTuesday);
+        final CheckBox mWednesday = (CheckBox) view.findViewById(R.id.cbWednesday);
+        final CheckBox mThursday = (CheckBox) view.findViewById(R.id.cbThursday);
+        final CheckBox mFriday = (CheckBox) view.findViewById(R.id.cbFriday);
+
         places = new ArrayList<>();
         placeAutoCompleteAdapter = new PlaceAutoCompleteAdapter(getContext(), places);
         placeAutoCompletePopupWindow = new ListPopupWindow(getContext());
@@ -120,6 +175,90 @@ public class AddProfile extends Fragment implements AdapterView.OnItemClickListe
         placeAutoCompletePopupWindow.setAnchorView(mAddress);
         placeAutoCompletePopupWindow.setModal(false);
         placeAutoCompletePopupWindow.setOnItemClickListener(this);
+
+        mMonday.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (mMondayBool == true) {
+                    for (int init = 0; init < 5; init++) {
+                        if (selectedDays.get(init).equals("Monday")) {
+                            selectedDays.remove(init);
+                        }
+                    }
+                    mMondayBool = false;
+                }
+            }
+        });
+
+        mTuesday.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (mTuesdayBool == true) {
+                    for (int init = 0; init < 5; init++) {
+                        if (selectedDays.get(init).equals("Tuesday")) {
+                            selectedDays.remove(init);
+                        }
+                    }
+                    mTuesdayBool = false;
+                } else {
+                    selectedDays.add("Tuesday");
+                    mTuesdayBool = true;
+                }
+            }
+        });
+
+        mWednesday.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (mWednesdayBool == true) {
+                    for (int init = 0; init < 5; init++) {
+                        if (selectedDays.get(init).equals("Wednesday")) {
+                            selectedDays.remove(init);
+                        }
+                        mWednesdayBool = false;
+                    }
+                } else {
+                    mThursdayBool = true;
+                    selectedDays.add("Wednesday");
+                }
+            }
+        });
+
+
+        mThursday.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (mThursdayBool == true) {
+                    for (int init = 0; init < 5; init++) {
+                        if (selectedDays.get(init).equals("Thursday")) {
+                            selectedDays.remove(init);
+                        }
+                    }
+                    mThursdayBool = false;
+                } else {
+                    mThursdayBool = true;
+                    selectedDays.add("Thursday");
+                }
+
+            }
+        });
+
+        mFriday.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (mFridayBool == true) {
+                    for (int init = 0; init < 5; init++) {
+                        if (selectedDays.get(init).equals("Friday")) {
+                            selectedDays.remove(init);
+                        }
+                    }
+                    mFridayBool = false;
+                } else {
+                    mFridayBool = true;
+                    selectedDays.add("Friday");
+                }
+            }
+        });
 
         mAddress.addTextChangedListener(new TextWatcher() {
             @Override
@@ -141,6 +280,7 @@ public class AddProfile extends Fragment implements AdapterView.OnItemClickListe
                             @Override
                             public void run() {
                                 PlacesUtility.getPredictions(getActivity(), val, new LatLng(10.289218, 123.857058), autocompleteplaceListener);
+                                addressBool = true;
                             }
                         }).start();
                     }
@@ -149,6 +289,97 @@ public class AddProfile extends Fragment implements AdapterView.OnItemClickListe
                 }
             }
         });
+
+        mFirstLoc.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+                final String val = editable.toString();
+                if (!fromSelected) {
+                    if (val.length() > 4) {
+                        new Thread(new Runnable() {
+                            @Override
+                            public void run() {
+                                PlacesUtility.getPredictions(getActivity(), val, new LatLng(10.289218, 123.857058), autocompleteplaceListener);
+                                firstLocBool = true;
+                            }
+                        }).start();
+                    }
+                } else {
+                    fromSelected = false;
+                }
+            }
+        });
+
+        mSecondLoc.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+                final String val = editable.toString();
+                if (!fromSelected) {
+                    if (val.length() > 4) {
+                        new Thread(new Runnable() {
+                            @Override
+                            public void run() {
+                                secondLocBool = true;
+                                PlacesUtility.getPredictions(getActivity(), val, new LatLng(10.289218, 123.857058), autocompleteplaceListener);
+                            }
+                        }).start();
+                    }
+                } else {
+                    fromSelected = false;
+                }
+            }
+        });
+
+        mThirdLoc.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+                final String val = editable.toString();
+                if (!fromSelected) {
+                    if (val.length() > 4) {
+                        new Thread(new Runnable() {
+                            @Override
+                            public void run() {
+                                thirdLocBool = true;
+                                PlacesUtility.getPredictions(getActivity(), val, new LatLng(10.289218, 123.857058), autocompleteplaceListener);
+                            }
+                        }).start();
+                    }
+                } else {
+                    fromSelected = false;
+                }
+            }
+        });
+
         mEmail = (EditText) view.findViewById(R.id.email);
         mContactNumber = (EditText) view.findViewById(R.id.contactNumber);
         mPassword = (EditText) view.findViewById(R.id.password);
@@ -187,6 +418,27 @@ public class AddProfile extends Fragment implements AdapterView.OnItemClickListe
                 openImageChooser();
             }
         });
+
+        mBtnAddTime.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (selectedDays.isEmpty()) {
+                    AlertDialog ad = new AlertDialog.Builder(getContext()).create();
+                    ad.setTitle("Alert!");
+                    ad.setMessage("You need to choose your available days for meet up.");
+                    ad.setButton(AlertDialog.BUTTON_POSITIVE, "Okay", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            dialog.dismiss();
+                        }
+                    });
+                    ad.show();
+                }else{
+                    customDialog();
+                }
+            }
+        });
+
         mNextAdd.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -223,6 +475,29 @@ public class AddProfile extends Fragment implements AdapterView.OnItemClickListe
                     mBirthdate.setError("Field cannot be empty");
                 }
 
+                if (mFirstLoc.getText().length() == 0) {
+                    mFirstLoc.setError("Field cannot be empty");
+                }
+                if (mSecondLoc.getText().length() == 0) {
+                    mSecondLoc.setError("Field cannot be empty");
+                }
+                if (mThirdLoc.getText().length() == 0) {
+                    mThirdLoc.setError("Field cannot be empty");
+                }
+
+                if (!(mMonday.isChecked()) && !(mTuesday.isChecked()) && !(mWednesday.isChecked()) && !(mThursday.isChecked()) && !(mFriday.isChecked())) {
+                    AlertDialog ad = new AlertDialog.Builder(getContext()).create();
+                    ad.setTitle("Alert!");
+                    ad.setMessage("Should choose available days for meet up.");
+                    ad.setButton(AlertDialog.BUTTON_POSITIVE, "Okay", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            dialog.dismiss();
+                        }
+                    });
+                }
+
+
                 if (mPassword.getText().toString().equals(mConfirmPassword.getText().toString()) && mFirstName.getText().length() != 0 &&
                         mLastName.getText().length() != 0 && mUsername.getText().length() != 0 && mAddress.getText().length() != 0 &&
                         mEmail.getText().length() != 0 && mContactNumber.getText().length() != 0 && mPassword.getText().length() != 0 &&
@@ -252,13 +527,154 @@ public class AddProfile extends Fragment implements AdapterView.OnItemClickListe
                         e.printStackTrace();
                     }
 
-                    mListener.onUserSelected(userModel);
+                    mListener.onUserSelected(userModel, locationList, userDayTimeList);
 
                 }
             }
         });
 
+        recyclerView = (RecyclerView) view.findViewById(R.id.recycler_view_timeDay);
+        recyclerView.setHasFixedSize(true);
+
+        layoutManager = new LinearLayoutManager(getContext());
+        recyclerView.setLayoutManager(layoutManager);
+        recyclerView.setItemAnimator(new DefaultItemAnimator());
+
+        mAdapter = new TimeDayAdapter(userDayTimeList);
+        recyclerView.setAdapter(mAdapter);
         return view;
+    }
+
+    public void customDialog() {
+        final Dialog dialog = new Dialog(getContext());
+        dialog.setContentView(R.layout.time_date_dialog);
+        dialog.setTitle("Choose Time and Day");
+        final DayModel day;
+        final TimeModel time;
+
+
+        day = new DayModel();
+        time = new TimeModel();
+
+        // set the custom dialog components - text, image and button
+        etTimeFrom = (EditText) dialog.findViewById(R.id.tcFrom);
+        etTimeTo = (EditText) dialog.findViewById(R.id.tcTo);
+        Button mBtnOkay = (Button) dialog.findViewById(R.id.btnOkay);
+        Button mBtnCancel = (Button) dialog.findViewById(R.id.btnCancel);
+        Spinner mSpinnerDay = (Spinner) dialog.findViewById(R.id.spinnerDay);
+
+        if (selectedDays.isEmpty()) {
+            Log.d("selectedDays", "empty");
+        } else {
+            Log.d("selectedDays", "not empty");
+        }
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(getContext(), android.R.layout.simple_dropdown_item_1line, selectedDays);
+        adapter.setDropDownViewResource(R.layout.support_simple_spinner_dropdown_item);
+        if (adapter == null) {
+            Log.d("apater", "is null");
+        } else {
+            Log.d("apater", "is not null");
+        }
+        mSpinnerDay.setAdapter(adapter);
+
+        mSpinnerDay.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                day.setStrDay(selectedDays.get(position));
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
+        etTimeFrom.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                CreateTimePicker(0);
+            }
+        });
+        etTimeTo.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                CreateTimePicker(1);
+            }
+        });
+
+        mBtnOkay.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                time.setStrTime(etTimeTo.getText().toString() + " - " + etTimeFrom.getText().toString());
+                userDayTime.setDay(day);
+                userDayTime.setTime(time);
+                userDayTimeList.add(userDayTime);
+                mAdapter.notifyDataSetChanged();
+                dialog.cancel();
+            }
+        });
+
+        mBtnCancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.cancel();
+            }
+        });
+        dialog.show();
+    }
+
+    public void CreateTimePicker(final int pos) {
+
+//        userDayTime = new UserDayTime();
+
+        final java.util.Calendar c = java.util.Calendar.getInstance();
+        int mHour = c.get(java.util.Calendar.HOUR_OF_DAY);
+        int mMinute = c.get(java.util.Calendar.MINUTE);
+
+
+        TimePickerDialog timePickerDialog = new TimePickerDialog(getContext(),
+                new TimePickerDialog.OnTimeSetListener() {
+
+                    @Override
+                    public void onTimeSet(TimePicker view, int hourOfDay,
+                                          int minute) {
+                        int hour = hourOfDay;
+                        int minutes = minute;
+                        String timeSet = "";
+                        if (hour > 12) {
+                            hour -= 12;
+                            timeSet = "PM";
+                        } else if (hour == 0) {
+                            hour += 12;
+                            timeSet = "AM";
+                        } else if (hour == 12) {
+                            timeSet = "PM";
+                        } else {
+                            timeSet = "AM";
+                        }
+
+                        String min = "";
+                        if (minutes < 10)
+                            min = "0" + minutes;
+                        else
+                            min = String.valueOf(minutes);
+
+                        // Append in a StringBuilder
+                        String aTime = new StringBuilder().append(hour).append(':')
+                                .append(min).append(" ").append(timeSet).toString();
+
+                        String timeGiven = "";
+                        timeGiven = hourOfDay + ":" + minute;
+                        Log.d("time selected", timeGiven);
+
+                        if (pos == 0) {
+                            etTimeFrom.setText(aTime);
+                        } else {
+                            etTimeTo.setText(aTime);
+                        }
+
+                    }
+                }, mHour, mMinute, false);
+        timePickerDialog.show();
     }
 
     Response.Listener<String> autocompleteplaceListener = new Response.Listener<String>() {
@@ -405,7 +821,50 @@ public class AddProfile extends Fragment implements AdapterView.OnItemClickListe
     @Override
     public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
         fromSelected = true;
-        mAddress.setText(places.get(i).getDescription());
+        if (firstLocBool == true) {
+            mFirstLoc.setText(places.get(i).getDescription());
+            firstLocBool = false;
+            LocationModel locationModel = new LocationModel();
+            locationModel.setLocationName(places.get(i).getDescription());
+            locationModel.setLongitude(Double.toString(places.get(i).getLongitude()));
+            locationModel.setLatitude(Double.toString(places.get(i).getLatitude()));
+            locationModel.setStatus("Address");
+            locationList.add(locationModel);
+        }
+
+        if (secondLocBool == true) {
+            mSecondLoc.setText(places.get(i).getDescription());
+            secondLocBool = false;
+            LocationModel locationModel = new LocationModel();
+            locationModel.setLocationName(places.get(i).getDescription());
+            locationModel.setLongitude(Double.toString(places.get(i).getLongitude()));
+            locationModel.setLatitude(Double.toString(places.get(i).getLatitude()));
+            locationModel.setStatus("MeetUp");
+            locationList.add(locationModel);
+        }
+
+        if (thirdLocBool == true) {
+            mThirdLoc.setText(places.get(i).getDescription());
+            thirdLocBool = false;
+            LocationModel locationModel = new LocationModel();
+            locationModel.setLocationName(places.get(i).getDescription());
+            locationModel.setLongitude(Double.toString(places.get(i).getLongitude()));
+            locationModel.setLatitude(Double.toString(places.get(i).getLatitude()));
+            locationModel.setStatus("MeetUp");
+            locationList.add(locationModel);
+        }
+
+        if (addressBool == true) {
+            mAddress.setText(places.get(i).getDescription());
+            addressBool = false;
+            LocationModel locationModel = new LocationModel();
+            locationModel.setLocationName(places.get(i).getDescription());
+            locationModel.setLongitude(Double.toString(places.get(i).getLongitude()));
+            locationModel.setLatitude(Double.toString(places.get(i).getLatitude()));
+            locationModel.setStatus("MeetUp");
+            locationList.add(locationModel);
+        }
+
         placeAutoCompletePopupWindow.dismiss();
         PlacesUtility.getPlaceDetails(getActivity(), places.get(i).getId(), getPlaceDetails);
     }
@@ -430,6 +889,6 @@ public class AddProfile extends Fragment implements AdapterView.OnItemClickListe
     };
 
     public interface OnFragmentInteractionListener {
-        void onUserSelected(User user);
+        void onUserSelected(User user, List<LocationModel> listLoc, List<UserDayTime> listDayTime);
     }
 }

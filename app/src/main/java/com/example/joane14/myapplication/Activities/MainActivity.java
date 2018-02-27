@@ -118,7 +118,10 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
 //                registerUser();
-                Intent intent = new Intent(MainActivity.this, LocationChooser.class);
+                Intent intent = new Intent(MainActivity.this, SignUp.class);
+                Bundle bundle = new Bundle();
+                bundle.putBoolean("Genre", true);
+                intent.putExtras(bundle);
                 startActivity(intent);
             }
 
@@ -191,44 +194,6 @@ public class MainActivity extends AppCompatActivity {
                                         }
 
                                         checkFB(userMod);
-//                                        Log.d("fbLogin", response.toString());
-//                                        Log.d("User Data", response.toString());
-//                                        Log.d("User json object", user.toString());
-//                                        try {
-//                                            Log.d("User id", user.getString("id").toString());
-//                                        } catch (JSONException e) {
-//                                            e.printStackTrace();
-//                                        }
-//
-//                                        try {
-//                                            Log.d("inside try ctch", "");
-//
-//                                            email = user.getString("email").toString();
-//                                            name = user.getString("name").toString();
-//                                            userId = user.getString("id").toString();
-//                                            gender = user.getString("gender").toString();
-//
-//                                            Log.d("name", name);
-//                                            Log.d("gender", gender);
-//                                            Log.d("email", email);
-//                                            Log.d("userId", userId);
-//
-//                                            mbundle.putString("email", email);
-//                                            mbundle.putString("name", name);
-//                                            mbundle.putString("userId", userId);
-//                                            mbundle.putString("gender", gender);
-//
-//                                            PrefUtil.getPrefUtilInstance(MainActivity.this)
-//                                                    .saveFacebookUserInfo(name, email, gender, userId);
-//
-//                                            SPUtility.getSPUtil(MainActivity.this).putObject("USER_OBJECT", user);
-//
-//                                            Intent intent = new Intent(MainActivity.this, LandingPage.class);
-//                                            intent.putExtra("ProfileBundle", mbundle);
-//                                            startActivity(intent);
-//                                        } catch (JSONException e) {
-//                                            e.printStackTrace();
-//                                        }
                                     }
                                 });
                         Bundle parameters = new Bundle();

@@ -8,7 +8,15 @@ import java.io.Serializable;
 
 public class LocationModel implements Serializable{
 
-    String locationName, longitude, latitude;
+    String locationName, longitude, latitude, status;
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
 
     public String getLocationName() {
         return locationName;

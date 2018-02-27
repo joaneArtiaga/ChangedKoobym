@@ -67,30 +67,6 @@ public class SignUp extends AppCompatActivity implements
             fragmentManager = getSupportFragmentManager();
             Genre genreModel = new Genre();
             changeFragment(genreModel);
-        } else
-            if(getIntent().getBundleExtra("confirmation").getBoolean("AddFrag")==true){
-            MeetUpLocObj meetUpLocObj = new MeetUpLocObj();
-            mBundle = getIntent().getExtras();
-            meetUpLocObj = (MeetUpLocObj) mBundle.getSerializable("locationObj");
-            if(meetUpLocObj!=null){
-                Log.d("MeetUpLocObj", "is not null");
-                this.locations = meetUpLocObj.getLocationModelList();
-
-                if(this.locations.size()==0){
-                    Log.d("Location", "is null");
-                }else{
-                    Log.d("Location", "is not null");
-                }
-            }else{
-                Log.d("MeetUpLocObj", "is null");
-            }
-
-            Bundle bundle = new Bundle();
-            bundle.putSerializable("meetUpLocObj", meetUpLocObj);
-            fragmentManager = getSupportFragmentManager();
-            AddTimeFrag addTimeModel = new AddTimeFrag();
-            addTimeModel.setArguments(bundle);
-            changeFragment(addTimeModel);
         }
 
         if(this.locations== null || this.locations.size()==0){
@@ -125,9 +101,11 @@ public class SignUp extends AppCompatActivity implements
     }
 
     @Override
-    public void onUserSelected(User user) {
+    public void onUserSelected(User user, List<LocationModel> locationModelList, List<UserDayTime> listUserDayTime) {
         mBundle = new Bundle();
         user.setGenreArray(this.genres);
+        locations = locationModelList;
+        userDayTimeList = listUserDayTime;
         this.userModel = user;
         Log.d("Add Profile", "First Name:" + userModel.getUserFname());
         Log.d("Add Profile", "Last Name:" + userModel.getUserLname());
