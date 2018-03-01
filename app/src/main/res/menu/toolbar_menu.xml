@@ -16,5 +16,10 @@
         android:title="Notifications"
         app:showAsAction="always" />
 
+    <item
+        android:id="@+id/action_overflow"
+        app:showAsAction="never"
+        android:title="Overflow"/>
+
 
 </menu>

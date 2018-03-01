@@ -18,6 +18,16 @@
         android:textColor="@color/colorLightOrange"
         android:textSize="30dp"/>
 
+    <!--<fragment xmlns:android="http://schemas.android.com/apk/res/android"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="490dp"-->
+        <!--android:name="com.google.android.gms.maps.SupportMapFragment"-->
+        <!--android:id="@+id/map"-->
+        <!--android:layout_alignParentTop="true"-->
+        <!--android:layout_alignParentBottom="true"-->
+        <!--android:layout_alignParentLeft="true"-->
+        <!--android:layout_alignParentRight="true"/>-->
+
     <FrameLayout
         android:id="@+id/fragment_landing_container"
         android:layout_width="match_parent"

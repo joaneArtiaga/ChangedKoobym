@@ -37,8 +37,10 @@ import com.android.volley.toolbox.StringRequest;
 import com.bumptech.glide.Glide;
 import com.example.joane14.myapplication.Class.BadgeDrawable;
 import com.example.joane14.myapplication.Fragments.Constants;
+import com.example.joane14.myapplication.Fragments.MapLandingPage;
 import com.example.joane14.myapplication.Fragments.MostRentedBookFrag;
 import com.example.joane14.myapplication.Fragments.PreferencesFrag;
+import com.example.joane14.myapplication.Fragments.SearcgByCategoryFrag;
 import com.example.joane14.myapplication.Fragments.SwapLandingPageFrag;
 import com.example.joane14.myapplication.Model.User;
 import com.example.joane14.myapplication.R;
@@ -55,7 +57,9 @@ public class LandingPage extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener,
         MostRentedBookFrag.OnFragmentInteractionListener,
         PreferencesFrag.OnFragmentInteractionListener,
-        SwapLandingPageFrag.OnSwapLPInteractionListener {
+        SwapLandingPageFrag.OnSwapLPInteractionListener,
+        MapLandingPage.OnMapInteractionListener,
+        SearcgByCategoryFrag.OnFragmentInteractionListener {
     private String name, userId, email, gender;
     Bundle mBundle, mBundleLogin, bundlePass;
     User userModel;
@@ -167,7 +171,8 @@ public class LandingPage extends AppCompatActivity
                 bundlePass.putSerializable("userModelPass", userModel);
                 Log.d("userModelPass1st", userModel.toString());
                 fragmentManager = getSupportFragmentManager();
-                PreferencesFrag prefFrag = PreferencesFrag.newInstance(bundlePass);
+//                PreferencesFrag prefFrag = PreferencesFrag.newInstance(bundlePass);
+                MapLandingPage prefFrag = MapLandingPage.newInstance();
                 FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
                 fragmentTransaction.replace(R.id.fragment_landing_container, prefFrag, prefFrag.getTag());
                 fragmentTransaction.commit();
@@ -204,31 +209,6 @@ public class LandingPage extends AppCompatActivity
 
             }
         }
-//
-//        if(null!=intent.getBundleExtra("fromRegister")){
-//            Log.d("User from Register","inside");
-//
-//            mBundle = intent.getBundleExtra("fromRegister");
-//            if(mBundle.getBoolean("fromRegister")==true){
-//                Log.d("inside", "TRUEfromRegister");
-//                fragmentManager = getSupportFragmentManager();
-//                MostRentedBookFrag mrbf = MostRentedBookFrag.newInstance();
-//                FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-//                fragmentTransaction.replace(R.id.fragment_landing_container, MostRentedBookFrag.newInstance(), mrbf.getTag());
-//                fragmentTransaction.commit();
-//            }else{
-//                bundlePass.putSerializable("userModelPass", userModel);
-//                fragmentManager = getSupportFragmentManager();
-//                PreferencesFrag pref = PreferencesFrag.newInstance();
-//                pref.setArguments(bundlePass);
-//                FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-//                fragmentTransaction.replace(R.id.fragment_landing_container, PreferencesFrag.newInstance(), pref.getTag());
-//                fragmentTransaction.commit();
-//
-//            }
-//
-//        }
-
     }
 
     @Override
@@ -322,6 +302,26 @@ public class LandingPage extends AppCompatActivity
                 return false;
             }
         });
+
+        searchView.setOnSearchClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Log.d("SearchView", "onclick");
+                FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+                ft.replace(R.id.fragment_landing_container, SearcgByCategoryFrag.newInstance());
+                ft.commit();
+            }
+        });
+
+//        searchView.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                Log.d("SearchView", "onclick");
+//                FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+//                ft.replace(R.id.fragment_landing_container, SearcgByCategoryFrag.newInstance());
+//                ft.commit();
+//            }
+//        });
         // searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
         item.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
             @Override
@@ -429,4 +429,9 @@ public class LandingPage extends AppCompatActivity
             Toast.makeText(getApplicationContext(), "push notification", Toast.LENGTH_SHORT).show();
         }
     };
+
+    @Override
+    public void onMapInteraction(Uri uri) {
+
+    }
 }
