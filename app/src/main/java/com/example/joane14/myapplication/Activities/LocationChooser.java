@@ -323,8 +323,8 @@ public class LocationChooser extends FragmentActivity implements
                     MarkerOptions marker = new MarkerOptions().position(
                             latLng)
                             .title(getCompleteAddress(latLat, latLong));
-                    marker.icon(BitmapDescriptorFactory
-                            .defaultMarker(BitmapDescriptorFactory.HUE_AZURE));
+                        marker.icon(BitmapDescriptorFactory
+                                .defaultMarker(BitmapDescriptorFactory.HUE_AZURE));
 
                     thisMarker = googleMap.addMarker(marker);
                     mMarker.add(thisMarker);

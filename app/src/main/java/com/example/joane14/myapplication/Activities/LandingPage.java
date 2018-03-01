@@ -171,6 +171,8 @@ public class LandingPage extends AppCompatActivity
                 bundlePass.putSerializable("userModelPass", userModel);
                 Log.d("userModelPass1st", userModel.toString());
                 fragmentManager = getSupportFragmentManager();
+                TextView title = (TextView) findViewById(R.id.lpTitle);
+                title.setVisibility(View.GONE);
 //                PreferencesFrag prefFrag = PreferencesFrag.newInstance(bundlePass);
                 MapLandingPage prefFrag = MapLandingPage.newInstance();
                 FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
@@ -285,6 +287,19 @@ public class LandingPage extends AppCompatActivity
 //        LayerDrawable icon = (LayerDrawable) item.getIcon();
 
 
+        searchView.setOnCloseListener(new SearchView.OnCloseListener() {
+            @Override
+            public boolean onClose() {
+                fragmentManager = getSupportFragmentManager();
+//                PreferencesFrag prefFrag = PreferencesFrag.newInstance(bundlePass);
+                MapLandingPage prefFrag = MapLandingPage.newInstance();
+                FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+                fragmentTransaction.replace(R.id.fragment_landing_container, prefFrag, prefFrag.getTag());
+                fragmentTransaction.commit();
+
+                return false;
+            }
+        });
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
@@ -299,6 +314,7 @@ public class LandingPage extends AppCompatActivity
 
             @Override
             public boolean onQueryTextChange(String newText) {
+
                 return false;
             }
         });

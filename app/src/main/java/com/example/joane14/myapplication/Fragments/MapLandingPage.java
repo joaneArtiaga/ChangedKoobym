@@ -6,6 +6,7 @@ import android.content.pm.PackageManager;
 import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
+import android.location.LocationManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
@@ -31,9 +32,12 @@ import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.MapView;
+import com.google.android.gms.maps.MapsInitializer;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
+import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
@@ -55,7 +59,9 @@ public class MapLandingPage extends Fragment implements
         GoogleApiClient.OnConnectionFailedListener,
         GoogleMap.OnMarkerClickListener{
 
-    GoogleMap googleMap;
+    MapView mMapView;
+    private GoogleMap googleMap;
+
     List<Marker> mMarker;
     private double longitude;
     private double latitude;
@@ -63,6 +69,7 @@ public class MapLandingPage extends Fragment implements
     private Marker thisMarker;
     private OnMapInteractionListener mListener;
     List<BookOwnerModel> bookOwnerModelList;
+    private LocationManager locManager;
 
     public MapLandingPage() {
     }
@@ -87,19 +94,70 @@ public class MapLandingPage extends Fragment implements
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_map_landing_page, container, false);
 
+        mMapView = (MapView) view.findViewById(R.id.mapView);
+        mMapView.onCreate(savedInstanceState);
+        mMapView.onResume();
+
+        try {
+            MapsInitializer.initialize(getActivity().getApplicationContext());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        googleMap = mMapView.getMap();
+
+
+        double latitude = 17.385044;
+        double longitude = 78.486671;
+
+        // create marker
+        MarkerOptions marker = new MarkerOptions().position(
+                new LatLng(latitude, longitude)).title("Hello Maps");
+
+        // Changing marker icon
+        marker.icon(BitmapDescriptorFactory
+                .defaultMarker(BitmapDescriptorFactory.HUE_ROSE));
+
+        // adding marker
+        googleMap.addMarker(marker);
+        CameraPosition cameraPosition = new CameraPosition.Builder()
+                .target(new LatLng(17.385044, 78.486671)).zoom(12).build();
+        googleMap.animateCamera(CameraUpdateFactory
+                .newCameraPosition(cameraPosition));
+
         bookOwnerModelList = new ArrayList<BookOwnerModel>();
         User user = (User) SPUtility.getSPUtil(getContext()).getObject("USER_OBJECT", User.class);
         getSuggested(user.getUserId());
 
-//
-//        SupportMapFragment mapFragment = (SupportMapFragment) getFragmentManager()
-//                .findFragmentById(R.id.map);
-//        mapFragment.getMapAsync((OnMapReadyCallback) getContext());
 
         mMarker = new ArrayList<Marker>();
 
 
         return view;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        mMapView.onResume();
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        mMapView.onPause();
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        mMapView.onDestroy();
+    }
+
+    @Override
+    public void onLowMemory() {
+        super.onLowMemory();
+        mMapView.onLowMemory();
     }
 
     public String getCompleteAddress(double latitude, double longitude){
@@ -141,6 +199,31 @@ public class MapLandingPage extends Fragment implements
                 Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd").registerTypeAdapter(Date.class, GsonDateDeserializer.getInstance()).create();
                 BookOwnerModel[] bookOwnerModels = gson.fromJson(response, BookOwnerModel[].class);
                 bookOwnerModelList.addAll(Arrays.asList(bookOwnerModels));
+
+                double latLat, latLong;
+
+                for(int init=0; init<bookOwnerModelList.size(); init++){
+                    Log.d("Inside", "BookOwner");
+
+                    for(int num=0; num<bookOwnerModelList.get(init).getUserObj().getLocationArray().size(); num++){
+                        Log.d("Inside", "LocationArray");
+                        if(bookOwnerModelList.get(init).getUserObj().getLocationArray().get(num).getStatus().equals("Address")){
+                            Log.d("Inside", bookOwnerModelList.get(init).getUserObj().getLocationArray().get(num).getLocationName());
+
+                            latLat = Double.parseDouble(bookOwnerModelList.get(init).getUserObj().getLocationArray().get(num).getLatitude());
+                            latLong = Double.parseDouble(bookOwnerModelList.get(init).getUserObj().getLocationArray().get(num).getLongitude());
+
+                            String title = bookOwnerModelList.get(init).getUserObj().getLocationArray().get(num).getLocationName();
+
+                            MarkerOptions markerOptions = new MarkerOptions().position(new LatLng(latLat, latLong)).title(title);
+                            markerOptions.icon(BitmapDescriptorFactory
+                                    .defaultMarker(BitmapDescriptorFactory.HUE_AZURE));
+                            googleMap.addMarker(markerOptions);
+                        }
+
+                    }
+
+                }
             }
         }, new Response.ErrorListener() {
             @Override
@@ -208,25 +291,40 @@ public class MapLandingPage extends Fragment implements
     public void onMapReady(GoogleMap mMap) {
         googleMap = mMap;
 
+        Log.d("onMapReady","inside");
         googleMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
             @Override
             public void onMapClick(LatLng latLng) {
                 double latLat, latLong;
 
-                latLat = latLng.latitude;
-                latLong = latLng.longitude;
+                for(int init=0; init<bookOwnerModelList.size(); init++){
+                    for(int num=0; num<bookOwnerModelList.get(init).getUserObj().getLocationArray().size(); num++){
+                        if(bookOwnerModelList.get(init).getUserObj().getLocationArray().get(num).getStatus().equals("Address")){
+                            latLat = Double.parseDouble(bookOwnerModelList.get(init).getUserObj().getLocationArray().get(num).getLatitude());
+                            latLong = Double.parseDouble(bookOwnerModelList.get(init).getUserObj().getLocationArray().get(num).getLongitude());
+                            String title = bookOwnerModelList.get(init).getUserObj().getLocationArray().get(num).getLocationName();
+                            MarkerOptions marker = new MarkerOptions().position(new LatLng(latLat, latLong)).title(title);
+                            marker.icon(BitmapDescriptorFactory
+                                    .defaultMarker(BitmapDescriptorFactory.HUE_AZURE));
+                            thisMarker = googleMap.addMarker(marker);
+                            mMarker.add(thisMarker);
+                        }
 
-                MarkerOptions marker = new MarkerOptions().position(
-                        latLng)
-                        .title(getCompleteAddress(latLat, latLong));
-                marker.icon(BitmapDescriptorFactory
-                        .defaultMarker(BitmapDescriptorFactory.HUE_AZURE));
+                    }
 
-                thisMarker = googleMap.addMarker(marker);
-                mMarker.add(thisMarker);
-                int position = mMarker.indexOf(thisMarker);
-
-                Log.d("position Marker", Integer.toString(position));
+                }
+//
+//                MarkerOptions marker = new MarkerOptions().position(
+//                        latLng)
+//                        .title(getCompleteAddress(latLat, latLong));
+//                marker.icon(BitmapDescriptorFactory
+//                        .defaultMarker(BitmapDescriptorFactory.HUE_AZURE));
+//
+//                thisMarker = googleMap.addMarker(marker);
+//                mMarker.add(thisMarker);
+//                int position = mMarker.indexOf(thisMarker);
+//
+//                Log.d("position Marker", Integer.toString(position));
             }
         });
     }
@@ -264,4 +362,6 @@ public class MapLandingPage extends Fragment implements
     public interface OnMapInteractionListener {
         void onMapInteraction(Uri uri);
     }
+
+
 }
