@@ -1,8 +1,11 @@
 package com.example.joane14.myapplication.Fragments;
 
 import android.Manifest;
+import android.app.Dialog;
 import android.content.Context;
+import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
 import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
@@ -11,19 +14,34 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.FrameLayout;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.RatingBar;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
+import com.bumptech.glide.Glide;
 import com.example.joane14.myapplication.Activities.GsonDateDeserializer;
+import com.example.joane14.myapplication.Activities.ProfileActivity;
+import com.example.joane14.myapplication.Activities.ViewAuctionBook;
+import com.example.joane14.myapplication.Activities.ViewBookAct;
+import com.example.joane14.myapplication.Model.AuctionDetailModel;
 import com.example.joane14.myapplication.Model.Book;
 import com.example.joane14.myapplication.Model.BookOwnerModel;
+import com.example.joane14.myapplication.Model.LocationModel;
+import com.example.joane14.myapplication.Model.RentalDetail;
+import com.example.joane14.myapplication.Model.SwapDetail;
 import com.example.joane14.myapplication.Model.User;
 import com.example.joane14.myapplication.R;
 import com.example.joane14.myapplication.Utilities.SPUtility;
@@ -57,7 +75,7 @@ public class MapLandingPage extends Fragment implements
         GoogleApiClient.ConnectionCallbacks,
         GoogleMap.OnMapLongClickListener,
         GoogleApiClient.OnConnectionFailedListener,
-        GoogleMap.OnMarkerClickListener{
+        GoogleMap.OnMarkerClickListener {
 
     MapView mMapView;
     private GoogleMap googleMap;
@@ -70,6 +88,8 @@ public class MapLandingPage extends Fragment implements
     private OnMapInteractionListener mListener;
     List<BookOwnerModel> bookOwnerModelList;
     private LocationManager locManager;
+    FrameLayout fm;
+    Bitmap bm;
 
     public MapLandingPage() {
     }
@@ -106,13 +126,26 @@ public class MapLandingPage extends Fragment implements
 
         googleMap = mMapView.getMap();
 
+        User user = (User) SPUtility.getSPUtil(getContext()).getObject("USER_OBJECT", User.class);
+        Log.d("User", user.toString());
 
-        double latitude = 17.385044;
-        double longitude = 78.486671;
+        double latitude = 0, longitude = 0;
+
+        latitude = Double.parseDouble(user.getLocationArray().get(0).getLatitude());
+        longitude = Double.parseDouble(user.getLocationArray().get(0).getLongitude());
+
+        for (int init = 0; init < user.getLocationArray().size(); init++) {
+            LocationModel location = user.getLocationArray().get(init);
+            Log.d("UserLocation", user.getLocationArray().get(init).toString());
+            if(location.getStatus().equals("Address")){
+                latitude = Double.parseDouble(user.getLocationArray().get(init).getLatitude());
+                longitude = Double.parseDouble(user.getLocationArray().get(init).getLongitude());
+            }
+        }
 
         // create marker
         MarkerOptions marker = new MarkerOptions().position(
-                new LatLng(latitude, longitude)).title("Hello Maps");
+                new LatLng(latitude, longitude)).title("Your Address");
 
         // Changing marker icon
         marker.icon(BitmapDescriptorFactory
@@ -121,19 +154,182 @@ public class MapLandingPage extends Fragment implements
         // adding marker
         googleMap.addMarker(marker);
         CameraPosition cameraPosition = new CameraPosition.Builder()
-                .target(new LatLng(17.385044, 78.486671)).zoom(12).build();
+                .target(new LatLng(latitude, longitude)).zoom(20).build();
         googleMap.animateCamera(CameraUpdateFactory
                 .newCameraPosition(cameraPosition));
 
         bookOwnerModelList = new ArrayList<BookOwnerModel>();
-        User user = (User) SPUtility.getSPUtil(getContext()).getObject("USER_OBJECT", User.class);
         getSuggested(user.getUserId());
 
 
         mMarker = new ArrayList<Marker>();
 
 
+        googleMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
+            @Override
+            public boolean onMarkerClick(Marker marker) {
+                final Dialog dialogCustom = new Dialog(getContext());
+                dialogCustom.setContentView(R.layout.map_book_item);
+
+                BookOwnerModel bookOwnerModel = new BookOwnerModel();
+
+                int bookOwnerId = Integer.parseInt(marker.getTitle());
+
+                for (int mark = 0; mark < bookOwnerModelList.size(); mark++) {
+                    if (bookOwnerModelList.get(mark).getBookOwnerId() == bookOwnerId) {
+                        bookOwnerModel = bookOwnerModelList.get(mark);
+                    }
+                }
+
+                TextView mTitle = (TextView) dialogCustom.findViewById(R.id.lpBookTitle);
+                TextView mAuthor = (TextView) dialogCustom.findViewById(R.id.lpAuthor);
+                TextView mStatus = (TextView) dialogCustom.findViewById(R.id.ratingStatusBook);
+                LinearLayout mStatLl = (LinearLayout) dialogCustom.findViewById(R.id.status_ll);
+                RatingBar mRate = (RatingBar) dialogCustom.findViewById(R.id.rating_bookRating);
+                ImageView ivBookSwap = (ImageView) dialogCustom.findViewById(R.id.displayBookPic);
+                Button mViewOwner = (Button) dialogCustom.findViewById(R.id.btnOwner);
+                Button mViewBook = (Button) dialogCustom.findViewById(R.id.btnBook);
+
+                Glide.with(getContext()).load(bookOwnerModel.getBookObj().getBookFilename()).centerCrop().into(ivBookSwap);
+
+
+                mTitle.setText(bookOwnerModel.getBookObj().getBookTitle());
+
+                String author = " ";
+                if (bookOwnerModel.getBookObj().getBookAuthor().size() != 0) {
+                    for (int init = 0; init < bookOwnerModel.getBookObj().getBookAuthor().size(); init++) {
+                        if (!(bookOwnerModel.getBookObj().getBookAuthor().get(init).getAuthorFName().equals(""))) {
+                            author += bookOwnerModel.getBookObj().getBookAuthor().get(init).getAuthorFName() + " ";
+                            if (!(bookOwnerModel.getBookObj().getBookAuthor().get(init).getAuthorLName().equals(""))) {
+                                author += bookOwnerModel.getBookObj().getBookAuthor().get(init).getAuthorLName();
+                                if (init + 1 < bookOwnerModel.getBookObj().getBookAuthor().size()) {
+                                    author += ", ";
+                                }
+                            }
+                        }
+                    }
+                } else {
+                    author = "Unknown Author";
+                }
+
+                mAuthor.setText(author);
+                mStatus.setText(bookOwnerModel.getStatus());
+                if (bookOwnerModel.getStatus().equals("Rent")) {
+                    mStatLl.setBackgroundColor(ContextCompat.getColor(getContext(), R.color.colorRent));
+                } else if (bookOwnerModel.getStatus().equals("Swap")) {
+                    mStatLl.setBackgroundColor(ContextCompat.getColor(getContext(), R.color.colorSwap));
+                } else if (bookOwnerModel.getStatus().equals("Auction")) {
+                    mStatLl.setBackgroundColor(ContextCompat.getColor(getContext(), R.color.colorAuction));
+                } else {
+                    mStatLl.setBackgroundColor(ContextCompat.getColor(getContext(), R.color.colorGray));
+                }
+
+                mRate.setRating(Float.parseFloat(String.valueOf(bookOwnerModel.getRate())));
+
+                final BookOwnerModel finalBookOwnerModel = bookOwnerModel;
+                mViewOwner.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Intent intent = new Intent(getContext(), ProfileActivity.class);
+                        Bundle bundle = new Bundle();
+                        bundle.putSerializable("userModelPass", finalBookOwnerModel.getUserObj());
+                        intent.putExtras(bundle);
+                        startActivity(intent);
+                    }
+                });
+
+                final BookOwnerModel finalBookOwnerModel1 = bookOwnerModel;
+                mViewBook.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        if (finalBookOwnerModel1.getStatus().equals("Swap")) {
+                            getSwapDetail(finalBookOwnerModel1.getBookOwnerId());
+                        } else if (finalBookOwnerModel1.getStatus().equals("Rent")) {
+                            getRentalDetail(finalBookOwnerModel1.getBookOwnerId());
+                        } else {
+                            getAuctionDetail(finalBookOwnerModel1.getBookOwnerId());
+                        }
+                    }
+                });
+                dialogCustom.show();
+
+                return false;
+            }
+        });
         return view;
+    }
+
+    private void getRentalDetail(int bookOwnerId) {
+        String URL = Constants.GET_BOOK_OWNER_RENTAL_DETAIL + bookOwnerId;
+        Log.d("PreferenceURL", URL);
+        StringRequest stringRequest = new StringRequest(Request.Method.GET, URL, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                Log.d("RentalDetailResponse", response);
+                Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd").registerTypeAdapter(Date.class, GsonDateDeserializer.getInstance()).create();
+                RentalDetail rentalDetails = gson.fromJson(response, RentalDetail.class);
+                Intent intent = new Intent(getContext(), ViewBookAct.class);
+                Bundle bundle = new Bundle();
+                bundle.putSerializable("viewBook", rentalDetails);
+                intent.putExtras(bundle);
+                startActivity(intent);
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.e("LOG_VOLLEY", error.toString());
+            }
+        });
+        VolleyUtil.volleyRQInstance(getContext()).add(stringRequest);
+    }
+
+    private void getSwapDetail(int bookOwnerId) {
+        String URL = Constants.GET_BOOK_OWNER_SWAP_DETAIL + bookOwnerId;
+        Log.d("PreferenceURL", URL);
+        StringRequest stringRequest = new StringRequest(Request.Method.GET, URL, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                Log.d("SwapDetailResponse", response);
+                Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd").registerTypeAdapter(Date.class, GsonDateDeserializer.getInstance()).create();
+                SwapDetail swapDetails = gson.fromJson(response, SwapDetail.class);
+                Intent intent = new Intent(getContext(), ViewBookAct.class);
+                Bundle bundle = new Bundle();
+                bundle.putSerializable("swapBook", swapDetails);
+                intent.putExtras(bundle);
+                startActivity(intent);
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.e("LOG_VOLLEY", error.toString());
+            }
+        });
+        VolleyUtil.volleyRQInstance(getContext()).add(stringRequest);
+    }
+
+    private void getAuctionDetail(int bookOwnerId) {
+        String URL = Constants.GET_BOOK_OWNER_AUCTION_DETAIL + bookOwnerId;
+
+        Log.d("PreferenceURL", URL);
+        StringRequest stringRequest = new StringRequest(Request.Method.GET, URL, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                Log.d("AuctionDetailResponse", response);
+                Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd").registerTypeAdapter(Date.class, GsonDateDeserializer.getInstance()).create();
+                AuctionDetailModel auctionDetails = gson.fromJson(response, AuctionDetailModel.class);
+                Intent intent = new Intent(getContext(), ViewAuctionBook.class);
+                Bundle bundle = new Bundle();
+                bundle.putSerializable("auctionBook", auctionDetails);
+                intent.putExtras(bundle);
+                startActivity(intent);
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.e("LOG_VOLLEY", error.toString());
+            }
+        });
+        VolleyUtil.volleyRQInstance(getContext()).add(stringRequest);
     }
 
     @Override
@@ -160,12 +356,12 @@ public class MapLandingPage extends Fragment implements
         mMapView.onLowMemory();
     }
 
-    public String getCompleteAddress(double latitude, double longitude){
+    public String getCompleteAddress(double latitude, double longitude) {
 
         Log.d("inside", "getCompleteAddress");
 
-        String address="", city="", state="", country = "", postalCode ="", knownName = "";
-        String addressComplete="";
+        String address = "", city = "", state = "", country = "", postalCode = "", knownName = "";
+        String addressComplete = "";
 
 
         Geocoder geocoder = new Geocoder(getContext(), Locale.getDefault());
@@ -188,8 +384,8 @@ public class MapLandingPage extends Fragment implements
         return addressComplete;
     }
 
-    private void getSuggested(int userId){
-        String URL = Constants.GET_RECOMMENDATION+userId;
+    private void getSuggested(int userId) {
+        String URL = Constants.GET_RECOMMENDATION + userId;
         URL = String.format(URL, userId);
         Log.d("PreferenceURL", URL);
         StringRequest stringRequest = new StringRequest(Request.Method.GET, URL, new Response.Listener<String>() {
@@ -202,18 +398,18 @@ public class MapLandingPage extends Fragment implements
 
                 double latLat, latLong;
 
-                for(int init=0; init<bookOwnerModelList.size(); init++){
+                for (int init = 0; init < bookOwnerModelList.size(); init++) {
                     Log.d("Inside", "BookOwner");
 
-                    for(int num=0; num<bookOwnerModelList.get(init).getUserObj().getLocationArray().size(); num++){
+                    for (int num = 0; num < bookOwnerModelList.get(init).getUserObj().getLocationArray().size(); num++) {
                         Log.d("Inside", "LocationArray");
-                        if(bookOwnerModelList.get(init).getUserObj().getLocationArray().get(num).getStatus().equals("Address")){
-                            Log.d("Inside", bookOwnerModelList.get(init).getUserObj().getLocationArray().get(num).getLocationName());
+                        if (bookOwnerModelList.get(init).getUserObj().getLocationArray().get(num).getStatus().equals("Address")) {
+                            Log.d("locationArr", bookOwnerModelList.get(init).getUserObj().getLocationArray().get(num).toString());
 
                             latLat = Double.parseDouble(bookOwnerModelList.get(init).getUserObj().getLocationArray().get(num).getLatitude());
                             latLong = Double.parseDouble(bookOwnerModelList.get(init).getUserObj().getLocationArray().get(num).getLongitude());
 
-                            String title = bookOwnerModelList.get(init).getUserObj().getLocationArray().get(num).getLocationName();
+                            String title = String.valueOf(bookOwnerModelList.get(init).getBookOwnerId());
 
                             MarkerOptions markerOptions = new MarkerOptions().position(new LatLng(latLat, latLong)).title(title);
                             markerOptions.icon(BitmapDescriptorFactory
@@ -230,7 +426,7 @@ public class MapLandingPage extends Fragment implements
             public void onErrorResponse(VolleyError error) {
                 Log.e("LOG_VOLLEY", error.toString());
             }
-        }) ;
+        });
         VolleyUtil.volleyRQInstance(getContext()).add(stringRequest);
     }
 
@@ -291,15 +487,15 @@ public class MapLandingPage extends Fragment implements
     public void onMapReady(GoogleMap mMap) {
         googleMap = mMap;
 
-        Log.d("onMapReady","inside");
+        Log.d("onMapReady", "inside");
         googleMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
             @Override
             public void onMapClick(LatLng latLng) {
                 double latLat, latLong;
 
-                for(int init=0; init<bookOwnerModelList.size(); init++){
-                    for(int num=0; num<bookOwnerModelList.get(init).getUserObj().getLocationArray().size(); num++){
-                        if(bookOwnerModelList.get(init).getUserObj().getLocationArray().get(num).getStatus().equals("Address")){
+                for (int init = 0; init < bookOwnerModelList.size(); init++) {
+                    for (int num = 0; num < bookOwnerModelList.get(init).getUserObj().getLocationArray().size(); num++) {
+                        if (bookOwnerModelList.get(init).getUserObj().getLocationArray().get(num).getStatus().equals("Address")) {
                             latLat = Double.parseDouble(bookOwnerModelList.get(init).getUserObj().getLocationArray().get(num).getLatitude());
                             latLong = Double.parseDouble(bookOwnerModelList.get(init).getUserObj().getLocationArray().get(num).getLongitude());
                             String title = bookOwnerModelList.get(init).getUserObj().getLocationArray().get(num).getLocationName();
@@ -329,17 +525,17 @@ public class MapLandingPage extends Fragment implements
         });
     }
 
-    public void getCurrentLocation(){
+    public void getCurrentLocation() {
         googleMap.clear();
 
-        if(ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
-                && ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED){
+        if (ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
+                && ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             Toast.makeText(getContext(), "Location not granted", Toast.LENGTH_SHORT).show();
         }
 
         Location location = LocationServices.FusedLocationApi.getLastLocation(googleApiClient);
 
-        if(location!=null){
+        if (location != null) {
             longitude = location.getLongitude();
             latitude = location.getLatitude();
 

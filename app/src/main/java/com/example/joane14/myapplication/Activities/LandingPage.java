@@ -284,14 +284,13 @@ public class LandingPage extends AppCompatActivity
         // SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
         SearchView searchView = (SearchView) MenuItemCompat.getActionView(menu.findItem(R.id.action_search));
         MenuItem item = menu.findItem(R.id.action_notifications);
-//        LayerDrawable icon = (LayerDrawable) item.getIcon();
-
+        MenuItem mapView = menu.findItem(R.id.action_map_view);
+        MenuItem gridView = menu.findItem(R.id.action_grid_view);
 
         searchView.setOnCloseListener(new SearchView.OnCloseListener() {
             @Override
             public boolean onClose() {
                 fragmentManager = getSupportFragmentManager();
-//                PreferencesFrag prefFrag = PreferencesFrag.newInstance(bundlePass);
                 MapLandingPage prefFrag = MapLandingPage.newInstance();
                 FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
                 fragmentTransaction.replace(R.id.fragment_landing_container, prefFrag, prefFrag.getTag());
@@ -329,16 +328,7 @@ public class LandingPage extends AppCompatActivity
             }
         });
 
-//        searchView.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                Log.d("SearchView", "onclick");
-//                FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-//                ft.replace(R.id.fragment_landing_container, SearcgByCategoryFrag.newInstance());
-//                ft.commit();
-//            }
-//        });
-        // searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
+
         item.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
             @Override
             public boolean onMenuItemClick(MenuItem item) {
@@ -354,19 +344,48 @@ public class LandingPage extends AppCompatActivity
         MenuItem itemCart = menu.findItem(R.id.action_notifications);
         icon = (LayerDrawable) itemCart.getIcon();
         getNotificationCount();
+
         return super.onCreateOptionsMenu(menu);
     }
 
-    private int getNotificationCount(){
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        Log.d("overflow", "itemSelectInside");
+
+        int id = item.getItemId();
+        if (id == R.id.action_map) {
+            Log.d("overflow", "mapView");
+            fragmentManager = getSupportFragmentManager();
+            TextView mtitle = (TextView) findViewById(R.id.lpTitle);
+            mtitle.setVisibility(View.GONE);
+            MapLandingPage fragMap = MapLandingPage.newInstance();
+            FragmentTransaction ft = fragmentManager.beginTransaction();
+            ft.replace(R.id.fragment_landing_container, fragMap, fragMap.getTag());
+            ft.commit();
+        } else if (id == R.id.action_grid) {
+            Log.d("overflow", "gridview");
+            fragmentManager = getSupportFragmentManager();
+            TextView title = (TextView) findViewById(R.id.lpTitle);
+            title.setVisibility(View.VISIBLE);
+            PreferencesFrag prefFrag = PreferencesFrag.newInstance(bundlePass);
+            FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+            fragmentTransaction.replace(R.id.fragment_landing_container, prefFrag, prefFrag.getTag());
+            fragmentTransaction.commit();
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+
+    private int getNotificationCount() {
         User user = (User) SPUtility.getSPUtil(getApplicationContext()).getObject("USER_OBJECT", User.class);
-        String query = Constants.GET_COUNT_NOTIF+user.getUserId();
+        String query = Constants.GET_COUNT_NOTIF + user.getUserId();
 
         this.countBadge = 0;
         StringRequest stringRequest = new StringRequest(Request.Method.GET, query, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
                 int count = Integer.parseInt(response);
-                 countBadge = count;
+                countBadge = count;
                 setBadgeCount(LandingPage.this, count);
 
             }

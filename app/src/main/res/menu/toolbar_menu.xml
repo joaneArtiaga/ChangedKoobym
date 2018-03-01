@@ -17,9 +17,17 @@
         app:showAsAction="always" />
 
     <item
-        android:id="@+id/action_overflow"
-        app:showAsAction="never"
-        android:title="Overflow"/>
+        android:id="@+id/action_map"
+        android:title="Map View"
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/action_grid"
+        android:title="Grid View" />
+    <TextView
+        android:id="@+id/textView16"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Overflow" />
 
 
 </menu>

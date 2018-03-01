@@ -47,7 +47,8 @@ public class LocationModel implements Serializable{
         return "Location{" +
                 "locationName=" + locationName +
                 ", longitude ='" + longitude + '\'' +
-                ", latitude =" + latitude +
+                ", latitude =" + latitude + '\'' +
+                ", status ="+ status +
                 '}';
     }
 }
