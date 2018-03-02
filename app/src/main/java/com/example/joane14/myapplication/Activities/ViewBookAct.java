@@ -1,6 +1,7 @@
 package com.example.joane14.myapplication.Activities;
 
 import android.annotation.SuppressLint;
+import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.icu.text.DateFormat;
@@ -26,9 +27,12 @@ import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewTreeObserver;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ListView;
 import android.widget.RatingBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -42,6 +46,7 @@ import com.android.volley.VolleyLog;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.bumptech.glide.Glide;
+import com.example.joane14.myapplication.Adapters.SwapBookChooserAdapter;
 import com.example.joane14.myapplication.Fragments.Constants;
 import com.example.joane14.myapplication.Fragments.DisplayBookReview;
 import com.example.joane14.myapplication.Fragments.DisplaySwapComments;
@@ -58,7 +63,10 @@ import com.google.gson.GsonBuilder;
 import com.squareup.picasso.Picasso;
 
 import java.io.UnsupportedEncodingException;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
+import java.util.List;
 import java.util.logging.LogRecord;
 
 import static android.net.sip.SipErrorCode.TIME_OUT;
@@ -277,11 +285,13 @@ public class ViewBookAct extends AppCompatActivity implements
             mRentBtn.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Intent intent = new Intent(ViewBookAct.this, SwapBookChooser.class);
-                    Bundle bundle = new Bundle();
-                    bundle.putSerializable("swapDetail", swapDetail);
-                    intent.putExtras(bundle);
-                    startActivity(intent);
+
+                    getMySwapDetail();
+//                    Intent intent = new Intent(ViewBookAct.this, SwapBookChooser.class);
+//                    Bundle bundle = new Bundle();
+//                    bundle.putSerializable("swapDetail", swapDetail);
+//                    intent.putExtras(bundle);
+//                    startActivity(intent);
                 }
             });
         }else if(getIntent().getExtras().getSerializable("auctionBook")!=null){
@@ -369,6 +379,68 @@ public class ViewBookAct extends AppCompatActivity implements
 //                }
 //            });
         }
+    }
+
+    public void getMySwapDetail(){
+        RequestQueue requestQueue = Volley.newRequestQueue(this);
+        User user = (User) SPUtility.getSPUtil(this).getObject("USER_OBJECT", User.class);
+
+        String URL = Constants.GET_ALL_MY_SWAP+user.getUserId();
+        d("SwapURL", URL);
+        final Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd").registerTypeAdapter(Date.class, GsonDateDeserializer.getInstance()).create();
+        final String mRequestBody = gson.toJson(swapDetail);
+
+        d("SwapDetail", mRequestBody);
+        StringRequest stringRequest = new StringRequest(Request.Method.GET, URL, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                Log.i("SwapDetailResponse", response);
+
+                final List<SwapDetail> swapDetailList = new ArrayList<SwapDetail>();
+                swapDetailList.addAll(Arrays.asList(gson.fromJson(response, SwapDetail[].class)));
+
+                final Dialog dialog = new Dialog(ViewBookAct.this);
+                View view = getLayoutInflater().inflate(R.layout.swap_book_chooser, null);
+
+                ListView ly = (ListView) view.findViewById(R.id.listSwap);
+                ArrayAdapter<SwapDetail> adapter = new SwapBookChooserAdapter(ViewBookAct.this, swapDetailList);
+
+                ly.setAdapter(adapter);
+                ly.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                    @Override
+                    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                        Log.d("SwapBookChooser", swapDetailList.get(position).getBookOwner().getBookObj().getBookTitle());
+                    }
+                });
+
+                dialog.setContentView(view);
+                dialog.show();
+
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.e("LOG_VOLLEY", error.toString());
+                error.printStackTrace();
+            }
+        }) {
+            @Override
+            public String getBodyContentType() {
+                return "application/json; charset=utf-8";
+            }
+
+            @Override
+            public byte[] getBody() throws AuthFailureError {
+                try {
+                    return mRequestBody == null ? null : mRequestBody.getBytes("utf-8");
+                } catch (UnsupportedEncodingException uee) {
+                    VolleyLog.wtf("Unsupported Encoding while trying to get the bytes of %s using %s", mRequestBody, "utf-8");
+                    return null;
+                }
+            }
+        };
+
+        requestQueue.add(stringRequest);
     }
 
     public static void makeTextViewResizable(final TextView textView, final int maxLine, final String expandText, final boolean viewMore){
