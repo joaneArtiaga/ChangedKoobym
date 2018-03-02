@@ -84,6 +84,7 @@
                     android:hint="Last Name"
                     android:inputType="text"
                     android:paddingLeft="40dp"
+                    android:gravity="left"
                     android:textColor="@color/colorOrange"
                     android:textColorHint="@color/colorDark"
                     android:textSize="15sp" />

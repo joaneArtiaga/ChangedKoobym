@@ -6,10 +6,17 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.AutoCompleteTextView;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.ImageView;
+import android.widget.ListPopupWindow;
 import android.widget.TextView;
 
 import com.android.volley.AuthFailureError;
@@ -20,14 +27,22 @@ import com.android.volley.VolleyError;
 import com.android.volley.VolleyLog;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+import com.bumptech.glide.Glide;
+import com.example.joane14.myapplication.Adapters.PlaceAutoCompleteAdapter;
 import com.example.joane14.myapplication.Fragments.Constants;
 import com.example.joane14.myapplication.Model.Book;
 import com.example.joane14.myapplication.Model.LocationModel;
+import com.example.joane14.myapplication.Model.Place;
 import com.example.joane14.myapplication.Model.User;
 import com.example.joane14.myapplication.R;
+import com.example.joane14.myapplication.Utilities.PlacesUtility;
 import com.example.joane14.myapplication.Utilities.SPUtility;
+import com.google.android.gms.maps.model.LatLng;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.UnsupportedEncodingException;
 import java.text.ParseException;
@@ -44,12 +59,17 @@ import static android.util.Log.d;
  * Created by Kimberly Cañedo on 06/10/2017.
  */
 
-public class UpdateProfileActivity extends AppCompatActivity {
+public class UpdateProfileActivity extends AppCompatActivity implements AdapterView.OnItemClickListener{
 
     DatePickerDialog.OnDateSetListener date;
     private Calendar calendar;
     EditText mBirtdate;
-
+    AutoCompleteTextView mFirst, mSecond, mThird, mAddress;
+    ListPopupWindow placeAutoCompletePopupWindow;
+    PlaceAutoCompleteAdapter placeAutoCompleteAdapter;
+    List<Place> places;
+    Boolean mFirstBool, mSecondBool, mThirdBool, fromSelected, mAddressBool;
+    List<LocationModel> location;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,20 +78,27 @@ public class UpdateProfileActivity extends AppCompatActivity {
 
         calendar = Calendar.getInstance();
 
+        fromSelected =false;
+        mFirstBool = false;
+        mSecondBool = false;
+        mThirdBool = false;
+        mAddressBool = false;
+
         final SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 
         final EditText mFirstName = (EditText) findViewById(R.id.etFirstNameUP);
         final EditText mLastName = (EditText) findViewById(R.id.etLastNameUP);
         mBirtdate = (EditText) findViewById(R.id.etBirthdateUP);
-        final EditText mAddress = (EditText) findViewById(R.id.etAddressUP);
+        mAddress = (AutoCompleteTextView) findViewById(R.id.etAddressUP);
         final EditText mUserName = (EditText) findViewById(R.id.etUserNameUP);
         final EditText mEmail = (EditText) findViewById(R.id.etMailUP);
         final EditText mContact = (EditText) findViewById(R.id.etContactUP);
-        ImageButton mBtnUpdate = (ImageButton) findViewById(R.id.btnUpdateProfile);
+        Button mBtnUpdate = (Button) findViewById(R.id.btnUpdateProfile);
+        ImageView ivProfile = (ImageView) findViewById(R.id.ivProfileUP);
 
-        TextView mLoc1 = (TextView) findViewById(R.id.location1UP);
-        TextView mLoc2 = (TextView) findViewById(R.id.location2UP);
-        TextView mLoc3 = (TextView) findViewById(R.id.location3UP);
+        mFirst = (AutoCompleteTextView) findViewById(R.id.location1UP);
+        mSecond = (AutoCompleteTextView) findViewById(R.id.location2UP);
+        mThird = (AutoCompleteTextView) findViewById(R.id.location3UP);
 
         User user = new User();
 
@@ -85,13 +112,141 @@ public class UpdateProfileActivity extends AppCompatActivity {
         mEmail.setText(user.getEmail());
         mContact.setText(user.getPhoneNumber());
 
-        List<LocationModel> location = new ArrayList<LocationModel>();
+        places = new ArrayList<>();
+        placeAutoCompleteAdapter = new PlaceAutoCompleteAdapter(this, places);
+        placeAutoCompletePopupWindow = new ListPopupWindow(this);
+        placeAutoCompletePopupWindow.setAdapter(placeAutoCompleteAdapter);
+        placeAutoCompletePopupWindow.setAnchorView(mAddress);
+        placeAutoCompletePopupWindow.setModal(false);
+        placeAutoCompletePopupWindow.setOnItemClickListener(this);
+        location = new ArrayList<LocationModel>();
 
         location = user.getLocationArray();
 
-        mLoc1.setText(location.get(0).getLocationName());
-        mLoc2.setText(location.get(1).getLocationName());
-        mLoc3.setText(location.get(2).getLocationName());
+        mFirst.setText(location.get(0).getLocationName());
+        mSecond.setText(location.get(1).getLocationName());
+        mThird.setText(location.get(2).getLocationName());
+
+        mAddress.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+                final String val = editable.toString();
+                if (!fromSelected) {
+                    if (val.length() > 4) {
+                        new Thread(new Runnable() {
+                            @Override
+                            public void run() {
+                                PlacesUtility.getPredictions(UpdateProfileActivity.this, val, new LatLng(10.289218, 123.857058), autocompleteplaceListener);
+                                mAddressBool = true;
+                            }
+                        }).start();
+                    }
+                } else {
+                    fromSelected = false;
+                }
+            }
+        });
+        mFirst.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+                final String val = editable.toString();
+                if (!fromSelected) {
+                    if (val.length() > 4) {
+                        new Thread(new Runnable() {
+                            @Override
+                            public void run() {
+                                PlacesUtility.getPredictions(UpdateProfileActivity.this, val, new LatLng(10.289218, 123.857058), autocompleteplaceListener);
+                                mFirstBool = true;
+                            }
+                        }).start();
+                    }
+                } else {
+                    fromSelected = false;
+                }
+            }
+        });
+
+        mSecond.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+                final String val = editable.toString();
+                if (!fromSelected) {
+                    if (val.length() > 4) {
+                        new Thread(new Runnable() {
+                            @Override
+                            public void run() {
+                                PlacesUtility.getPredictions(UpdateProfileActivity.this, val, new LatLng(10.289218, 123.857058), autocompleteplaceListener);
+                                mSecondBool = true;
+                            }
+                        }).start();
+                    }
+                } else {
+                    fromSelected = false;
+                }
+            }
+        });
+
+        mThird.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+                final String val = editable.toString();
+                if (!fromSelected) {
+                    if (val.length() > 4) {
+                        new Thread(new Runnable() {
+                            @Override
+                            public void run() {
+                                PlacesUtility.getPredictions(UpdateProfileActivity.this, val, new LatLng(10.289218, 123.857058), autocompleteplaceListener);
+                                mThirdBool = true;
+                            }
+                        }).start();
+                    }
+                } else {
+                    fromSelected = false;
+                }
+            }
+        });
+
+        Glide.with(this).load(user.getImageFilename()).centerCrop().into(ivProfile);
 
         mBirtdate.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -139,6 +294,39 @@ public class UpdateProfileActivity extends AppCompatActivity {
             }
         });
 
+    }
+
+    Response.Listener<String> autocompleteplaceListener = new Response.Listener<String>() {
+        @Override
+        public void onResponse(String response) {
+            Log.d("response", response);
+            places.clear();
+            places.addAll(PlacesUtility.parsePredictionResult(response));
+            changeSuggestedPlaces();
+        }
+    };
+
+    Response.Listener<String> getPlaceDetails = new Response.Listener<String>() {
+        @Override
+        public void onResponse(String response) {
+            Log.d("place details = ", response);
+            try {
+                JSONObject object = new JSONObject(response);
+                JSONObject obj = object.getJSONObject("result");
+                obj = obj.getJSONObject("geometry");
+                obj = obj.getJSONObject("location");
+                Log.d("lat", Double.toString(obj.getDouble("lat")));
+                Log.d("lng", Double.toString(obj.getDouble("lng")));
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
+    };
+
+    private void changeSuggestedPlaces() {
+        placeAutoCompletePopupWindow.show();
+        placeAutoCompleteAdapter.notifyDataSetChanged();
+        Log.d("size of result", Integer.toString(places.size()));
     }
 
     public void updateUser(final User userModel){
@@ -206,4 +394,54 @@ public class UpdateProfileActivity extends AppCompatActivity {
         Log.d("sdf", sdf.format(calendar.getTime()).toString());
     }
 
+    @Override
+    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+        fromSelected = true;
+        if (mFirstBool == true) {
+            mFirst.setText(places.get(position).getDescription());
+            mFirstBool = false;
+            LocationModel locationModel = new LocationModel();
+            locationModel.setLocationName(places.get(position).getDescription());
+            locationModel.setLongitude(Double.toString(places.get(position).getLongitude()));
+            locationModel.setLatitude(Double.toString(places.get(position).getLatitude()));
+            locationModel.setStatus("MeetUp");
+            location.add(locationModel);
+        }
+
+        if (mSecondBool == true) {
+            mSecond.setText(places.get(position).getDescription());
+            mSecondBool = false;
+            LocationModel locationModel = new LocationModel();
+            locationModel.setLocationName(places.get(position).getDescription());
+            locationModel.setLongitude(Double.toString(places.get(position).getLongitude()));
+            locationModel.setLatitude(Double.toString(places.get(position).getLatitude()));
+            locationModel.setStatus("MeetUp");
+            location.add(locationModel);
+        }
+
+        if (mThirdBool == true) {
+            mThird.setText(places.get(position).getDescription());
+            mThirdBool = false;
+            LocationModel locationModel = new LocationModel();
+            locationModel.setLocationName(places.get(position).getDescription());
+            locationModel.setLongitude(Double.toString(places.get(position).getLongitude()));
+            locationModel.setLatitude(Double.toString(places.get(position).getLatitude()));
+            locationModel.setStatus("MeetUp");
+            location.add(locationModel);
+        }
+
+        if (mAddressBool == true) {
+            mAddress.setText(places.get(position).getDescription());
+            mAddressBool = false;
+            LocationModel locationModel = new LocationModel();
+            locationModel.setLocationName(places.get(position).getDescription());
+            locationModel.setLongitude(Double.toString(places.get(position).getLongitude()));
+            locationModel.setLatitude(Double.toString(places.get(position).getLatitude()));
+            locationModel.setStatus("MeetUp");
+            location.add(locationModel);
+        }
+
+        placeAutoCompletePopupWindow.dismiss();
+        PlacesUtility.getPlaceDetails(UpdateProfileActivity.this, places.get(position).getId(), getPlaceDetails);
+    }
 }

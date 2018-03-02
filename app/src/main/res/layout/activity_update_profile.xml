@@ -4,7 +4,6 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/colorDark"
     android:orientation="vertical">
 
     <ScrollView
@@ -21,8 +20,8 @@
                 android:id="@+id/ivProfileUP"
                 android:layout_width="100dp"
                 android:layout_height="100dp"
-                android:layout_marginTop="10dp"
                 android:layout_gravity="center_horizontal"
+                android:layout_marginTop="10dp"
                 app:srcCompat="@drawable/firstname"
                 tools:layout_editor_absoluteX="0dp"
                 tools:layout_editor_absoluteY="94dp" />
@@ -46,7 +45,6 @@
                         android:ems="10"
                         android:hint="Last Name"
                         android:inputType="textPersonName"
-                        android:textColor="@color/colorWhite"
                         android:textColorHint="@color/colorLightOrange"
                         android:textStyle="bold"
                         tools:layout_editor_absoluteX="62dp"
@@ -55,11 +53,12 @@
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="(Last Name)"
                         android:layout_gravity="center_horizontal"
                         android:gravity="center_horizontal"
-                        android:textColor="@color/colorLightOrange"/>
+                        android:text="(Last Name)"
+                        android:textColor="@color/colorLightOrange" />
                 </LinearLayout>
+
                 <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
@@ -73,7 +72,6 @@
                         android:ems="10"
                         android:hint="First Name"
                         android:inputType="textPersonName"
-                        android:textColor="@color/colorWhite"
                         android:textColorHint="@color/colorLightOrange"
                         android:textStyle="bold"
                         tools:layout_editor_absoluteX="62dp"
@@ -82,10 +80,10 @@
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="(First Name)"
                         android:layout_gravity="center_horizontal"
                         android:gravity="center_horizontal"
-                        android:textColor="@color/colorLightOrange"/>
+                        android:text="(First Name)"
+                        android:textColor="@color/colorLightOrange" />
                 </LinearLayout>
 
             </LinearLayout>
@@ -97,21 +95,21 @@
 
                 <ImageView
                     android:id="@+id/imageView13"
-                    android:layout_width="40dp"
-                    android:layout_height="40dp"
+                    android:layout_width="30dp"
+                    android:layout_height="25dp"
+                    android:layout_gravity="center"
                     app:srcCompat="@drawable/bday"
                     tools:layout_editor_absoluteX="2dp"
                     tools:layout_editor_absoluteY="182dp" />
 
                 <EditText
                     android:id="@+id/etBirthdateUP"
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:ems="10"
-                    android:inputType="textPersonName"
-                    android:hint="Birthdate"
                     android:layout_marginLeft="20dp"
-                    android:textColor="@color/colorWhite"
+                    android:ems="10"
+                    android:hint="Birthdate"
+                    android:inputType="textPersonName"
                     android:textColorHint="@color/colorLightOrange"
                     tools:layout_editor_absoluteX="62dp"
                     tools:layout_editor_absoluteY="138dp" />
@@ -127,23 +125,23 @@
 
                 <ImageView
                     android:id="@+id/imageView14"
-                    android:layout_width="40dp"
-                    android:layout_height="40dp"
+                    android:layout_width="30dp"
+                    android:layout_height="25dp"
+                    android:layout_gravity="center"
                     app:srcCompat="@drawable/location1"
                     tools:layout_editor_absoluteX="179dp"
                     tools:layout_editor_absoluteY="354dp" />
 
-                <EditText
+                <AutoCompleteTextView
                     android:id="@+id/etAddressUP"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginLeft="20dp"
                     android:layout_weight="1"
                     android:ems="10"
-                    android:layout_marginLeft="20dp"
-                    android:inputType="textPostalAddress"
                     android:hint="Address"
-                    android:textColorHint="@color/colorLightOrange"
-                    android:textColor="@color/colorWhite" />
+                    android:inputType="textPostalAddress"
+                    android:textColorHint="@color/colorLightOrange" />
             </LinearLayout>
 
             <LinearLayout
@@ -155,8 +153,9 @@
 
                 <ImageView
                     android:id="@+id/imageView14"
-                    android:layout_width="40dp"
-                    android:layout_height="40dp"
+                    android:layout_width="30dp"
+                    android:layout_gravity="center"
+                    android:layout_height="25dp"
                     app:srcCompat="@drawable/username"
                     tools:layout_editor_absoluteX="179dp"
                     tools:layout_editor_absoluteY="354dp" />
@@ -165,13 +164,12 @@
                     android:id="@+id/etUserNameUP"
                     android:layout_width="314dp"
                     android:layout_height="39dp"
+                    android:layout_marginLeft="20dp"
                     android:layout_weight="1"
                     android:ems="10"
-                    android:inputType="textPostalAddress"
                     android:hint="Username"
-                    android:layout_marginLeft="20dp"
+                    android:inputType="textPostalAddress"
                     android:textColorHint="@color/colorLightOrange"
-                    android:textColor="@color/colorWhite"
                     tools:layout_editor_absoluteX="69dp"
                     tools:layout_editor_absoluteY="389dp" />
 
@@ -186,8 +184,9 @@
 
                 <ImageView
                     android:id="@+id/imageView14"
-                    android:layout_width="40dp"
-                    android:layout_height="40dp"
+                    android:layout_width="30dp"
+                    android:layout_gravity="center"
+                    android:layout_height="25dp"
                     app:srcCompat="@drawable/email"
                     tools:layout_editor_absoluteX="179dp"
                     tools:layout_editor_absoluteY="354dp" />
@@ -196,13 +195,12 @@
                     android:id="@+id/etMailUP"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginLeft="20dp"
                     android:layout_weight="1"
                     android:ems="10"
-                    android:layout_marginLeft="20dp"
-                    android:inputType="text|textEmailAddress"
-                    android:textColorHint="@color/colorLightOrange"
                     android:hint="Email"
-                    android:textColor="@color/colorWhite"/>
+                    android:inputType="text|textEmailAddress"
+                    android:textColorHint="@color/colorLightOrange" />
 
             </LinearLayout>
 
@@ -215,8 +213,9 @@
 
                 <ImageView
                     android:id="@+id/imageView14"
-                    android:layout_width="40dp"
-                    android:layout_height="40dp"
+                    android:layout_width="30dp"
+                    android:layout_height="25dp"
+                    android:layout_gravity="center"
                     app:srcCompat="@drawable/phoneup"
                     tools:layout_editor_absoluteX="179dp"
                     tools:layout_editor_absoluteY="354dp" />
@@ -225,24 +224,23 @@
                     android:id="@+id/etContactUP"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginLeft="20dp"
                     android:layout_weight="1"
                     android:ems="10"
-                    android:layout_marginLeft="20dp"
-                    android:textColorHint="@color/colorLightOrange"
-                    android:inputType="textPhonetic"
                     android:hint="Contact Number"
-                    android:textColor="@color/colorWhite"/>
+                    android:inputType="textPhonetic"
+                    android:textColorHint="@color/colorLightOrange" />
 
             </LinearLayout>
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Meet Up Location:"
                 android:layout_marginTop="10dp"
+                android:text="Meet Up Location:"
+                android:textColor="@color/colorLightOrange"
                 android:textSize="18dp"
-                android:textStyle="bold"
-                android:textColor="@color/colorLightOrange"/>
+                android:textStyle="bold" />
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -253,46 +251,46 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:layout_marginTop="10dp">
+                    android:layout_marginTop="10dp"
+                    android:orientation="horizontal">
 
                     <ImageView
                         android:id="@+id/imageView14"
                         android:layout_width="20dp"
+                        android:layout_gravity="center"
                         android:layout_height="20dp"
                         app:srcCompat="@drawable/location1"
                         tools:layout_editor_absoluteX="179dp"
                         tools:layout_editor_absoluteY="354dp" />
 
-                    <TextView
+                    <AutoCompleteTextView
+                        android:id="@+id/location1UP"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:id="@+id/location1UP"
-                        android:text="Location 1"
-                        android:textColor="@color/colorWhite"/>
+                        android:text="Location 1"/>
 
                 </LinearLayout>
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:layout_marginTop="10dp">
+                    android:layout_marginTop="10dp"
+                    android:orientation="horizontal">
 
                     <ImageView
                         android:id="@+id/imageView14"
                         android:layout_width="20dp"
+                        android:layout_gravity="center"
                         android:layout_height="20dp"
                         app:srcCompat="@drawable/location1"
                         tools:layout_editor_absoluteX="179dp"
                         tools:layout_editor_absoluteY="354dp" />
 
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Location 2"
+                    <AutoCompleteTextView
                         android:id="@+id/location2UP"
-                        android:textColor="@color/colorWhite"/>
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Location 2" />
 
                 </LinearLayout>
 
@@ -300,36 +298,38 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:layout_marginTop="10dp">
+                    android:layout_marginTop="10dp"
+                    android:orientation="horizontal">
 
                     <ImageView
                         android:id="@+id/imageView14"
+                        android:layout_gravity="center"
                         android:layout_width="20dp"
                         android:layout_height="20dp"
                         app:srcCompat="@drawable/location1"
                         tools:layout_editor_absoluteX="179dp"
                         tools:layout_editor_absoluteY="354dp" />
 
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Location 3"
+                    <AutoCompleteTextView
                         android:id="@+id/location3UP"
-                        android:textColor="@color/colorWhite"/>
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Location 3" />
 
                 </LinearLayout>
             </LinearLayout>
 
-            <ImageButton
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/userDaytime"></FrameLayout>
+
+            <Button
+                android:text="Update Profile"
                 android:id="@+id/btnUpdateProfile"
-                android:layout_gravity="center_horizontal"
                 android:layout_width="250dp"
                 android:layout_height="100dp"
-                android:background="@null"
-                android:adjustViewBounds="true"
-                android:scaleType="fitXY"
-                android:src="@drawable/updateprofile"/>
+                android:layout_gravity="center_horizontal"/>
 
         </LinearLayout>
     </ScrollView>

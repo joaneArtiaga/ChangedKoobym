@@ -49,6 +49,7 @@ public class AddTimeFrag extends Fragment{
     UserDayTime userDayTime;
     EditText etTimeFrom, etTimeTo;
     TextView tvRemind;
+    String daySelect;
 
     public AddTimeFrag() {
     }
@@ -144,6 +145,7 @@ public class AddTimeFrag extends Fragment{
         dialog.setTitle("Choose Time and Day");
         final DayModel day;
         final TimeModel time;
+        daySelect="";
 
 
         day = new DayModel();
@@ -168,7 +170,7 @@ public class AddTimeFrag extends Fragment{
         mSpinnerDay.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                day.setStrDay(selectedDays.get(position));
+                daySelect = selectedDays.get(position);
             }
 
             @Override
@@ -192,10 +194,14 @@ public class AddTimeFrag extends Fragment{
         mBtnOkay.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                UserDayTime udt = new UserDayTime();
+                TimeModel time = new TimeModel();
+                DayModel day = new DayModel();
                 time.setStrTime(etTimeTo.getText().toString()+" - "+etTimeFrom.getText().toString());
-                userDayTime.setDay(day);
-                userDayTime.setTime(time);
-                userDayTimeList.add(userDayTime);
+                day.setStrDay(daySelect);
+                udt.setDay(day);
+                udt.setTime(time);
+                userDayTimeList.add(udt);
                 mAdapter.notifyDataSetChanged();
                 tvRemind.setVisibility(View.GONE);
                 dialog.cancel();

@@ -186,6 +186,9 @@ public class AddProfile extends Fragment implements AdapterView.OnItemClickListe
                         }
                     }
                     mMondayBool = false;
+                }else {
+                    selectedDays.add("Monday");
+                    mMondayBool = true;
                 }
             }
         });

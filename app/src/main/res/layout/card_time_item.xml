@@ -26,7 +26,7 @@
             <TextView
                 android:id="@+id/tvDay"
                 android:layout_marginLeft="10dp"
-                android:layout_width="150dp"
+                android:layout_width="100dp"
                 android:layout_height="wrap_content"
                 android:textSize="18sp" />
 

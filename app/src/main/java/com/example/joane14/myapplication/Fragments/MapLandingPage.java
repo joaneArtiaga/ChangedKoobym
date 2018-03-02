@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
 import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
@@ -154,7 +155,7 @@ public class MapLandingPage extends Fragment implements
         // adding marker
         googleMap.addMarker(marker);
         CameraPosition cameraPosition = new CameraPosition.Builder()
-                .target(new LatLng(latitude, longitude)).zoom(20).build();
+                .target(new LatLng(latitude, longitude)).zoom(15).build();
         googleMap.animateCamera(CameraUpdateFactory
                 .newCameraPosition(cameraPosition));
 
@@ -406,6 +407,23 @@ public class MapLandingPage extends Fragment implements
                         if (bookOwnerModelList.get(init).getUserObj().getLocationArray().get(num).getStatus().equals("Address")) {
                             Log.d("locationArr", bookOwnerModelList.get(init).getUserObj().getLocationArray().get(num).toString());
 
+                            int height = 70;
+                            int width = 60;
+                            BitmapDrawable bitmapDrawable;
+
+                            if(bookOwnerModelList.get(init).getStatus().equals("Rent")){
+                                bitmapDrawable = (BitmapDrawable) getResources().getDrawable(R.drawable.markerrent);
+                            }else if(bookOwnerModelList.get(init).getStatus().equals("Swap")){
+                                bitmapDrawable = (BitmapDrawable) getResources().getDrawable(R.drawable.markerswap);
+                            }else{
+                                bitmapDrawable = (BitmapDrawable) getResources().getDrawable(R.drawable.markerauction);
+                            }
+
+
+                            Bitmap bitmap = bitmapDrawable.getBitmap();
+
+                            Bitmap small = Bitmap.createScaledBitmap(bitmap, width, height, false);
+
                             latLat = Double.parseDouble(bookOwnerModelList.get(init).getUserObj().getLocationArray().get(num).getLatitude());
                             latLong = Double.parseDouble(bookOwnerModelList.get(init).getUserObj().getLocationArray().get(num).getLongitude());
 
@@ -413,7 +431,7 @@ public class MapLandingPage extends Fragment implements
 
                             MarkerOptions markerOptions = new MarkerOptions().position(new LatLng(latLat, latLong)).title(title);
                             markerOptions.icon(BitmapDescriptorFactory
-                                    .defaultMarker(BitmapDescriptorFactory.HUE_AZURE));
+                                    .fromBitmap(small));
                             googleMap.addMarker(markerOptions);
                         }
 
@@ -429,6 +447,8 @@ public class MapLandingPage extends Fragment implements
         });
         VolleyUtil.volleyRQInstance(getContext()).add(stringRequest);
     }
+
+
 
     public void onButtonPressed(Uri uri) {
         if (mListener != null) {
