@@ -3,6 +3,7 @@ package com.example.joane14.myapplication.Model;
 import com.google.gson.annotations.SerializedName;
 
 import java.io.Serializable;
+import java.util.List;
 
 /**
  * Created by Joane14 on 09/10/2017.
@@ -54,6 +55,16 @@ public class SwapHeader implements Serializable {
 
     @SerializedName("swapExtraMessage")
     private String swapExtraMessage;
+
+    List<SwapHeaderDetail> swapHeaderDetails;
+
+    public List<SwapHeaderDetail> getSwapHeaderDetail() {
+        return swapHeaderDetails;
+    }
+
+    public void setSwapHeaderDetail(List<SwapHeaderDetail> swapHeaderDetails) {
+        this.swapHeaderDetails = swapHeaderDetails;
+    }
 
     private MeetUp meetUp;
 

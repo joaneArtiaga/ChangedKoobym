@@ -107,9 +107,11 @@ public class SwapBookChooserAdapter extends ArrayAdapter<SwapDetail> {
 
             }
         });
-
         return view;
     }
 
+    public  List<SwapDetail> getSelectedSwap(){
+        return selectedSwap;
+    }
 
 }

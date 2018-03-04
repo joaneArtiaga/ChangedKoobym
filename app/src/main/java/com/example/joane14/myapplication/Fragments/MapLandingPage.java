@@ -139,6 +139,7 @@ public class MapLandingPage extends Fragment implements
             LocationModel location = user.getLocationArray().get(init);
             Log.d("UserLocation", user.getLocationArray().get(init).toString());
             if(location.getStatus().equals("Address")){
+                Log.d("InsideUserLocation", location.getLocationName());
                 latitude = Double.parseDouble(user.getLocationArray().get(init).getLatitude());
                 longitude = Double.parseDouble(user.getLocationArray().get(init).getLongitude());
             }

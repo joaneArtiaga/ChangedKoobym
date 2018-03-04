@@ -7,7 +7,10 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.icu.text.DateFormat;
+import android.icu.text.SimpleDateFormat;
+import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.RequiresApi;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.CardView;
@@ -19,6 +22,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.ListView;
 import android.widget.RatingBar;
 import android.widget.TextView;
 
@@ -37,6 +41,7 @@ import com.example.joane14.myapplication.Activities.LandingPage;
 import com.example.joane14.myapplication.Activities.MeetUpChooser;
 import com.example.joane14.myapplication.Activities.NotificationAct;
 import com.example.joane14.myapplication.Activities.ProfileActivity;
+import com.example.joane14.myapplication.Activities.RequestActivity;
 import com.example.joane14.myapplication.Activities.SwapMeetUpChooser;
 import com.example.joane14.myapplication.Activities.ViewAuctionBook;
 import com.example.joane14.myapplication.Activities.ViewBookAct;
@@ -46,7 +51,9 @@ import com.example.joane14.myapplication.Model.AuctionHeader;
 import com.example.joane14.myapplication.Model.BookOwnerRating;
 import com.example.joane14.myapplication.Model.BookOwnerReview;
 import com.example.joane14.myapplication.Model.RentalHeader;
+import com.example.joane14.myapplication.Model.SwapDetail;
 import com.example.joane14.myapplication.Model.SwapHeader;
+import com.example.joane14.myapplication.Model.SwapHeaderDetail;
 import com.example.joane14.myapplication.Model.User;
 import com.example.joane14.myapplication.Model.UserNotification;
 import com.example.joane14.myapplication.Model.UserRating;
@@ -57,6 +64,7 @@ import com.google.gson.GsonBuilder;
 import com.squareup.picasso.Picasso;
 
 import java.io.UnsupportedEncodingException;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
@@ -248,6 +256,10 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
         requestQueue.add(stringRequest);
     }
 
+    public Activity getContext() {
+        return context;
+    }
+
     @Override
     public int getItemCount() {
         return userNotificationList.size();
@@ -259,10 +271,14 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
         CardView mCardView;
         float rateNumber;
         Context context;
+        Activity act;
 
 
         public BookHolder(final Context context, View itemView) {
             super(itemView);
+
+            act = getContext();
+
 
             this.context = context;
 //            final String rateNumber="";
@@ -334,7 +350,9 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
                             if (userNotificationList.get(position).getActionName().equals("swap")) {
 
                                 if (userNotificationList.get(position).getActionStatus().equals("Request")) {
-                                    acceptSwap(position);
+                                    getSwapHeader(position, "Request");
+                                    getRead(position);
+//                                    acceptSwap(position);
                                 } else if (userNotificationList.get(position).getActionStatus().equals("Approved")) {
                                     Log.d("ApprovedNotif", "Inside");
                                     getSwapHeader(position, "meetUp");
@@ -1836,7 +1854,7 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
                 @Override
                 public void onResponse(String response) {
                     Log.i("swapHeaderResponseId", response);
-                    SwapHeader swapHeaderMod = gson.fromJson(response, SwapHeader.class);
+                    final SwapHeader swapHeaderMod = gson.fromJson(response, SwapHeader.class);
 
                     if (status.equals("view")) {
                         Intent intent = new Intent(context, ViewBookAct.class);
@@ -1913,30 +1931,106 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
 
                         dialogCustom.show();
                     }else if(status.equals("Rejected")){
+                        List<SwapHeaderDetail> swapDetailList = new ArrayList<SwapHeaderDetail>();
+                        swapDetailList = swapHeaderMod.getSwapHeaderDetail();
+
                         final Dialog dialogCustom = new Dialog(context);
-                        dialogCustom.setContentView(R.layout.swap_history_rejected);
+                        dialogCustom.setContentView(R.layout.swap_rejected);
                         TextView mTitleSwap = (TextView) dialogCustom.findViewById(R.id.bookTitleSwap);
-                        TextView mTitleSwapReq = (TextView) dialogCustom.findViewById(R.id.bookTitleSwapReq);
+                        TextView mOwnerMess = (TextView) dialogCustom.findViewById(R.id.tvOwner);
                         TextView mRejection = (TextView) dialogCustom.findViewById(R.id.rejectReason);
                         ImageView ivBookSwap = (ImageView) dialogCustom.findViewById(R.id.ivSwap);
-                        ImageView ivBookSwapReq = (ImageView) dialogCustom.findViewById(R.id.ivBookDelivery);
                         Button btnOkay = (Button) dialogCustom.findViewById(R.id.btnDeliveryOkay);
-
+                        ListView ly = (ListView) dialogCustom.findViewById(R.id.listSwap);
 
                         Glide.with(context).load(swapHeaderMod.getSwapDetail().getBookOwner().getBookObj().getBookFilename()).centerCrop().into(ivBookSwap);
-                        Glide.with(context).load(swapHeaderMod.getRequestedSwapDetail().getBookOwner().getBookObj().getBookFilename()).centerCrop().into(ivBookSwapReq);
 
                         mTitleSwap.setText(swapHeaderMod.getSwapDetail().getBookOwner().getBookObj().getBookTitle());
-                        mTitleSwapReq.setText(swapHeaderMod.getRequestedSwapDetail().getBookOwner().getBookObj().getBookTitle());
                         mRejection.setText(swapHeaderMod.getSwapExtraMessage());
 
+
+                        for(int init=0; init<swapDetailList.size(); init++){
+                            if(swapDetailList.get(init).getSwapType().equals("Requestor")){
+                                swapDetailList.remove(init);
+                                break;
+                            }
+                        }
+
+                        final SwapRequestAdapter adapter = new SwapRequestAdapter(act, swapDetailList);
+                        mOwnerMess.setText("Your book request/s:");
+
+                        ly.setAdapter(adapter);
                         btnOkay.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
-                                dialogCustom.dismiss();
+
+                                Intent intent = new Intent(context, NotificationAct.class);
+                                context.startActivity(intent);
+
                             }
                         });
                         dialogCustom.show();
+                    }else if(status.equals("Request")){
+                        List<SwapHeaderDetail> swapDetailList = new ArrayList<SwapHeaderDetail>();
+                        swapDetailList = swapHeaderMod.getSwapHeaderDetail();
+
+                        final Dialog dialog = new Dialog(context);
+                        LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+                        View view = inflater.inflate(R.layout.swap_request_custom_dialog, null);
+
+                        TextView tvmessage = (TextView) view.findViewById(R.id.messageTV);
+                        TextView tvOwner = (TextView) view.findViewById(R.id.bookOwnerSwap);
+                        ListView ly = (ListView) view.findViewById(R.id.listSwap);
+
+                        for(int init=0; init<swapDetailList.size(); init++){
+                            if(swapDetailList.get(init).getSwapType().equals("Requestor")){
+                                swapDetailList.remove(init);
+                                break;
+                            }
+                        }
+                        final SwapRequestAdapter adapter = new SwapRequestAdapter(act, swapDetailList);
+
+                        tvmessage.setText(message);
+                        tvOwner.setText(userNotificationList.get(position).getUserPerformer().getUserFname()+" "+userNotificationList.get(position).getUserPerformer().getUserLname()+"'s book request/s:");
+                        ly.setAdapter(adapter);
+
+
+                        Button mOkay = (Button) view.findViewById(R.id.btnAccept);
+                        Button mCancel = (Button) view.findViewById(R.id.btnReject);
+
+                        mOkay.setOnClickListener(new View.OnClickListener() {
+                            @RequiresApi(api = Build.VERSION_CODES.N)
+                            @Override
+                            public void onClick(View v) {
+                                acceptRequest(swapHeaderMod);
+                            }
+                        });
+
+                        mCancel.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                final Dialog dialogCustom = new Dialog(getContext());
+                                dialogCustom.setContentView(R.layout.reject_custom_dialog);
+                                final EditText etReason = (EditText) dialogCustom.findViewById(R.id.etReason);
+                                Button mSubmitReason = (Button) dialogCustom.findViewById(R.id.submitReject);
+
+                                mSubmitReason.setOnClickListener(new View.OnClickListener() {
+                                    @Override
+                                    public void onClick(View v) {
+                                        if(etReason.getText().length()==0){
+                                            etReason.setError("Field should not be empty.");
+                                        }else{
+                                            swapHeaderMod.setStatus("Rejected");
+                                            String message = etReason.getText().toString();
+                                            rejectRequest(swapHeaderMod, message);
+                                        }
+                                    }
+                                });
+                                dialogCustom.show();
+                            }
+                        });
+                        dialog.setContentView(view);
+                        dialog.show();
                     }
 
                 }
@@ -1962,11 +2056,200 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
                     }
                 }
             };
-
             requestQueue.add(stringRequest);
         }
-
     }
 
+    public void rejectRequest(final SwapHeader swapHeader, final String message){
+        RequestQueue requestQueue = Volley.newRequestQueue(getContext());
+        User user = new User();
+        user = (User) SPUtility.getSPUtil(getContext()).getObject("USER_OBJECT", User.class);
+        String URL = Constants.REJECT_REQUEST_SWAP+swapHeader.getSwapHeaderId();
+
+        Log.d("rejectRequestRentURL", URL);
+        Log.d("rejectRequestRent", swapHeader.toString());
+
+        final Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd").registerTypeAdapter(Date.class, GsonDateDeserializer.getInstance()).create();
+        final String mRequestBody = gson.toJson(swapHeader);
+
+
+        Log.d("LOG_VOLLEY", mRequestBody);
+        final User finalUser = user;
+        StringRequest stringRequest = new StringRequest(Request.Method.GET, URL, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                Log.i("rejectRequestRentRes", response);
+                SwapHeader swapHeaderModel = gson.fromJson(response, SwapHeader.class);
+
+                UserNotification un = new UserNotification();
+                un.setActionName("swap");
+                un.setBookActionPerformedOn(swapHeaderModel.getSwapDetail().getBookOwner());
+                un.setExtraMessage(message);
+                un.setUserPerformer(finalUser);
+                un.setUser(swapHeaderModel.getUser());
+                un.setActionStatus("Rejected");
+                un.setActionId(Math.round(swapHeaderModel.getSwapHeaderId()));
+
+                addUserNotif(un);
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.e("LOG_VOLLEY", error.toString());
+            }
+        }) {
+            @Override
+            public String getBodyContentType() {
+                return "application/json; charset=utf-8";
+            }
+
+            @Override
+            public byte[] getBody() throws AuthFailureError {
+                try {
+                    return mRequestBody == null ? null : mRequestBody.getBytes("utf-8");
+                } catch (UnsupportedEncodingException uee) {
+                    VolleyLog.wtf("Unsupported Encoding while trying to get the bytes of %s using %s", mRequestBody, "utf-8");
+                    return null;
+                }
+            }
+        };
+
+        requestQueue.add(stringRequest);
+    }
+
+    public void acceptRequest(SwapHeader swapHeader){
+        RequestQueue requestQueue = Volley.newRequestQueue(getContext());
+        User user = new User();
+        user = (User) SPUtility.getSPUtil(getContext()).getObject("USER_OBJECT", User.class);
+        String URL = Constants.ACCEPT_REQUEST_SWAP+swapHeader.getSwapHeaderId();
+
+        Log.d("AcceptRequestRentURL", URL);
+
+        final Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd").registerTypeAdapter(Date.class, GsonDateDeserializer.getInstance()).create();
+        final String mRequestBody = gson.toJson(swapHeader);
+
+
+        Log.d("LOG_VOLLEY", mRequestBody);
+        StringRequest stringRequest = new StringRequest(Request.Method.GET, URL, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                Log.i("AcceptRequestSwapRes", response);
+                SwapHeader swapHeaderModel = gson.fromJson(response, SwapHeader.class);
+                Intent intent = new Intent(context, NotificationAct.class);
+                context.startActivity(intent);
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.e("LOG_VOLLEY", error.toString());
+            }
+        }) {
+            @Override
+            public String getBodyContentType() {
+                return "application/json; charset=utf-8";
+            }
+
+            @Override
+            public byte[] getBody() throws AuthFailureError {
+                try {
+                    return mRequestBody == null ? null : mRequestBody.getBytes("utf-8");
+                } catch (UnsupportedEncodingException uee) {
+                    VolleyLog.wtf("Unsupported Encoding while trying to get the bytes of %s using %s", mRequestBody, "utf-8");
+                    return null;
+                }
+            }
+        };
+
+        requestQueue.add(stringRequest);
+    }
+
+    public void addUserNotif(UserNotification userNotification) {
+        RequestQueue requestQueue = Volley.newRequestQueue(getContext());
+        User user = new User();
+        user = (User) SPUtility.getSPUtil(getContext()).getObject("USER_OBJECT", User.class);
+        d("UserIdReceive", String.valueOf(user.getUserId()));
+        String URL = Constants.POST_USER_NOTIFICATION;
+
+
+        final Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd").registerTypeAdapter(Date.class, GsonDateDeserializer.getInstance()).create();
+        final String mRequestBody = gson.toJson(userNotification);
+
+
+        d("LOG_VOLLEY", mRequestBody);
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, URL, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                Log.i("userNotificationPost", response);
+                UserNotification un = gson.fromJson(response, UserNotification.class);
+                updateSwapExtra(un);
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.e("LOG_VOLLEY", error.toString());
+            }
+        }) {
+            @Override
+            public String getBodyContentType() {
+                return "application/json; charset=utf-8";
+            }
+
+            @Override
+            public byte[] getBody() throws AuthFailureError {
+                try {
+                    return mRequestBody == null ? null : mRequestBody.getBytes("utf-8");
+                } catch (UnsupportedEncodingException uee) {
+                    VolleyLog.wtf("Unsupported Encoding while trying to get the bytes of %s using %s", mRequestBody, "utf-8");
+                    return null;
+                }
+            }
+        };
+
+        requestQueue.add(stringRequest);
+    }
+
+    public void updateSwapExtra(UserNotification un){
+        RequestQueue requestQueue = Volley.newRequestQueue(getContext());
+        User user = new User();
+        user = (User) SPUtility.getSPUtil(getContext()).getObject("USER_OBJECT", User.class);
+        String URL = Constants.UPDATE_SWAP_EXTRA+un.getUserNotificationId();
+
+        final Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd").registerTypeAdapter(Date.class, GsonDateDeserializer.getInstance()).create();
+        final String mRequestBody = gson.toJson(un);
+
+
+        Log.d("LOG_VOLLEY", mRequestBody);
+        final User finalUser = user;
+        StringRequest stringRequest = new StringRequest(Request.Method.GET, URL, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                Log.i("rejectRequestRentRes", response);
+                Intent intent = new Intent(context, NotificationAct.class);
+                context.startActivity(intent);
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.e("LOG_VOLLEY", error.toString());
+            }
+        }) {
+            @Override
+            public String getBodyContentType() {
+                return "application/json; charset=utf-8";
+            }
+
+            @Override
+            public byte[] getBody() throws AuthFailureError {
+                try {
+                    return mRequestBody == null ? null : mRequestBody.getBytes("utf-8");
+                } catch (UnsupportedEncodingException uee) {
+                    VolleyLog.wtf("Unsupported Encoding while trying to get the bytes of %s using %s", mRequestBody, "utf-8");
+                    return null;
+                }
+            }
+        };
+
+        requestQueue.add(stringRequest);
+    }
 }
 

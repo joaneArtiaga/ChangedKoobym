@@ -55,6 +55,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
 import java.io.UnsupportedEncodingException;
+import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -1043,11 +1044,12 @@ public class UpdateBookActivity extends AppCompatActivity {
 //        String URL = "http://104.197.4.32:8080/Koobym/user/add";
         String URL = Constants.POST_SWAP_DETAIL_1;
 
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+        DateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
         Calendar c = Calendar.getInstance();
 
+        swapDetailModel.setSwapTimeStamp(sdf.format(c.getTime()));
+
         swapDetailModel.setSwapStatus("Available");
-        swapDetailModel.setSwapTimeStamp(sdf.format(sdf.format(c)));
 
 //        user.setDayTimeModel();
         final Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd").registerTypeAdapter(Date.class, GsonDateDeserializer.getInstance()).create();

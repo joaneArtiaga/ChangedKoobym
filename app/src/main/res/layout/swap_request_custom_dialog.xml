@@ -8,10 +8,26 @@
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Swap Book Chooser"
-        android:textSize="20dp"
+        android:text="Swap Request"
         android:textColor="@color/colorLightOrange"
-        android:layout_marginTop="15dp"/>
+        android:textSize="20dp"/>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Message"
+        android:textSize="15dp"
+        android:layout_marginLeft="15dp"
+        android:layout_marginTop="8dp"
+        android:id="@+id/messageTV"/>
+
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/bookOwnerSwap"
+        android:textSize="15dp"
+        android:textColor="@color/colorLightOrange"/>
 
     <ListView
         android:id="@+id/listSwap"
@@ -29,14 +45,14 @@
         <Button
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Cancel"
-            android:id="@+id/btnCancel"/>
+            android:text="Reject"
+            android:id="@+id/btnReject"/>
 
         <Button
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Request"
-            android:id="@+id/btnReq"/>
+            android:text="Accept"
+            android:id="@+id/btnAccept"/>
 
     </LinearLayout>
 </LinearLayout>

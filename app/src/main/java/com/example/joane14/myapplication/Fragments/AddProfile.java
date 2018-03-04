@@ -607,6 +607,7 @@ public class AddProfile extends Fragment implements AdapterView.OnItemClickListe
         mBtnOkay.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                userDayTime = new UserDayTime();
                 time.setStrTime(etTimeTo.getText().toString() + " - " + etTimeFrom.getText().toString());
                 userDayTime.setDay(day);
                 userDayTime.setTime(time);
@@ -825,6 +826,8 @@ public class AddProfile extends Fragment implements AdapterView.OnItemClickListe
     public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
         fromSelected = true;
         if (firstLocBool == true) {
+            Log.d("Loc", String.valueOf(places.get(i).getLatitude()));
+            Log.d("Loc", String.valueOf(places.get(i).getLongitude()));
             mFirstLoc.setText(places.get(i).getDescription());
             firstLocBool = false;
             LocationModel locationModel = new LocationModel();
@@ -836,6 +839,8 @@ public class AddProfile extends Fragment implements AdapterView.OnItemClickListe
         }
 
         if (secondLocBool == true) {
+            Log.d("Loc", String.valueOf(places.get(i).getLatitude()));
+            Log.d("Loc", String.valueOf(places.get(i).getLongitude()));
             mSecondLoc.setText(places.get(i).getDescription());
             secondLocBool = false;
             LocationModel locationModel = new LocationModel();
@@ -847,6 +852,8 @@ public class AddProfile extends Fragment implements AdapterView.OnItemClickListe
         }
 
         if (thirdLocBool == true) {
+            Log.d("Loc", String.valueOf(places.get(i).getLatitude()));
+            Log.d("Loc", String.valueOf(places.get(i).getLongitude()));
             mThirdLoc.setText(places.get(i).getDescription());
             thirdLocBool = false;
             LocationModel locationModel = new LocationModel();
@@ -858,6 +865,8 @@ public class AddProfile extends Fragment implements AdapterView.OnItemClickListe
         }
 
         if (addressBool == true) {
+            Log.d("Loc", String.valueOf(places.get(i).getLatitude()));
+            Log.d("Loc", places.get(i).getLongitude()+"");
             mAddress.setText(places.get(i).getDescription());
             addressBool = false;
             LocationModel locationModel = new LocationModel();

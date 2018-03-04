@@ -8,7 +8,9 @@ import android.icu.text.DateFormat;
 import android.icu.text.SimpleDateFormat;
 import android.icu.util.Calendar;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Handler;
+import android.support.annotation.RequiresApi;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
@@ -17,6 +19,7 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.AlertDialogLayout;
 import android.support.v7.widget.Toolbar;
 import android.text.Html;
 import android.text.SpannableStringBuilder;
@@ -54,7 +57,10 @@ import com.example.joane14.myapplication.Model.AuctionDetailModel;
 import com.example.joane14.myapplication.Model.RentalDetail;
 import com.example.joane14.myapplication.Model.RentalHeader;
 import com.example.joane14.myapplication.Model.SwapDetail;
+import com.example.joane14.myapplication.Model.SwapHeader;
+import com.example.joane14.myapplication.Model.SwapHeaderDetail;
 import com.example.joane14.myapplication.Model.User;
+import com.example.joane14.myapplication.Model.UserNotification;
 import com.example.joane14.myapplication.R;
 import com.example.joane14.myapplication.Utilities.SPUtility;
 import com.facebook.login.LoginManager;
@@ -285,13 +291,7 @@ public class ViewBookAct extends AppCompatActivity implements
             mRentBtn.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-
-                    getMySwapDetail();
-//                    Intent intent = new Intent(ViewBookAct.this, SwapBookChooser.class);
-//                    Bundle bundle = new Bundle();
-//                    bundle.putSerializable("swapDetail", swapDetail);
-//                    intent.putExtras(bundle);
-//                    startActivity(intent);
+                    checkExist();
                 }
             });
         }else if(getIntent().getExtras().getSerializable("auctionBook")!=null){
@@ -381,9 +381,64 @@ public class ViewBookAct extends AppCompatActivity implements
         }
     }
 
+    public void checkExist(){
+        RequestQueue requestQueue = Volley.newRequestQueue(this);
+        final User user = (User) SPUtility.getSPUtil(this).getObject("USER_OBJECT", User.class);
+
+        String URL = Constants.CHECK_SWAP_REQUEST+user.getUserId()+"/"+swapDetail.getSwapDetailId();
+        d("SwapURL", URL);
+        final Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd").registerTypeAdapter(Date.class, GsonDateDeserializer.getInstance()).create();
+        final String mRequestBody = gson.toJson(swapDetail);
+
+        d("SwapDetail", mRequestBody);
+        StringRequest stringRequest = new StringRequest(Request.Method.GET, URL, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                Log.i("SwapDetailResponse", response);
+                if(response.length()==0){
+                    getMySwapDetail();
+                }else {
+                    AlertDialog ad = new AlertDialog.Builder(ViewBookAct.this).create();
+                    ad.setTitle("Alert!");
+                    ad.setMessage("You already sent a request for this book. You can't send a request again.");
+                    ad.setButton(AlertDialog.BUTTON_POSITIVE, "Okay", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            dialog.dismiss();
+                        }
+                    });
+                    ad.show();
+                }
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.e("LOG_VOLLEY", error.toString());
+                error.printStackTrace();
+            }
+        }) {
+            @Override
+            public String getBodyContentType() {
+                return "application/json; charset=utf-8";
+            }
+
+            @Override
+            public byte[] getBody() throws AuthFailureError {
+                try {
+                    return mRequestBody == null ? null : mRequestBody.getBytes("utf-8");
+                } catch (UnsupportedEncodingException uee) {
+                    VolleyLog.wtf("Unsupported Encoding while trying to get the bytes of %s using %s", mRequestBody, "utf-8");
+                    return null;
+                }
+            }
+        };
+
+        requestQueue.add(stringRequest);
+    }
+
     public void getMySwapDetail(){
         RequestQueue requestQueue = Volley.newRequestQueue(this);
-        User user = (User) SPUtility.getSPUtil(this).getObject("USER_OBJECT", User.class);
+        final User user = (User) SPUtility.getSPUtil(this).getObject("USER_OBJECT", User.class);
 
         String URL = Constants.GET_ALL_MY_SWAP+user.getUserId();
         d("SwapURL", URL);
@@ -396,32 +451,218 @@ public class ViewBookAct extends AppCompatActivity implements
             public void onResponse(String response) {
                 Log.i("SwapDetailResponse", response);
 
-                final List<SwapDetail> swapDetailList = new ArrayList<SwapDetail>();
-                swapDetailList.addAll(Arrays.asList(gson.fromJson(response, SwapDetail[].class)));
+                if(response.length()==0){
+                    AlertDialog ad = new AlertDialog.Builder(ViewBookAct.this).create();
+                    ad.setTitle("Alert!");
+                    ad.setMessage("You don't have any books that are available for swap.");
+                    ad.setButton(AlertDialog.BUTTON_POSITIVE, "Okay", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            dialog.dismiss();
+                        }
+                    });
+                }else{
+                    final List<SwapDetail> swapDetailList = new ArrayList<SwapDetail>();
+                    swapDetailList.addAll(Arrays.asList(gson.fromJson(response, SwapDetail[].class)));
 
-                final Dialog dialog = new Dialog(ViewBookAct.this);
-                View view = getLayoutInflater().inflate(R.layout.swap_book_chooser, null);
+                    final Dialog dialog = new Dialog(ViewBookAct.this);
+                    View view = getLayoutInflater().inflate(R.layout.swap_book_chooser, null);
 
-                ListView ly = (ListView) view.findViewById(R.id.listSwap);
-                ArrayAdapter<SwapDetail> adapter = new SwapBookChooserAdapter(ViewBookAct.this, swapDetailList);
+                    ListView ly = (ListView) view.findViewById(R.id.listSwap);
+                    final SwapBookChooserAdapter adapter = new SwapBookChooserAdapter(ViewBookAct.this, swapDetailList);
 
-                ly.setAdapter(adapter);
-                ly.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                    @Override
-                    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                        Log.d("SwapBookChooser", swapDetailList.get(position).getBookOwner().getBookObj().getBookTitle());
-                    }
-                });
+                    ly.setAdapter(adapter);
 
-                dialog.setContentView(view);
-                dialog.show();
+                    Button mOkay = (Button) view.findViewById(R.id.btnReq);
+                    Button mCancel = (Button) view.findViewById(R.id.btnCancel);
 
+                    mOkay.setOnClickListener(new View.OnClickListener() {
+                        @RequiresApi(api = Build.VERSION_CODES.N)
+                        @Override
+                        public void onClick(View v) {
+                            List<SwapDetail> requesteeSwapDetail  = adapter.getSelectedSwap();
+                            List<SwapHeaderDetail> listSHD = new ArrayList<SwapHeaderDetail>();
+
+                            Calendar cal = Calendar.getInstance();
+                            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+                            String currDate = sdf.format(cal.getTime());
+                            SwapHeader swapHeader = new SwapHeader();
+                            swapHeader.setDateRequest(currDate);
+                            swapHeader.setStatus("Request");
+                            swapHeader.setUser(user);
+                            swapHeader.setSwapDetail(swapDetail);
+                            swapHeader.setRequestedSwapDetail(requesteeSwapDetail.get(0));
+                            swapHeader.setDateTimeStamp(currDate);
+
+                            swapDetail.setSwapStatus("Not Available");
+                            swapDetail.getBookOwner().setBookStat("Not Available");
+                            swapDetail.getBookOwner().getBookObj().setStatus("Not Available");
+                            swapHeader.getRequestedSwapDetail().setSwapStatus("Not Available");
+                            swapHeader.getRequestedSwapDetail().getBookOwner().setBookStat("Not Available");
+                            swapHeader.getRequestedSwapDetail().getBookOwner().getBookObj().setStatus("Not Available");
+
+                            swapHeader.setSwapDetail(swapDetail);
+                            swapHeader.setRequestedSwapDetail(swapHeader.getRequestedSwapDetail());
+
+
+
+                            for(int init=0; init<requesteeSwapDetail.size(); init++){
+                                SwapHeaderDetail shd = new SwapHeaderDetail();
+
+                                shd.setSwapDetail(requesteeSwapDetail.get(init));
+                                shd.setSwapType("Requestee");
+                                shd.getSwapDetail().setSwapStatus("Not Available");
+                                shd.getSwapDetail().getBookOwner().setBookStat("Not Available");
+                                shd.getSwapDetail().getBookOwner().getBookObj().setStatus("Not Available");
+                                listSHD.add(shd);
+                            }
+
+                            SwapHeaderDetail swapHeaderDetail = new SwapHeaderDetail();
+                            swapHeaderDetail.setSwapDetail(swapDetail);
+                            swapHeaderDetail.setSwapType("Requestor");
+
+                            listSHD.add(swapHeaderDetail);
+                            swapHeader.setSwapHeaderDetail(listSHD);
+
+                            addSwapHeader(swapHeader);
+                        }
+                    });
+
+                    mCancel.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            dialog.dismiss();
+                        }
+                    });
+
+                    dialog.setContentView(view);
+                    dialog.show();
+                }
             }
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
                 Log.e("LOG_VOLLEY", error.toString());
                 error.printStackTrace();
+            }
+        }) {
+            @Override
+            public String getBodyContentType() {
+                return "application/json; charset=utf-8";
+            }
+
+            @Override
+            public byte[] getBody() throws AuthFailureError {
+                try {
+                    return mRequestBody == null ? null : mRequestBody.getBytes("utf-8");
+                } catch (UnsupportedEncodingException uee) {
+                    VolleyLog.wtf("Unsupported Encoding while trying to get the bytes of %s using %s", mRequestBody, "utf-8");
+                    return null;
+                }
+            }
+        };
+
+        requestQueue.add(stringRequest);
+    }
+
+    public void addSwapHeader(SwapHeader swapHeaderToPost){
+        RequestQueue requestQueue = Volley.newRequestQueue(this);
+        final User user = (User) SPUtility.getSPUtil(this).getObject("USER_OBJECT", User.class);
+
+        String URL = Constants.POST_SWAP_HEADER;
+        d("SwapURL", URL);
+        final Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd").registerTypeAdapter(Date.class, GsonDateDeserializer.getInstance()).create();
+        final String mRequestBody = gson.toJson(swapHeaderToPost);
+
+        d("a", mRequestBody);
+        int maxLogSize = 2000;
+        for (int i = 0; i <= mRequestBody.length() / maxLogSize; i++) {
+            int start = i * maxLogSize;
+            int end = (i + 1) * maxLogSize;
+            end = end > mRequestBody.length() ? mRequestBody.length() : end;
+            Log.d("addSwapHeader", mRequestBody.substring(start, end));
+        }
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, URL, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                Log.i("AddSHRes", response);
+
+                SwapHeader sh = gson.fromJson(response, SwapHeader.class);
+
+                UserNotification un = new UserNotification();
+//                Log.d("Ssh.getUser = "+swapHeader.getUser().getUserFname(), "user = "+swapDetail.getBookOwner().getUserObj().getUserFname());
+
+                un.setActionId(sh.getSwapHeaderId());
+                un.setBookActionPerformedOn(sh.getRequestedSwapDetail().getBookOwner());
+                un.setUser(swapDetail.getBookOwner().getUserObj());
+                un.setUserPerformer(user);
+                un.setActionName("swap");
+                un.setActionStatus("Request");
+//
+                addUserNotif(un);
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.e("LOG_VOLLEY", error.toString());
+                error.printStackTrace();
+            }
+        }) {
+            @Override
+            public String getBodyContentType() {
+                return "application/json; charset=utf-8";
+            }
+
+            @Override
+            public byte[] getBody() throws AuthFailureError {
+                try {
+                    return mRequestBody == null ? null : mRequestBody.getBytes("utf-8");
+                } catch (UnsupportedEncodingException uee) {
+                    VolleyLog.wtf("Unsupported Encoding while trying to get the bytes of %s using %s", mRequestBody, "utf-8");
+                    return null;
+                }
+            }
+        };
+
+        requestQueue.add(stringRequest);
+    }
+
+    public void addUserNotif(UserNotification userNotification) {
+        RequestQueue requestQueue = Volley.newRequestQueue(this);
+        User user = new User();
+        user = (User) SPUtility.getSPUtil(this).getObject("USER_OBJECT", User.class);
+        d("UserIdReceive", String.valueOf(user.getUserId()));
+        String URL = Constants.POST_USER_NOTIFICATION;
+
+
+        final Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd").registerTypeAdapter(Date.class, GsonDateDeserializer.getInstance()).create();
+        final String mRequestBody = gson.toJson(userNotification);
+
+
+        d("LOG_VOLLEY", mRequestBody);
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, URL, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                Log.i("userNotificationPost", response);
+
+                AlertDialog ad = new AlertDialog.Builder(ViewBookAct.this).create();
+                ad.setMessage("The owner will be notified of your request.");
+                ad.setButton(AlertDialog.BUTTON_POSITIVE, "Okay", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        Intent intent = new Intent(ViewBookAct.this, ViewBookAct.class);
+                        Bundle bundle = new Bundle();
+                        bundle.putSerializable("swapBook",swapDetail);
+                        intent.putExtras(bundle);
+                        startActivity(intent);
+                    }
+                });
+                ad.show();
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.e("LOG_VOLLEY", error.toString());
             }
         }) {
             @Override

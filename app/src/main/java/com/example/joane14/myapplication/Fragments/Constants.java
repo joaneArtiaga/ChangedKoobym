@@ -107,6 +107,8 @@ public class Constants {
 
     public static final String GET_ALL_MY_SWAP = WEB_SERVICE_URL + "swapDetail/swapDetailById/";
 
+    public static final String CHECK_SWAP_REQUEST = WEB_SERVICE_URL + "swapHeader/checkExist/";
+
     public static final String GET_MY_SWAP_RECOMMENDED = WEB_SERVICE_URL + "swapDetail/mySwapBooksPrice/";
 
     public static final String RECOMMEND_SWAP_BOOK = WEB_SERVICE_URL + "swapDetail/mySwapBooksPrice/";

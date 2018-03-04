@@ -102,14 +102,6 @@ public class RequestSwapAdapter extends BaseAdapter {
 
         statusLinear.setVisibility(View.GONE);
         statusBook.setVisibility(View.GONE);
-//        statusBook.setText(bookOwnerModel.getStatus());
-//        if(bookOwnerModelList.get(position).getStatus().equals("Complete")){
-//            statusBook.setText("Complete");
-//            statusLinear.setBackgroundColor(ContextCompat.getColor(context, R.color.colorRent));
-//        }else {
-//            statusBook.setText("Rejected");
-//            statusLinear.setBackgroundColor(ContextCompat.getColor(context, R.color.colorAuction));
-//        }
 
         String author = " ";
         if(bookOwnerModel.getBookObj().getBookAuthor().size()!=0){
