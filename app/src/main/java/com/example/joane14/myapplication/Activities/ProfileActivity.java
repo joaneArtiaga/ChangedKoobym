@@ -397,6 +397,7 @@ public class ProfileActivity extends AppCompatActivity implements
             Intent intent = new Intent(ProfileActivity.this, RequestActivity.class);
             startActivity(intent);
         } else if (id == R.id.signOut) {
+            SPUtility.getSPUtil(ProfileActivity.this).clear();
             LoginManager.getInstance().logOut();
             Intent intent = new Intent(ProfileActivity.this, MainActivity.class);
             startActivity(intent);

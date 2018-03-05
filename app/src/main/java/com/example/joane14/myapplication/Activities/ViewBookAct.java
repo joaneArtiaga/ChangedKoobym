@@ -486,31 +486,26 @@ public class ViewBookAct extends AppCompatActivity implements
                             Calendar cal = Calendar.getInstance();
                             SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
                             String currDate = sdf.format(cal.getTime());
+
                             SwapHeader swapHeader = new SwapHeader();
+
                             swapHeader.setDateRequest(currDate);
+
                             swapHeader.setStatus("Request");
+
                             swapHeader.setUser(user);
+
                             swapHeader.setSwapDetail(swapDetail);
+
                             swapHeader.setRequestedSwapDetail(requesteeSwapDetail.get(0));
+
                             swapHeader.setDateTimeStamp(currDate);
-
-                            swapDetail.setSwapStatus("Not Available");
-                            swapDetail.getBookOwner().setBookStat("Not Available");
-                            swapDetail.getBookOwner().getBookObj().setStatus("Not Available");
-                            swapHeader.getRequestedSwapDetail().setSwapStatus("Not Available");
-                            swapHeader.getRequestedSwapDetail().getBookOwner().setBookStat("Not Available");
-                            swapHeader.getRequestedSwapDetail().getBookOwner().getBookObj().setStatus("Not Available");
-
-                            swapHeader.setSwapDetail(swapDetail);
-                            swapHeader.setRequestedSwapDetail(swapHeader.getRequestedSwapDetail());
-
-
 
                             for(int init=0; init<requesteeSwapDetail.size(); init++){
                                 SwapHeaderDetail shd = new SwapHeaderDetail();
 
                                 shd.setSwapDetail(requesteeSwapDetail.get(init));
-                                shd.setSwapType("Requestee");
+                                shd.setSwapType("Requestor");
                                 shd.getSwapDetail().setSwapStatus("Not Available");
                                 shd.getSwapDetail().getBookOwner().setBookStat("Not Available");
                                 shd.getSwapDetail().getBookOwner().getBookObj().setStatus("Not Available");
@@ -519,10 +514,16 @@ public class ViewBookAct extends AppCompatActivity implements
 
                             SwapHeaderDetail swapHeaderDetail = new SwapHeaderDetail();
                             swapHeaderDetail.setSwapDetail(swapDetail);
-                            swapHeaderDetail.setSwapType("Requestor");
+                            swapHeaderDetail.setSwapType("Requestee");
 
                             listSHD.add(swapHeaderDetail);
                             swapHeader.setSwapHeaderDetail(listSHD);
+
+                            Log.d("This user ", user.getUserFname());
+
+                            Log.d("SwapDetailRead:"+swapDetail.getBookOwner().getBookObj().getBookTitle(), "user:"+ swapHeader.getSwapDetail().getBookOwner().getUserObj().getUserFname());
+                            Log.d("ReqDetail:"+ swapHeader.getRequestedSwapDetail().getBookOwner().getBookObj().getBookTitle(), "user:"+swapHeader.getRequestedSwapDetail().getBookOwner().getUserObj().getUserFname());
+
 
                             addSwapHeader(swapHeader);
                         }
@@ -593,7 +594,7 @@ public class ViewBookAct extends AppCompatActivity implements
 //                Log.d("Ssh.getUser = "+swapHeader.getUser().getUserFname(), "user = "+swapDetail.getBookOwner().getUserObj().getUserFname());
 
                 un.setActionId(sh.getSwapHeaderId());
-                un.setBookActionPerformedOn(sh.getRequestedSwapDetail().getBookOwner());
+                un.setBookActionPerformedOn(swapDetail.getBookOwner());
                 un.setUser(swapDetail.getBookOwner().getUserObj());
                 un.setUserPerformer(user);
                 un.setActionName("swap");

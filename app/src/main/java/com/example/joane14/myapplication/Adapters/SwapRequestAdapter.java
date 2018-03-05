@@ -59,10 +59,8 @@ public class SwapRequestAdapter extends ArrayAdapter<SwapHeaderDetail> {
 
         ViewHolder holder = (ViewHolder) view.getTag();
 
-        if(bookList.get(position).getSwapType().equals("Requestee")){
             holder.bookTitleSwap.setText(bookList.get(position).getSwapDetail().getBookOwner().getBookObj().getBookTitle());
             Glide.with(context).load(bookList.get(position).getSwapDetail().getBookOwner().getBookObj().getBookFilename()).centerCrop().into(holder.bookImage);
-        }
 
         return view;
     }

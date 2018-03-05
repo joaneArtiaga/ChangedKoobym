@@ -19,11 +19,14 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.RatingBar;
+import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.android.volley.AuthFailureError;
@@ -43,6 +46,7 @@ import com.example.joane14.myapplication.Activities.NotificationAct;
 import com.example.joane14.myapplication.Activities.ProfileActivity;
 import com.example.joane14.myapplication.Activities.RequestActivity;
 import com.example.joane14.myapplication.Activities.SwapMeetUpChooser;
+import com.example.joane14.myapplication.Activities.TimeDateChooser;
 import com.example.joane14.myapplication.Activities.ViewAuctionBook;
 import com.example.joane14.myapplication.Activities.ViewBookAct;
 import com.example.joane14.myapplication.Fragments.Constants;
@@ -50,11 +54,17 @@ import com.example.joane14.myapplication.Model.AuctionDetailModel;
 import com.example.joane14.myapplication.Model.AuctionHeader;
 import com.example.joane14.myapplication.Model.BookOwnerRating;
 import com.example.joane14.myapplication.Model.BookOwnerReview;
+import com.example.joane14.myapplication.Model.DayModel;
+import com.example.joane14.myapplication.Model.LocationModel;
+import com.example.joane14.myapplication.Model.MeetUp;
+import com.example.joane14.myapplication.Model.MeetUpModel;
 import com.example.joane14.myapplication.Model.RentalHeader;
 import com.example.joane14.myapplication.Model.SwapDetail;
 import com.example.joane14.myapplication.Model.SwapHeader;
 import com.example.joane14.myapplication.Model.SwapHeaderDetail;
+import com.example.joane14.myapplication.Model.TimeModel;
 import com.example.joane14.myapplication.Model.User;
+import com.example.joane14.myapplication.Model.UserDayTime;
 import com.example.joane14.myapplication.Model.UserNotification;
 import com.example.joane14.myapplication.Model.UserRating;
 import com.example.joane14.myapplication.R;
@@ -64,11 +74,15 @@ import com.google.gson.GsonBuilder;
 import com.squareup.picasso.Picasso;
 
 import java.io.UnsupportedEncodingException;
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Set;
 
 import static android.util.Log.d;
 
@@ -272,6 +286,10 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
         float rateNumber;
         Context context;
         Activity act;
+        Boolean locbool;
+        Boolean datebool;
+        Boolean timebool;
+        List<String> timeStr;
 
 
         public BookHolder(final Context context, View itemView) {
@@ -316,8 +334,8 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
                                 createDialog(position);
                             } else if (userNotificationList.get(position).getActionStatus().equals("Approved")) {
                                 Log.d("ApprovedNotif", "Inside");
-                                getRentalHeader(position, "meetUp");
-                                updateReceive(position, "Confirm");
+                                getRentalHeader(position, "Approved");
+//                                updateReceive(position, "Confirm");
                                 getRead(position);
                             } else if (userNotificationList.get(position).getActionStatus().equals("Confirm")) {
                                 Log.d("Confirm", "Inside");
@@ -355,14 +373,16 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
 //                                    acceptSwap(position);
                                 } else if (userNotificationList.get(position).getActionStatus().equals("Approved")) {
                                     Log.d("ApprovedNotif", "Inside");
-                                    getSwapHeader(position, "meetUp");
-                                    updateReceive(position, "Confirm");
+                                    getSwapHeader(position, "Approved");
+//                                    getSwapHeader(position, "meetUp");
+//                                    updateReceive(position, "Confirm");
                                     getRead(position);
                                 } else if (userNotificationList.get(position).getActionStatus().equals("Confirm")) {
                                     Log.d("ConfirmNotif", "Inside");
                                     getRead(position);
+                                    getSwapHeader(position, "Confirm");
 //                                    getSwapHeader(position, "summ");
-                                    toDeliverDialog(position);
+//                                    toDeliverDialog(position);
                                 } else if (userNotificationList.get(position).getActionStatus().equals("ToReceive")) {
                                     Log.d("ToReceiveNotif", "Inside");
                                     toGiveDialog(position);
@@ -1107,6 +1127,7 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
             d("LOG_VOLLEY", mRequestBody);
             final User finalUser = user;
             StringRequest stringRequest = new StringRequest(Request.Method.GET, URL, new Response.Listener<String>() {
+                @RequiresApi(api = Build.VERSION_CODES.N)
                 @Override
                 public void onResponse(String response) {
                     Log.i("rentalHeaderResponseId", response);
@@ -1306,6 +1327,287 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
                         });
 
                         dialogCustom.show();
+                    }else if(status.equals("Approved")){
+                        Date nextDate = new Date();
+                        locbool = false;
+                        datebool = false;
+                        timebool = false;
+
+                        final MeetUp muModel = new MeetUp();
+                        final MeetUp mureturn = new MeetUp();
+
+                        final Dialog dialog = new Dialog(context);
+                        LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+                        View view = inflater.inflate(R.layout.rental_meet_up_dialog, null);
+
+                        Button mSubmit = (Button) view.findViewById(R.id.btnSubmit);
+
+                        final Spinner mSpinDate = (Spinner) view.findViewById(R.id.spinnerDate);
+                        final Spinner mSpinTime = (Spinner) view.findViewById(R.id.spinnerTime);
+                        final TextView mDateReturn = (TextView) view.findViewById(R.id.dateTv);
+                        final TextView mTimeReturn = (TextView) view.findViewById(R.id.tvTime);
+                        final TextView mLocReturn = (TextView) view.findViewById(R.id.tvLocation);
+
+                        User userOwner = rentalHeaderMod.getRentalDetail().getBookOwner().getUserObj();
+
+                        List<LocationModel> userLoc = userOwner.getLocationArray();
+                        final List<LocationModel> meetUpLoc = new ArrayList<LocationModel>();
+                        List<String> meetUpStringLoc = new ArrayList<String>();
+                        final UserDayTime udt = new UserDayTime();
+                        final UserDayTime udtReturn = new UserDayTime();
+
+                        for(int init=0; init<userLoc.size(); init++){
+                            if(userLoc.get(init).getStatus().equals("MeetUp")){
+                                meetUpLoc.add(userLoc.get(init));
+                                meetUpStringLoc.add(userLoc.get(init).getLocationName());
+                            }
+                        }
+
+                        ArrayAdapter<String> adapterLoc = new ArrayAdapter<String>(context, android.R.layout.simple_spinner_item, meetUpStringLoc);
+                        adapterLoc.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                        Spinner mSpinLoc = (Spinner) view.findViewById(R.id.spinnerLocation);
+                        mSpinLoc.setAdapter(adapterLoc);
+
+                        mSpinLoc.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                            @Override
+                            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                                locbool = true;
+                                muModel.setLocation(meetUpLoc.get(position));
+                                mLocReturn.setText(meetUpLoc.get(position).getLocationName());
+                                mureturn.setLocation(meetUpLoc.get(position));
+                            }
+
+                            @Override
+                            public void onNothingSelected(AdapterView<?> parent) {
+
+                            }
+                        });
+
+                        final List<UserDayTime> daytime = userOwner.getDayTimeModel();
+                        final List<String> dateMeetUp = new ArrayList<String>();
+                        final DateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+                        Set<String> removeDuplicate = new HashSet<>();
+
+
+                        for(int init=0; init<daytime.size(); init++){
+                            if(daytime.get(init).getDay().getStrDay().equals("Monday")){
+                                nextDate=getNextDate(java.util.Calendar.MONDAY);
+                            }else if(daytime.get(init).getDay().getStrDay().equals("Tuesday")){
+                                nextDate=getNextDate(Calendar.TUESDAY);
+                            }else if(daytime.get(init).getDay().getStrDay().equals("Wednesday")){
+                                nextDate=getNextDate(Calendar.WEDNESDAY);
+                            }else if(daytime.get(init).getDay().getStrDay().equals("Thursday")){
+                                nextDate=getNextDate(Calendar.THURSDAY);
+                            }else if(daytime.get(init).getDay().getStrDay().equals("Friday")){
+                                nextDate=getNextDate(Calendar.FRIDAY);
+                            }else if(daytime.get(init).getDay().getStrDay().equals("Saturday")){
+                                nextDate=getNextDate(Calendar.SATURDAY);
+                            }else if(daytime.get(init).getDay().getStrDay().equals("Sunday")){
+                                nextDate=getNextDate(Calendar.SUNDAY);
+                            }
+                            dateMeetUp.add(format.format(nextDate));
+                        }
+
+                        Set<String> dateNoDuplicates = new LinkedHashSet<String>(dateMeetUp);
+                        dateMeetUp.clear();
+                        dateMeetUp.addAll(dateNoDuplicates);
+                        timeStr = new ArrayList<String>();
+
+                        ArrayAdapter<String> adapterDate = new ArrayAdapter<String>(context, android.R.layout.simple_spinner_item, dateMeetUp);
+                        adapterDate.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                        mSpinDate.setAdapter(adapterDate);
+
+
+                        timeStr.add("09:00 - 10:00 am");
+                        timeStr.add("12:00 - 02:00 pm");
+                        timeStr.add("04:00 - 06:00 pm");
+                        timeStr.add("07:00 - 09:00 pm");
+
+                        mSpinDate.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                            @Override
+                            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                                datebool = true;
+                                try {
+                                    rentalHeaderMod.setDateDeliver(dateMeetUp.get(position));
+                                    Date dateReturn = new Date();
+                                    dateReturn = format.parse(dateMeetUp.get(position));
+
+                                    Calendar cal = Calendar.getInstance();
+                                    cal.setTime(dateReturn);
+
+                                    cal.add(Calendar.DATE, rentalHeaderMod.getRentalDetail().getDaysForRent());
+
+                                    mDateReturn.setText(format.format(cal.getTime()));
+                                    DayModel dayR = new DayModel();
+                                    dayR.setStrDay(format.format(cal.getTime()));
+                                    udtReturn.setDay(dayR);
+                                    rentalHeaderMod.setRentalReturnDate(format.format(cal.getTime()));
+                                    Log.d("dateDelivered", dateMeetUp.get(position));
+
+                                    String dayOfDate = "";
+                                    Calendar calendar = Calendar.getInstance();
+                                    Date selectedDate = format.parse(dateMeetUp.get(position));
+                                    calendar.setTime(selectedDate);
+                                    int dayOfWeek = calendar.get(Calendar.DAY_OF_WEEK);
+
+                                    timeStr.add("09:00 - 10:00 am");
+                                    timeStr.add("12:00 - 02:00 pm");
+                                    timeStr.add("04:00 - 06:00 pm");
+                                    timeStr.add("07:00 - 09:00 pm");
+                                    for(int init=0; init<daytime.size(); init++){
+                                        Log.d("iterateUserTime", daytime.get(init).getTime().getStrTime());
+                                    }
+
+                                    if(dayOfWeek==Calendar.MONDAY){
+                                        DayModel day = new DayModel();
+                                        day.setStrDay("Monday");
+                                        udt.setDay(day);
+                                        for(int init=0; init<daytime.size(); init++){
+                                            Log.d("userTime", daytime.get(init).getTime().getStrTime());
+                                            if(daytime.get(init).getDay().getStrDay().equals("Monday")){
+                                                Log.d("TimeAdded", daytime.get(init).getTime().getStrTime());
+                                                timeStr.add(daytime.get(init).getTime().getStrTime());
+                                            }
+                                        }
+                                    }else if(dayOfWeek==Calendar.TUESDAY){
+                                        DayModel day = new DayModel();
+                                        day.setStrDay("Tuesday");
+                                        udt.setDay(day);
+                                        for(int init=0; init<daytime.size(); init++){
+                                            if(daytime.get(init).getDay().getStrDay().equals("Tuesday")){
+                                                Log.d("TimeAdded", daytime.get(init).getTime().getStrTime());
+                                                timeStr.add(daytime.get(init).getTime().getStrTime());
+                                            }
+                                        }
+                                    }else if(dayOfWeek==Calendar.WEDNESDAY){
+                                        DayModel day = new DayModel();
+                                        day.setStrDay("Wednesday");
+                                        udt.setDay(day);
+                                        for(int init=0; init<daytime.size(); init++){
+                                            if(daytime.get(init).getDay().getStrDay().equals("Wednesday")){
+                                                Log.d("TimeAdded", daytime.get(init).getTime().getStrTime());
+                                                timeStr.add(daytime.get(init).getTime().getStrTime());
+                                            }
+                                        }
+                                    }else if(dayOfWeek==Calendar.THURSDAY){
+                                        DayModel day = new DayModel();
+                                        day.setStrDay("Thursday");
+                                        udt.setDay(day);
+                                        for(int init=0; init<daytime.size(); init++){
+                                            if(daytime.get(init).getDay().getStrDay().equals("Thursday")){
+                                                Log.d("TimeAdded", daytime.get(init).getTime().getStrTime());
+                                                timeStr.add(daytime.get(init).getTime().getStrTime());
+                                            }
+                                        }
+                                    }else if(dayOfWeek==Calendar.FRIDAY){
+                                        DayModel day = new DayModel();
+                                        day.setStrDay("Friday");
+                                        udt.setDay(day);
+                                        for(int init=0; init<daytime.size(); init++){
+                                            if(daytime.get(init).getDay().getStrDay().equals("Friday")){
+                                                Log.d("TimeAdded", daytime.get(init).getTime().getStrTime());
+                                                timeStr.add(daytime.get(init).getTime().getStrTime());
+                                            }
+                                        }
+                                    }else if(dayOfWeek==Calendar.SATURDAY){
+                                        DayModel day = new DayModel();
+                                        day.setStrDay("Saturday");
+                                        udt.setDay(day);
+                                        for(int init=0; init<daytime.size(); init++){
+                                            if(daytime.get(init).getDay().getStrDay().equals("Saturday")){
+                                                Log.d("TimeAdded", daytime.get(init).getTime().getStrTime());
+                                                timeStr.add(daytime.get(init).getTime().getStrTime());
+                                            }
+                                        }
+                                    }else if(dayOfWeek==Calendar.SUNDAY){
+                                        DayModel day = new DayModel();
+                                        day.setStrDay("Sunday");
+                                        udt.setDay(day);
+                                        for(int init=0; init<daytime.size(); init++){
+                                            if(daytime.get(init).getDay().getStrDay().equals("Sunday")){
+                                                Log.d("TimeAdded", daytime.get(init).getTime().getStrTime());
+                                                timeStr.add(daytime.get(init).getTime().getStrTime());
+                                            }
+                                        }
+                                    }
+
+                                } catch (ParseException e) {
+                                    e.printStackTrace();
+                                }
+                            }
+
+                            @Override
+                            public void onNothingSelected(AdapterView<?> parent) {
+
+                            }
+                        });
+
+                        ArrayAdapter<String> adapterTime = new ArrayAdapter<String>(context, android.R.layout.simple_spinner_item, timeStr);
+                        adapterTime.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                        mSpinTime.setAdapter(adapterTime);
+
+                        mSpinTime.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                            @Override
+                            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                                timebool = true;
+                                udt.setUserId(Long.valueOf(rentalHeaderMod.getUserId().getUserId()));
+                                TimeModel time = new TimeModel();
+                                time.setStrTime(timeStr.get(position));
+                                udt.setTime(time);
+                                mTimeReturn.setText(timeStr.get(position));
+                                udtReturn.setTime(time);
+                            }
+
+                            @Override
+                            public void onNothingSelected(AdapterView<?> parent) {
+
+                            }
+                        });
+
+                        mSubmit.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                if(datebool==true&&locbool==true&&timebool==true){
+                                    Log.d("himo ka ug ","joke pag add na bitaw");
+                                    muModel.setUserDayTime(udt);
+                                    mureturn.setUserDayTime(udtReturn);
+                                    rentalHeaderMod.setMeetUp(muModel);
+                                    rentalHeaderMod.setReturnMeetUp(mureturn);
+
+                                    AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(context);
+                                    alertDialogBuilder.setTitle("Meet Up Summary");
+                                    alertDialogBuilder.setMessage("Delivery\tDate:\t" +rentalHeaderMod.getDateDeliver()+
+                                            "\n\nTime:\t"+muModel.getUserDayTime().getTime().getStrTime()+
+                                            "\n\nLocation:\t"+muModel.getLocation().getLocationName()+"\n\nReturn\tDate:\t"+rentalHeaderMod.getRentalReturnDate()+
+                                            "\n\nTime:\t"+mureturn.getUserDayTime().getTime().getStrTime()+
+                                            "\n\nLocation:\t"+mureturn.getLocation().getLocationName());
+                                    alertDialogBuilder.setPositiveButton("Okay",
+                                            new DialogInterface.OnClickListener() {
+                                                @RequiresApi(api = Build.VERSION_CODES.N)
+                                                @Override
+                                                public void onClick(DialogInterface arg0, int arg1) {
+                                                    addMeetUpRentalOnly(rentalHeaderMod);
+                                                }
+                                            });
+
+                                    AlertDialog alertDialog = alertDialogBuilder.create();
+                                    alertDialog.show();
+                                }else{
+                                    AlertDialog ad = new AlertDialog.Builder(context).create();
+                                    ad.setTitle("Alert!");
+                                    ad.setMessage("You should fill all data.");
+                                    ad.setButton(AlertDialog.BUTTON_POSITIVE, "Okay", new DialogInterface.OnClickListener() {
+                                        @Override
+                                        public void onClick(DialogInterface dialog, int which) {
+                                            dialog.dismiss();
+                                        }
+                                    });
+                                    ad.show();
+                                }
+                            }
+                        });
+                        dialog.setContentView(view);
+                        dialog.show();
                     }
                 }
             }, new Response.ErrorListener() {
@@ -1850,7 +2152,9 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
 
             d("LOG_VOLLEY", mRequestBody);
             final User finalUser = user;
+            final User finalUser1 = user;
             StringRequest stringRequest = new StringRequest(Request.Method.GET, URL, new Response.Listener<String>() {
+                @RequiresApi(api = Build.VERSION_CODES.N)
                 @Override
                 public void onResponse(String response) {
                     Log.i("swapHeaderResponseId", response);
@@ -1949,17 +2253,19 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
                         mRejection.setText(swapHeaderMod.getSwapExtraMessage());
 
 
+                        List<SwapHeaderDetail> newSHD = new ArrayList<SwapHeaderDetail>();
+
+
                         for(int init=0; init<swapDetailList.size(); init++){
                             if(swapDetailList.get(init).getSwapType().equals("Requestor")){
-                                swapDetailList.remove(init);
-                                break;
+                                newSHD.add(swapDetailList.get(init));
                             }
                         }
 
-                        final SwapRequestAdapter adapter = new SwapRequestAdapter(act, swapDetailList);
+                        final SwapRequestAdapter adapter = new SwapRequestAdapter(act, newSHD);
                         mOwnerMess.setText("Your book request/s:");
-
                         ly.setAdapter(adapter);
+
                         btnOkay.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
@@ -1982,15 +2288,19 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
                         TextView tvOwner = (TextView) view.findViewById(R.id.bookOwnerSwap);
                         ListView ly = (ListView) view.findViewById(R.id.listSwap);
 
+                        tvmessage.setText(swapHeaderMod.getRequestedSwapDetail().getBookOwner().getUserObj().getUserFname()+" "+swapHeaderMod.getRequestedSwapDetail().getBookOwner().getUserObj().getUserLname()+" requested your book "+swapHeaderMod.getSwapDetail().getBookOwner().getBookObj().getBookTitle()+" to be swapped.");
+                        List<SwapHeaderDetail> newSHD = new ArrayList<SwapHeaderDetail>();
+
                         for(int init=0; init<swapDetailList.size(); init++){
                             if(swapDetailList.get(init).getSwapType().equals("Requestor")){
-                                swapDetailList.remove(init);
-                                break;
+                                newSHD.add(swapDetailList.get(init));
                             }
                         }
-                        final SwapRequestAdapter adapter = new SwapRequestAdapter(act, swapDetailList);
 
-                        tvmessage.setText(message);
+                        final SwapRequestAdapter adapter = new SwapRequestAdapter(act, newSHD);
+
+                        Log.d("Message: ", message);
+//                        tvmessage.setText(message);
                         tvOwner.setText(userNotificationList.get(position).getUserPerformer().getUserFname()+" "+userNotificationList.get(position).getUserPerformer().getUserLname()+"'s book request/s:");
                         ly.setAdapter(adapter);
 
@@ -2031,6 +2341,315 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
                         });
                         dialog.setContentView(view);
                         dialog.show();
+                    }else if(status.equals("Approved")){
+                        Date nextDate = new Date();
+                        locbool = false;
+                        datebool = false;
+                        timebool = false;
+
+                        final MeetUp muModel = new MeetUp();
+                        final Dialog dialog = new Dialog(context);
+                        LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+                        View view = inflater.inflate(R.layout.meet_up_dialog, null);
+
+                        Button mSubmit = (Button) view.findViewById(R.id.btnSubmit);
+
+                        final Spinner mSpinDate = (Spinner) view.findViewById(R.id.spinnerDate);
+                        final Spinner mSpinTime = (Spinner) view.findViewById(R.id.spinnerTime);
+
+                        User userRequestee = swapHeaderMod.getSwapDetail().getBookOwner().getUserObj();
+
+                        List<LocationModel> userLoc = userRequestee.getLocationArray();
+                        final List<LocationModel> meetUpLoc = new ArrayList<LocationModel>();
+                        List<String> meetUpStringLoc = new ArrayList<String>();
+                        final UserDayTime udt = new UserDayTime();
+
+                        for(int init=0; init<userLoc.size(); init++){
+                            if(userLoc.get(init).getStatus().equals("MeetUp")){
+                                meetUpLoc.add(userLoc.get(init));
+                                meetUpStringLoc.add(userLoc.get(init).getLocationName());
+                            }
+                        }
+
+                        ArrayAdapter<String> adapterLoc = new ArrayAdapter<String>(context, android.R.layout.simple_spinner_item, meetUpStringLoc);
+                        adapterLoc.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                        Spinner mSpinLoc = (Spinner) view.findViewById(R.id.spinnerLocation);
+                        mSpinLoc.setAdapter(adapterLoc);
+
+                        mSpinLoc.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                            @Override
+                            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                                locbool = true;
+                                muModel.setLocation(meetUpLoc.get(position));
+                            }
+
+                            @Override
+                            public void onNothingSelected(AdapterView<?> parent) {
+
+                            }
+                        });
+
+                        final List<UserDayTime> daytime = userRequestee.getDayTimeModel();
+                        final List<String> dateMeetUp = new ArrayList<String>();
+                        final DateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+                        Set<String> removeDuplicate = new HashSet<>();
+
+
+                        for(int init=0; init<daytime.size(); init++){
+                            if(daytime.get(init).getDay().getStrDay().equals("Monday")){
+                                nextDate=getNextDate(java.util.Calendar.MONDAY);
+                            }else if(daytime.get(init).getDay().getStrDay().equals("Tuesday")){
+                                nextDate=getNextDate(Calendar.TUESDAY);
+                            }else if(daytime.get(init).getDay().getStrDay().equals("Wednesday")){
+                                nextDate=getNextDate(Calendar.WEDNESDAY);
+                            }else if(daytime.get(init).getDay().getStrDay().equals("Thursday")){
+                                nextDate=getNextDate(Calendar.THURSDAY);
+                            }else if(daytime.get(init).getDay().getStrDay().equals("Friday")){
+                                nextDate=getNextDate(Calendar.FRIDAY);
+                            }else if(daytime.get(init).getDay().getStrDay().equals("Saturday")){
+                                nextDate=getNextDate(Calendar.SATURDAY);
+                            }else if(daytime.get(init).getDay().getStrDay().equals("Sunday")){
+                                nextDate=getNextDate(Calendar.SUNDAY);
+                            }
+                            dateMeetUp.add(format.format(nextDate));
+                        }
+
+                        Set<String> dateNoDuplicates = new LinkedHashSet<String>(dateMeetUp);
+                        dateMeetUp.clear();
+                        dateMeetUp.addAll(dateNoDuplicates);
+                        timeStr = new ArrayList<String>();
+
+                        ArrayAdapter<String> adapterDate = new ArrayAdapter<String>(context, android.R.layout.simple_spinner_item, dateMeetUp);
+                        adapterDate.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                        mSpinDate.setAdapter(adapterDate);
+
+
+                        timeStr.add("09:00 - 10:00 am");
+                        timeStr.add("12:00 - 02:00 pm");
+                        timeStr.add("04:00 - 06:00 pm");
+                        timeStr.add("07:00 - 09:00 pm");
+
+                        mSpinDate.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                            @Override
+                            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                                datebool = true;
+                                try {
+                                    swapHeaderMod.setDateDelivered(dateMeetUp.get(position));
+                                    Log.d("dateDelivered", dateMeetUp.get(position));
+
+//                                    timeStr = new ArrayList<String>();
+                                    String dayOfDate = "";
+                                    Calendar calendar = Calendar.getInstance();
+                                    Date selectedDate = format.parse(dateMeetUp.get(position));
+                                    calendar.setTime(selectedDate);
+                                    int dayOfWeek = calendar.get(Calendar.DAY_OF_WEEK);
+
+                                    timeStr.add("09:00 - 10:00 am");
+                                    timeStr.add("12:00 - 02:00 pm");
+                                    timeStr.add("04:00 - 06:00 pm");
+                                    timeStr.add("07:00 - 09:00 pm");
+                                    for(int init=0; init<daytime.size(); init++){
+                                        Log.d("iterateUserTime", daytime.get(init).getTime().getStrTime());
+                                    }
+
+                                    if(dayOfWeek==Calendar.MONDAY){
+                                        DayModel day = new DayModel();
+                                        day.setStrDay("Monday");
+                                        udt.setDay(day);
+                                        for(int init=0; init<daytime.size(); init++){
+                                            Log.d("userTime", daytime.get(init).getTime().getStrTime());
+                                            if(daytime.get(init).getDay().getStrDay().equals("Monday")){
+                                                Log.d("TimeAdded", daytime.get(init).getTime().getStrTime());
+                                                timeStr.add(daytime.get(init).getTime().getStrTime());
+                                            }
+                                        }
+                                    }else if(dayOfWeek==Calendar.TUESDAY){
+                                        DayModel day = new DayModel();
+                                        day.setStrDay("Tuesday");
+                                        udt.setDay(day);
+                                        for(int init=0; init<daytime.size(); init++){
+                                            if(daytime.get(init).getDay().getStrDay().equals("Tuesday")){
+                                                Log.d("TimeAdded", daytime.get(init).getTime().getStrTime());
+                                                timeStr.add(daytime.get(init).getTime().getStrTime());
+                                            }
+                                        }
+                                    }else if(dayOfWeek==Calendar.WEDNESDAY){
+                                        DayModel day = new DayModel();
+                                        day.setStrDay("Wednesday");
+                                        udt.setDay(day);
+                                        for(int init=0; init<daytime.size(); init++){
+                                            if(daytime.get(init).getDay().getStrDay().equals("Wednesday")){
+                                                Log.d("TimeAdded", daytime.get(init).getTime().getStrTime());
+                                                timeStr.add(daytime.get(init).getTime().getStrTime());
+                                            }
+                                        }
+                                    }else if(dayOfWeek==Calendar.THURSDAY){
+                                        DayModel day = new DayModel();
+                                        day.setStrDay("Thursday");
+                                        udt.setDay(day);
+                                        for(int init=0; init<daytime.size(); init++){
+                                            if(daytime.get(init).getDay().getStrDay().equals("Thursday")){
+                                                Log.d("TimeAdded", daytime.get(init).getTime().getStrTime());
+                                                timeStr.add(daytime.get(init).getTime().getStrTime());
+                                            }
+                                        }
+                                    }else if(dayOfWeek==Calendar.FRIDAY){
+                                        DayModel day = new DayModel();
+                                        day.setStrDay("Friday");
+                                        udt.setDay(day);
+                                        for(int init=0; init<daytime.size(); init++){
+                                            if(daytime.get(init).getDay().getStrDay().equals("Friday")){
+                                                Log.d("TimeAdded", daytime.get(init).getTime().getStrTime());
+                                                timeStr.add(daytime.get(init).getTime().getStrTime());
+                                            }
+                                        }
+                                    }else if(dayOfWeek==Calendar.SATURDAY){
+                                        DayModel day = new DayModel();
+                                        day.setStrDay("Saturday");
+                                        udt.setDay(day);
+                                        for(int init=0; init<daytime.size(); init++){
+                                            if(daytime.get(init).getDay().getStrDay().equals("Saturday")){
+                                                Log.d("TimeAdded", daytime.get(init).getTime().getStrTime());
+                                                timeStr.add(daytime.get(init).getTime().getStrTime());
+                                            }
+                                        }
+                                    }else if(dayOfWeek==Calendar.SUNDAY){
+                                        DayModel day = new DayModel();
+                                        day.setStrDay("Sunday");
+                                        udt.setDay(day);
+                                        for(int init=0; init<daytime.size(); init++){
+                                            if(daytime.get(init).getDay().getStrDay().equals("Sunday")){
+                                                Log.d("TimeAdded", daytime.get(init).getTime().getStrTime());
+                                                timeStr.add(daytime.get(init).getTime().getStrTime());
+                                            }
+                                        }
+                                    }
+
+                                } catch (ParseException e) {
+                                    e.printStackTrace();
+                                }
+                            }
+
+                            @Override
+                            public void onNothingSelected(AdapterView<?> parent) {
+
+                            }
+                        });
+
+                        ArrayAdapter<String> adapterTime = new ArrayAdapter<String>(context, android.R.layout.simple_spinner_item, timeStr);
+                        adapterTime.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                        mSpinTime.setAdapter(adapterTime);
+
+                        mSpinTime.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                            @Override
+                            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                                timebool = true;
+                                udt.setUserId(Long.valueOf(finalUser1.getUserId()));
+                                TimeModel time = new TimeModel();
+                                time.setStrTime(timeStr.get(position));
+                                udt.setTime(time);
+                            }
+
+                            @Override
+                            public void onNothingSelected(AdapterView<?> parent) {
+
+                            }
+                        });
+
+                        mSubmit.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                if(datebool==true&&locbool==true&&timebool==true){
+                                    Log.d("himo ka ug ","joke pag add na bitaw");
+                                    muModel.setUserDayTime(udt);
+                                    swapHeaderMod.setMeetUp(muModel);
+
+                                    AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(context);
+                                    alertDialogBuilder.setTitle("Meet Up Summary");
+                                    alertDialogBuilder.setMessage("Date:\t" +swapHeaderMod.getDateDelivered()+
+                                            "\n\nTime:\t"+muModel.getUserDayTime().getTime().getStrTime()+
+                                            "\n\nLocation:\t"+muModel.getLocation().getLocationName());
+                                    alertDialogBuilder.setPositiveButton("Okay",
+                                            new DialogInterface.OnClickListener() {
+                                                @RequiresApi(api = Build.VERSION_CODES.N)
+                                                @Override
+                                                public void onClick(DialogInterface arg0, int arg1) {
+                                                    addMeetUp(swapHeaderMod, muModel);
+                                                }
+                                            });
+
+                                    AlertDialog alertDialog = alertDialogBuilder.create();
+                                    alertDialog.show();
+                                }else{
+                                    AlertDialog ad = new AlertDialog.Builder(context).create();
+                                    ad.setTitle("Alert!");
+                                    ad.setMessage("You should fill all data.");
+                                    ad.setButton(AlertDialog.BUTTON_POSITIVE, "Okay", new DialogInterface.OnClickListener() {
+                                        @Override
+                                        public void onClick(DialogInterface dialog, int which) {
+                                            dialog.dismiss();
+                                        }
+                                    });
+                                    ad.show();
+                                }
+                            }
+                        });
+                        dialog.setContentView(view);
+                        dialog.show();
+                    }else if(status.equals("Confirm")){
+                        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(context);
+                        alertDialogBuilder.setTitle("Meet Up Summary");
+                        alertDialogBuilder.setMessage("Date:\t" +swapHeaderMod.getDateDelivered()+
+                                "\n\nTime:\t"+swapHeaderMod.getMeetUp().getUserDayTime().getTime().getStrTime()+
+                                "\n\nLocation:\t"+swapHeaderMod.getMeetUp().getLocation().getLocationName());
+                        alertDialogBuilder.setPositiveButton("View Books", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                List<SwapHeaderDetail> swapDetailList = new ArrayList<SwapHeaderDetail>();
+                                swapDetailList = swapHeaderMod.getSwapHeaderDetail();
+
+                                final Dialog dialogCustom = new Dialog(context);
+                                dialogCustom.setContentView(R.layout.swap_view_books);
+                                TextView mTitleSwap = (TextView) dialogCustom.findViewById(R.id.tvTitleSwap);
+                                ImageView ivBookSwap = (ImageView) dialogCustom.findViewById(R.id.ivBookSwap);
+                                Button btnClose = (Button) dialogCustom.findViewById(R.id.closeBtn);
+                                ListView ly = (ListView) dialogCustom.findViewById(R.id.listSwap);
+
+                                Glide.with(context).load(swapHeaderMod.getSwapDetail().getBookOwner().getBookObj().getBookFilename()).centerCrop().into(ivBookSwap);
+
+                                mTitleSwap.setText(swapHeaderMod.getSwapDetail().getBookOwner().getBookObj().getBookTitle());
+
+                                List<SwapHeaderDetail> newSHD = new ArrayList<SwapHeaderDetail>();
+
+
+                                for(int init=0; init<swapDetailList.size(); init++){
+                                    if(swapDetailList.get(init).getSwapType().equals("Requestor")){
+                                        newSHD.add(swapDetailList.get(init));
+                                    }
+                                }
+
+                                final SwapRequestAdapter adapter = new SwapRequestAdapter(act, newSHD);
+
+                                ly.setAdapter(adapter);
+                                btnClose.setOnClickListener(new View.OnClickListener() {
+                                    @Override
+                                    public void onClick(View v) {
+                                        dialogCustom.dismiss();
+                                    }
+                                });
+                                dialogCustom.show();
+                            }
+                        });
+
+                        alertDialogBuilder.setNeutralButton("Okay", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                dialog.dismiss();
+                            }
+                        });
+
+                        AlertDialog alertDialog = alertDialogBuilder.create();
+                        alertDialog.show();
                     }
 
                 }
@@ -2058,6 +2677,305 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
             };
             requestQueue.add(stringRequest);
         }
+    }
+
+    public void addMeetUpRentalOnly(final RentalHeader rentalHeader){
+        RequestQueue requestQueue = Volley.newRequestQueue(context);
+        String URL = Constants.POST_MEET_UP;
+
+        final Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd").registerTypeAdapter(Date.class, GsonDateDeserializer.getInstance()).create();
+        final String mRequestBody = gson.toJson(rentalHeader.getMeetUp());
+
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, URL, new Response.Listener<String>() {
+            @SuppressLint("NewApi")
+            @Override
+            public void onResponse(String response) {
+                Log.d("MeetUpResponse", "inside");
+                Log.i("MeetUpResponse", response);
+                MeetUp meetUp = gson.fromJson(response, MeetUp.class);
+
+                Calendar c = Calendar.getInstance();
+                DateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+                rentalHeader.setMeetUp(meetUp);
+
+                addMeetUpRental(rentalHeader);
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.e("LOG_VOLLEY", error.toString());
+                error.printStackTrace();
+            }
+        }) {
+            @Override
+            public String getBodyContentType() {
+                return "application/json; charset=utf-8";
+            }
+
+            @Override
+            public byte[] getBody() throws AuthFailureError {
+                try {
+                    return mRequestBody == null ? null : mRequestBody.getBytes("utf-8");
+                } catch (UnsupportedEncodingException uee) {
+                    VolleyLog.wtf("Unsupported Encoding while trying to get the bytes of %s using %s", mRequestBody, "utf-8");
+                    return null;
+                }
+            }
+        };
+
+        requestQueue.add(stringRequest);
+    }
+
+    public void addMeetUpRental(final RentalHeader rentalHeader){
+        RequestQueue requestQueue = Volley.newRequestQueue(context);
+        String URL = Constants.POST_MEET_UP;
+
+        final Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd").registerTypeAdapter(Date.class, GsonDateDeserializer.getInstance()).create();
+        final String mRequestBody = gson.toJson(rentalHeader.getReturnMeetUp());
+
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, URL, new Response.Listener<String>() {
+            @SuppressLint("NewApi")
+            @Override
+            public void onResponse(String response) {
+                Log.i("MeetUpResponse", response);
+                MeetUp meetUp = gson.fromJson(response, MeetUp.class);
+
+                Calendar c = Calendar.getInstance();
+                DateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+                rentalHeader.setReturnMeetUp(meetUp);
+                rentalHeader.setDateConfirmed(format.format(c.getTime()));
+                updateRental(rentalHeader);
+
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.e("LOG_VOLLEY", error.toString());
+                error.printStackTrace();
+            }
+        }) {
+            @Override
+            public String getBodyContentType() {
+                return "application/json; charset=utf-8";
+            }
+
+            @Override
+            public byte[] getBody() throws AuthFailureError {
+                try {
+                    return mRequestBody == null ? null : mRequestBody.getBytes("utf-8");
+                } catch (UnsupportedEncodingException uee) {
+                    VolleyLog.wtf("Unsupported Encoding while trying to get the bytes of %s using %s", mRequestBody, "utf-8");
+                    return null;
+                }
+            }
+        };
+
+        requestQueue.add(stringRequest);
+    }
+
+    public void addMeetUp(final SwapHeader swapHeader, MeetUp meetUp){
+        RequestQueue requestQueue = Volley.newRequestQueue(context);
+//        String URL = "http://104.197.4.32:8080/Koobym/user/add";
+        String URL = Constants.POST_MEET_UP;
+
+        final Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd").registerTypeAdapter(Date.class, GsonDateDeserializer.getInstance()).create();
+        final String mRequestBody = gson.toJson(meetUp);
+
+//        Log.d("RentalHeaderAdd", rentalHeader.toString());
+
+
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, URL, new Response.Listener<String>() {
+            @SuppressLint("NewApi")
+            @Override
+            public void onResponse(String response) {
+                Log.d("MeetUpResponse", "inside");
+                Log.i("MeetUpResponse", response);
+                MeetUp meetUp = gson.fromJson(response, MeetUp.class);
+
+                Calendar c = Calendar.getInstance();
+                DateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+                    swapHeader.setMeetUp(meetUp);
+                swapHeader.setDateConfirmed(format.format(c.getTime()));
+                    updateSwap(swapHeader);
+
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.e("LOG_VOLLEY", error.toString());
+                error.printStackTrace();
+            }
+        }) {
+            @Override
+            public String getBodyContentType() {
+                return "application/json; charset=utf-8";
+            }
+
+            @Override
+            public byte[] getBody() throws AuthFailureError {
+                try {
+                    return mRequestBody == null ? null : mRequestBody.getBytes("utf-8");
+                } catch (UnsupportedEncodingException uee) {
+                    VolleyLog.wtf("Unsupported Encoding while trying to get the bytes of %s using %s", mRequestBody, "utf-8");
+                    return null;
+                }
+            }
+        };
+
+        requestQueue.add(stringRequest);
+    }
+
+    public void updateRental(RentalHeader rentHeader){
+        RequestQueue requestQueue = Volley.newRequestQueue(context);
+        String nextDateStr = "";
+
+        rentHeader.setStatus("Confirm");
+
+        User user = new User();
+        user = (User) SPUtility.getSPUtil(context).getObject("USER_OBJECT", User.class);
+        String URL = Constants.UPDATE_RENTAL_HEADER_1;
+        Log.d("UpdateSwapHeaderURL", URL);
+        final Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd").registerTypeAdapter(Date.class, GsonDateDeserializer.getInstance()).create();
+        final String mRequestBody = gson.toJson(rentHeader);
+
+
+        int maxLogSize = 2000;
+        for (int i = 0; i <= mRequestBody.length() / maxLogSize; i++) {
+            int start = i * maxLogSize;
+            int end = (i + 1) * maxLogSize;
+            end = end > mRequestBody.length() ? mRequestBody.length() : end;
+            Log.d("updateRent", mRequestBody.substring(start, end));
+        }
+        final String finalNextDateStr = nextDateStr;
+        StringRequest stringRequest = new StringRequest(Request.Method.PUT, URL, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                d("UpdateSwapHeader", response);
+                RentalHeader rentalHeaderMod = gson.fromJson(response, RentalHeader.class);
+
+                UserNotification un =new UserNotification();
+                un.setActionName("rental");
+                un.setActionId(Math.round(rentalHeaderMod.getRentalHeaderId()));
+                un.setBookActionPerformedOn(rentalHeaderMod.getRentalDetail().getBookOwner());
+                un.setUser(rentalHeaderMod.getRentalDetail().getBookOwner().getUserObj());
+                un.setUserPerformer(rentalHeaderMod.getUserId());
+                un.setActionStatus("Confirm");
+
+                Intent intent = new Intent(context, NotificationAct.class);
+                context.startActivity(intent);
+
+                addUserNotif1(un);
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.e("LOG_VOLLEY", error.toString());
+                error.printStackTrace();
+            }
+        }) {
+            @Override
+            public String getBodyContentType() {
+                return "application/json; charset=utf-8";
+            }
+
+            @Override
+            public byte[] getBody() throws AuthFailureError {
+                try {
+                    return mRequestBody == null ? null : mRequestBody.getBytes("utf-8");
+                } catch (UnsupportedEncodingException uee) {
+                    VolleyLog.wtf("Unsupported Encoding while trying to get the bytes of %s using %s", mRequestBody, "utf-8");
+                    return null;
+                }
+            }
+        };
+
+        requestQueue.add(stringRequest);
+    }
+
+    public void updateSwap(SwapHeader swapHeader){
+        RequestQueue requestQueue = Volley.newRequestQueue(context);
+        String nextDateStr = "";
+
+        swapHeader.setStatus("Confirm");
+
+        User user = new User();
+        user = (User) SPUtility.getSPUtil(context).getObject("USER_OBJECT", User.class);
+        String URL = Constants.UPDATE_SWAP_HEADER_1;
+        Log.d("UpdateSwapHeaderURL", URL);
+        final Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd").registerTypeAdapter(Date.class, GsonDateDeserializer.getInstance()).create();
+        final String mRequestBody = gson.toJson(swapHeader);
+
+
+        int maxLogSize = 2000;
+        for (int i = 0; i <= mRequestBody.length() / maxLogSize; i++) {
+            int start = i * maxLogSize;
+            int end = (i + 1) * maxLogSize;
+            end = end > mRequestBody.length() ? mRequestBody.length() : end;
+            Log.d("updateSwap", mRequestBody.substring(start, end));
+        }
+        final String finalNextDateStr = nextDateStr;
+        StringRequest stringRequest = new StringRequest(Request.Method.PUT, URL, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                d("UpdateSwapHeader", response);
+                SwapHeader swapHeaderMod = gson.fromJson(response, SwapHeader.class);
+
+                UserNotification un =new UserNotification();
+                un.setActionName("swap");
+                un.setActionId(swapHeaderMod.getSwapHeaderId());
+                un.setBookActionPerformedOn(swapHeaderMod.getSwapDetail().getBookOwner());
+                un.setUser(swapHeaderMod.getSwapDetail().getBookOwner().getUserObj());
+                un.setUserPerformer(swapHeaderMod.getUser());
+                un.setActionStatus("Confirm");
+
+                Intent intent = new Intent(context, NotificationAct.class);
+                context.startActivity(intent);
+
+                addUserNotif1(un);
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.e("LOG_VOLLEY", error.toString());
+                error.printStackTrace();
+            }
+        }) {
+            @Override
+            public String getBodyContentType() {
+                return "application/json; charset=utf-8";
+            }
+
+            @Override
+            public byte[] getBody() throws AuthFailureError {
+                try {
+                    return mRequestBody == null ? null : mRequestBody.getBytes("utf-8");
+                } catch (UnsupportedEncodingException uee) {
+                    VolleyLog.wtf("Unsupported Encoding while trying to get the bytes of %s using %s", mRequestBody, "utf-8");
+                    return null;
+                }
+            }
+        };
+
+        requestQueue.add(stringRequest);
+    }
+
+    @SuppressLint("NewApi")
+    public Date getNextDate(int dayOfWeek) {
+        @SuppressLint({"NewApi", "LocalSuppress"})
+        java.util.Calendar c = java.util.Calendar.getInstance();
+        int diff = dayOfWeek - c.get(Calendar.DAY_OF_WEEK);
+        if(diff<=0){
+            diff+=7;
+        }
+        c.add(Calendar.DAY_OF_MONTH, diff);
+//        for ( int i = 0; i < 7; i++ ) {
+//            if ( c.get(java.util.Calendar.DAY_OF_WEEK) == dayOfWeek ) {
+//                return c.getTime();
+//            } else {
+//                c.add(java.util.Calendar.DAY_OF_WEEK, 1);
+//            }
+//        }
+        return c.getTime();
     }
 
     public void rejectRequest(final SwapHeader swapHeader, final String message){
@@ -2182,6 +3100,50 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
                 Log.i("userNotificationPost", response);
                 UserNotification un = gson.fromJson(response, UserNotification.class);
                 updateSwapExtra(un);
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.e("LOG_VOLLEY", error.toString());
+            }
+        }) {
+            @Override
+            public String getBodyContentType() {
+                return "application/json; charset=utf-8";
+            }
+
+            @Override
+            public byte[] getBody() throws AuthFailureError {
+                try {
+                    return mRequestBody == null ? null : mRequestBody.getBytes("utf-8");
+                } catch (UnsupportedEncodingException uee) {
+                    VolleyLog.wtf("Unsupported Encoding while trying to get the bytes of %s using %s", mRequestBody, "utf-8");
+                    return null;
+                }
+            }
+        };
+
+        requestQueue.add(stringRequest);
+    }
+
+    public void addUserNotif1(UserNotification userNotification) {
+        RequestQueue requestQueue = Volley.newRequestQueue(getContext());
+        User user = new User();
+        user = (User) SPUtility.getSPUtil(getContext()).getObject("USER_OBJECT", User.class);
+        d("UserIdReceive", String.valueOf(user.getUserId()));
+        String URL = Constants.POST_USER_NOTIFICATION;
+
+
+        final Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd").registerTypeAdapter(Date.class, GsonDateDeserializer.getInstance()).create();
+        final String mRequestBody = gson.toJson(userNotification);
+
+
+        d("LOG_VOLLEY", mRequestBody);
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, URL, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                Log.i("userNotificationPost", response);
+                UserNotification un = gson.fromJson(response, UserNotification.class);
             }
         }, new Response.ErrorListener() {
             @Override

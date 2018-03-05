@@ -20,11 +20,11 @@ import com.android.volley.VolleyLog;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.example.joane14.myapplication.Activities.GsonDateDeserializer;
-import com.example.joane14.myapplication.Adapters.CompleteSwapAdapter;
-import com.example.joane14.myapplication.Adapters.ToApproveSwapAdapter;
 import com.example.joane14.myapplication.Adapters.ToDeliverSwapAdapter;
 import com.example.joane14.myapplication.Model.RentalHeader;
 import com.example.joane14.myapplication.Model.SwapHeader;
+import com.example.joane14.myapplication.Model.SwapHeaderDetail;
+import com.example.joane14.myapplication.Model.ToDeliverSwapModel;
 import com.example.joane14.myapplication.Model.User;
 import com.example.joane14.myapplication.R;
 import com.example.joane14.myapplication.Utilities.SPUtility;
@@ -99,7 +99,7 @@ public class ToDeliverSwapFrag extends Fragment {
             @Override
             public void onResponse(String response) {
                 Log.i("ToDeliverSwapRes", response);
-//                RentalHeader rentalHeaderModel = gson.fromJson(response, RentalHeader.class);
+
                 swapHeaderList.clear();
                 swapHeaderList.addAll(Arrays.asList(gson.fromJson(response, SwapHeader[].class)));
                 mAdapter.notifyDataSetChanged();

@@ -16,6 +16,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.ListView;
 import android.widget.RatingBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -39,6 +40,7 @@ import com.example.joane14.myapplication.Model.AuctionHeader;
 import com.example.joane14.myapplication.Model.Rate;
 import com.example.joane14.myapplication.Model.Review;
 import com.example.joane14.myapplication.Model.SwapHeader;
+import com.example.joane14.myapplication.Model.SwapHeaderDetail;
 import com.example.joane14.myapplication.Model.User;
 import com.example.joane14.myapplication.Model.UserNotification;
 import com.example.joane14.myapplication.Model.UserRating;
@@ -50,6 +52,7 @@ import com.squareup.picasso.Picasso;
 
 import java.io.UnsupportedEncodingException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -69,7 +72,7 @@ public class ToReceiveSwapAdapter extends RecyclerView.Adapter<ToReceiveSwapAdap
     @Override
     public ToReceiveSwapAdapter.BookHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.book_activity_item, parent, false);
+                .inflate(R.layout.swap_receive_book_activity_item, parent, false);
 
         this.context = (Activity) parent.getContext();
         swapHeader = new SwapHeader();
@@ -98,7 +101,6 @@ public class ToReceiveSwapAdapter extends RecyclerView.Adapter<ToReceiveSwapAdap
         holder.mBookTitle.setText(bookList.get(position).getSwapDetail().getBookOwner().getBookObj().getBookTitle());
         holder.mRenter.setText(bookList.get(position).getSwapDetail().getBookOwner().getUserObj().getUserFname()+" "+bookList.get(position).getSwapDetail().getBookOwner().getUserObj().getUserLname());
         holder.mBookDate.setText(bookList.get(position).getDateTimeStamp());
-        holder.mPrice.setVisibility(View.GONE);
         if(bookList.get(position).getDateDelivered()==null){
             Log.d("EndDateReceiveSwap", "walay sulod");
         }else{
@@ -131,17 +133,11 @@ public class ToReceiveSwapAdapter extends RecyclerView.Adapter<ToReceiveSwapAdap
                 if(bookList.get(position).getSwapExtraMessage()!=null){
                     AlertDialog alertDialog = new AlertDialog.Builder(context).create();
                     alertDialog.setTitle("Confirmation");
-                    alertDialog.setMessage("Did you receive the book?");
-                    alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, "Yes", new DialogInterface.OnClickListener() {
+                    alertDialog.setMessage("Will notify "+bookList.get(position).getSwapDetail().getBookOwner().getUserObj().getUserFname()+" "+bookList.get(position).getSwapDetail().getBookOwner().getUserObj().getUserLname()+" that you already received the book.");
+                    alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, "Okay", new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
                             completed(bookList.get(position));
-                        }
-                    });
-                    alertDialog.setButton(AlertDialog.BUTTON_NEGATIVE, "Not Yet", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            dialog.dismiss();
                         }
                     });
                     alertDialog.show();
@@ -159,6 +155,20 @@ public class ToReceiveSwapAdapter extends RecyclerView.Adapter<ToReceiveSwapAdap
                 }
             }
         });
+
+        List<SwapHeaderDetail> shd = new ArrayList<SwapHeaderDetail>();
+        List<SwapHeaderDetail> newShd = new ArrayList<SwapHeaderDetail>();
+
+        shd = bookList.get(position).getSwapHeaderDetail();
+        for(int init=0; init<shd.size(); init++){
+            if(shd.get(init).getSwapType().equals("Requestor")){
+                newShd.add(shd.get(init));
+            }
+        }
+
+        final SwapRequestAdapter adapter = new SwapRequestAdapter(context, newShd);
+
+        holder.ly.setAdapter(adapter);
 
     }
 
@@ -355,9 +365,10 @@ public class ToReceiveSwapAdapter extends RecyclerView.Adapter<ToReceiveSwapAdap
     }
 
     public class BookHolder extends RecyclerView.ViewHolder {
-        TextView mBookTitle, mRenter, mBookDate, mPrice, mLocation, mTime, mDate;
+        TextView mBookTitle, mRenter, mBookDate, mLocation, mTime, mDate;
         ImageView mIvBookImg;
         ImageButton mProfile, mNotify, mRate;
+        ListView ly;
         SwapHeader swapHeaderObj;
         Context context;
 
@@ -369,18 +380,14 @@ public class ToReceiveSwapAdapter extends RecyclerView.Adapter<ToReceiveSwapAdap
             mBookTitle = (TextView) itemView.findViewById(R.id.bookTitleBA);
             mDate = (TextView) itemView.findViewById(R.id.dateBA);
             mRenter = (TextView) itemView.findViewById(R.id.renterNameBA);
-//            mRenter = (TextView) itemView.findViewById(R.id.toReceiveRenter);
             mBookDate = (TextView) itemView.findViewById(R.id.bookDateBA);
             mLocation = (TextView) itemView.findViewById(R.id.locationBA);
-            mPrice = (TextView) itemView.findViewById(R.id.bookPriceBA);
             mTime = (TextView) itemView.findViewById(R.id.timeBA);
-//            mIvRenter = (ImageView) itemView.findViewById(R.id.toReceiveRenterImage);
             mIvBookImg = (ImageView) itemView.findViewById(R.id.ivBookBA);
             mProfile = (ImageButton) itemView.findViewById(R.id.profileBA);
             mNotify = (ImageButton) itemView.findViewById(R.id.notifyBA);
             mRate = (ImageButton) itemView.findViewById(R.id.rateButtonBA);
-//            itemView.setOnClickListener(this);
-
+            ly = (ListView) itemView.findViewById(R.id.listSwap);
 
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override

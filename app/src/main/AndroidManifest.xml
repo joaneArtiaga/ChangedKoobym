@@ -83,6 +83,8 @@
         <activity
             android:name=".Activities.MeetUpChooser"
             android:label="@string/title_activity_meet_up_chooser" />
+        <activity android:name="com.example.joane14.myapplication.Activities.BookActActivity" />
+
         <activity
             android:name=".Activities.TransactionActivity"
             android:theme="@style/AppTheme.NoActionBar" />
@@ -105,7 +107,6 @@
         <activity android:name=".Activities.SearchResult" />
         <activity android:name=".Activities.ViewAuctionBook" />
         <activity android:name=".Activities.AuctionMeetUpChooser" />
-        <activity android:name=".Activities.BookActActivity" />
         <activity android:name=".Activities.UpdateBookActivity" />
         <activity android:name=".Activities.UpdateProfileActivity" />
         <activity

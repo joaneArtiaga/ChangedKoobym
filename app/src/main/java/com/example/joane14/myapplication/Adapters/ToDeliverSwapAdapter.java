@@ -15,6 +15,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.ListView;
 import android.widget.TextView;
 
 import com.android.volley.Request;
@@ -30,6 +31,7 @@ import com.example.joane14.myapplication.Fragments.VolleyUtil;
 import com.example.joane14.myapplication.Model.BookActivity;
 import com.example.joane14.myapplication.Model.RentalHeader;
 import com.example.joane14.myapplication.Model.SwapHeader;
+import com.example.joane14.myapplication.Model.SwapHeaderDetail;
 import com.example.joane14.myapplication.R;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -37,6 +39,7 @@ import com.google.gson.GsonBuilder;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -54,7 +57,7 @@ public class ToDeliverSwapAdapter extends RecyclerView.Adapter<ToDeliverSwapAdap
     @Override
     public ToDeliverSwapAdapter.BookHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.book_activity_item, parent, false);
+                .inflate(R.layout.swap_book_activity_item, parent, false);
 
         this.context = (Activity) parent.getContext();
         Log.d("ToDeliverSwapAdapter","inside");
@@ -77,7 +80,7 @@ public class ToDeliverSwapAdapter extends RecyclerView.Adapter<ToDeliverSwapAdap
         final String currDAte = sdf.format(c);
 
         d("swapHeader", bookList.get(position).toString());
-        Log.d("CurrentDate: "+currDAte, "ReturnDate: "+bookList.get(position).getDateDelivered());
+//        Log.d("CurrentDate: "+currDAte, "ReturnDate: "+bookList.get(position).getSwapHeader().getDateDelivered());
         if(currDAte.equals(bookList.get(position).getDateDelivered())){
             holder.mRate.setImageResource(R.drawable.checkbookact);
         }else{
@@ -85,15 +88,16 @@ public class ToDeliverSwapAdapter extends RecyclerView.Adapter<ToDeliverSwapAdap
         }
 
         holder.mNotify.setVisibility(View.GONE);
+
         holder.mBookTitle.setText(bookList.get(position).getSwapDetail().getBookOwner().getBookObj().getBookTitle());
         holder.mBookDate.setText(bookList.get(position).getDateTimeStamp());
-        holder.mPrice.setText(String.valueOf(bookList.get(position).getSwapDetail().getSwapPrice()));
         holder.mRenterName.setText(bookList.get(position).getRequestedSwapDetail().getBookOwner().getUserObj().getUserFname()+" "+bookList.get(position).getRequestedSwapDetail().getBookOwner().getUserObj().getUserLname());
         if(bookList.get(position).getDateDelivered()==null){
             Log.d("EndDateDeliverSwap", "walay sulod");
         }else{
             holder.mDate.setText(bookList.get(position).getDateDelivered());
         }
+
         if(bookList.get(position).getMeetUp()==null){
 
         }else{
@@ -120,18 +124,13 @@ public class ToDeliverSwapAdapter extends RecyclerView.Adapter<ToDeliverSwapAdap
                 if(currDAte.equals(bookList.get(position).getDateDelivered())){
                     final AlertDialog ad = new AlertDialog.Builder(context).create();
                     ad.setTitle("Confirmation");
-                    ad.setMessage("Did you deliver the book?");
-                    ad.setButton(AlertDialog.BUTTON_POSITIVE, "Yes", new DialogInterface.OnClickListener() {
+                    ad.setMessage("Will notify "+bookList.get(position).getRequestedSwapDetail().getBookOwner().getUserObj().getUserFname()+" "+bookList.get(position).getRequestedSwapDetail().getBookOwner().getUserObj().getUserFname()+" that the book has been delivered.");
+                    ad.setButton(AlertDialog.BUTTON_POSITIVE, "Okay", new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
                             setDelivered(bookList.get(position));
-                            ad.dismiss();
-                        }
-                    });
-                    ad.setButton(AlertDialog.BUTTON_NEGATIVE, "Not Yet", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            ad.dismiss();
+                            Intent intent = new Intent(context, BookActActivity.class);
+                            context.startActivity(intent);
                         }
                     });
                     ad.show();
@@ -150,6 +149,21 @@ public class ToDeliverSwapAdapter extends RecyclerView.Adapter<ToDeliverSwapAdap
             }
         });
 
+        List<SwapHeaderDetail> shd = new ArrayList<SwapHeaderDetail>();
+        List<SwapHeaderDetail> newShd = new ArrayList<SwapHeaderDetail>();
+
+        shd = bookList.get(position).getSwapHeaderDetail();
+        for(int init=0; init<shd.size(); init++){
+            if(shd.get(init).getSwapType().equals("Requestor")){
+                newShd.add(shd.get(init));
+            }
+        }
+
+        final SwapRequestAdapter adapter = new SwapRequestAdapter(context, newShd);
+
+        holder.ly.setAdapter(adapter);
+
+
 
     }
 
@@ -164,9 +178,6 @@ public class ToDeliverSwapAdapter extends RecyclerView.Adapter<ToDeliverSwapAdap
             public void onResponse(String response) {
                 Log.d("setDeliveredResponse", response);
                 Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd").registerTypeAdapter(Date.class, GsonDateDeserializer.getInstance()).create();
-
-                Intent intent = new Intent(context, BookActivity.class);
-                context.startActivity(intent);
             }
         }, new Response.ErrorListener() {
             @Override
@@ -184,8 +195,9 @@ public class ToDeliverSwapAdapter extends RecyclerView.Adapter<ToDeliverSwapAdap
     }
 
     public class BookHolder extends RecyclerView.ViewHolder {
-        TextView mBookTitle, mRenterName, mBookDate, mPrice, mLocation, mTime, mDate;
+        TextView mBookTitle, mRenterName, mBookDate, mLocation, mTime, mDate;
         ImageView mIvBookImg;
+        ListView ly;
         ImageButton mProfile, mNotify, mRate;
         SwapHeader swapHeaderObj;
         Context context;
@@ -194,21 +206,18 @@ public class ToDeliverSwapAdapter extends RecyclerView.Adapter<ToDeliverSwapAdap
             super(itemView);
 
             this.context = context;
-//            mRenter = (TextView) itemView.findViewById(R.id.deliverRenter);
             mBookTitle = (TextView) itemView.findViewById(R.id.bookTitleBA);
             mDate = (TextView) itemView.findViewById(R.id.dateBA);
             mRenterName = (TextView) itemView.findViewById(R.id.renterNameBA);
             mBookDate = (TextView) itemView.findViewById(R.id.bookDateBA);
-            mPrice = (TextView) itemView.findViewById(R.id.bookPriceBA);
             mLocation = (TextView) itemView.findViewById(R.id.locationBA);
             mTime = (TextView) itemView.findViewById(R.id.timeBA);
-//            mIvRenter = (ImageView) itemView.findViewById(R.id.deliverRenterImage);
             mIvBookImg = (ImageView) itemView.findViewById(R.id.ivBookBA);
             mProfile = (ImageButton) itemView.findViewById(R.id.profileBA);
             mNotify = (ImageButton) itemView.findViewById(R.id.notifyBA);
             mRate = (ImageButton) itemView.findViewById(R.id.rateButtonBA);
-//            itemView.setOnClickListener(this);
 
+            ly = (ListView) itemView.findViewById(R.id.listSwap);
 
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override

@@ -75,6 +75,8 @@ public class Constants {
 
     public static final String UPDATE_RENTAL_HEADER = WEB_SERVICE_URL + "rentalHeader/updateStatus";
 
+    public static final String UPDATE_RENTAL_HEADER_1 = WEB_SERVICE_URL + "rentalHeader/update";
+
     public static final String UPDATE_BOOK_OWNER = WEB_SERVICE_URL + "bookOwner/updateBookOwner";
 
     public static final String UPDATE_BOOK = WEB_SERVICE_URL + "book/update";
@@ -84,6 +86,8 @@ public class Constants {
     public static final String UPDATE_BOOK_OWNER_1 = WEB_SERVICE_URL + "bookOwner/update";
 
     public static final String UPDATE_SWAP_HEADER = WEB_SERVICE_URL + "swapHeader/updateStatus";
+
+    public static final String UPDATE_SWAP_HEADER_1 = WEB_SERVICE_URL + "swapHeader/update";
 
     public static final String GET_SWAP_DETAILS_ALL = WEB_SERVICE_URL + "swapDetail/getAllSwap";
 
