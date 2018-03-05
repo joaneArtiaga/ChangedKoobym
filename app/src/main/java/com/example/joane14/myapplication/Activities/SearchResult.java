@@ -15,14 +15,6 @@ public class SearchResult extends AppCompatActivity implements SearchFragmentRes
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_search_result);
 
-        Bundle bundle = new Bundle();
-        bundle = getIntent().getExtras();
-
-        SearchFragmentResult mrbf = SearchFragmentResult.newInstance(bundle);
-        FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
-        fragmentTransaction.replace(R.id.fragment_container_search, mrbf);
-        fragmentTransaction.commit();
-
     }
 
     @Override

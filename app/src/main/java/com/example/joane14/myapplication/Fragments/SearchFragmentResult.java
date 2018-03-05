@@ -45,14 +45,15 @@ public class SearchFragmentResult extends Fragment {
     private SearchAdapter mAdapter;
 
     private OnSearchListener mListener;
+    static String key;
 
     public SearchFragmentResult() {
     }
 
 
-    public static SearchFragmentResult newInstance(Bundle bundle) {
+    public static SearchFragmentResult newInstance(String keyword) {
         SearchFragmentResult fragment = new SearchFragmentResult();
-        fragment.setArguments(bundle);
+        key = keyword;
         return fragment;
     }
 
@@ -66,12 +67,9 @@ public class SearchFragmentResult extends Fragment {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_search_fragment_result, container, false);
 
-        String keyword = getArguments().getString("SearchKeyword");
 
-        TextView mHeader = (TextView) view.findViewById(R.id.searchTitle);
         bookOwnerModelList = new ArrayList<BookOwnerModel>();
 
-        mHeader.setText("Result/s of '"+keyword+"'");
         mGridView = (GridView) view.findViewById(R.id.search_gridview);
         mAdapter = new SearchAdapter(getContext(), bookOwnerModelList);
         mGridView.setAdapter(mAdapter);
@@ -100,7 +98,7 @@ public class SearchFragmentResult extends Fragment {
             }
         });
 
-        getSuggested(keyword);
+        getSuggested();
 
         return view;
     }
@@ -200,10 +198,10 @@ public class SearchFragmentResult extends Fragment {
     }
 
 
-    private void getSuggested(String keyword){
+    private void getSuggested(){
 //        String URL = "http://104.198.152.85/Koobym/rentalDetail/suggested/%d";
 //        String URL = Constants.WEB_SERVICE_URL+"rentalDetail/suggested/%d";
-        String URL = Constants.GET_SEARCH_RESULT+keyword;
+        String URL = Constants.GET_SEARCH_RESULT+key;
         Log.d("SearchURL", URL);
         StringRequest stringRequest = new StringRequest(Request.Method.GET, URL, new Response.Listener<String>() {
             @Override

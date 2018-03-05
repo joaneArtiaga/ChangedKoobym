@@ -2,9 +2,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/colorDark"
     android:orientation="vertical"
-    tools:context="com.example.joane14.myapplication.Fragments.SearchFragmentResult">
+    tools:context="com.example.joane14.myapplication.Fragments.SearchByAuthor">
 
     <GridView
         android:id="@+id/search_gridview"

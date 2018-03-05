@@ -322,9 +322,11 @@ public class LandingPage extends AppCompatActivity
             @Override
             public void onClick(View v) {
                 Log.d("SearchView", "onclick");
-                FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-                ft.replace(R.id.fragment_landing_container, SearcgByCategoryFrag.newInstance());
-                ft.commit();
+                Intent intent = new Intent(LandingPage.this, SearchActivity.class);
+                startActivity(intent);
+//                FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+//                ft.replace(R.id.fragment_landing_container, SearcgByCategoryFrag.newInstance());
+//                ft.commit();
             }
         });
 
@@ -461,7 +463,7 @@ public class LandingPage extends AppCompatActivity
     BroadcastReceiver notificationReceivedReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
-            Toast.makeText(getApplicationContext(), "push notification", Toast.LENGTH_SHORT).show();
+//            Toast.makeText(getApplicationContext(), "push notification", Toast.LENGTH_SHORT).show();
         }
     };
 

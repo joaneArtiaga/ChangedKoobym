@@ -75,7 +75,7 @@ public class Constants {
 
     public static final String UPDATE_RENTAL_HEADER = WEB_SERVICE_URL + "rentalHeader/updateStatus";
 
-    public static final String UPDATE_RENTAL_HEADER_1 = WEB_SERVICE_URL + "rentalHeader/update";
+    public static final String UPDATE_RENTAL_HEADER_1 = WEB_SERVICE_URL + "rentalHeader/setConfirm/";
 
     public static final String UPDATE_BOOK_OWNER = WEB_SERVICE_URL + "bookOwner/updateBookOwner";
 
@@ -200,6 +200,12 @@ public class Constants {
     public static final String GET_RECOMMENDATION = WEB_SERVICE_URL + "bookOwner/suggestedBooks/";
 
     public static final String GET_SEARCH_RESULT = WEB_SERVICE_URL + "bookOwner/searchBooks/";
+
+    public static final String GET_SEARCH_RESULT_OWNER = WEB_SERVICE_URL + "bookOwner/searchByUserOwner/";
+
+    public static final String GET_SEARCH_RESULT_GENRE = WEB_SERVICE_URL + "bookOwner/searchByGenre/";
+
+    public static final String GET_SEARCH_RESULT_AUTHOR = WEB_SERVICE_URL + "bookOwner/searchByAuthor/";
 
     public static final String PUT_RENTAL_HEADER = WEB_SERVICE_URL + "rentalHeader/update";
 

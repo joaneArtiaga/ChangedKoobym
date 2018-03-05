@@ -83,16 +83,16 @@
         <activity
             android:name=".Activities.MeetUpChooser"
             android:label="@string/title_activity_meet_up_chooser" />
-        <activity android:name="com.example.joane14.myapplication.Activities.BookActActivity" />
-
+        <activity android:name=".Activities.BookActActivity" />
         <activity
             android:name=".Activities.TransactionActivity"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity android:name=".Activities.UserReviewActivity" />
         <activity android:name=".Activities.BookReviewActivity" />
         <activity android:name=".Activities.ViewBookSwapActivity" />
-        <activity android:name=".Activities.SwapBookChooser"
-            android:excludeFromRecents="true"/>
+        <activity
+            android:name=".Activities.SwapBookChooser"
+            android:excludeFromRecents="true" />
         <activity
             android:name=".Activities.SwapMeetUpChooser"
             android:label="@string/title_activity_swap_meet_up_chooser" />
@@ -111,7 +111,8 @@
         <activity android:name=".Activities.UpdateProfileActivity" />
         <activity
             android:name=".Activities.MeetUpUpdate"
-            android:label="@string/title_activity_meet_up_update"></activity>
+            android:label="@string/title_activity_meet_up_update" />
+        <activity android:name=".Activities.SearchActivity"></activity>
     </application>
 
 </manifest>

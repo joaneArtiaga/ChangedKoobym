@@ -23,6 +23,13 @@
     <string name="title_activity_meet_up_chooser">Map</string>
     <string name="title_activity_swap_meet_up_chooser">Map</string>
 
+    <string name="category_search">Choose category</string>
+    <string-array name="category">
+        <item>Book Title</item>
+        <item>Book Genre</item>
+        <item>Book Author</item>
+        <item>Book Owner</item>
+    </string-array>
 
     <string name="countdown">There are only</string>
     <string name="countdownLeft">till this auction stops.</string>

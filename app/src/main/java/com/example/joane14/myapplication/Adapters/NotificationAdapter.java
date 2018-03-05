@@ -55,6 +55,7 @@ import com.example.joane14.myapplication.Model.AuctionHeader;
 import com.example.joane14.myapplication.Model.BookOwnerRating;
 import com.example.joane14.myapplication.Model.BookOwnerReview;
 import com.example.joane14.myapplication.Model.DayModel;
+import com.example.joane14.myapplication.Model.DayTimeModel;
 import com.example.joane14.myapplication.Model.LocationModel;
 import com.example.joane14.myapplication.Model.MeetUp;
 import com.example.joane14.myapplication.Model.MeetUpModel;
@@ -1429,6 +1430,12 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
                                 datebool = true;
                                 try {
                                     rentalHeaderMod.setDateDeliver(dateMeetUp.get(position));
+
+                                    DayModel dayModel = new DayModel();
+                                    dayModel.setStrDay(dateMeetUp.get(position));
+
+                                    udt.setDay(dayModel);
+
                                     Date dateReturn = new Date();
                                     dateReturn = format.parse(dateMeetUp.get(position));
 
@@ -1460,8 +1467,6 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
 
                                     if(dayOfWeek==Calendar.MONDAY){
                                         DayModel day = new DayModel();
-                                        day.setStrDay("Monday");
-                                        udt.setDay(day);
                                         for(int init=0; init<daytime.size(); init++){
                                             Log.d("userTime", daytime.get(init).getTime().getStrTime());
                                             if(daytime.get(init).getDay().getStrDay().equals("Monday")){
@@ -1471,8 +1476,6 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
                                         }
                                     }else if(dayOfWeek==Calendar.TUESDAY){
                                         DayModel day = new DayModel();
-                                        day.setStrDay("Tuesday");
-                                        udt.setDay(day);
                                         for(int init=0; init<daytime.size(); init++){
                                             if(daytime.get(init).getDay().getStrDay().equals("Tuesday")){
                                                 Log.d("TimeAdded", daytime.get(init).getTime().getStrTime());
@@ -1481,8 +1484,6 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
                                         }
                                     }else if(dayOfWeek==Calendar.WEDNESDAY){
                                         DayModel day = new DayModel();
-                                        day.setStrDay("Wednesday");
-                                        udt.setDay(day);
                                         for(int init=0; init<daytime.size(); init++){
                                             if(daytime.get(init).getDay().getStrDay().equals("Wednesday")){
                                                 Log.d("TimeAdded", daytime.get(init).getTime().getStrTime());
@@ -1491,8 +1492,6 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
                                         }
                                     }else if(dayOfWeek==Calendar.THURSDAY){
                                         DayModel day = new DayModel();
-                                        day.setStrDay("Thursday");
-                                        udt.setDay(day);
                                         for(int init=0; init<daytime.size(); init++){
                                             if(daytime.get(init).getDay().getStrDay().equals("Thursday")){
                                                 Log.d("TimeAdded", daytime.get(init).getTime().getStrTime());
@@ -1501,8 +1500,6 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
                                         }
                                     }else if(dayOfWeek==Calendar.FRIDAY){
                                         DayModel day = new DayModel();
-                                        day.setStrDay("Friday");
-                                        udt.setDay(day);
                                         for(int init=0; init<daytime.size(); init++){
                                             if(daytime.get(init).getDay().getStrDay().equals("Friday")){
                                                 Log.d("TimeAdded", daytime.get(init).getTime().getStrTime());
@@ -1511,8 +1508,6 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
                                         }
                                     }else if(dayOfWeek==Calendar.SATURDAY){
                                         DayModel day = new DayModel();
-                                        day.setStrDay("Saturday");
-                                        udt.setDay(day);
                                         for(int init=0; init<daytime.size(); init++){
                                             if(daytime.get(init).getDay().getStrDay().equals("Saturday")){
                                                 Log.d("TimeAdded", daytime.get(init).getTime().getStrTime());
@@ -1521,8 +1516,6 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
                                         }
                                     }else if(dayOfWeek==Calendar.SUNDAY){
                                         DayModel day = new DayModel();
-                                        day.setStrDay("Sunday");
-                                        udt.setDay(day);
                                         for(int init=0; init<daytime.size(); init++){
                                             if(daytime.get(init).getDay().getStrDay().equals("Sunday")){
                                                 Log.d("TimeAdded", daytime.get(init).getTime().getStrTime());
@@ -2698,7 +2691,7 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
                 DateFormat format = new SimpleDateFormat("yyyy-MM-dd");
                 rentalHeader.setMeetUp(meetUp);
 
-                addMeetUpRental(rentalHeader);
+                addMeetUpRental(rentalHeader, meetUp);
             }
         }, new Response.ErrorListener() {
             @Override
@@ -2726,7 +2719,7 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
         requestQueue.add(stringRequest);
     }
 
-    public void addMeetUpRental(final RentalHeader rentalHeader){
+    public void addMeetUpRental(final RentalHeader rentalHeader, final MeetUp deliver){
         RequestQueue requestQueue = Volley.newRequestQueue(context);
         String URL = Constants.POST_MEET_UP;
 
@@ -2744,7 +2737,7 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
                 DateFormat format = new SimpleDateFormat("yyyy-MM-dd");
                 rentalHeader.setReturnMeetUp(meetUp);
                 rentalHeader.setDateConfirmed(format.format(c.getTime()));
-                updateRental(rentalHeader);
+                updateRental(rentalHeader, deliver, meetUp);
 
             }
         }, new Response.ErrorListener() {
@@ -2825,7 +2818,7 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
         requestQueue.add(stringRequest);
     }
 
-    public void updateRental(RentalHeader rentHeader){
+    public void updateRental(RentalHeader rentHeader, MeetUp deliver, MeetUp returnMU){
         RequestQueue requestQueue = Volley.newRequestQueue(context);
         String nextDateStr = "";
 
@@ -2833,7 +2826,7 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
 
         User user = new User();
         user = (User) SPUtility.getSPUtil(context).getObject("USER_OBJECT", User.class);
-        String URL = Constants.UPDATE_RENTAL_HEADER_1;
+        String URL = Constants.UPDATE_RENTAL_HEADER_1+rentHeader.getRentalHeaderId()+"/"+deliver.getMeetUpId()+"/"+returnMU.getMeetUpId();
         Log.d("UpdateSwapHeaderURL", URL);
         final Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd").registerTypeAdapter(Date.class, GsonDateDeserializer.getInstance()).create();
         final String mRequestBody = gson.toJson(rentHeader);
@@ -2847,7 +2840,7 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
             Log.d("updateRent", mRequestBody.substring(start, end));
         }
         final String finalNextDateStr = nextDateStr;
-        StringRequest stringRequest = new StringRequest(Request.Method.PUT, URL, new Response.Listener<String>() {
+        StringRequest stringRequest = new StringRequest(Request.Method.GET, URL, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
                 d("UpdateSwapHeader", response);
