@@ -4,7 +4,6 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/colorDark"
     android:orientation="vertical"
     android:weightSum="1"
     tools:context=".Activities.UpdateBookActivity">
@@ -55,7 +54,6 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_horizontal"
                     android:ems="10"
-                    android:textColor="@color/colorWhite"
                     android:gravity="center_horizontal"/>
 
                 <TextView
@@ -73,7 +71,6 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_horizontal"
                     android:ems="10"
-                    android:textColor="@color/colorWhite"
                     android:gravity="center_horizontal"
                     android:inputType="none|textPersonName" />
 
@@ -96,7 +93,6 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_horizontal"
                     android:ems="10"
-                    android:textColor="@color/colorWhite"
                     android:gravity="center_horizontal"
                     tools:layout_editor_absoluteX="20dp"
                     tools:layout_editor_absoluteY="433dp" />
@@ -119,7 +115,6 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_horizontal"
                     android:ems="10"
-                    android:textColor="@color/colorWhite"
                     android:gravity="center_horizontal"
                     tools:layout_editor_absoluteX="20dp"
                     tools:layout_editor_absoluteY="433dp" />
@@ -142,7 +137,6 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_horizontal"
                     android:ems="10"
-                    android:textColor="@color/colorWhite"
                     android:gravity="center_horizontal"
                     tools:layout_editor_absoluteX="20dp"
                     tools:layout_editor_absoluteY="433dp" />
@@ -168,7 +162,6 @@
                     android:clickable="true"
                     android:focusable="false"
                     android:gravity="center"
-                    android:textColor="@color/colorWhite"
                     android:hint="Date Bought (YYYY-MM-DD)"
                     android:inputType="datetime"
                     android:textSize="15sp" />

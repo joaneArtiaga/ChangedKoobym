@@ -134,19 +134,91 @@ public class ToReceiveAuctionAdapter extends RecyclerView.Adapter<ToReceiveAucti
             @Override
             public void onClick(View v) {
                 if(bookList.get(position).getAuctionExtraMessage()!=null){
+                    AuctionHeader auctionHeaderModel = new AuctionHeader();
+                    auctionHeaderModel = bookList.get(position);
                     AlertDialog alertDialog = new AlertDialog.Builder(context).create();
-                    alertDialog.setTitle("Confirmation");
-                    alertDialog.setMessage("Did you receive the book?");
-                    alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, "Yes", new DialogInterface.OnClickListener() {
+                    alertDialog.setMessage("Will notify the owner that you received the book.");
+                    final AuctionHeader finalAuctionHeaderModel = auctionHeaderModel;
+                    alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, "Okay", new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
-                            completed(bookList.get(position));
-                        }
-                    });
-                    alertDialog.setButton(AlertDialog.BUTTON_NEGATIVE, "Not Yet", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            dialog.dismiss();
+
+                            final Dialog dialogCustom = new Dialog(context);
+                            dialogCustom.setContentView(R.layout.review_custom_dialog);
+                            TextView mTitle = (TextView) dialogCustom.findViewById(R.id.bookTitleReview);
+                            TextView mAuthor = (TextView) dialogCustom.findViewById(R.id.bookAuthorReview);
+                            ImageView ivBook = (ImageView) dialogCustom.findViewById(R.id.ivBookReview);
+                            final EditText etReviewMessage = (EditText) dialogCustom.findViewById(R.id.etReviewReview);
+                            final RatingBar mRateBar = (RatingBar) dialogCustom.findViewById(R.id.ratingReview);
+                            Button mRateNow = (Button) dialogCustom.findViewById(R.id.btnRateReview);
+
+                            etReviewMessage.setHint("Review owner");
+                            mTitle.setText(finalAuctionHeaderModel.getAuctionDetail().getBookOwner().getBookObj().getBookTitle());
+
+                            Glide.with(context).load(finalAuctionHeaderModel.getAuctionDetail().getBookOwner().getBookObj().getBookFilename()).centerCrop().into(ivBook);
+
+                            String author = "";
+
+                            if(finalAuctionHeaderModel.getAuctionDetail().getBookOwner().getBookObj().getBookAuthor().size()!=0){
+                                for(int init = 0; init< finalAuctionHeaderModel.getAuctionDetail().getBookOwner().getBookObj().getBookAuthor().size(); init++){
+                                    if(!(finalAuctionHeaderModel.getAuctionDetail().getBookOwner().getBookObj().getBookAuthor().get(init).getAuthorFName().equals(""))){
+                                        author+= finalAuctionHeaderModel.getAuctionDetail().getBookOwner().getBookObj().getBookAuthor().get(init).getAuthorFName()+" ";
+                                        if(!(finalAuctionHeaderModel.getAuctionDetail().getBookOwner().getBookObj().getBookAuthor().get(init).getAuthorLName().equals(""))){
+                                            author+= finalAuctionHeaderModel.getAuctionDetail().getBookOwner().getBookObj().getBookAuthor().get(init).getAuthorLName();
+                                            if(init+1< finalAuctionHeaderModel.getAuctionDetail().getBookOwner().getBookObj().getBookAuthor().size()){
+                                                author+=", ";
+                                            }
+                                        }
+                                    }
+                                }
+                            }else{
+                                author="Unknown Author";
+                            }
+                            mAuthor.setText(author);
+
+                            mRateBar.setOnRatingBarChangeListener(new RatingBar.OnRatingBarChangeListener() {
+                                @Override
+                                public void onRatingChanged(RatingBar ratingBar, float rating, boolean fromUser) {
+                                    rateNumber = rating;
+                                }
+                            });
+
+                            mRateNow.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    if(etReviewMessage.getText().length()==0){
+                                        etReviewMessage.setError("Fill necessary fields.");
+                                    }
+                                    if(rateNumber==0){
+                                        Toast.makeText(context, "Should rate.", Toast.LENGTH_LONG);
+                                    }
+
+                                    if(etReviewMessage.getText().length()>0&&rateNumber>0){
+                                        java.util.Calendar c = java.util.Calendar.getInstance();
+                                        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+
+                                        Rate rateMod = new Rate();
+                                        rateMod.setRateNumber(rateNumber);
+                                        rateMod.setRateTimeStamp(sdf.format(c.getTime()));
+
+                                        Review reviewMod = new Review();
+                                        reviewMod.setReviewTimeStamp(sdf.format(c.getTime()));
+
+                                        UserRating userRatingMod = new UserRating();
+
+                                        userRatingMod.setComment(etReviewMessage.getText().toString());
+                                        userRatingMod.setUserRater(finalAuctionHeaderModel.getUser());
+                                        userRatingMod.setUser(finalAuctionHeaderModel.getAuctionDetail().getBookOwner().getUserObj());
+                                        userRatingMod.setReview(reviewMod);
+                                        userRatingMod.setRate(rateMod);
+
+                                        userRate(userRatingMod, position);
+                                    }
+
+                                }
+                            });
+
+                            dialogCustom.show();
                         }
                     });
                     alertDialog.show();
@@ -167,10 +239,10 @@ public class ToReceiveAuctionAdapter extends RecyclerView.Adapter<ToReceiveAucti
 
     }
 
-    public void completed(AuctionHeader auctionHeader) {
+    public void completed(AuctionHeader auctionHeader, UserRating ur) {
         RequestQueue requestQueue = Volley.newRequestQueue(context);
 //        String URL = "http://192.168.1.6:8080/Koobym/swapHeader/add";
-        String URL = Constants.AUCTION_COMPLETED + auctionHeader.getAuctionHeaderId();
+        String URL = Constants.AUCTION_COMPLETED + auctionHeader.getAuctionHeaderId()+"/"+ur.getUserRatingId();
 
         rateNumber=0f;
         Log.d("auctionCompletedURL", URL);
@@ -189,85 +261,6 @@ public class ToReceiveAuctionAdapter extends RecyclerView.Adapter<ToReceiveAucti
             @Override
             public void onResponse(String response) {
                 d("auctionCompletedRes", response);
-                final AuctionHeader auctionHeaderModel = gson.fromJson(response, AuctionHeader.class);
-
-                final Dialog dialogCustom = new Dialog(context);
-                dialogCustom.setContentView(R.layout.review_custom_dialog);
-                TextView mTitle = (TextView) dialogCustom.findViewById(R.id.bookTitleReview);
-                TextView mAuthor = (TextView) dialogCustom.findViewById(R.id.bookAuthorReview);
-                ImageView ivBook = (ImageView) dialogCustom.findViewById(R.id.ivBookReview);
-                final EditText etReviewMessage = (EditText) dialogCustom.findViewById(R.id.etReviewReview);
-                final RatingBar mRateBar = (RatingBar) dialogCustom.findViewById(R.id.ratingReview);
-                Button mRateNow = (Button) dialogCustom.findViewById(R.id.btnRateReview);
-
-                etReviewMessage.setHint("Review renter");
-                mTitle.setText(auctionHeaderModel.getAuctionDetail().getBookOwner().getBookObj().getBookTitle());
-
-                Glide.with(context).load(auctionHeaderModel.getAuctionDetail().getBookOwner().getBookObj().getBookFilename()).centerCrop().into(ivBook);
-
-                String author = "";
-
-                if(auctionHeaderModel.getAuctionDetail().getBookOwner().getBookObj().getBookAuthor().size()!=0){
-                    for(int init=0; init<auctionHeaderModel.getAuctionDetail().getBookOwner().getBookObj().getBookAuthor().size(); init++){
-                        if(!(auctionHeaderModel.getAuctionDetail().getBookOwner().getBookObj().getBookAuthor().get(init).getAuthorFName().equals(""))){
-                            author+=auctionHeaderModel.getAuctionDetail().getBookOwner().getBookObj().getBookAuthor().get(init).getAuthorFName()+" ";
-                            if(!(auctionHeaderModel.getAuctionDetail().getBookOwner().getBookObj().getBookAuthor().get(init).getAuthorLName().equals(""))){
-                                author+=auctionHeaderModel.getAuctionDetail().getBookOwner().getBookObj().getBookAuthor().get(init).getAuthorLName();
-                                if(init+1<auctionHeaderModel.getAuctionDetail().getBookOwner().getBookObj().getBookAuthor().size()){
-                                    author+=", ";
-                                }
-                            }
-                        }
-                    }
-                }else{
-                    author="Unknown Author";
-                }
-                mAuthor.setText(author);
-
-                mRateBar.setOnRatingBarChangeListener(new RatingBar.OnRatingBarChangeListener() {
-                    @Override
-                    public void onRatingChanged(RatingBar ratingBar, float rating, boolean fromUser) {
-                        rateNumber = rating;
-                    }
-                });
-
-                mRateNow.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        if(etReviewMessage.getText().length()==0){
-                            etReviewMessage.setError("Fill necessary fields.");
-                        }
-                        if(rateNumber==0){
-                            Toast.makeText(context, "Should rate.", Toast.LENGTH_LONG);
-                        }
-
-                        if(etReviewMessage.getText().length()>0&&rateNumber>0){
-                            java.util.Calendar c = java.util.Calendar.getInstance();
-                            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-
-                            Rate rateMod = new Rate();
-                            rateMod.setRateNumber(rateNumber);
-                            rateMod.setRateTimeStamp(sdf.format(c.getTime()));
-
-                            Review reviewMod = new Review();
-                            reviewMod.setReviewTimeStamp(sdf.format(c.getTime()));
-
-                            UserRating userRatingMod = new UserRating();
-
-                            userRatingMod.setComment(etReviewMessage.getText().toString());
-                            userRatingMod.setUserRater(auctionHeaderModel.getUser());
-                            userRatingMod.setUser(auctionHeaderModel.getAuctionDetail().getBookOwner().getUserObj());
-                            userRatingMod.setReview(reviewMod);
-                            userRatingMod.setRate(rateMod);
-
-                            userRate(userRatingMod);
-                        }
-
-                    }
-                });
-
-                dialogCustom.show();
-
             }
         }, new Response.ErrorListener() {
             @Override
@@ -295,9 +288,8 @@ public class ToReceiveAuctionAdapter extends RecyclerView.Adapter<ToReceiveAucti
         requestQueue.add(stringRequest);
     }
 
-    public void userRate(final UserRating userRating) {
+    public void userRate(final UserRating userRating, final int position) {
         RequestQueue requestQueue = Volley.newRequestQueue(context);
-//        String URL = "http://104.197.4.32:8080/Koobym/user/add";
         String URL = Constants.POST_USER_RATE;
 
 
@@ -321,12 +313,10 @@ public class ToReceiveAuctionAdapter extends RecyclerView.Adapter<ToReceiveAucti
                 UserRating ur = new UserRating();
                 ur = gson.fromJson(response, UserRating.class);
 
+                completed(bookList.get(position), ur);
+
                 Intent intent = new Intent(context, BookActActivity.class);
                 context.startActivity(intent);
-//                    if (bool == false) {
-//                        Intent intent = new Intent(context, HistoryActivity.class);
-//                        context.startActivity(intent);
-//                    }
             }
         }, new Response.ErrorListener() {
             @Override
@@ -374,17 +364,14 @@ public class ToReceiveAuctionAdapter extends RecyclerView.Adapter<ToReceiveAucti
             mBookTitle = (TextView) itemView.findViewById(R.id.bookTitleBA);
             mDate = (TextView) itemView.findViewById(R.id.dateBA);
             mBookRenter = (TextView) itemView.findViewById(R.id.renterNameBA);
-//            mRenter = (TextView) itemView.findViewById(R.id.toReceiveRenter);
             mBookDate = (TextView) itemView.findViewById(R.id.bookDateBA);
             mLocation = (TextView) itemView.findViewById(R.id.locationBA);
             mPrice = (TextView) itemView.findViewById(R.id.bookPriceBA);
             mTime = (TextView) itemView.findViewById(R.id.timeBA);
-//            mIvRenter = (ImageView) itemView.findViewById(R.id.toReceiveRenterImage);
             mIvBook = (ImageView) itemView.findViewById(R.id.ivBookBA);
             mBtnProfile = (ImageButton) itemView.findViewById(R.id.profileBA);
             mBtnMail = (ImageButton) itemView.findViewById(R.id.notifyBA);
             mBtnRate = (ImageButton) itemView.findViewById(R.id.rateButtonBA);
-//            itemView.setOnClickListener(this);
 
 
             itemView.setOnClickListener(new View.OnClickListener() {
@@ -393,168 +380,17 @@ public class ToReceiveAuctionAdapter extends RecyclerView.Adapter<ToReceiveAucti
                     auctionHeaderObj = new AuctionHeader();
                     Bundle bundle = new Bundle();
                     int position = getAdapterPosition();
-                    Log.d("AdapterPosition", "inside "+Integer.toString(position));
-//                    Intent intent = new Intent(LandingPageAdapter.this.context, ViewBookActivity.class);
+                    Log.d("AdapterPosition", "inside " + Integer.toString(position));
                     auctionHeaderObj = ToReceiveAuctionAdapter.this.bookList.get(position);
-                    if(auctionHeaderObj==null){
+                    if (auctionHeaderObj == null) {
                         Log.d("reaceiveRentAdapter", "is null");
-                    }else{
+                    } else {
                         Log.d("reaceiveRentAdapter", "is not null");
                     }
-//                    intent.putExtra("ViewBook", "fromAdapter");
-//                    bundle.putSerializable("View", rentalDetailObj);
-//                    intent.putExtras(bundle);
-//                    context.startActivity(intent);
                 }
             });
         }
 
-//        @Override
-//        public void onClick(View v) {
-//            int position = getAdapterPosition();
-//
-//
-//            Log.d("AdapterPosition", "inside "+Integer.toString(position));
-//
-//        }
     }
-
-//    public void updateReceive(int position, Boolean bool){
-//        RequestQueue requestQueue = Volley.newRequestQueue(context);
-////        String URL = "http://104.197.4.32:8080/Koobym/user/add";
-////        String URL = Constants.WEB_SERVICE_URL+"user/add";
-//
-//        rentalHeader = bookList.get(position);
-//        String status="";
-//        if(rentalHeader.getStatus().equals("Confirmation")){
-//            if(bool==true){
-//                status = "Approved";
-//            }else{
-//                status = "Rejected";
-//            }
-//        }else if(rentalHeader.getStatus().equals("Approved")){
-//            if(bool==true){
-//                status = "Received";
-//            }else{
-//                status = "Rejected";
-//            }
-//        }else{
-//            if(bool==true){
-//                status = "Complete";
-//
-//            }else{
-//                status = "Rejected";
-//            }
-//
-//        }
-//
-//        String URL = Constants.UPDATE_RENTAL_HEADER+"/"+rentalHeader.getRentalHeaderId()+"/"+status;
-//
-//
-//        final Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd").registerTypeAdapter(Date.class, GsonDateDeserializer.getInstance()).create();
-//        final String mRequestBody = gson.toJson(rentalHeader);
-//
-//
-//        Log.d("LOG_VOLLEY", mRequestBody);
-//        Log.d("LOG_VOLLEY rentalHeader", mRequestBody);
-//        final String finalStatus = status;
-//        StringRequest stringRequest = new StringRequest(Request.Method.GET, URL, new Response.Listener<String>() {
-//            @Override
-//            public void onResponse(String response) {
-//                Log.i("RequestReceivedStatus", response);
-//                RentalHeader rentalHeaderModel = new RentalHeader();
-//                if(finalStatus.equals("Complete")){
-//                    incrementRenters(rentalHeader.getRentalDetail().getBookOwner());
-//                }else if(finalStatus.equals("Received")){
-//                    Intent intent = new Intent(context, BookReviewActivity.class);
-//                    Bundle bundle = new Bundle();
-//                    bundle.putSerializable("rentalHeader", rentalHeader);
-//                    intent.putExtras(bundle);
-//                    context.startActivity(intent);
-//                }else if(finalStatus.equals("Approved")){
-//                    Intent intent = new Intent(context, TransactionActivity.class);
-//                    context.startActivity(intent);
-//                }else{
-//                    Intent intent = new Intent(context, HistoryActivity.class);
-//                    context.startActivity(intent);
-//                }
-//
-//            }
-//        }, new Response.ErrorListener() {
-//            @Override
-//            public void onErrorResponse(VolleyError error) {
-//                Log.e("LOG_VOLLEY", error.toString());
-//                error.printStackTrace();
-//            }
-//        }) {
-//            @Override
-//            public String getBodyContentType() {
-//                return "application/json; charset=utf-8";
-//            }
-//
-//            @Override
-//            public byte[] getBody() throws AuthFailureError {
-//                try {
-//                    return mRequestBody == null ? null : mRequestBody.getBytes("utf-8");
-//                } catch (UnsupportedEncodingException uee) {
-//                    VolleyLog.wtf("Unsupported Encoding while trying to get the bytes of %s using %s", mRequestBody, "utf-8");
-//                    return null;
-//                }
-//            }
-//        };
-//
-//        requestQueue.add(stringRequest);
-//    }
-//
-//    public void incrementRenters(BookOwnerModel bookOwnerModel){
-//        RequestQueue requestQueue = Volley.newRequestQueue(context);
-////        String URL = "http://104.197.4.32:8080/Koobym/user/add";
-////        String URL = Constants.WEB_SERVICE_URL+"user/add";
-//
-//        String URL = Constants.INCREMENT_BOOK_OWNER+"/"+bookOwnerModel.getBookOwnerId();
-//
-//
-//        final Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd").registerTypeAdapter(Date.class, GsonDateDeserializer.getInstance()).create();
-//        final String mRequestBody = gson.toJson(bookOwnerModel);
-//
-//
-//        Log.d("LOG_VOLLEY", mRequestBody);
-//        Log.d("LOG_VOLLEY rentalHeader", mRequestBody);
-//        StringRequest stringRequest = new StringRequest(Request.Method.GET, URL, new Response.Listener<String>() {
-//            @Override
-//            public void onResponse(String response) {
-//                Log.i("RequestReceivedStatus", response);
-//                Intent intent = new Intent(context, UserReviewActivity.class);
-//                Bundle bundle = new Bundle();
-//                bundle.putSerializable("rentalHeader", rentalHeader);
-//                intent.putExtras(bundle);
-//                context.startActivity(intent);
-//            }
-//        }, new Response.ErrorListener() {
-//            @Override
-//            public void onErrorResponse(VolleyError error) {
-//                Log.e("LOG_VOLLEY", error.toString());
-//                error.printStackTrace();
-//            }
-//        }) {
-//            @Override
-//            public String getBodyContentType() {
-//                return "application/json; charset=utf-8";
-//            }
-//
-//            @Override
-//            public byte[] getBody() throws AuthFailureError {
-//                try {
-//                    return mRequestBody == null ? null : mRequestBody.getBytes("utf-8");
-//                } catch (UnsupportedEncodingException uee) {
-//                    VolleyLog.wtf("Unsupported Encoding while trying to get the bytes of %s using %s", mRequestBody, "utf-8");
-//                    return null;
-//                }
-//            }
-//        };
-//
-//        requestQueue.add(stringRequest);
-//    }
-
 
 }

@@ -28,15 +28,13 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
-            android:id="@+id/tvName"
-            android:textColor="@color/colorMint"/>
+            android:id="@+id/tvName"/>
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
-            android:id="@+id/tvEmailProfile"
-            android:textColor="@color/colorMint"/>
+            android:id="@+id/tvEmailProfile"/>
 
         <TextView
             android:layout_width="wrap_content"
@@ -45,8 +43,7 @@
             android:clickable="true"
             android:textStyle="bold|italic"
             android:text="Edit Profile"
-            android:layout_gravity="center_horizontal"
-            android:textColor="@color/colorWhite"/>
+            android:layout_gravity="center_horizontal"/>
 
     </LinearLayout>
 

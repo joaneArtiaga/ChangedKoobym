@@ -26,6 +26,7 @@ import com.android.volley.VolleyLog;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.bumptech.glide.Glide;
+import com.example.joane14.myapplication.Activities.BookActActivity;
 import com.example.joane14.myapplication.Activities.GsonDateDeserializer;
 import com.example.joane14.myapplication.Activities.ProfileActivity;
 import com.example.joane14.myapplication.Fragments.Constants;
@@ -148,18 +149,11 @@ public class ToDeliverAuctionAdapter extends RecyclerView.Adapter<ToDeliverAucti
             public void onClick(View v) {
                 if(currDAte.equals(bookList.get(position).getDateDelivered())){
                     AlertDialog alertDialog = new AlertDialog.Builder(context).create();
-                    alertDialog.setTitle("Confirmation");
-                    alertDialog.setMessage("Did you deliver the book?");
-                    alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, "Yes", new DialogInterface.OnClickListener() {
+                    alertDialog.setMessage("Will notify the bidder that the book has been delivered");
+                    alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, "Okay", new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
                             delivered(bookList.get(position));
-                        }
-                    });
-                    alertDialog.setButton(AlertDialog.BUTTON_NEGATIVE, "Not Yet", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            dialog.dismiss();
                         }
                     });
                     alertDialog.show();
@@ -200,7 +194,8 @@ public class ToDeliverAuctionAdapter extends RecyclerView.Adapter<ToDeliverAucti
             @Override
             public void onResponse(String response) {
                 d("auctionDeliverResponse", response);
-
+                Intent intent = new Intent(context, BookActActivity.class);
+                context.startActivity(intent);
             }
         }, new Response.ErrorListener() {
             @Override

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#3F51B5</color>
-    <color name="colorPrimaryDark">#303f9f</color>
+    <color name="colorPrimary">#CFA28D</color>
+    <color name="colorPrimaryDark">#AE775D</color>
     <color name="colorAccent">#FF4081</color>
     <color name="colorDark">#d8be97</color>
     <color name="colorMint">#9ebed3</color>
@@ -17,5 +17,6 @@
     <color name="colorLightRent">#ADFF2F</color>
     <color name="colorLightSwap">#FFFF00</color>
     <color name="colorLightAuction">#FF6347</color>
+    <color name="colorBase">#B69667</color>
 
 </resources>

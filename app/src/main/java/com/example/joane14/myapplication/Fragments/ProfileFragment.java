@@ -70,9 +70,6 @@ public class ProfileFragment extends Fragment {
         TextView mName = (TextView) view.findViewById(R.id.tvName);
         TextView mBtnEdit = (TextView) view.findViewById(R.id.tvEditProfile);
         TextView mEmail = (TextView) view.findViewById(R.id.tvEmailProfile);
-//        TextView mAddress = (TextView) view.findViewById(R.id.tvAddress);
-//        TextView mBirthDate = (TextView) view.findViewById(R.id.tvBirthDate);
-//        TextView mPhone = (TextView) view.findViewById(R.id.tvPhoneNumber);
 
         Bundle bundle = new Bundle();
         bundle.putSerializable("user", userObj);
@@ -84,23 +81,12 @@ public class ProfileFragment extends Fragment {
 
         User userModel = new User();
 
-//        userModel = (User) SPUtility.getSPUtil(getContext()).getObject("USER_OBJECT", User.class);
-
-
         mEmail.setText(userObj.getEmail());
-//        mPhone.setText(userModel.getPhoneNumber());
-//        mBirthDate.setText(userModel.getBirthdate().toString());
-//        mAddress.setText(userModel.getAddress());
         ImageView profileImg = (ImageView) view.findViewById(R.id.profIvProf);
         mBtnAdd = (FloatingActionButton) view.findViewById(R.id.btnAdd);
 
         mName.setText(userObj.getUserFname()+" "+ userObj.getUserLname());
         Picasso.with(getContext()).load(userObj.getImageFilename()).fit().into(profileImg);
-
-//        mEmail.setText();
-//        Picasso.with(getContext()).load(String.format(Constants.IMAGE_URL, userObj.getImageFilename())).fit().into(profileImg);
-//        Glide.with(getContext()).load(userModel.getImageFilename()).centerCrop().into(profileImg);
-
 
         mBtnAdd.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -117,10 +103,6 @@ public class ProfileFragment extends Fragment {
 
                 alert.setPositiveButton("SUBMIT", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int whichButton) {
-//                        //What ever you want to do with the value
-//                        Editable YouEditTextValue = edittext.getText();
-//                        //OR
-//                        String YouEditTextValue
                         Log.d("Inside", "onClickPositiveButton");
                         titleKeyword = edittext.getText().toString();
                         Log.d("Title Keyword", titleKeyword);

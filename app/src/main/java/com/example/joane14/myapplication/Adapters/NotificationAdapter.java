@@ -202,6 +202,8 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
                 message = userNotification.getUserPerformer().getUserFname()+" "+userNotification.getUserPerformer().getUserLname()+" delivered the book, "+userNotification.getBookActionPerformedOn().getBookObj().getBookTitle()+".";
             }else if(userNotification.getActionStatus().equals("Complete")){
                 message = "The transaction of the book that you want to " + userNotification.getActionName() + " is completed";
+            }else if(userNotification.getActionStatus().equals("Confirm")){
+                message = userNotification.getUserPerformer().getUserFname() + " " + userNotification.getUserPerformer().getUserLname() + " " + userNotification.getActionStatus() + "ed the meet up location and time with the book " + userNotification.getBookActionPerformedOn().getBookObj().getBookTitle() + " that was auctioned.";
             }
         }
 
@@ -291,6 +293,7 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
         Boolean datebool;
         Boolean timebool;
         List<String> timeStr;
+        UserNotification userN;
 
 
         public BookHolder(final Context context, View itemView) {
@@ -307,24 +310,16 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
             mPerformer = (ImageView) itemView.findViewById(R.id.notifPerformer);
             mBookPerformed = (ImageView) itemView.findViewById(R.id.notifBookPerformer);
             mCardView = (CardView) itemView.findViewById(R.id.card_view);
-//            itemView.setOnClickListener(this);
+            userN = new UserNotification();
 
 
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-//                    rentalHeaderObj = new RentalHeader();
-//                    Bundle bundle = new Bundle();
-//                    int position = getAdapterPosition();
-//                    Log.d("AdapterPosition", "inside "+Integer.toString(position));
-//                    Intent intent = new Intent(LandingPageAdapter.this.context, ViewBookActivity.class);
-//                    intent.putExtra("ViewBook", "fromAdapter");
-//                    bundle.putSerializable("View", rentalDetailObj);
-//                    intent.putExtras(bundle);
-//                    context.startActivity(intent);
                     final int position = getAdapterPosition();
                     Log.d("AdapterNotif", userNotificationList.get(position).getUserPerformer().getUserFname());
 
+                    userN = userNotificationList.get(position);
                     User user = (User) SPUtility.getSPUtil(context).getObject("USER_OBJECT", User.class);
                     if (user.getUserId() == userNotificationList.get(position).getUser().getUserId()) {
 
@@ -418,6 +413,9 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
                             }else if(userNotificationList.get(position).getActionStatus().equals("Complete")){
                                 getRead(position);
                                 getAuctionHeader(position, "Completed");
+                            }else if(userNotificationList.get(position).getActionStatus().equals("Confirm")){
+                                getRead(position);
+                                getAuctionHeader(position, "Confirm");
                             }
                         }
                     } else {
@@ -578,11 +576,7 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
                     bundle.putSerializable("userModelPass", userRating.getUser());
                     intent.putExtras(bundle);
                     context.startActivity(intent);
-//                    if (bool == false) {
-//                        Intent intent = new Intent(context, HistoryActivity.class);
-//                        context.startActivity(intent);
-//                    }
-                }
+                 }
             }, new Response.ErrorListener() {
                 @Override
                 public void onErrorResponse(VolleyError error) {
@@ -611,8 +605,6 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
 
         public void updateBookOwner(int position, final boolean bool, SwapHeader swapHeader) {
             RequestQueue requestQueue = Volley.newRequestQueue(context);
-//        String URL = "http://104.197.4.32:8080/Koobym/user/add";
-//        String URL = Constants.WEB_SERVICE_URL+"user/add";
 
             User user = new User();
             user = (User) SPUtility.getSPUtil(context).getObject("USER_OBJECT", User.class);
@@ -637,10 +629,6 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
                 @Override
                 public void onResponse(String response) {
                     Log.i("RequestReceivedStatus", response);
-//                    if (bool == false) {
-//                        Intent intent = new Intent(context, HistoryActivity.class);
-//                        context.startActivity(intent);
-//                    }
                 }
             }, new Response.ErrorListener() {
                 @Override
@@ -691,16 +679,6 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
                             context.startActivity(intent);
                         }
                     });
-//            alertDialogBuilder.setNegativeButton("No", new DialogInterface.OnClickListener() {
-//                @Override
-//                public void onClick(DialogInterface dialog, int which) {
-//                    getRead(position);
-//                    updateReceive(position, "Rejected");
-//                    Intent intent = new Intent(context, NotificationAct.class);
-//                    context.startActivity(intent);
-//                }
-//            });
-
             android.support.v7.app.AlertDialog alertDialog = alertDialogBuilder.create();
             alertDialog.show();
         }
@@ -728,16 +706,6 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
                             context.startActivity(intent);
                         }
                     });
-//            alertDialogBuilder.setNegativeButton("No", new DialogInterface.OnClickListener() {
-//                @Override
-//                public void onClick(DialogInterface dialog, int which) {
-//                    getRead(position);
-//                    updateReceive(position, "Rejected");
-//                    Intent intent = new Intent(context, NotificationAct.class);
-//                    context.startActivity(intent);
-//                }
-//            });
-
             android.support.v7.app.AlertDialog alertDialog = alertDialogBuilder.create();
             alertDialog.show();
         }
@@ -2004,43 +1972,284 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
             d("LOG_VOLLEY", mRequestBody);
             final User finalUser = user;
             StringRequest stringRequest = new StringRequest(Request.Method.GET, URL, new Response.Listener<String>() {
+                @RequiresApi(api = Build.VERSION_CODES.N)
                 @Override
                 public void onResponse(String response) {
                     Log.i("auctionHeaderResponseId", response);
-                    AuctionHeader auctionHeaderMod = gson.fromJson(response, AuctionHeader.class);
+                    final AuctionHeader auctionHeaderMod = gson.fromJson(response, AuctionHeader.class);
 
                     if (status.equals("win")) {
 
                         if (finalUser.getUserId() == userNotificationList.get(position).getUser().getUserId()) {
-                            Intent intent = new Intent(context, AuctionMeetUpChooser.class);
-                            Bundle bundle = new Bundle();
-                            bundle.putSerializable("auctionHeader", auctionHeaderMod);
-                            intent.putExtras(bundle);
-                            context.startActivity(intent);
+
+                            Date nextDate = new Date();
+                            locbool = false;
+                            datebool = false;
+                            timebool = false;
+
+                            final MeetUp muModel = new MeetUp();
+                            final Dialog dialog = new Dialog(context);
+                            LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+                            View view = inflater.inflate(R.layout.meet_up_dialog, null);
+
+                            Button mSubmit = (Button) view.findViewById(R.id.btnSubmit);
+
+                            final Spinner mSpinDate = (Spinner) view.findViewById(R.id.spinnerDate);
+                            final Spinner mSpinTime = (Spinner) view.findViewById(R.id.spinnerTime);
+
+                            User userRequestee = auctionHeaderMod.getAuctionDetail().getBookOwner().getUserObj();
+
+                            List<LocationModel> userLoc = userRequestee.getLocationArray();
+                            final List<LocationModel> meetUpLoc = new ArrayList<LocationModel>();
+                            List<String> meetUpStringLoc = new ArrayList<String>();
+                            final UserDayTime udt = new UserDayTime();
+
+                            for(int init=0; init<userLoc.size(); init++){
+                                if(userLoc.get(init).getStatus().equals("MeetUp")){
+                                    meetUpLoc.add(userLoc.get(init));
+                                    meetUpStringLoc.add(userLoc.get(init).getLocationName());
+                                }
+                            }
+
+                            ArrayAdapter<String> adapterLoc = new ArrayAdapter<String>(context, android.R.layout.simple_spinner_item, meetUpStringLoc);
+                            adapterLoc.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                            Spinner mSpinLoc = (Spinner) view.findViewById(R.id.spinnerLocation);
+                            mSpinLoc.setAdapter(adapterLoc);
+
+                            mSpinLoc.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                                @Override
+                                public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                                    locbool = true;
+                                    muModel.setLocation(meetUpLoc.get(position));
+                                }
+
+                                @Override
+                                public void onNothingSelected(AdapterView<?> parent) {
+
+                                }
+                            });
+
+                            final List<UserDayTime> daytime = userRequestee.getDayTimeModel();
+                            final List<String> dateMeetUp = new ArrayList<String>();
+                            final DateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+                            Set<String> removeDuplicate = new HashSet<>();
+
+
+                            for(int init=0; init<daytime.size(); init++){
+                                if(daytime.get(init).getDay().getStrDay().equals("Monday")){
+                                    nextDate=getNextDate(java.util.Calendar.MONDAY);
+                                }else if(daytime.get(init).getDay().getStrDay().equals("Tuesday")){
+                                    nextDate=getNextDate(Calendar.TUESDAY);
+                                }else if(daytime.get(init).getDay().getStrDay().equals("Wednesday")){
+                                    nextDate=getNextDate(Calendar.WEDNESDAY);
+                                }else if(daytime.get(init).getDay().getStrDay().equals("Thursday")){
+                                    nextDate=getNextDate(Calendar.THURSDAY);
+                                }else if(daytime.get(init).getDay().getStrDay().equals("Friday")){
+                                    nextDate=getNextDate(Calendar.FRIDAY);
+                                }else if(daytime.get(init).getDay().getStrDay().equals("Saturday")){
+                                    nextDate=getNextDate(Calendar.SATURDAY);
+                                }else if(daytime.get(init).getDay().getStrDay().equals("Sunday")){
+                                    nextDate=getNextDate(Calendar.SUNDAY);
+                                }
+                                dateMeetUp.add(format.format(nextDate));
+                            }
+
+                            Set<String> dateNoDuplicates = new LinkedHashSet<String>(dateMeetUp);
+                            dateMeetUp.clear();
+                            dateMeetUp.addAll(dateNoDuplicates);
+                            timeStr = new ArrayList<String>();
+
+                            ArrayAdapter<String> adapterDate = new ArrayAdapter<String>(context, android.R.layout.simple_spinner_item, dateMeetUp);
+                            adapterDate.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                            mSpinDate.setAdapter(adapterDate);
+
+
+                            timeStr.add("09:00 - 10:00 am");
+                            timeStr.add("12:00 - 02:00 pm");
+                            timeStr.add("04:00 - 06:00 pm");
+                            timeStr.add("07:00 - 09:00 pm");
+
+                            mSpinDate.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                                @Override
+                                public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                                    datebool = true;
+                                    try {
+                                        auctionHeaderMod.setDateDelivered(dateMeetUp.get(position));
+                                        Log.d("dateDelivered", dateMeetUp.get(position));
+
+                                        String dayOfDate = "";
+                                        Calendar calendar = Calendar.getInstance();
+                                        Date selectedDate = format.parse(dateMeetUp.get(position));
+                                        calendar.setTime(selectedDate);
+                                        int dayOfWeek = calendar.get(Calendar.DAY_OF_WEEK);
+
+                                        timeStr.add("09:00 - 10:00 am");
+                                        timeStr.add("12:00 - 02:00 pm");
+                                        timeStr.add("04:00 - 06:00 pm");
+                                        timeStr.add("07:00 - 09:00 pm");
+                                        for(int init=0; init<daytime.size(); init++){
+                                            Log.d("iterateUserTime", daytime.get(init).getTime().getStrTime());
+                                        }
+
+                                        if(dayOfWeek==Calendar.MONDAY){
+                                            DayModel day = new DayModel();
+                                            day.setStrDay("Monday");
+                                            udt.setDay(day);
+                                            for(int init=0; init<daytime.size(); init++){
+                                                Log.d("userTime", daytime.get(init).getTime().getStrTime());
+                                                if(daytime.get(init).getDay().getStrDay().equals("Monday")){
+                                                    Log.d("TimeAdded", daytime.get(init).getTime().getStrTime());
+                                                    timeStr.add(daytime.get(init).getTime().getStrTime());
+                                                }
+                                            }
+                                        }else if(dayOfWeek==Calendar.TUESDAY){
+                                            DayModel day = new DayModel();
+                                            day.setStrDay("Tuesday");
+                                            udt.setDay(day);
+                                            for(int init=0; init<daytime.size(); init++){
+                                                if(daytime.get(init).getDay().getStrDay().equals("Tuesday")){
+                                                    Log.d("TimeAdded", daytime.get(init).getTime().getStrTime());
+                                                    timeStr.add(daytime.get(init).getTime().getStrTime());
+                                                }
+                                            }
+                                        }else if(dayOfWeek==Calendar.WEDNESDAY){
+                                            DayModel day = new DayModel();
+                                            day.setStrDay("Wednesday");
+                                            udt.setDay(day);
+                                            for(int init=0; init<daytime.size(); init++){
+                                                if(daytime.get(init).getDay().getStrDay().equals("Wednesday")){
+                                                    Log.d("TimeAdded", daytime.get(init).getTime().getStrTime());
+                                                    timeStr.add(daytime.get(init).getTime().getStrTime());
+                                                }
+                                            }
+                                        }else if(dayOfWeek==Calendar.THURSDAY){
+                                            DayModel day = new DayModel();
+                                            day.setStrDay("Thursday");
+                                            udt.setDay(day);
+                                            for(int init=0; init<daytime.size(); init++){
+                                                if(daytime.get(init).getDay().getStrDay().equals("Thursday")){
+                                                    Log.d("TimeAdded", daytime.get(init).getTime().getStrTime());
+                                                    timeStr.add(daytime.get(init).getTime().getStrTime());
+                                                }
+                                            }
+                                        }else if(dayOfWeek==Calendar.FRIDAY){
+                                            DayModel day = new DayModel();
+                                            day.setStrDay("Friday");
+                                            udt.setDay(day);
+                                            for(int init=0; init<daytime.size(); init++){
+                                                if(daytime.get(init).getDay().getStrDay().equals("Friday")){
+                                                    Log.d("TimeAdded", daytime.get(init).getTime().getStrTime());
+                                                    timeStr.add(daytime.get(init).getTime().getStrTime());
+                                                }
+                                            }
+                                        }else if(dayOfWeek==Calendar.SATURDAY){
+                                            DayModel day = new DayModel();
+                                            day.setStrDay("Saturday");
+                                            udt.setDay(day);
+                                            for(int init=0; init<daytime.size(); init++){
+                                                if(daytime.get(init).getDay().getStrDay().equals("Saturday")){
+                                                    Log.d("TimeAdded", daytime.get(init).getTime().getStrTime());
+                                                    timeStr.add(daytime.get(init).getTime().getStrTime());
+                                                }
+                                            }
+                                        }else if(dayOfWeek==Calendar.SUNDAY){
+                                            DayModel day = new DayModel();
+                                            day.setStrDay("Sunday");
+                                            udt.setDay(day);
+                                            for(int init=0; init<daytime.size(); init++){
+                                                if(daytime.get(init).getDay().getStrDay().equals("Sunday")){
+                                                    Log.d("TimeAdded", daytime.get(init).getTime().getStrTime());
+                                                    timeStr.add(daytime.get(init).getTime().getStrTime());
+                                                }
+                                            }
+                                        }
+
+                                    } catch (ParseException e) {
+                                        e.printStackTrace();
+                                    }
+                                }
+
+                                @Override
+                                public void onNothingSelected(AdapterView<?> parent) {
+
+                                }
+                            });
+
+                            ArrayAdapter<String> adapterTime = new ArrayAdapter<String>(context, android.R.layout.simple_spinner_item, timeStr);
+                            adapterTime.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                            mSpinTime.setAdapter(adapterTime);
+
+                            mSpinTime.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                                @Override
+                                public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                                    timebool = true;
+                                    User finalUser1 = (User) SPUtility.getSPUtil(context).getObject("USER_OBJECT", User.class);
+                                    udt.setUserId(Long.valueOf(finalUser1.getUserId()));
+                                    TimeModel time = new TimeModel();
+                                    time.setStrTime(timeStr.get(position));
+                                    udt.setTime(time);
+                                }
+
+                                @Override
+                                public void onNothingSelected(AdapterView<?> parent) {
+
+                                }
+                            });
+
+                            mSubmit.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    if(datebool==true&&locbool==true&&timebool==true){
+                                        Log.d("himo ka ug ","joke pag add na bitaw");
+                                        muModel.setUserDayTime(udt);
+                                        auctionHeaderMod.setMeetUp(muModel);
+
+                                        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(context);
+                                        alertDialogBuilder.setTitle("Meet Up Summary");
+                                        alertDialogBuilder.setMessage("Date:\t" +auctionHeaderMod.getDateDelivered()+
+                                                "\n\nTime:\t"+muModel.getUserDayTime().getTime().getStrTime()+
+                                                "\n\nLocation:\t"+muModel.getLocation().getLocationName());
+                                        alertDialogBuilder.setPositiveButton("Okay",
+                                                new DialogInterface.OnClickListener() {
+                                                    @RequiresApi(api = Build.VERSION_CODES.N)
+                                                    @Override
+                                                    public void onClick(DialogInterface arg0, int arg1) {
+                                                        addMeetUpAuction(auctionHeaderMod, muModel, position);
+                                                    }
+                                                });
+
+                                        AlertDialog alertDialog = alertDialogBuilder.create();
+                                        alertDialog.show();
+                                    }else{
+                                        AlertDialog ad = new AlertDialog.Builder(context).create();
+                                        ad.setTitle("Alert!");
+                                        ad.setMessage("You should fill all data.");
+                                        ad.setButton(AlertDialog.BUTTON_POSITIVE, "Okay", new DialogInterface.OnClickListener() {
+                                            @Override
+                                            public void onClick(DialogInterface dialog, int which) {
+                                                dialog.dismiss();
+                                            }
+                                        });
+                                        ad.show();
+                                    }
+                                }
+                            });
+                            dialog.setContentView(view);
+                            dialog.show();
                         }
                     } else if (status.equals("own")) {
-
                         Intent intent = new Intent(context, ProfileActivity.class);
                         Bundle bundle = new Bundle();
                         bundle.putSerializable("userModelPass", userNotificationList.get(position).getUserPerformer());
                         intent.putExtras(bundle);
                         context.startActivity(intent);
-//                        updateBookOwner(position, true, swapHeaderMod);
-//                        updateBookOwner(position, false, swapHeaderMod);
                     }else if(status.equals("lose")){
                         Intent intent = new Intent(context, ViewAuctionBook.class);
                         Bundle bundle = new Bundle();
                         bundle.putSerializable("auctionBook",auctionHeaderMod.getAuctionDetail());
                         bundle.putBoolean("notif", true);
                         intent.putExtras(bundle);
-
-//                        if(auctionDetailModel==null){
-//                            Log.d("NotifAuc", "null");
-//                        }else{
-//                            Log.d("NotifAuc", auctionDetailModel.toString());
-//                        }
                         context.startActivity(intent);
-//                        meetUpSumm(position, swapHeaderMod);
                     }else if (status.equals("view")) {
                         Intent intent = new Intent(context, ViewBookAct.class);
                         Bundle bundle = new Bundle();
@@ -2098,6 +2307,20 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
                         });
 
                         dialogCustom.show();
+                    }else if(status.equals("Confirm")){
+                        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(context);
+                        alertDialogBuilder.setTitle("Meet Up Summary");
+                        alertDialogBuilder.setMessage("Date:\t" +auctionHeaderMod.getDateDelivered()+
+                                "\n\nTime:\t"+auctionHeaderMod.getMeetUp().getUserDayTime().getTime().getStrTime()+
+                                "\n\nLocation:\t"+auctionHeaderMod.getMeetUp().getLocation().getLocationName());
+                        alertDialogBuilder.setPositiveButton("Okay", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                Intent intent = new Intent(context, NotificationAct.class);
+                                context.startActivity(intent);
+                            }
+                        });
+                        alertDialogBuilder.show();
                     }
                 }
 
@@ -2766,6 +2989,55 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
         requestQueue.add(stringRequest);
     }
 
+    public void addMeetUpAuction(final AuctionHeader auctionHeader, MeetUp meetUp, final int position){
+        RequestQueue requestQueue = Volley.newRequestQueue(context);
+//        String URL = "http://104.197.4.32:8080/Koobym/user/add";
+        String URL = Constants.POST_MEET_UP;
+
+        final Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd").registerTypeAdapter(Date.class, GsonDateDeserializer.getInstance()).create();
+        final String mRequestBody = gson.toJson(meetUp);
+
+//        Log.d("RentalHeaderAdd", rentalHeader.toString());
+
+
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, URL, new Response.Listener<String>() {
+            @SuppressLint("NewApi")
+            @Override
+            public void onResponse(String response) {
+                Log.d("MeetUpResponse", "inside");
+                Log.i("MeetUpResponse", response);
+                MeetUp meetUp = gson.fromJson(response, MeetUp.class);
+
+                Calendar c = Calendar.getInstance();
+                updateAuction(auctionHeader, position);
+
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.e("LOG_VOLLEY", error.toString());
+                error.printStackTrace();
+            }
+        }) {
+            @Override
+            public String getBodyContentType() {
+                return "application/json; charset=utf-8";
+            }
+
+            @Override
+            public byte[] getBody() throws AuthFailureError {
+                try {
+                    return mRequestBody == null ? null : mRequestBody.getBytes("utf-8");
+                } catch (UnsupportedEncodingException uee) {
+                    VolleyLog.wtf("Unsupported Encoding while trying to get the bytes of %s using %s", mRequestBody, "utf-8");
+                    return null;
+                }
+            }
+        };
+
+        requestQueue.add(stringRequest);
+    }
+
     public void addMeetUp(final SwapHeader swapHeader, MeetUp meetUp){
         RequestQueue requestQueue = Volley.newRequestQueue(context);
 //        String URL = "http://104.197.4.32:8080/Koobym/user/add";
@@ -2853,6 +3125,74 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
                 un.setUser(rentalHeaderMod.getRentalDetail().getBookOwner().getUserObj());
                 un.setUserPerformer(rentalHeaderMod.getUserId());
                 un.setActionStatus("Confirm");
+
+                Intent intent = new Intent(context, NotificationAct.class);
+                context.startActivity(intent);
+
+                addUserNotif1(un);
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.e("LOG_VOLLEY", error.toString());
+                error.printStackTrace();
+            }
+        }) {
+            @Override
+            public String getBodyContentType() {
+                return "application/json; charset=utf-8";
+            }
+
+            @Override
+            public byte[] getBody() throws AuthFailureError {
+                try {
+                    return mRequestBody == null ? null : mRequestBody.getBytes("utf-8");
+                } catch (UnsupportedEncodingException uee) {
+                    VolleyLog.wtf("Unsupported Encoding while trying to get the bytes of %s using %s", mRequestBody, "utf-8");
+                    return null;
+                }
+            }
+        };
+
+        requestQueue.add(stringRequest);
+    }
+
+    public void updateAuction(final AuctionHeader auctionHeader, final int position){
+        RequestQueue requestQueue = Volley.newRequestQueue(context);
+        String nextDateStr = "";
+
+        auctionHeader.setStatus("Confirm");
+
+        User user = new User();
+        user = (User) SPUtility.getSPUtil(context).getObject("USER_OBJECT", User.class);
+        String URL = Constants.UPDATE_AUCTION_HEADER_1;
+        Log.d("UpdateSwapHeaderURL", URL);
+        final Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd").registerTypeAdapter(Date.class, GsonDateDeserializer.getInstance()).create();
+        final String mRequestBody = gson.toJson(auctionHeader);
+
+
+        int maxLogSize = 2000;
+        for (int i = 0; i <= mRequestBody.length() / maxLogSize; i++) {
+            int start = i * maxLogSize;
+            int end = (i + 1) * maxLogSize;
+            end = end > mRequestBody.length() ? mRequestBody.length() : end;
+            Log.d("updateSwap", mRequestBody.substring(start, end));
+        }
+        final String finalNextDateStr = nextDateStr;
+        StringRequest stringRequest = new StringRequest(Request.Method.PUT, URL, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                d("UpdateSwapHeader", response);
+                AuctionHeader auctionHeaderMod = gson.fromJson(response, AuctionHeader.class);
+
+                UserNotification un =new UserNotification();
+                un.setActionName("auction");
+                un.setActionId(auctionHeader.getAuctionHeaderId());
+                un.setBookActionPerformedOn(auctionHeaderMod.getAuctionDetail().getBookOwner());
+                un.setUser(auctionHeaderMod.getAuctionDetail().getBookOwner().getUserObj());
+                un.setUserPerformer(auctionHeaderMod.getUser());
+                un.setActionStatus("Confirm");
+                un.setExtraMessage(userNotificationList.get(position).getExtraMessage());
 
                 Intent intent = new Intent(context, NotificationAct.class);
                 context.startActivity(intent);

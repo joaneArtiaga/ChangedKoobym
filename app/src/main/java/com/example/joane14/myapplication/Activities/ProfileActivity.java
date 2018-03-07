@@ -2,16 +2,20 @@ package com.example.joane14.myapplication.Activities;
 
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.media.Image;
 import android.net.Uri;
 import android.os.Build;
 import android.support.annotation.NonNull;
+import android.support.annotation.RequiresApi;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
+import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.view.MenuItemCompat;
+import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AlertDialog;
@@ -29,10 +33,12 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
+import com.android.volley.VolleyLog;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.example.joane14.myapplication.Fragments.AboutProfFrag;
@@ -43,6 +49,7 @@ import com.example.joane14.myapplication.Fragments.DisplayUserReview;
 import com.example.joane14.myapplication.Fragments.Genre;
 import com.example.joane14.myapplication.Fragments.ProfileFrag;
 import com.example.joane14.myapplication.Fragments.ProfileFragment;
+import com.example.joane14.myapplication.Fragments.RentTransaction;
 import com.example.joane14.myapplication.Fragments.ShowBooksFrag;
 import com.example.joane14.myapplication.Model.Book;
 import com.example.joane14.myapplication.Model.BookOwnerModel;
@@ -50,6 +57,8 @@ import com.example.joane14.myapplication.Model.User;
 import com.example.joane14.myapplication.R;
 import com.example.joane14.myapplication.Utilities.SPUtility;
 import com.facebook.login.LoginManager;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.squareup.picasso.Picasso;
 
 import org.json.JSONArray;
@@ -58,6 +67,7 @@ import org.json.JSONObject;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
+import java.util.Date;
 
 public class ProfileActivity extends AppCompatActivity implements
         NavigationView.OnNavigationItemSelectedListener,
@@ -82,32 +92,18 @@ public class ProfileActivity extends AppCompatActivity implements
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profile);
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbarProfile);
-        setSupportActionBar(toolbar);
-        getSupportActionBar().setTitle("View Profile");
-
-
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout_profile);
-        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
-                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
-        drawer.setDrawerListener(toggle);
-        toggle.syncState();
-
-        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
-        navigationView.setNavigationItemSelectedListener(this);
-
-
-        NavigationView navigationView1 = (NavigationView) findViewById(R.id.nav_view);
-
-
-        View hView = navigationView.getHeaderView(0);
-        TextView mName = (TextView) hView.findViewById(R.id.tvName);
-        TextView mEmail = (TextView) hView.findViewById(R.id.tvEmail);
-        ImageView profileImg = (ImageView) hView.findViewById(R.id.profPic);
-
-
-
         Intent intent = getIntent();
+        TextView mName = (TextView) findViewById(R.id.tvName);
+        TextView mBtnEdit = (TextView) findViewById(R.id.tvEditProfile);
+        TextView mEmail = (TextView) findViewById(R.id.tvEmailProfile);
+        ImageView mBackBtn = (ImageView) findViewById(R.id.backBtn);
+
+        ViewPager viewPager = (ViewPager) findViewById(R.id.viewpager);
+
+        setupViewPager(viewPager);
+        TabLayout tab = (TabLayout) findViewById(R.id.result_tabs);
+
+        tab.setupWithViewPager(viewPager);
 
         book = new Book();
         bookOwner = new BookOwnerModel();
@@ -126,31 +122,48 @@ public class ProfileActivity extends AppCompatActivity implements
                 Log.d("User Id", String.valueOf(userObj.getUserId()));
 
                 Log.d("User Login", userObj.getUserFname());
-                mName.setText(userMod.getUserFname()+" "+ userMod.getUserLname());
-                mEmail.setText(userMod.getEmail());
-                Picasso.with(ProfileActivity.this).load(userMod.getImageFilename()).fit().into(profileImg);
-
-
                 mBundle.putSerializable("userDetails", userObj);
 
-                if(userObj==null){
-                    Log.d("userObj", "null");
-                }else{
-                    fragmentManager = getSupportFragmentManager();
-                    ProfileFragment profileModel = ProfileFragment.newInstance(mBundle);
-                    FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-                    fragmentTransaction.replace(R.id.fragment_container_books, profileModel);
-                    fragmentTransaction.commit();
-                }
+                mEmail.setText(userObj.getEmail());
+                ImageView profileImg = (ImageView) findViewById(R.id.profIvProf);
+                mName.setText(userObj.getUserFname()+" "+ userObj.getUserLname());
+                Picasso.with(getApplicationContext()).load(userObj.getImageFilename()).fit().into(profileImg);
+
+                mBtnEdit.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Intent intent = new Intent(getApplicationContext(), UpdateProfileActivity.class);
+                        startActivity(intent);
+                    }
+                });
 
             }else{
                 Log.d("null oi", "mao white screen");
             }
 
+            mBackBtn.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+                        onBackPressed();
+                    }
+                }
+            });
+    }
 
-
-
-
+    private void setupViewPager(ViewPager viewPager) {
+        userObj = (User) SPUtility.getSPUtil(getApplicationContext()).getObject("USER_OBJECT", User.class);
+        Bundle bundle = new Bundle();
+        bundle.putSerializable("user", userObj);
+        RentTransaction.Adapter adapter = new RentTransaction.Adapter(getSupportFragmentManager());
+        adapter.addFragment(AboutProfFrag.newInstance(bundle), "User Profile");
+        adapter.addFragment(DisplayMyBooks.newInstance(bundle), "Shelf");
+        viewPager.setAdapter(adapter);
+    }
+    @Override
+    public boolean onSupportNavigateUp() {
+        super.onBackPressed();
+        return true;
     }
 
     public void searchISBNPrice(String booktitle){
@@ -183,7 +196,6 @@ public class ProfileActivity extends AppCompatActivity implements
                         Log.d("PRICE",arrayObject.getString("price"));
 
                         book.setBookOriginalPrice(Float.parseFloat(String.valueOf(arrayObject.get("price"))));
-//                        searchGoogleBook(arrayObject.getString("isbn13"));
                     }
 
                 } catch (JSONException e) {
@@ -226,7 +238,6 @@ public class ProfileActivity extends AppCompatActivity implements
                         JSONObject arrayObject = items.getJSONObject(init);
                         Log.d("ISBN",arrayObject.getString("isbn13"));
 
-//                        searchISBNPrice(arrayObject.getString("isbn13"));
                     }
 
                 } catch (JSONException e) {
@@ -280,14 +291,6 @@ public class ProfileActivity extends AppCompatActivity implements
                         Log.d("ImageGoogle", obj.getJSONObject("volumeInfo").getJSONObject("imageLinks").getString("thumbnail"));
                     }
 
-
-
-//                    searchISBNPrice(booktitle);
-
-
-//                    fragmentManager = getSupportFragmentManager();
-//                    ShowBooksFrag bookModel = new ShowBooksFrag();
-//                    changeFragment(bookModel, response);
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
@@ -414,46 +417,17 @@ public class ProfileActivity extends AppCompatActivity implements
         return true;
     }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.toolbar_menu, menu);
 
-        // Associate searchable configuration with the SearchView
-        // SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
-        SearchView searchView = (SearchView) MenuItemCompat.getActionView(menu.findItem(R.id.action_search));
-        MenuItem item = menu.findItem(R.id.action_notifications);
-        // searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
-        item.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
-            @Override
-            public boolean onMenuItemClick(MenuItem item) {
-
-                Intent intent = new Intent(ProfileActivity.this, NotificationAct.class);
-                startActivity(intent);
-
-
-                return false;
-            }
-        });
-        return super.onCreateOptionsMenu(menu);
-    }
-
+    @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
     @Override
     public void onBackPressed() {
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout_profile);
-        if (drawer.isDrawerOpen(GravityCompat.START)) {
-            drawer.closeDrawer(GravityCompat.START);
-        } else {
-            Log.d("Inside","On back pressed");
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
-                finishAffinity();
-            }
-        }
+
+                finish();
     }
 
     @Override
     public void onAddBookSelected(String keyword) {
         searchBook(keyword);
-//        searchISBN(keyword);
     }
 
     @Override

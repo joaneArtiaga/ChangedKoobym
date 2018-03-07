@@ -294,12 +294,10 @@ public class DisplayBooksAdapter extends BaseAdapter {
 
     public void getRatings(){
         RequestQueue requestQueue = Volley.newRequestQueue(context);
-//        String URL = "http://104.197.4.32:8080/Koobym/user/add";
         User user = new User();
         user = (User) SPUtility.getSPUtil(context).getObject("USER_OBJECT", User.class);
         Log.d("UserIdReceive", String.valueOf(user.getUserId()));
         String URL = Constants.GET_RATINGS+bookOwnerModel.getBookOwnerId();
-//        String URL = Constants.WEB_SERVICE_URL+"user/add";
 
         final RentalHeader rentalHeader =new RentalHeader();
 

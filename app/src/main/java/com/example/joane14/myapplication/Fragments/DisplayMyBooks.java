@@ -197,12 +197,8 @@ public class DisplayMyBooks extends Fragment {
 
     public void getMyBooks(){
         RequestQueue requestQueue = Volley.newRequestQueue(getContext());
-//        String URL = "http://104.197.4.32:8080/Koobym/user/add";
-//        User user = new User();
-//        user = (User) SPUtility.getSPUtil(getContext()).getObject("USER_OBJECT", User.class);
         Log.d("UserIdReceive", String.valueOf(user.getUserId()));
         String URL = Constants.GET_MY_BOOKS+"/"+user.getUserId();
-//        String URL = Constants.WEB_SERVICE_URL+"user/add";
 
         Log.d("UserReview URL", URL);
 
@@ -215,7 +211,6 @@ public class DisplayMyBooks extends Fragment {
             @Override
             public void onResponse(String response) {
                 Log.i("displayMyBooks", response);
-//                RentalHeader rentalHeaderModel = gson.fromJson(response, RentalHeader.class);
                 bookOwnerModelList.clear();
                 bookOwnerModelList.addAll(Arrays.asList(gson.fromJson(response, BookOwnerModel[].class)));
                 mAdapter.notifyDataSetChanged();

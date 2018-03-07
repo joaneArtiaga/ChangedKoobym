@@ -60,16 +60,12 @@ public class ProfileFrag extends Fragment {
     }
 
     private void setupViewPager(ViewPager viewPager) {
-
         Bundle bundle = new Bundle();
         bundle.putSerializable("user", user);
         RentTransaction.Adapter adapter = new RentTransaction.Adapter(getChildFragmentManager());
         adapter.addFragment(AboutProfFrag.newInstance(bundle), "User Profile");
         adapter.addFragment(DisplayMyBooks.newInstance(bundle), "Shelf");
         viewPager.setAdapter(adapter);
-
-
-
     }
 
 

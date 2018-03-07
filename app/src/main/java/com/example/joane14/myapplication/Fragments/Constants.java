@@ -89,6 +89,8 @@ public class Constants {
 
     public static final String UPDATE_SWAP_HEADER_1 = WEB_SERVICE_URL + "swapHeader/update";
 
+    public static final String UPDATE_AUCTION_HEADER_1 = WEB_SERVICE_URL + "auctionHeader/update";
+
     public static final String GET_SWAP_DETAILS_ALL = WEB_SERVICE_URL + "swapDetail/getAllSwap";
 
     public static final String GET_REQUEST_RECEIVED = WEB_SERVICE_URL + "rentalHeader/requestReceivedById/";

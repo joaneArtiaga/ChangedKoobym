@@ -6,6 +6,14 @@
     android:layout_height="match_parent"
     android:padding="10dp">
 
+    <CheckBox
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:id="@+id/checkSwap"
+        android:gravity="center"
+        android:layout_gravity="center"
+        android:buttonTint="@color/colorLightOrange"
+        android:layout_marginRight="5dp"/>
 
     <ImageView
         android:id="@+id/ivBookSwap"
@@ -15,7 +23,7 @@
 
     <TextView
         android:id="@+id/tvTitleSwap"
-        android:layout_width="150dp"
+        android:layout_width="100dp"
         android:gravity="center_vertical"
         android:layout_marginLeft="10dp"
         android:textStyle="bold"
@@ -23,12 +31,12 @@
         android:layout_gravity="center_vertical"
         android:layout_height="wrap_content" />
 
-    <CheckBox
-        android:layout_width="50dp"
-        android:layout_height="50dp"
-        android:id="@+id/checkSwap"
-        android:gravity="center"
+    <ImageView
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:id="@+id/viewBook"
+        android:clickable="true"
         android:layout_gravity="center"
-        android:buttonTint="@color/colorLightOrange"
-        android:layout_marginRight="5dp"/>
+        android:src="@drawable/view"/>
+
 </LinearLayout>

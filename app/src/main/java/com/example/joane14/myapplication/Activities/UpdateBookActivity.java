@@ -663,6 +663,7 @@ public class UpdateBookActivity extends AppCompatActivity {
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 Log.d("AuctionItemSelected", dateEnd.get(position));
                 auctionToPost.setEndDate(dateEnd.get(position));
+                auctionToPost.setAuctionStatus("pending");
                 boolEndDate = true;
             }
 
@@ -977,11 +978,10 @@ public class UpdateBookActivity extends AppCompatActivity {
 
     private void addAuctionDetail(AuctionDetailModel auctionDetailModel) {
         RequestQueue requestQueue = Volley.newRequestQueue(this);
-//        String URL = "http://104.197.4.32:8080/Koobym/user/add";
         String URL = Constants.POST_AUCTION_DETAIL_1;
 
+        auctionDetailModel.setStatus("Available");
 
-//        user.setDayTimeModel();
         final Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd").registerTypeAdapter(Date.class, GsonDateDeserializer.getInstance()).create();
         final String mRequestBody = gson.toJson(auctionDetailModel);
 

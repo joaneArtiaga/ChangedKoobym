@@ -53,6 +53,7 @@ import com.example.joane14.myapplication.Adapters.SwapBookChooserAdapter;
 import com.example.joane14.myapplication.Fragments.Constants;
 import com.example.joane14.myapplication.Fragments.DisplayBookReview;
 import com.example.joane14.myapplication.Fragments.DisplaySwapComments;
+import com.example.joane14.myapplication.Fragments.VolleyUtil;
 import com.example.joane14.myapplication.Model.AuctionDetailModel;
 import com.example.joane14.myapplication.Model.RentalDetail;
 import com.example.joane14.myapplication.Model.RentalHeader;
@@ -81,7 +82,7 @@ import static android.util.Log.d;
 public class ViewBookAct extends AppCompatActivity implements
         NavigationView.OnNavigationItemSelectedListener,
         DisplayBookReview.OnDisplayBookReviewInteractionListener,
-        DisplaySwapComments.OnSwapCommentInteractionListener{
+        DisplaySwapComments.OnSwapCommentInteractionListener, AdapterView.OnItemClickListener {
 
     static final int MSG_DISMISS_DIALOG = 0;
     RentalDetail rentalDetailModel;
@@ -89,6 +90,7 @@ public class ViewBookAct extends AppCompatActivity implements
     AuctionDetailModel auctionDetailModel;
     RatingBar mRating;
     TextView mRenters;
+    List<SwapDetail> sdList;
 
     private AlertDialog mAlertDialog;
 
@@ -468,11 +470,14 @@ public class ViewBookAct extends AppCompatActivity implements
                     final Dialog dialog = new Dialog(ViewBookAct.this);
                     View view = getLayoutInflater().inflate(R.layout.swap_book_chooser, null);
 
-                    ListView ly = (ListView) view.findViewById(R.id.listSwap);
+                    final ListView ly = (ListView) view.findViewById(R.id.listSwap);
                     final SwapBookChooserAdapter adapter = new SwapBookChooserAdapter(ViewBookAct.this, swapDetailList);
 
+                    sdList = swapDetailList;
                     ly.setAdapter(adapter);
-
+                    ly.setOnItemClickListener(listviewOnItemClickListener);
+                    ly.setFocusable(false);
+                    Log.d("lySelectedNum", ly.getCheckedItemCount()+"");
                     Button mOkay = (Button) view.findViewById(R.id.btnReq);
                     Button mCancel = (Button) view.findViewById(R.id.btnCancel);
 
@@ -480,52 +485,65 @@ public class ViewBookAct extends AppCompatActivity implements
                         @RequiresApi(api = Build.VERSION_CODES.N)
                         @Override
                         public void onClick(View v) {
-                            List<SwapDetail> requesteeSwapDetail  = adapter.getSelectedSwap();
-                            List<SwapHeaderDetail> listSHD = new ArrayList<SwapHeaderDetail>();
+                            if(ly.getCheckedItemCount()!=0){
+                                List<SwapDetail> requesteeSwapDetail  = adapter.getSelectedSwap();
+                                List<SwapHeaderDetail> listSHD = new ArrayList<SwapHeaderDetail>();
 
-                            Calendar cal = Calendar.getInstance();
-                            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-                            String currDate = sdf.format(cal.getTime());
+                                Calendar cal = Calendar.getInstance();
+                                SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+                                String currDate = sdf.format(cal.getTime());
 
-                            SwapHeader swapHeader = new SwapHeader();
+                                SwapHeader swapHeader = new SwapHeader();
 
-                            swapHeader.setDateRequest(currDate);
+                                swapHeader.setDateRequest(currDate);
 
-                            swapHeader.setStatus("Request");
+                                swapHeader.setStatus("Request");
 
-                            swapHeader.setUser(user);
+                                swapHeader.setUser(user);
 
-                            swapHeader.setSwapDetail(swapDetail);
+                                swapHeader.setSwapDetail(swapDetail);
 
-                            swapHeader.setRequestedSwapDetail(requesteeSwapDetail.get(0));
+                                swapHeader.setRequestedSwapDetail(requesteeSwapDetail.get(0));
 
-                            swapHeader.setDateTimeStamp(currDate);
+                                swapHeader.setDateTimeStamp(currDate);
 
-                            for(int init=0; init<requesteeSwapDetail.size(); init++){
-                                SwapHeaderDetail shd = new SwapHeaderDetail();
+                                for(int init=0; init<requesteeSwapDetail.size(); init++){
+                                    SwapHeaderDetail shd = new SwapHeaderDetail();
 
-                                shd.setSwapDetail(requesteeSwapDetail.get(init));
-                                shd.setSwapType("Requestor");
-                                shd.getSwapDetail().setSwapStatus("Not Available");
-                                shd.getSwapDetail().getBookOwner().setBookStat("Not Available");
-                                shd.getSwapDetail().getBookOwner().getBookObj().setStatus("Not Available");
-                                listSHD.add(shd);
+                                    shd.setSwapDetail(requesteeSwapDetail.get(init));
+                                    shd.setSwapType("Requestor");
+                                    shd.getSwapDetail().setSwapStatus("Not Available");
+                                    shd.getSwapDetail().getBookOwner().setBookStat("Not Available");
+                                    shd.getSwapDetail().getBookOwner().getBookObj().setStatus("Not Available");
+                                    listSHD.add(shd);
+                                }
+
+                                SwapHeaderDetail swapHeaderDetail = new SwapHeaderDetail();
+                                swapHeaderDetail.setSwapDetail(swapDetail);
+                                swapHeaderDetail.setSwapType("Requestee");
+
+                                listSHD.add(swapHeaderDetail);
+                                swapHeader.setSwapHeaderDetail(listSHD);
+
+                                Log.d("This user ", user.getUserFname());
+
+                                Log.d("SwapDetailRead:"+swapDetail.getBookOwner().getBookObj().getBookTitle(), "user:"+ swapHeader.getSwapDetail().getBookOwner().getUserObj().getUserFname());
+                                Log.d("ReqDetail:"+ swapHeader.getRequestedSwapDetail().getBookOwner().getBookObj().getBookTitle(), "user:"+swapHeader.getRequestedSwapDetail().getBookOwner().getUserObj().getUserFname());
+
+
+                                addSwapHeader(swapHeader);
+                            }else{
+                                AlertDialog ad = new AlertDialog.Builder(ViewBookAct.this).create();
+                                ad.setTitle("Alert!");
+                                ad.setMessage("You should choose a book/s for it to be swapped.");
+                                ad.setButton(AlertDialog.BUTTON_POSITIVE, "Okay", new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        dialog.dismiss();
+                                    }
+                                });
+                                ad.show();
                             }
-
-                            SwapHeaderDetail swapHeaderDetail = new SwapHeaderDetail();
-                            swapHeaderDetail.setSwapDetail(swapDetail);
-                            swapHeaderDetail.setSwapType("Requestee");
-
-                            listSHD.add(swapHeaderDetail);
-                            swapHeader.setSwapHeaderDetail(listSHD);
-
-                            Log.d("This user ", user.getUserFname());
-
-                            Log.d("SwapDetailRead:"+swapDetail.getBookOwner().getBookObj().getBookTitle(), "user:"+ swapHeader.getSwapDetail().getBookOwner().getUserObj().getUserFname());
-                            Log.d("ReqDetail:"+ swapHeader.getRequestedSwapDetail().getBookOwner().getBookObj().getBookTitle(), "user:"+swapHeader.getRequestedSwapDetail().getBookOwner().getUserObj().getUserFname());
-
-
-                            addSwapHeader(swapHeader);
                         }
                     });
 
@@ -564,6 +582,37 @@ public class ViewBookAct extends AppCompatActivity implements
         };
 
         requestQueue.add(stringRequest);
+    }
+
+    private AdapterView.OnItemClickListener listviewOnItemClickListener = new AdapterView.OnItemClickListener() {
+        @Override
+        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+            Toast.makeText(getApplicationContext(), "balalallala", Toast.LENGTH_SHORT).show();
+        }
+    };
+
+    private void getSwapDetail(int bookOwnerId){
+        String URL = Constants.GET_BOOK_OWNER_SWAP_DETAIL+bookOwnerId;
+        Log.d("PreferenceURL", URL);
+        StringRequest stringRequest = new StringRequest(Request.Method.GET, URL, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                Log.d("SwapDetailResponse", response);
+                Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd").registerTypeAdapter(Date.class, GsonDateDeserializer.getInstance()).create();
+                SwapDetail swapDetails = gson.fromJson(response, SwapDetail.class);
+                Intent intent = new Intent(ViewBookAct.this, ViewBookAct.class);
+                Bundle bundle = new Bundle();
+                bundle.putSerializable("swapBook",swapDetails);
+                intent.putExtras(bundle);
+                startActivity(intent);
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.e("LOG_VOLLEY", error.toString());
+            }
+        }) ;
+        VolleyUtil.volleyRQInstance(ViewBookAct.this).add(stringRequest);
     }
 
     public void addSwapHeader(SwapHeader swapHeaderToPost){
@@ -1084,7 +1133,6 @@ public class ViewBookAct extends AppCompatActivity implements
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }
-
     @Override
     public void onDisplayBookReviewOnClick(Uri uri) {
 
@@ -1093,5 +1141,10 @@ public class ViewBookAct extends AppCompatActivity implements
     @Override
     public void onSwapCommentOnClick(Uri uri) {
 
+    }
+
+    @Override
+    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+        Log.d("SelectNaSwap", sdList.get(position).getBookOwner().getBookObj().getBookTitle());
     }
 }

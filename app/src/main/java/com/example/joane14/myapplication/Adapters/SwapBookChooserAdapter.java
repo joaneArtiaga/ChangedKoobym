@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.icu.text.DateFormat;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
@@ -28,6 +29,7 @@ import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.bumptech.glide.Glide;
 import com.example.joane14.myapplication.Activities.GsonDateDeserializer;
+import com.example.joane14.myapplication.Activities.ViewBookAct;
 import com.example.joane14.myapplication.Fragments.Constants;
 import com.example.joane14.myapplication.Model.RentalHeader;
 import com.example.joane14.myapplication.Model.SwapDetail;
@@ -61,6 +63,7 @@ public class SwapBookChooserAdapter extends ArrayAdapter<SwapDetail> {
         protected TextView bookTitleSwap;
         protected CheckBox checkSwap;
         protected ImageView bookImage;
+        protected ImageView viewBookBtn;
     }
 
     public SwapBookChooserAdapter(Activity context, List<SwapDetail> swapHeaderList) {
@@ -80,6 +83,7 @@ public class SwapBookChooserAdapter extends ArrayAdapter<SwapDetail> {
             viewHolder.bookTitleSwap = (TextView) view.findViewById(R.id.tvTitleSwap);
             viewHolder.bookImage = (ImageView) view.findViewById(R.id.ivBookSwap);
             viewHolder.checkSwap = (CheckBox) view.findViewById(R.id.checkSwap);
+            viewHolder.viewBookBtn = (ImageView) view.findViewById(R.id.viewBook);
             view.setTag(viewHolder);
         }else{
             view = convertView;
@@ -107,6 +111,18 @@ public class SwapBookChooserAdapter extends ArrayAdapter<SwapDetail> {
 
             }
         });
+
+        holder.viewBookBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getContext(), ViewBookAct.class);
+                Bundle bundle = new Bundle();
+                bundle.putSerializable("swapBook",bookList.get(position));
+                intent.putExtras(bundle);
+                context.startActivity(intent);
+            }
+        });
+
         return view;
     }
 

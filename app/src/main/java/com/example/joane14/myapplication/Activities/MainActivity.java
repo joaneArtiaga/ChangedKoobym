@@ -88,10 +88,8 @@ public class MainActivity extends AppCompatActivity {
 //                    intent.putExtra("recommned", b);
             SPUtility.getSPUtil(MainActivity.this).putObject("USER_OBJECT ", spUser);
             startActivity(intent);
-            Toast.makeText(MainActivity.this, "Contain", Toast.LENGTH_SHORT).show();
         }else{
             Log.d("inside", "empty SPUtility");
-            Toast.makeText(MainActivity.this, "Empty", Toast.LENGTH_SHORT).show();
         }
 
         username = (EditText) findViewById(R.id.etUsername);

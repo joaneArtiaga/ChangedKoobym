@@ -336,8 +336,6 @@ ViewAuctionBook extends AppCompatActivity
                                 auctionHeaderPost.setUser(user);
                                 auctionHeaderPost.setAuctionHeaderDateStamp(currDate);
                                 addAuctionHeader(auctionHeaderPost, auctionComment, auctionCommentDetail);
-
-                                dialogCustom.dismiss();
                             }
                         });
 
@@ -567,6 +565,11 @@ ViewAuctionBook extends AppCompatActivity
             public void onResponse(String response) {
                 Log.d("onResponse addSwapC", "inside");
                 Log.i("addAuctionComment", response);
+                Intent intent = new Intent(ViewAuctionBook.this, ViewAuctionBook.class);
+                Bundle bundle = new Bundle();
+                bundle.putSerializable("auctionBook",auctionDetailModel);
+                intent.putExtras(bundle);
+                startActivity(intent);
 //                Intent intent = new Intent(ViewAuctionBook.this, MyShelf.class);
 //                startActivity(intent);
 
