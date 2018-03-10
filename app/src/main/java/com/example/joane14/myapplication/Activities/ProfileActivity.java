@@ -97,6 +97,7 @@ public class ProfileActivity extends AppCompatActivity implements
         TextView mBtnEdit = (TextView) findViewById(R.id.tvEditProfile);
         TextView mEmail = (TextView) findViewById(R.id.tvEmailProfile);
         ImageView mBackBtn = (ImageView) findViewById(R.id.backBtn);
+        mBtnAdd = (FloatingActionButton) findViewById(R.id.btnAdd);
 
         ViewPager viewPager = (ViewPager) findViewById(R.id.viewpager);
 
@@ -149,6 +150,40 @@ public class ProfileActivity extends AppCompatActivity implements
                     }
                 }
             });
+
+        mBtnAdd.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Log.d("Inside", "Floating Action listener");
+
+                final AlertDialog.Builder alert = new AlertDialog.Builder(getApplicationContext());
+
+                final EditText edittext = new EditText(getApplicationContext());
+                edittext.setHint("Book Title");
+                alert.setTitle("Enter Your Title of the Book");
+
+                alert.setView(edittext);
+
+                alert.setPositiveButton("SUBMIT", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int whichButton) {
+                        Log.d("Inside", "onClickPositiveButton");
+                        titleKeyword = edittext.getText().toString();
+                        Log.d("Title Keyword", titleKeyword);
+
+                        searchBook(titleKeyword);
+                    }
+                });
+
+                alert.setNegativeButton("CANCEL", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int whichButton) {
+                        Log.d("Inside", "onClickNegativeButton");
+                        dialog.dismiss();
+                    }
+                });
+
+                alert.show();
+            }
+        });
     }
 
     private void setupViewPager(ViewPager viewPager) {
@@ -341,9 +376,6 @@ public class ProfileActivity extends AppCompatActivity implements
                                 Log.d("googleBookPrice", "not null");
                         }
                     }
-
-
-
                         fragmentManager = getSupportFragmentManager();
                         ShowBooksFrag bookModel = new ShowBooksFrag();
                         changeFragment(bookModel, response);
