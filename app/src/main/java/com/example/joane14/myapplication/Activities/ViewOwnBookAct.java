@@ -4,8 +4,11 @@ import android.annotation.SuppressLint;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.app.TimePickerDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.drawable.Drawable;
+import android.graphics.drawable.LayerDrawable;
 import android.icu.text.DateFormat;
 import android.icu.text.SimpleDateFormat;
 import android.icu.util.Calendar;
@@ -19,10 +22,12 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.GravityCompat;
+import android.support.v4.view.MenuItemCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
 import android.text.Html;
 import android.text.SpannableStringBuilder;
@@ -30,6 +35,7 @@ import android.text.Spanned;
 import android.text.method.LinkMovementMethod;
 import android.text.style.ClickableSpan;
 import android.util.Log;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewTreeObserver;
@@ -54,10 +60,12 @@ import com.android.volley.VolleyLog;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.bumptech.glide.Glide;
+import com.example.joane14.myapplication.Class.BadgeDrawable;
 import com.example.joane14.myapplication.Fragments.Constants;
 import com.example.joane14.myapplication.Fragments.CountdownFrag;
 import com.example.joane14.myapplication.Fragments.DisplayBookReview;
 import com.example.joane14.myapplication.Fragments.DisplaySwapComments;
+import com.example.joane14.myapplication.Fragments.MapLandingPage;
 import com.example.joane14.myapplication.Model.AuctionDetailModel;
 import com.example.joane14.myapplication.Model.Book;
 import com.example.joane14.myapplication.Model.BookOwnerModel;
@@ -68,6 +76,7 @@ import com.example.joane14.myapplication.Model.SwapDetail;
 import com.example.joane14.myapplication.Model.TimeModel;
 import com.example.joane14.myapplication.Model.User;
 import com.example.joane14.myapplication.R;
+import com.example.joane14.myapplication.Utilities.PlacesUtility;
 import com.example.joane14.myapplication.Utilities.SPUtility;
 import com.facebook.login.LoginManager;
 import com.google.gson.Gson;
@@ -104,6 +113,8 @@ public class ViewOwnBookAct extends AppCompatActivity
     private Calendar aucDate;
     ArrayAdapter<String> adapterA;
     ViewTreeObserver vto;
+    LayerDrawable icon;
+    int countBadge;
 
 
     private AlertDialog mAlertDialog;
@@ -141,12 +152,6 @@ public class ViewOwnBookAct extends AppCompatActivity
         swapToPost = new SwapDetail();
         rentToPost = new RentalDetail();
 
-
-
-
-
-
-
         calendar = java.util.Calendar.getInstance();
 
 
@@ -176,6 +181,7 @@ public class ViewOwnBookAct extends AppCompatActivity
         Spinner mSpinnerDay = (Spinner) findViewById(R.id.spinnerStatus);
 
 
+        getNotificationCount();
         mSpinnerDay.setVisibility(View.GONE);
         mRating = (RatingBar) findViewById(R.id.vbRating);
 
@@ -1970,7 +1976,115 @@ public class ViewOwnBookAct extends AppCompatActivity
         return true;
     }
 
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.toolbar_menu_main, menu);
 
+        // Associate searchable configuration with the SearchView
+        // SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
+        SearchView searchView = (SearchView) MenuItemCompat.getActionView(menu.findItem(R.id.action_search));
+        MenuItem item = menu.findItem(R.id.action_notifications);
+        // searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
+        searchView.setOnCloseListener(new SearchView.OnCloseListener() {
+            @Override
+            public boolean onClose() {
+                FragmentManager fragmentManager;
+                fragmentManager = getSupportFragmentManager();
+                MapLandingPage prefFrag = MapLandingPage.newInstance();
+                FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+                fragmentTransaction.replace(R.id.fragment_landing_container, prefFrag, prefFrag.getTag());
+                fragmentTransaction.commit();
+
+                return false;
+            }
+        });
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                Log.d("SearchKeyword", query);
+                Intent intent = new Intent(ViewOwnBookAct.this, SearchResult.class);
+                Bundle bundle = new Bundle();
+                bundle.putString("SearchKeyword", query);
+                intent.putExtras(bundle);
+                startActivity(intent);
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+
+                return false;
+            }
+        });
+
+        searchView.setOnSearchClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Log.d("SearchView", "onclick");
+                Intent intent = new Intent(ViewOwnBookAct.this, SearchActivity.class);
+                startActivity(intent);
+            }
+        });
+
+
+        item.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem item) {
+
+                Intent intent = new Intent(ViewOwnBookAct.this, NotificationAct.class);
+                startActivity(intent);
+
+
+                return false;
+            }
+        });
+
+        MenuItem itemCart = menu.findItem(R.id.action_notifications);
+        icon = (LayerDrawable) itemCart.getIcon();
+
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    private int getNotificationCount() {
+        User user = (User) SPUtility.getSPUtil(getApplicationContext()).getObject("USER_OBJECT", User.class);
+        String query = Constants.GET_COUNT_NOTIF + user.getUserId();
+
+        this.countBadge = 0;
+        StringRequest stringRequest = new StringRequest(Request.Method.GET, query, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                int count = Integer.parseInt(response);
+                countBadge = count;
+                setBadgeCount(ViewOwnBookAct.this, count);
+
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+
+            }
+        });
+
+        PlacesUtility.getInstance(this).add(stringRequest);
+        return countBadge;
+    }
+
+    public void setBadgeCount(Context context, int count) {
+        if (icon != null) {
+            String countString = Integer.toString(count);
+            BadgeDrawable badge;
+            Drawable reuse = icon.findDrawableByLayerId(R.id.ic_badge);
+            if (reuse != null && reuse instanceof BadgeDrawable) {
+                badge = (BadgeDrawable) reuse;
+            } else {
+                badge = new BadgeDrawable(context);
+            }
+
+            badge.setCount(countString);
+            icon.mutate();
+            icon.setDrawableByLayerId(R.id.ic_badge, badge);
+        }
+    }
 
     @Override
     public void onDisplayBookReviewOnClick(Uri uri) {

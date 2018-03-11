@@ -14,6 +14,7 @@ import android.text.style.ClickableSpan;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewTreeObserver;
+import android.view.WindowManager;
 import android.widget.*;
 
 import com.android.volley.AuthFailureError;
@@ -43,6 +44,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 import java.util.Locale;
 
 public class AddBookOwner extends AppCompatActivity {
@@ -60,12 +62,26 @@ public class AddBookOwner extends AppCompatActivity {
     private Calendar calendar;
     DatePickerDialog.OnDateSetListener date;
     String category, dateBought;
+    CheckBox mCb1, mCb2, mCb3, mCb4, mCb5, mCb6, mCb7;
+    Boolean mCb1Bool, mCb2Bool, mCb3Bool, mCb4Bool, mCb5Bool, mCb6Bool, mCb7Bool;
     int catPos, daysForRent, year;
+    List<String> bookDescList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_book_owner);
+
+        getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
+
+        bookDescList = new ArrayList<String>();
+        mCb1Bool=false;
+        mCb2Bool=false;
+        mCb3Bool=false;
+        mCb4Bool=false;
+        mCb5Bool=false;
+        mCb6Bool=false;
+        mCb7Bool=false;
 
         catPos = 0;
         daysForRent = 0;
@@ -83,10 +99,6 @@ public class AddBookOwner extends AppCompatActivity {
         rentalDetail = new RentalDetail();
         swapDetail = new SwapDetail();
 
-
-
-
-
         user = new User();
         user = (User) SPUtility.getSPUtil(this).getObject("USER_OBJECT", User.class);
         mBookTitle = (TextView) findViewById(R.id.addBoTitle);
@@ -101,15 +113,138 @@ public class AddBookOwner extends AppCompatActivity {
 
         mBtnAddBO = (Button) findViewById(R.id.addBoBookBtn);
 
-//        mSpinnerCat = (Spinner) findViewById(R.id.spinnerCat);
-//        mSpinnerDays = (Spinner) findViewById(R.id.spinnerDays);
-
+        mBookCondition.setEnabled(false);
+        mCb1 = (CheckBox) findViewById(R.id.checkDesc1);
+        mCb2 = (CheckBox) findViewById(R.id.checkDesc2);
+        mCb3 = (CheckBox) findViewById(R.id.checkDesc3);
+        mCb4 = (CheckBox) findViewById(R.id.checkDesc4);
+        mCb5 = (CheckBox) findViewById(R.id.checkDesc5);
+        mCb6 = (CheckBox) findViewById(R.id.checkDesc6);
+        mCb7 = (CheckBox) findViewById(R.id.checkDesc7);
 
         mBookTitle.setText(bookModel.getBookTitle());
         mBookDescription.setText(bookModel.getBookDescription());
-        makeTextViewResizable(mBookDescription, 10, "See More", true);
+        makeTextViewResizable(mBookDescription, 5, "View More", true);
         Picasso.with(this).load(bookModel.getBookFilename()).fit().into(mBookPic);
 
+        mCb1.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                Log.d("CBDesc", "Good as new");
+                if(isChecked==true){
+                    bookDescList.add("Good as new");
+                }else{
+                    for(int init=0; init<bookDescList.size(); init++){
+                        if(bookDescList.get(init).equals("Good as new")){
+                            bookDescList.remove(init);
+                            break;
+                        }
+                    }
+                }
+            }
+        });
+
+        mCb2.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                Log.d("CBDesc", "Fine");
+                if(isChecked==true){
+                    bookDescList.add("Fine");
+                }else{
+                    for(int init=0; init<bookDescList.size(); init++){
+                        if(bookDescList.get(init).equals("Fine")){
+                            bookDescList.remove(init);
+                            break;
+                        }
+                    }
+                }
+
+            }
+        });
+
+        mCb3.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                Log.d("CBDesc", "Very Good");
+                if(isChecked==true){
+                    bookDescList.add("Very Good");
+                }else{
+                    for(int init=0; init<bookDescList.size(); init++){
+                        if(bookDescList.get(init).equals("Very Good")){
+                            bookDescList.remove(init);
+                            break;
+                        }
+                    }
+                }
+
+            }
+        });
+
+        mCb4.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                Log.d("CBDesc", "Poor");
+                if(isChecked==true){
+                    bookDescList.add("Poor");
+                }else{
+                    for(int init=0; init<bookDescList.size(); init++){
+                        if(bookDescList.get(init).equals("Poor")){
+                            bookDescList.remove(init);
+                            break;
+                        }
+                    }
+                }
+
+            }
+        });
+
+        mCb5.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                Log.d("CBDesc", "Fair");
+                if(isChecked==true){
+                    bookDescList.add("Fair");
+                }else{
+                    for(int init=0; init<bookDescList.size(); init++){
+                        if(bookDescList.get(init).equals("Fair")){
+                            bookDescList.remove(init);
+                            break;
+                        }
+                    }
+                }
+
+            }
+        });
+
+        mCb6.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                Log.d("CBDesc", "Small flaws");
+                if(isChecked==true){
+                    bookDescList.add("Small flaws");
+                }else{
+                    for(int init=0; init<bookDescList.size(); init++){
+                        if(bookDescList.get(init).equals("Small flaws")){
+                            bookDescList.remove(init);
+                            break;
+                        }
+                    }
+                }
+
+            }
+        });
+
+        mCb7.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                Log.d("CBDesc", "Others");
+                if(isChecked==true){
+                    mBookCondition.setEnabled(true);
+                }else{
+                    mBookCondition.setEnabled(false);
+                }
+            }
+        });
 
         String author = " ";
         if(bookModel.getBookAuthor()!=null) {
@@ -128,14 +263,6 @@ public class AddBookOwner extends AppCompatActivity {
                 Log.d("authorName", "inside dododo");
                 author = bookModel.getBookAuthor().get(0).getAuthorFName() + bookModel.getBookAuthor().get(0).getAuthorLName();
             }
-            Log.d("authorName if", "inside");
-            Log.d("authorName if", author);
-        }
-
-        if(author==null){
-         Log.d("authorNull", "yes");
-        }else{
-            Log.d("authorNull", author+" inside");
         }
         mBookAuthor.setText(author);
         mPrice.setText("₱ "+String.format("%.2f",calculatePrice()));
@@ -143,67 +270,77 @@ public class AddBookOwner extends AppCompatActivity {
         mBtnAddBO.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                bookOwnerModel.setStatusDescription(mBookCondition.getText().toString());
-                bookOwnerModel.setBookObj(bookModel);
-                bookOwnerModel.setUserObj(user);
-                bookOwnerModel.setNoRenters(0);
-//                if(catPos==0){
-//                    rentalDetail.setBookOwner(bookOwnerModel);
-//                    rentalDetail.setDaysForRent(daysForRent);
-//                    rentalDetail.setCalculatedPrice(calculatePrice());
-//                    addBook(true);
-//                }else if(catPos==1){
-//                    mSpinnerDays.setEnabled(false);
-//                    swapDetail.setBookOwner(bookOwnerModel);
-//                    swapDetail.setSwapDescription(mBookCondition.getText().toString());
-//                    swapDetail.setSwapPrice(calculatePrice());
-//                    @SuppressLint({"NewApi", "LocalSuppress"})
-//                    String date = new android.icu.text.SimpleDateFormat("yyyy-MM-dd").format(new Date());
-//                    swapDetail.setSwapTimeStamp(date);
-//                    addBook(false);
-//                }
-                addBook();
-                Intent intent = new Intent(getApplicationContext(), ProfileActivity.class);
-                Bundle bundlePass = new Bundle();
-                User userModel = new User();
-                userModel = (User) SPUtility.getSPUtil(getApplicationContext()).getObject("USER_OBJECT", User.class);
-                bundlePass.putSerializable("userModelPass", userModel);
-                intent.putExtras(bundlePass);
-                startActivity(intent);
+
+                Log.d("checkBoxSize", bookDescList.size()+"");
+                String bookCond = "";
+                if(mCb7.isChecked()==true){
+                    if(mBookCondition.getText().length()==0){
+                        mBookCondition.setError("Field must not be empty.");
+                    }else{
+                        bookDescList.add(mBookCondition.getText().toString());
+
+                        int sizeCond = bookDescList.size();
+                        Log.d("SizeBook", sizeCond+"");
+                        if(sizeCond>1){
+                            for(int init=0; init<bookDescList.size(); init++){
+                                bookCond = bookCond+bookDescList.get(init);
+                                if(sizeCond-1>init){
+                                    bookCond = bookCond+"; ";
+                                }
+                            }
+                        }else{
+                            bookCond = bookDescList.get(0);
+                        }
+                        Log.d("bookCond", bookCond);
+
+//                        bookOwnerModel.setStatusDescription(mBookCondition.getText().toString());
+//                        bookOwnerModel.setBookObj(bookModel);
+//                        bookOwnerModel.setUserObj(user);
+//                        bookOwnerModel.setNoRenters(0);
+//                        addBook();
+//                        Intent intent = new Intent(getApplicationContext(), ProfileActivity.class);
+//                        Bundle bundlePass = new Bundle();
+//                        User userModel = new User();
+//                        userModel = (User) SPUtility.getSPUtil(getApplicationContext()).getObject("USER_OBJECT", User.class);
+//                        bundlePass.putSerializable("userModelPass", userModel);
+//                        intent.putExtras(bundlePass);
+//                        startActivity(intent);
+                    }
+                }else{
+                    int sizeCond = bookDescList.size();
+                    Log.d("SizeBook", sizeCond+"");
+
+                    if(sizeCond>1){
+                        Log.d("validate", "If");
+                        for(int init=0; init<bookDescList.size(); init++){
+                            Log.d("validate", "for");
+                            bookCond = bookCond+bookDescList.get(init);
+                            if(sizeCond-1>init){
+                                bookCond = bookCond + "; ";
+                            }
+                        }
+                    }else if(sizeCond==1){
+                        Log.d("validate", "elseIf");
+                        bookCond = bookDescList.get(0);
+                    }
+                    Log.d("bookCondElse", bookCond);
+
+//                    bookOwnerModel.setStatusDescription(mBookCondition.getText().toString());
+//                    bookOwnerModel.setBookObj(bookModel);
+//                    bookOwnerModel.setUserObj(user);
+//                    bookOwnerModel.setNoRenters(0);
+//                    addBook();
+//                    Intent intent = new Intent(getApplicationContext(), ProfileActivity.class);
+//                    Bundle bundlePass = new Bundle();
+//                    User userModel = new User();
+//                    userModel = (User) SPUtility.getSPUtil(getApplicationContext()).getObject("USER_OBJECT", User.class);
+//                    bundlePass.putSerializable("userModelPass", userModel);
+//                    intent.putExtras(bundlePass);
+//                    startActivity(intent);
+                }
             }
         });
 
-//        mSpinnerCat.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-//            @Override
-//            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-//                Log.d("selectedCat", String.valueOf(position));
-//                if(position==0){
-//                    category = "Rent";
-//                }else if(position==1){
-//                    category="Swap";
-//                }else{
-//                    category = "Auction";
-//                }
-//                catPos = position;
-//            }
-//
-//            @Override
-//            public void onNothingSelected(AdapterView<?> parent) {
-//
-//            }
-//        });
-
-//    mSpinnerDays.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-//    @Override
-//    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-//        daysForRent = position+1;
-//    }
-//
-//    @Override
-//    public void onNothingSelected(AdapterView<?> parent) {
-//
-//    }
-//});
         mDate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -218,7 +355,6 @@ public class AddBookOwner extends AppCompatActivity {
             @Override
             public void onDateSet(android.widget.DatePicker view, int year, int monthOfYear,
                                   int dayOfMonth) {
-                // TODO Auto-generated method stub
                 calendar.set(Calendar.YEAR, year);
                 calendar.set(Calendar.MONTH, monthOfYear);
                 calendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
@@ -285,7 +421,7 @@ public class AddBookOwner extends AppCompatActivity {
                     if (viewMore) {
                         makeTextViewResizable(tv, -1, "View Less", false);
                     } else {
-                        makeTextViewResizable(tv, 3, "View More", true);
+                        makeTextViewResizable(tv, 5, "View More", true);
                     }
 
                 }
@@ -341,12 +477,9 @@ public class AddBookOwner extends AppCompatActivity {
 
     private void addBook() {
         RequestQueue requestQueue = Volley.newRequestQueue(this);
-//        String URL = "http://104.197.4.32:8080/Koobym/user/add";
         String URL = Constants.POST_BOOK;
 
-
         Log.d("bookDate", bookOwnerModel.getDateBought());
-//        user.setDayTimeModel();
         final Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd").registerTypeAdapter(Date.class, GsonDateDeserializer.getInstance()).create();
         final String mRequestBody = gson.toJson(bookOwnerModel.getBookObj());
 
@@ -360,59 +493,7 @@ public class AddBookOwner extends AppCompatActivity {
                 Book book = gson.fromJson(response, Book.class);
 
                 addBookOwner(book);
-//                if(bool==true){
-//                    addRentalDetail(book);
-//                }else{
-//                    addBookOwner(book);
-//                }
 
-
-            }
-        }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                Log.e("LOG_VOLLEY", error.toString());
-            }
-        }) {
-            @Override
-            public String getBodyContentType() {
-                return "application/json; charset=utf-8";
-            }
-
-            @Override
-            public byte[] getBody() throws AuthFailureError {
-                try {
-                    return mRequestBody == null ? null : mRequestBody.getBytes("utf-8");
-                } catch (UnsupportedEncodingException uee) {
-                    VolleyLog.wtf("Unsupported Encoding while trying to get the bytes of %s using %s", mRequestBody, "utf-8");
-                    return null;
-                }
-            }
-        };
-
-        requestQueue.add(stringRequest);
-    }
-
-
-    private void addRentalDetail(Book bookId) {
-        RequestQueue requestQueue = Volley.newRequestQueue(this);
-//        String URL = "http://104.197.4.32:8080/Koobym/user/add";
-        String URL = Constants.POST_RENTAL_DETAIL;
-
-        rentalDetail.getBookOwner().setBookObj(bookId);
-//        user.setDayTimeModel();
-        final Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd").registerTypeAdapter(Date.class, GsonDateDeserializer.getInstance()).create();
-        final String mRequestBody = gson.toJson(rentalDetail);
-
-
-        Log.d("LOG_VOLLEY_RequestBody", mRequestBody);
-        StringRequest stringRequest = new StringRequest(Request.Method.POST, URL, new Response.Listener<String>() {
-            @Override
-            public void onResponse(String response) {
-                Log.i("rentalDetailAddLog", response);
-
-                Intent intent = new Intent(AddBookOwner.this, MyShelf.class);
-                startActivity(intent);
             }
         }, new Response.ErrorListener() {
             @Override
@@ -442,16 +523,14 @@ public class AddBookOwner extends AppCompatActivity {
 
     private void addBookOwner(Book book) {
         RequestQueue requestQueue = Volley.newRequestQueue(this);
-//        String URL = "http://104.197.4.32:8080/Koobym/user/add";
         String URL = Constants.POST_BOOK_OWNER;
 
 
         bookOwnerModel.setBookObj(book);
         bookOwnerModel.setStatus("none");
-        bookOwnerModel.setBookStat("Available");
+        bookOwnerModel.setBookStat("Not Available");
 
         Log.d("bookDate", bookOwnerModel.getDateBought());
-//        user.setDayTimeModel();
         final Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd").registerTypeAdapter(Date.class, GsonDateDeserializer.getInstance()).create();
         final String mRequestBody = gson.toJson(bookOwnerModel);
 
@@ -464,55 +543,8 @@ public class AddBookOwner extends AppCompatActivity {
 
                 BookOwnerModel bookOwnerModel1 = gson.fromJson(response, BookOwnerModel.class);
 
-//                swapDetail.setBookOwner(bookOwnerModel1);
-
                 Log.d("bookOwnerAdd", "");
 
-//                addSwapDetail(swapDetail);
-            }
-        }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                Log.e("LOG_VOLLEY", error.toString());
-            }
-        }) {
-            @Override
-            public String getBodyContentType() {
-                return "application/json; charset=utf-8";
-            }
-
-            @Override
-            public byte[] getBody() throws AuthFailureError {
-                try {
-                    return mRequestBody == null ? null : mRequestBody.getBytes("utf-8");
-                } catch (UnsupportedEncodingException uee) {
-                    VolleyLog.wtf("Unsupported Encoding while trying to get the bytes of %s using %s", mRequestBody, "utf-8");
-                    return null;
-                }
-            }
-        };
-
-        requestQueue.add(stringRequest);
-    }
-
-    private void addSwapDetail(SwapDetail swapDetailModel) {
-        RequestQueue requestQueue = Volley.newRequestQueue(this);
-//        String URL = "http://104.197.4.32:8080/Koobym/user/add";
-        String URL = Constants.POST_SWAP_DETAIL;
-
-
-//        user.setDayTimeModel();
-        final Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd").registerTypeAdapter(Date.class, GsonDateDeserializer.getInstance()).create();
-        final String mRequestBody = gson.toJson(swapDetailModel);
-
-
-        Log.d("LOG_VOLLEY_RequestBody", mRequestBody);
-        StringRequest stringRequest = new StringRequest(Request.Method.POST, URL, new Response.Listener<String>() {
-            @Override
-            public void onResponse(String response) {
-                Log.i("swapDetailAddLog", response);
-                Intent inten = new Intent(AddBookOwner.this, MyShelf.class);
-                startActivity(inten);
             }
         }, new Response.ErrorListener() {
             @Override

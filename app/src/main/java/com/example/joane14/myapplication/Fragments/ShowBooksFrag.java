@@ -176,10 +176,6 @@ public class ShowBooksFrag extends Fragment {
                     }else{
                         bookObject.setBookPublishedDate("N/A");
                     }
-//                    bookObject.setBookFilename();
-//                    bookObject.setBookId(arrayObject.getJSONObject(""));
-
-//                    bookObject.setBookFilename(obj.getJSONObject("imageLinks").getString("thumbnail"));
 
                     if(arrayObject.getJSONObject("saleInfo").getString("saleability").equals("FOR_SALE")){
                         String price = arrayObject.getJSONObject("saleInfo").getJSONObject("listPrice").getString("amount");

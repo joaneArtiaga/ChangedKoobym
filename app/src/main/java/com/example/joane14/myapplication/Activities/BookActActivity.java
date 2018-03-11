@@ -188,7 +188,7 @@ public class BookActActivity extends AppCompatActivity
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.toolbar_menu, menu);
+        getMenuInflater().inflate(R.menu.toolbar_menu_main, menu);
 
         // Associate searchable configuration with the SearchView
         // SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);

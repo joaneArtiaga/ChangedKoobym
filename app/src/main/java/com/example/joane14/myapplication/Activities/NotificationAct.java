@@ -1,8 +1,12 @@
 package com.example.joane14.myapplication.Activities;
 
+import android.content.Context;
 import android.content.Intent;
+import android.graphics.drawable.Drawable;
+import android.graphics.drawable.LayerDrawable;
 import android.net.Uri;
 import android.support.design.widget.NavigationView;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.view.MenuItemCompat;
@@ -19,9 +23,17 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.android.volley.Request;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
+import com.example.joane14.myapplication.Class.BadgeDrawable;
+import com.example.joane14.myapplication.Fragments.Constants;
+import com.example.joane14.myapplication.Fragments.MapLandingPage;
 import com.example.joane14.myapplication.Fragments.NotificationFrag;
 import com.example.joane14.myapplication.Model.User;
 import com.example.joane14.myapplication.R;
+import com.example.joane14.myapplication.Utilities.PlacesUtility;
 import com.example.joane14.myapplication.Utilities.SPUtility;
 import com.facebook.login.LoginManager;
 import com.squareup.picasso.Picasso;
@@ -29,6 +41,9 @@ import com.squareup.picasso.Picasso;
 public class NotificationAct extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener,
         NotificationFrag.OnNotificationInteractionListener{
+
+    LayerDrawable icon;
+    int countBadge;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -66,11 +81,55 @@ public class NotificationAct extends AppCompatActivity
             Picasso.with(NotificationAct.this).load(userModel.getImageFilename()).fit().into(profileImg);
         }
 
+        getNotificationCount();
         NotificationFrag notificationFrag = NotificationFrag.newInstance();
         FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
         fragmentTransaction.replace(R.id.fragment_container_notification, notificationFrag);
         fragmentTransaction.commit();
     }
+
+
+    private int getNotificationCount() {
+        User user = (User) SPUtility.getSPUtil(getApplicationContext()).getObject("USER_OBJECT", User.class);
+        String query = Constants.GET_COUNT_NOTIF + user.getUserId();
+
+        this.countBadge = 0;
+        StringRequest stringRequest = new StringRequest(Request.Method.GET, query, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                int count = Integer.parseInt(response);
+                countBadge = count;
+                setBadgeCount(NotificationAct.this, count);
+
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+
+            }
+        });
+
+        PlacesUtility.getInstance(this).add(stringRequest);
+        return countBadge;
+    }
+
+    public void setBadgeCount(Context context, int count) {
+        if (icon != null) {
+            String countString = Integer.toString(count);
+            BadgeDrawable badge;
+            Drawable reuse = icon.findDrawableByLayerId(R.id.ic_badge);
+            if (reuse != null && reuse instanceof BadgeDrawable) {
+                badge = (BadgeDrawable) reuse;
+            } else {
+                badge = new BadgeDrawable(context);
+            }
+
+            badge.setCount(countString);
+            icon.mutate();
+            icon.setDrawableByLayerId(R.id.ic_badge, badge);
+        }
+    }
+
 
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
@@ -120,13 +179,71 @@ public class NotificationAct extends AppCompatActivity
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.toolbar_menu, menu);
+        getMenuInflater().inflate(R.menu.toolbar_menu_main, menu);
 
         // Associate searchable configuration with the SearchView
         // SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
         SearchView searchView = (SearchView) MenuItemCompat.getActionView(menu.findItem(R.id.action_search));
         MenuItem item = menu.findItem(R.id.action_notifications);
         // searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
+
+        searchView.setOnCloseListener(new SearchView.OnCloseListener() {
+            @Override
+            public boolean onClose() {
+                FragmentManager fragmentManager;
+                fragmentManager = getSupportFragmentManager();
+                MapLandingPage prefFrag = MapLandingPage.newInstance();
+                FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+                fragmentTransaction.replace(R.id.fragment_landing_container, prefFrag, prefFrag.getTag());
+                fragmentTransaction.commit();
+
+                return false;
+            }
+        });
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                Log.d("SearchKeyword", query);
+                Intent intent = new Intent(NotificationAct.this, SearchResult.class);
+                Bundle bundle = new Bundle();
+                bundle.putString("SearchKeyword", query);
+                intent.putExtras(bundle);
+                startActivity(intent);
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+
+                return false;
+            }
+        });
+
+        searchView.setOnSearchClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Log.d("SearchView", "onclick");
+                Intent intent = new Intent(NotificationAct.this, SearchActivity.class);
+                startActivity(intent);
+            }
+        });
+
+
+        item.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem item) {
+
+                Intent intent = new Intent(NotificationAct.this, NotificationAct.class);
+                startActivity(intent);
+
+
+                return false;
+            }
+        });
+
+        MenuItem itemCart = menu.findItem(R.id.action_notifications);
+        icon = (LayerDrawable) itemCart.getIcon();
+
         return super.onCreateOptionsMenu(menu);
     }
 

@@ -3,22 +3,25 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="com.example.joane14.myapplication.Fragments.PreferencesFrag">
-
-    <!--<android.support.v7.widget.RecyclerView-->
-        <!--android:id="@+id/my_recycler_view_preferences"-->
-        <!--android:layout_width="match_parent"-->
-        <!--android:layout_height="510dp"-->
-        <!--android:layout_alignParentBottom="true"-->
-        <!--android:scrollbars="vertical"/>-->
-
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Books you might like"
+        android:id="@+id/lpTitle"
+        android:layout_marginTop="10dp"
+        android:gravity="center_horizontal"
+        android:textColor="@color/colorLightOrange"
+        android:textSize="25dp"
+        android:textStyle="bold"/>
 
     <GridView
         android:id="@+id/preffered_gridview"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:numColumns="2"
         android:horizontalSpacing="10dp"
         android:verticalSpacing="10dp"
-        android:padding="10dp"/>
+        android:padding="10dp"
+        android:layout_below="@+id/lpTitle" />
 
 </RelativeLayout>

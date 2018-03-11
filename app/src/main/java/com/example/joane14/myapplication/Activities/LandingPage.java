@@ -91,14 +91,10 @@ public class LandingPage extends AppCompatActivity
         navigationView.setNavigationItemSelectedListener(this);
 
 
-        NavigationView navigationView1 = (NavigationView) findViewById(R.id.nav_view);
         View hView = navigationView.getHeaderView(0);
-//        View hView = navigationView1.findViewById(R.id.navHeader)
         TextView mName = (TextView) hView.findViewById(R.id.tvName);
         TextView mEmail = (TextView) hView.findViewById(R.id.tvEmail);
         profileImg = (ImageView) hView.findViewById(R.id.profPic);
-
-        final TextView mTitle = (TextView) findViewById(R.id.lpTitle);
 
         Log.d("Inside", "landing page");
 
@@ -109,6 +105,7 @@ public class LandingPage extends AppCompatActivity
         User userMod = (User) SPUtility.getSPUtil(this).getObject("USER_OBJECT", User.class);
         Log.d("toInitializePusher", "");
         initializePusherNotification(Integer.toString(userMod.getUserId()));
+        getNotificationCount();
 
         if (null != intent.getBundleExtra("ProfileBundle")) {
             mBundle = intent.getBundleExtra("ProfileBundle");
@@ -127,8 +124,6 @@ public class LandingPage extends AppCompatActivity
 
             mName.setText(name);
             mEmail.setText(email);
-//            ProfilePictureView mProfPic = (ProfilePictureView) hView.findViewById(R.id.profPic);
-//            mProfPic.setProfileId(userId);
         } else if (null != intent.getBundleExtra("user")) {
             Log.d("User Login", "inside");
 
@@ -152,28 +147,14 @@ public class LandingPage extends AppCompatActivity
             Log.d("User Login", userModel.getUserFname());
             mName.setText(userModel.getUserFname() + " " + userModel.getUserLname());
             mEmail.setText(userModel.getEmail());
-            Log.d("moaatay", userModel.getImageFilename());
             Glide.with(LandingPage.this).load(userModel.getImageFilename()).into(profileImg);
-            Picasso.with(LandingPage.this).load(userModel.getImageFilename()).fit().into(profileImg);
 
 
-            if (mBundleLogin.getBoolean("fromRegister") == true) {
-                Log.d("inside", "TRUEfromRegister");
-                mTitle.setText("Books you might like");
-                fragmentManager = getSupportFragmentManager();
-                MostRentedBookFrag mrbf = MostRentedBookFrag.newInstance();
-                FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-                fragmentTransaction.replace(R.id.fragment_landing_container, MostRentedBookFrag.newInstance(), mrbf.getTag());
-                fragmentTransaction.commit();
-            } else {
+            if (mBundleLogin.getBoolean("fromRegister") == false){
                 Log.d("PrefFrag", "else inside");
-                mTitle.setText("Books you might like");
                 bundlePass.putSerializable("userModelPass", userModel);
                 Log.d("userModelPass1st", userModel.toString());
                 fragmentManager = getSupportFragmentManager();
-                TextView title = (TextView) findViewById(R.id.lpTitle);
-                title.setVisibility(View.GONE);
-//                PreferencesFrag prefFrag = PreferencesFrag.newInstance(bundlePass);
                 MapLandingPage prefFrag = MapLandingPage.newInstance();
                 FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
                 fragmentTransaction.replace(R.id.fragment_landing_container, prefFrag, prefFrag.getTag());
@@ -190,17 +171,10 @@ public class LandingPage extends AppCompatActivity
             Log.d("User Login", userModel.getUserFname());
             mName.setText(userModel.getUserFname() + " " + userModel.getUserLname());
             mEmail.setText(userModel.getEmail());
-            Picasso.with(LandingPage.this).load(String.format(Constants.IMAGE_URL, userModel.getImageFilename())).fit().into(profileImg);
+            Glide.with(LandingPage.this).load(userModel.getImageFilename()).into(profileImg);
 
 
-            if (mBundleLogin.getBoolean("fromRegister") == true) {
-                Log.d("inside", "TRUEfromRegister");
-                fragmentManager = getSupportFragmentManager();
-                MostRentedBookFrag mrbf = MostRentedBookFrag.newInstance();
-                FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-                fragmentTransaction.replace(R.id.fragment_landing_container, MostRentedBookFrag.newInstance(), mrbf.getTag());
-                fragmentTransaction.commit();
-            } else {
+            if (mBundleLogin.getBoolean("fromRegister") == false) {
                 bundlePass.putSerializable("userModelPass", userModel);
                 Log.d("userModelPass1st", userModel.toString());
                 fragmentManager = getSupportFragmentManager();
@@ -208,7 +182,6 @@ public class LandingPage extends AppCompatActivity
                 FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
                 fragmentTransaction.replace(R.id.fragment_landing_container, prefFrag, prefFrag.getTag());
                 fragmentTransaction.commit();
-
             }
         }
     }
@@ -241,7 +214,6 @@ public class LandingPage extends AppCompatActivity
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
-        // Handle navigation view item clicks here.
         Log.d("onNavigationItem", "inside");
 
         int id = item.getItemId();
@@ -249,9 +221,6 @@ public class LandingPage extends AppCompatActivity
         if (id == R.id.home) {
         } else if (id == R.id.profile) {
             Intent intent = new Intent(LandingPage.this, ProfileActivity.class);
-//            User user = userModel;
-//            Log.d("User Id", String.valueOf(userModel.getUserId()));
-//            Log.d("User name", userModel.getUserFname()+" "+userModel.getUserLname());
             bundlePass.putSerializable("userModelPass", userModel);
             intent.putExtras(bundlePass);
             startActivity(intent);
@@ -324,9 +293,6 @@ public class LandingPage extends AppCompatActivity
                 Log.d("SearchView", "onclick");
                 Intent intent = new Intent(LandingPage.this, SearchActivity.class);
                 startActivity(intent);
-//                FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-//                ft.replace(R.id.fragment_landing_container, SearcgByCategoryFrag.newInstance());
-//                ft.commit();
             }
         });
 
@@ -345,8 +311,6 @@ public class LandingPage extends AppCompatActivity
 
         MenuItem itemCart = menu.findItem(R.id.action_notifications);
         icon = (LayerDrawable) itemCart.getIcon();
-        getNotificationCount();
-
         return super.onCreateOptionsMenu(menu);
     }
 
@@ -368,7 +332,6 @@ public class LandingPage extends AppCompatActivity
             Log.d("overflow", "gridview");
             fragmentManager = getSupportFragmentManager();
             TextView title = (TextView) findViewById(R.id.lpTitle);
-            title.setVisibility(View.VISIBLE);
             PreferencesFrag prefFrag = PreferencesFrag.newInstance(bundlePass);
             FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
             fragmentTransaction.replace(R.id.fragment_landing_container, prefFrag, prefFrag.getTag());
@@ -406,7 +369,6 @@ public class LandingPage extends AppCompatActivity
         if (icon != null) {
             String countString = Integer.toString(count);
             BadgeDrawable badge;
-            // Reuse drawable if possible
             Drawable reuse = icon.findDrawableByLayerId(R.id.ic_badge);
             if (reuse != null && reuse instanceof BadgeDrawable) {
                 badge = (BadgeDrawable) reuse;

@@ -1,6 +1,9 @@
 package com.example.joane14.myapplication.Activities;
 
+import android.content.Context;
 import android.content.Intent;
+import android.graphics.drawable.Drawable;
+import android.graphics.drawable.LayerDrawable;
 import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
@@ -27,7 +30,12 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.android.volley.Request;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
 import com.bumptech.glide.Glide;
+import com.example.joane14.myapplication.Class.BadgeDrawable;
 import com.example.joane14.myapplication.Fragments.CompletedHistory;
 import com.example.joane14.myapplication.Fragments.CompletedOwnerHistory;
 import com.example.joane14.myapplication.Fragments.CompletedRenterHistory;
@@ -37,6 +45,7 @@ import com.example.joane14.myapplication.Fragments.HistoryAuction;
 import com.example.joane14.myapplication.Fragments.HistoryFragment;
 import com.example.joane14.myapplication.Fragments.HistoryRent;
 import com.example.joane14.myapplication.Fragments.HistorySwap;
+import com.example.joane14.myapplication.Fragments.MapLandingPage;
 import com.example.joane14.myapplication.Fragments.MyRequestFrag;
 import com.example.joane14.myapplication.Fragments.RejectedHistory;
 import com.example.joane14.myapplication.Fragments.RejectedOwnerHistory;
@@ -48,6 +57,7 @@ import com.example.joane14.myapplication.Fragments.SwapHistory;
 import com.example.joane14.myapplication.Fragments.ToDeliver;
 import com.example.joane14.myapplication.Model.User;
 import com.example.joane14.myapplication.R;
+import com.example.joane14.myapplication.Utilities.PlacesUtility;
 import com.example.joane14.myapplication.Utilities.SPUtility;
 import com.facebook.login.LoginManager;
 import com.squareup.picasso.Picasso;
@@ -73,8 +83,8 @@ public class HistoryActivity extends AppCompatActivity
         HistorySwap.OnHistorySwapInteractionListener{
 
     User userModel;
-    private TabLayout tabLayout;
-    private ViewPager viewPager;
+    LayerDrawable icon;
+    int countBadge;
 
 
     @Override
@@ -120,6 +130,7 @@ public class HistoryActivity extends AppCompatActivity
         final TextView tvSwap = (TextView) findViewById(R.id.tvSwapHistory);
         final TextView tvAuction = (TextView) findViewById(R.id.tvAuctionHistory);
 
+        getNotificationCount();
         tvRent.setTextColor(ContextCompat.getColor(HistoryActivity.this, R.color.colorLightOrange));
         tvSwap.setTextColor(ContextCompat.getColor(HistoryActivity.this, R.color.colorDark));
         tvAuction.setTextColor(ContextCompat.getColor(HistoryActivity.this, R.color.colorDark));
@@ -219,15 +230,114 @@ public class HistoryActivity extends AppCompatActivity
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.toolbar_menu, menu);
+        getMenuInflater().inflate(R.menu.toolbar_menu_main, menu);
 
         // Associate searchable configuration with the SearchView
         // SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
         SearchView searchView = (SearchView) MenuItemCompat.getActionView(menu.findItem(R.id.action_search));
         MenuItem item = menu.findItem(R.id.action_notifications);
         // searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
+
+        searchView.setOnCloseListener(new SearchView.OnCloseListener() {
+            @Override
+            public boolean onClose() {
+                FragmentManager fragmentManager;
+                fragmentManager = getSupportFragmentManager();
+                MapLandingPage prefFrag = MapLandingPage.newInstance();
+                FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+                fragmentTransaction.replace(R.id.fragment_landing_container, prefFrag, prefFrag.getTag());
+                fragmentTransaction.commit();
+
+                return false;
+            }
+        });
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                Log.d("SearchKeyword", query);
+                Intent intent = new Intent(HistoryActivity.this, SearchResult.class);
+                Bundle bundle = new Bundle();
+                bundle.putString("SearchKeyword", query);
+                intent.putExtras(bundle);
+                startActivity(intent);
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+
+                return false;
+            }
+        });
+
+        searchView.setOnSearchClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Log.d("SearchView", "onclick");
+                Intent intent = new Intent(HistoryActivity.this, SearchActivity.class);
+                startActivity(intent);
+            }
+        });
+
+
+        item.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem item) {
+
+                Intent intent = new Intent(HistoryActivity.this, NotificationAct.class);
+                startActivity(intent);
+
+
+                return false;
+            }
+        });
+
+        MenuItem itemCart = menu.findItem(R.id.action_notifications);
+        icon = (LayerDrawable) itemCart.getIcon();
         return super.onCreateOptionsMenu(menu);
     }
+
+    private int getNotificationCount() {
+        User user = (User) SPUtility.getSPUtil(getApplicationContext()).getObject("USER_OBJECT", User.class);
+        String query = Constants.GET_COUNT_NOTIF + user.getUserId();
+
+        this.countBadge = 0;
+        StringRequest stringRequest = new StringRequest(Request.Method.GET, query, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                int count = Integer.parseInt(response);
+                countBadge = count;
+                setBadgeCount(HistoryActivity.this, count);
+
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+
+            }
+        });
+
+        PlacesUtility.getInstance(this).add(stringRequest);
+        return countBadge;
+    }
+
+    public void setBadgeCount(Context context, int count) {
+        if (icon != null) {
+            String countString = Integer.toString(count);
+            BadgeDrawable badge;
+            Drawable reuse = icon.findDrawableByLayerId(R.id.ic_badge);
+            if (reuse != null && reuse instanceof BadgeDrawable) {
+                badge = (BadgeDrawable) reuse;
+            } else {
+                badge = new BadgeDrawable(context);
+            }
+
+            badge.setCount(countString);
+            icon.mutate();
+            icon.setDrawableByLayerId(R.id.ic_badge, badge);
+        }
+    }
+
 
     @Override
     public void OnCompletedHistoryOnClick(Uri uri) {

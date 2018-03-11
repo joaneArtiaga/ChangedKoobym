@@ -1,7 +1,11 @@
 package com.example.joane14.myapplication.Activities;
 
+import android.app.Dialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.drawable.Drawable;
+import android.graphics.drawable.LayerDrawable;
 import android.media.Image;
 import android.net.Uri;
 import android.os.Build;
@@ -29,8 +33,10 @@ import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.RatingBar;
 import android.widget.TextView;
 
 import com.android.volley.AuthFailureError;
@@ -41,12 +47,15 @@ import com.android.volley.VolleyError;
 import com.android.volley.VolleyLog;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+import com.bumptech.glide.Glide;
+import com.example.joane14.myapplication.Class.BadgeDrawable;
 import com.example.joane14.myapplication.Fragments.AboutProfFrag;
 import com.example.joane14.myapplication.Fragments.Constants;
 import com.example.joane14.myapplication.Fragments.DisplayBookReview;
 import com.example.joane14.myapplication.Fragments.DisplayMyBooks;
 import com.example.joane14.myapplication.Fragments.DisplayUserReview;
 import com.example.joane14.myapplication.Fragments.Genre;
+import com.example.joane14.myapplication.Fragments.MapLandingPage;
 import com.example.joane14.myapplication.Fragments.ProfileFrag;
 import com.example.joane14.myapplication.Fragments.ProfileFragment;
 import com.example.joane14.myapplication.Fragments.RentTransaction;
@@ -55,6 +64,7 @@ import com.example.joane14.myapplication.Model.Book;
 import com.example.joane14.myapplication.Model.BookOwnerModel;
 import com.example.joane14.myapplication.Model.User;
 import com.example.joane14.myapplication.R;
+import com.example.joane14.myapplication.Utilities.PlacesUtility;
 import com.example.joane14.myapplication.Utilities.SPUtility;
 import com.facebook.login.LoginManager;
 import com.google.gson.Gson;
@@ -74,7 +84,7 @@ public class ProfileActivity extends AppCompatActivity implements
         ProfileFragment.OnFragmentInteractionListener, ProfileFrag.OnProfileFragInteractionListener,
         AboutProfFrag.OnAboutProfInteractionListener,
         DisplayUserReview.OnUserReviewInteractionListener,
-        DisplayMyBooks.OnDisplayMyBooksInteractionListener{
+        DisplayMyBooks.OnDisplayMyBooksInteractionListener {
 
     FloatingActionButton mBtnAdd;
     Book book;
@@ -84,7 +94,8 @@ public class ProfileActivity extends AppCompatActivity implements
     ImageView profileImg;
     String titleKeyword;
     private FragmentManager fragmentManager;
-
+    LayerDrawable icon;
+    int countBadge;
 
 
     @Override
@@ -111,77 +122,78 @@ public class ProfileActivity extends AppCompatActivity implements
         mBundle = new Bundle();
 
 
-            if(intent.getExtras().getSerializable("userModelPass")!=null){
-                Log.d("User Login", "inside");
+        if (intent.getExtras().getSerializable("userModelPass") != null) {
+            Log.d("User Login", "inside");
 
 
-                this.userObj = (User) getIntent().getExtras().getSerializable("userModelPass");
-                User userMod = (User) SPUtility.getSPUtil(this).getObject("USER_OBJECT", User.class);
+            this.userObj = (User) getIntent().getExtras().getSerializable("userModelPass");
+            User userMod = (User) SPUtility.getSPUtil(this).getObject("USER_OBJECT", User.class);
 
+            getNotificationCount();
 
-                Log.d("User filename", userObj.getImageFilename());
-                Log.d("User Id", String.valueOf(userObj.getUserId()));
+            Log.d("User filename", userObj.getImageFilename());
+            Log.d("User Id", String.valueOf(userObj.getUserId()));
 
-                Log.d("User Login", userObj.getUserFname());
-                mBundle.putSerializable("userDetails", userObj);
+            Log.d("User Login", userObj.getUserFname());
+            mBundle.putSerializable("userDetails", userObj);
 
-                mEmail.setText(userObj.getEmail());
-                ImageView profileImg = (ImageView) findViewById(R.id.profIvProf);
-                mName.setText(userObj.getUserFname()+" "+ userObj.getUserLname());
-                Picasso.with(getApplicationContext()).load(userObj.getImageFilename()).fit().into(profileImg);
+            mEmail.setText(userObj.getEmail());
+            ImageView profileImg = (ImageView) findViewById(R.id.profIvProf);
+            mName.setText(userObj.getUserFname() + " " + userObj.getUserLname());
+            Picasso.with(getApplicationContext()).load(userObj.getImageFilename()).fit().into(profileImg);
 
-                mBtnEdit.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        Intent intent = new Intent(getApplicationContext(), UpdateProfileActivity.class);
-                        startActivity(intent);
-                    }
-                });
-
-            }else{
-                Log.d("null oi", "mao white screen");
-            }
-
-            mBackBtn.setOnClickListener(new View.OnClickListener() {
+            mBtnEdit.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
-                        onBackPressed();
-                    }
+                    Intent intent = new Intent(getApplicationContext(), UpdateProfileActivity.class);
+                    startActivity(intent);
                 }
             });
+
+        } else {
+            Log.d("null oi", "mao white screen");
+        }
+
+        mBackBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+                    onBackPressed();
+                }
+            }
+        });
 
         mBtnAdd.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Log.d("Inside", "Floating Action listener");
 
-                final AlertDialog.Builder alert = new AlertDialog.Builder(getApplicationContext());
+                final Dialog dialogCustom = new Dialog(ProfileActivity.this);
+                dialogCustom.setContentView(R.layout.add_book_custom_dialog);
 
-                final EditText edittext = new EditText(getApplicationContext());
-                edittext.setHint("Book Title");
-                alert.setTitle("Enter Your Title of the Book");
+                final EditText mTitle = (EditText) dialogCustom.findViewById(R.id.etTitle);
+                Button mBtnSearch = (Button) dialogCustom.findViewById(R.id.searchBtn);
+                Button mBtnCancel = (Button) dialogCustom.findViewById(R.id.cancelBtn);
 
-                alert.setView(edittext);
-
-                alert.setPositiveButton("SUBMIT", new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int whichButton) {
-                        Log.d("Inside", "onClickPositiveButton");
-                        titleKeyword = edittext.getText().toString();
-                        Log.d("Title Keyword", titleKeyword);
-
-                        searchBook(titleKeyword);
+                mBtnSearch.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        if (mTitle.getText().length() == 0) {
+                            mTitle.setError("Field must not be empty.");
+                        } else {
+                            searchBook(mTitle.getText().toString());
+                        }
                     }
                 });
 
-                alert.setNegativeButton("CANCEL", new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int whichButton) {
-                        Log.d("Inside", "onClickNegativeButton");
-                        dialog.dismiss();
+                mBtnCancel.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        dialogCustom.dismiss();
                     }
                 });
 
-                alert.show();
+                dialogCustom.show();
             }
         });
     }
@@ -195,13 +207,14 @@ public class ProfileActivity extends AppCompatActivity implements
         adapter.addFragment(DisplayMyBooks.newInstance(bundle), "Shelf");
         viewPager.setAdapter(adapter);
     }
+
     @Override
     public boolean onSupportNavigateUp() {
         super.onBackPressed();
         return true;
     }
 
-    public void searchISBNPrice(String booktitle){
+    public void searchISBNPrice(String booktitle) {
 
         String query = booktitle;
         try {
@@ -221,14 +234,14 @@ public class ProfileActivity extends AppCompatActivity implements
                 try {
                     JSONObject obj = new JSONObject(response);
                     JSONArray items = obj.getJSONArray("data");
-                    if(items.length()!=0){
+                    if (items.length() != 0) {
                         Log.d("PriceSize", "not Empty");
-                    }else{
+                    } else {
                         Log.d("PriceSize", "Empty");
                     }
-                    for(int init = 0; init< items.length(); init++){
+                    for (int init = 0; init < items.length(); init++) {
                         JSONObject arrayObject = items.getJSONObject(init);
-                        Log.d("PRICE",arrayObject.getString("price"));
+                        Log.d("PRICE", arrayObject.getString("price"));
 
                         book.setBookOriginalPrice(Float.parseFloat(String.valueOf(arrayObject.get("price"))));
                     }
@@ -249,7 +262,7 @@ public class ProfileActivity extends AppCompatActivity implements
 
     }
 
-    public void searchISBN(String booktitle){
+    public void searchISBN(String booktitle) {
 
         String query = booktitle;
         try {
@@ -269,9 +282,9 @@ public class ProfileActivity extends AppCompatActivity implements
                 try {
                     JSONObject obj = new JSONObject(response);
                     JSONArray items = obj.getJSONArray("data");
-                    for(int init = 0; init< items.length(); init++){
+                    for (int init = 0; init < items.length(); init++) {
                         JSONObject arrayObject = items.getJSONObject(init);
-                        Log.d("ISBN",arrayObject.getString("isbn13"));
+                        Log.d("ISBN", arrayObject.getString("isbn13"));
 
                     }
 
@@ -310,19 +323,19 @@ public class ProfileActivity extends AppCompatActivity implements
                 Log.d("SEARCHGOOGLEBOOK RES", response);
                 try {
                     JSONObject obj = new JSONObject(response);
-                        Log.d("VolumeInfo",obj.getString("totalItems"));
+                    Log.d("VolumeInfo", obj.getString("totalItems"));
 
-                    if(obj.getString("totalItems")=="0"){
+                    if (obj.getString("totalItems") == "0") {
                         Log.d("totalItemsNumber", "is 0");
-                    }else{
+                    } else {
                         Log.d("totalItemsNumber", "is not 0");
                     }
 
                     Log.d("ImageGoogle", obj.getJSONObject("volumeInfo").getJSONObject("imageLinks").getString("thumbnail"));
 
-                    if(obj.getJSONObject("volumeInfo").getJSONObject("imageLinks").getString("thumbnail")==null){
+                    if (obj.getJSONObject("volumeInfo").getJSONObject("imageLinks").getString("thumbnail") == null) {
                         Log.d("ImageGoogle", "is empty");
-                    }else{
+                    } else {
                         Log.d("ImageGoogle", obj.getJSONObject("volumeInfo").getJSONObject("imageLinks").getString("thumbnail"));
                     }
 
@@ -342,7 +355,7 @@ public class ProfileActivity extends AppCompatActivity implements
     }
 
 
-    public void searchBook(String booktitle) {
+    public void searchBook(final String booktitle) {
         String query = booktitle;
         try {
             query = URLEncoder.encode(booktitle, "utf-8");
@@ -352,7 +365,7 @@ public class ProfileActivity extends AppCompatActivity implements
         RequestQueue requestQueue = Volley.newRequestQueue(this);
         String URL = String.format(Constants.GOOGLE_API_SEARCH_URL, query);
 
-        String URL1 = URL+"&maxResults=40";
+        String URL1 = URL + "&maxResults=40";
         Log.d("BOOKURL", URL1);
 
 
@@ -363,22 +376,23 @@ public class ProfileActivity extends AppCompatActivity implements
                 try {
                     JSONObject obj = new JSONObject(response);
                     JSONArray items = obj.getJSONArray("items");
-                    for(int init = 0; init< items.length(); init++){
+                    for (int init = 0; init < items.length(); init++) {
                         JSONObject arrayObject = items.getJSONObject(init);
-                        Log.d("Title",arrayObject.getJSONObject("volumeInfo").getString("title"));
-                        Log.d("VolumeInfo",arrayObject.getJSONObject("volumeInfo").toString());
+                        Log.d("Title", arrayObject.getJSONObject("volumeInfo").getString("title"));
+                        Log.d("VolumeInfo", arrayObject.getJSONObject("volumeInfo").toString());
 
-                        if(arrayObject.getJSONObject("saleInfo").getString("saleability").equals("NOT_FOR_SALE")){
+                        if (arrayObject.getJSONObject("saleInfo").getString("saleability").equals("NOT_FOR_SALE")) {
                             Log.d("googleBookPrice", "not for sale");
-                        }else if(arrayObject.getJSONObject("saleInfo").getString("saleability").equals("FOR_SALE")){
-                                String price = arrayObject.getJSONObject("saleInfo").getJSONObject("listPrice").getString("amount");
-                                Log.d("priceGoogle", price);
-                                Log.d("googleBookPrice", "not null");
+                        } else if (arrayObject.getJSONObject("saleInfo").getString("saleability").equals("FOR_SALE")) {
+                            String price = arrayObject.getJSONObject("saleInfo").getJSONObject("listPrice").getString("amount");
+                            Log.d("priceGoogle", price);
+                            Log.d("googleBookPrice", "not null");
                         }
                     }
-                        fragmentManager = getSupportFragmentManager();
-                        ShowBooksFrag bookModel = new ShowBooksFrag();
-                        changeFragment(bookModel, response);
+                    Intent intent = new Intent(ProfileActivity.this, SearchResult.class);
+                    intent.putExtra("bookResult", response);
+                    intent.putExtra("bookTitle", booktitle);
+                    startActivity(intent);
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
@@ -393,11 +407,12 @@ public class ProfileActivity extends AppCompatActivity implements
         requestQueue.add(stringRequest);
 
     }
+
     private void changeFragment(Fragment fragment, String result) {
         Log.d("Change Fragment", "inside");
-        if(result.length()==0){
+        if (result.length() == 0) {
             Log.d("nullResponse", "is null");
-        }else{
+        } else {
             Log.d("notNullResponse", "is not null");
         }
         fragmentBundle = new Bundle();
@@ -408,10 +423,11 @@ public class ProfileActivity extends AppCompatActivity implements
         fragmentTransaction.replace(R.id.fragment_container_books, fragment, fragment.getTag());
         fragmentTransaction.commit();
     }
+
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         int id = item.getItemId();
-        boolean flag=true;
+        boolean flag = true;
 
         if (id == R.id.home) {
             Log.d("HomeFrom", "Profile");
@@ -438,10 +454,10 @@ public class ProfileActivity extends AppCompatActivity implements
             startActivity(intent);
         }
 
-        if(flag == false){
+        if (flag == false) {
             DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout_profile);
             drawer.closeDrawer(GravityCompat.START);
-        }else{
+        } else {
             DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout_profile);
             drawer.closeDrawer(GravityCompat.START);
         }
@@ -449,12 +465,118 @@ public class ProfileActivity extends AppCompatActivity implements
         return true;
     }
 
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.toolbar_menu_main, menu);
+
+        SearchView searchView = (SearchView) MenuItemCompat.getActionView(menu.findItem(R.id.action_search));
+        MenuItem item = menu.findItem(R.id.action_notifications);
+
+        searchView.setOnCloseListener(new SearchView.OnCloseListener() {
+            @Override
+            public boolean onClose() {
+                FragmentManager fragmentManager;
+                fragmentManager = getSupportFragmentManager();
+                MapLandingPage prefFrag = MapLandingPage.newInstance();
+                FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+                fragmentTransaction.replace(R.id.fragment_landing_container, prefFrag, prefFrag.getTag());
+                fragmentTransaction.commit();
+
+                return false;
+            }
+        });
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                Log.d("SearchKeyword", query);
+                Intent intent = new Intent(ProfileActivity.this, SearchResult.class);
+                Bundle bundle = new Bundle();
+                bundle.putString("SearchKeyword", query);
+                intent.putExtras(bundle);
+                startActivity(intent);
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+
+                return false;
+            }
+        });
+
+        searchView.setOnSearchClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Log.d("SearchView", "onclick");
+                Intent intent = new Intent(ProfileActivity.this, SearchActivity.class);
+                startActivity(intent);
+            }
+        });
+
+
+        item.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem item) {
+
+                Intent intent = new Intent(ProfileActivity.this, NotificationAct.class);
+                startActivity(intent);
+
+
+                return false;
+            }
+        });
+
+        MenuItem itemCart = menu.findItem(R.id.action_notifications);
+        icon = (LayerDrawable) itemCart.getIcon();
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    private int getNotificationCount() {
+        User user = (User) SPUtility.getSPUtil(getApplicationContext()).getObject("USER_OBJECT", User.class);
+        String query = Constants.GET_COUNT_NOTIF + user.getUserId();
+
+        this.countBadge = 0;
+        StringRequest stringRequest = new StringRequest(Request.Method.GET, query, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                int count = Integer.parseInt(response);
+                countBadge = count;
+                setBadgeCount(ProfileActivity.this, count);
+
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+
+            }
+        });
+
+        PlacesUtility.getInstance(this).add(stringRequest);
+        return countBadge;
+    }
+
+    public void setBadgeCount(Context context, int count) {
+        if (icon != null) {
+            String countString = Integer.toString(count);
+            BadgeDrawable badge;
+            Drawable reuse = icon.findDrawableByLayerId(R.id.ic_badge);
+            if (reuse != null && reuse instanceof BadgeDrawable) {
+                badge = (BadgeDrawable) reuse;
+            } else {
+                badge = new BadgeDrawable(context);
+            }
+
+            badge.setCount(countString);
+            icon.mutate();
+            icon.setDrawableByLayerId(R.id.ic_badge, badge);
+        }
+    }
 
     @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
     @Override
     public void onBackPressed() {
 
-                finish();
+        finish();
     }
 
     @Override
