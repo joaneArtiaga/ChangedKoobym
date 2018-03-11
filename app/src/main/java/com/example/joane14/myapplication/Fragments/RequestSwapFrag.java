@@ -19,6 +19,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.GridView;
 import android.widget.ImageView;
+import android.widget.ListView;
 import android.widget.TextView;
 
 import com.android.volley.AuthFailureError;
@@ -32,9 +33,14 @@ import com.android.volley.toolbox.Volley;
 import com.bumptech.glide.Glide;
 import com.example.joane14.myapplication.Activities.GsonDateDeserializer;
 import com.example.joane14.myapplication.Activities.RequestActivity;
+import com.example.joane14.myapplication.Activities.ViewBookAct;
 import com.example.joane14.myapplication.Adapters.RequestSwapAdapter;
+import com.example.joane14.myapplication.Adapters.SwapBookChooserAdapter;
+import com.example.joane14.myapplication.Adapters.SwapRequestAdapter;
 import com.example.joane14.myapplication.Model.RentalHeader;
+import com.example.joane14.myapplication.Model.SwapDetail;
 import com.example.joane14.myapplication.Model.SwapHeader;
+import com.example.joane14.myapplication.Model.SwapHeaderDetail;
 import com.example.joane14.myapplication.Model.User;
 import com.example.joane14.myapplication.Model.UserNotification;
 import com.example.joane14.myapplication.R;
@@ -95,20 +101,25 @@ public class RequestSwapFrag extends Fragment {
                 final Dialog dialogCustom = new Dialog(getContext());
                 dialogCustom.setContentView(R.layout.request_swap_custom_dialog);
                 TextView mTitle = (TextView) dialogCustom.findViewById(R.id.bookTitleRequest);
-                TextView mTitle2 = (TextView) dialogCustom.findViewById(R.id.bookTitleRequest2);
                 TextView mOwner = (TextView) dialogCustom.findViewById(R.id.requestor);
                 ImageView ivBook = (ImageView) dialogCustom.findViewById(R.id.ivBookRequest);
-                ImageView ivBook2 = (ImageView) dialogCustom.findViewById(R.id.ivBookRequest2);
                 Button btnAccept = (Button) dialogCustom.findViewById(R.id.btnRequestAccept);
                 Button btnReject = (Button) dialogCustom.findViewById(R.id.btnRequestReject);
 
 
                 Glide.with(getContext()).load(rh.getSwapDetail().getBookOwner().getBookObj().getBookFilename()).centerCrop().into(ivBook);
-                Glide.with(getContext()).load(rh.getRequestedSwapDetail().getBookOwner().getBookObj().getBookFilename()).centerCrop().into(ivBook2);
 
                 mTitle.setText(rh.getSwapDetail().getBookOwner().getBookObj().getBookTitle());
-                mTitle2.setText(rh.getRequestedSwapDetail().getBookOwner().getBookObj().getBookTitle());
                 mOwner.setText(rh.getUser().getUserFname()+" "+rh.getUser().getUserLname());
+
+                ListView ly = (ListView) dialogCustom.findViewById(R.id.listSwap);
+                List<SwapHeaderDetail> sdList = new ArrayList<SwapHeaderDetail>();
+                sdList = rh.getSwapHeaderDetail();
+
+
+                final SwapRequestAdapter adapter = new SwapRequestAdapter(getActivity(), sdList);
+
+                ly.setAdapter(adapter);
 
                 btnAccept.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -349,17 +360,14 @@ public class RequestSwapFrag extends Fragment {
 
     public void getRequestReceivedSwap() {
         RequestQueue requestQueue = Volley.newRequestQueue(getContext());
-//        String URL = "http://104.197.4.32:8080/Koobym/user/add";
         User user = new User();
         user = (User) SPUtility.getSPUtil(getContext()).getObject("USER_OBJECT", User.class);
         String URL = Constants.SWAP_REQUEST_RECEIVED + user.getUserId();
-//        String URL = Constants.WEB_SERVICE_URL+"user/add";
 
         Log.d("RequestSwap", URL);
-        final SwapHeader swapHeader = new SwapHeader();
 
         final Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd").registerTypeAdapter(Date.class, GsonDateDeserializer.getInstance()).create();
-        final String mRequestBody = gson.toJson(swapHeader);
+        final String mRequestBody = gson.toJson(user);
 
 
         Log.d("RequestSwap", mRequestBody);

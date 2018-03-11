@@ -156,9 +156,6 @@ public class BookActActivity extends AppCompatActivity
             startActivity(intent);
         } else if (id == R.id.profile) {
             Intent intent = new Intent(BookActActivity.this, ProfileActivity.class);
-//            User user = userModel;
-//            Log.d("User Id", String.valueOf(userModel.getUserId()));
-//            Log.d("User name", userModel.getUserFname()+" "+userModel.getUserLname());
             Bundle bundlePass = new Bundle();
             User userModel = new User();
             userModel = (User) SPUtility.getSPUtil(this).getObject("USER_OBJECT", User.class);

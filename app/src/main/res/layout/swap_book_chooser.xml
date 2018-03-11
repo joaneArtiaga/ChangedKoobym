@@ -10,6 +10,7 @@
         android:layout_height="wrap_content"
         android:text="Swap Book Chooser"
         android:textSize="20dp"
+        android:textStyle="bold"
         android:textColor="@color/colorLightOrange"
         android:layout_marginTop="15dp"/>
 

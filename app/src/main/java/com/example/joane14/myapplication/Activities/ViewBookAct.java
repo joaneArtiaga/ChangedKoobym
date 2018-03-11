@@ -488,8 +488,6 @@ public class ViewBookAct extends AppCompatActivity implements
 
                     sdList = swapDetailList;
                     ly.setAdapter(adapter);
-                    ly.setOnItemClickListener(listviewOnItemClickListener);
-                    ly.setFocusable(false);
                     Log.d("lySelectedNum", ly.getCheckedItemCount()+"");
                     Button mOkay = (Button) view.findViewById(R.id.btnReq);
                     Button mCancel = (Button) view.findViewById(R.id.btnCancel);
@@ -498,8 +496,8 @@ public class ViewBookAct extends AppCompatActivity implements
                         @RequiresApi(api = Build.VERSION_CODES.N)
                         @Override
                         public void onClick(View v) {
-                            if(ly.getCheckedItemCount()!=0){
-                                List<SwapDetail> requesteeSwapDetail  = adapter.getSelectedSwap();
+                            List<SwapDetail> requesteeSwapDetail  = adapter.getSelectedSwap();
+                            if(requesteeSwapDetail.size()!=0){
                                 List<SwapHeaderDetail> listSHD = new ArrayList<SwapHeaderDetail>();
 
                                 Calendar cal = Calendar.getInstance();

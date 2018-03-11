@@ -327,9 +327,11 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
                             Log.d("RentalAdapter", "Inside");
 
                             if (userNotificationList.get(position).getActionStatus().equals("Request")) {
-                                createDialog(position);
+                                getRentalHeader(position, "Request");
+                                getRead(position);
                             } else if (userNotificationList.get(position).getActionStatus().equals("Approved")) {
                                 Log.d("ApprovedNotif", "Inside");
+                                getRead(position);
                                 getRentalHeader(position, "Approved");
 //                                updateReceive(position, "Confirm");
                                 getRead(position);
@@ -1569,7 +1571,165 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
                         });
                         dialog.setContentView(view);
                         dialog.show();
+                    }else if(status.equals("Request")){
+                        final Dialog dialogCustom = new Dialog(context);
+                        dialogCustom.setContentView(R.layout.rent_request_custom_dialog);
+                        TextView mTitle = (TextView) dialogCustom.findViewById(R.id.bookTitle);
+                        TextView mRequestor = (TextView) dialogCustom.findViewById(R.id.requestor);
+                        ImageView ivBook = (ImageView) dialogCustom.findViewById(R.id.ivBook);
+                        Button mAccept = (Button) dialogCustom.findViewById(R.id.btnAccept);
+                        Button mReject = (Button) dialogCustom.findViewById(R.id.btnReject);
+
+                        mTitle.setText(userNotificationList.get(position).getBookActionPerformedOn().getBookObj().getBookTitle());
+
+                        Glide.with(context).load(userNotificationList.get(position).getBookActionPerformedOn().getBookObj().getBookFilename()).centerCrop().into(ivBook);
+                        mRequestor.setText(userNotificationList.get(position).getUserPerformer().getUserFname()+" "+userNotificationList.get(position).getUserPerformer().getUserLname());
+
+                        mReject.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                final Dialog dialogCustom = new Dialog(getContext());
+                                dialogCustom.setContentView(R.layout.reject_custom_dialog);
+                                final EditText etReason = (EditText) dialogCustom.findViewById(R.id.etReason);
+                                Button mSubmitReason = (Button) dialogCustom.findViewById(R.id.submitReject);
+
+                                mSubmitReason.setOnClickListener(new View.OnClickListener() {
+                                    @Override
+                                    public void onClick(View v) {
+                                        if(etReason.getText().length()==0){
+                                            etReason.setError("Field should not be empty.");
+                                        }else{
+                                            rentalHeaderMod.setStatus("Rejected");
+                                            String message = etReason.getText().toString();
+                                            rejectRequestRent(rentalHeaderMod, message);
+                                        }
+                                    }
+                                });
+                                dialogCustom.show();
+                            }
+                        });
+
+                        mAccept.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                AlertDialog ad = new AlertDialog.Builder(getContext()).create();
+                                ad.setMessage("The renter will be notified.");
+                                ad.setButton(AlertDialog.BUTTON_POSITIVE, "Okay", new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        acceptRequestRent(rentalHeaderMod);
+                                    }
+                                });
+                                ad.show();
+                            }
+                        });
+
+
+                        dialogCustom.show();
                     }
+                }
+            }, new Response.ErrorListener() {
+                @Override
+                public void onErrorResponse(VolleyError error) {
+                    Log.e("LOG_VOLLEY", error.toString());
+                }
+            }) {
+                @Override
+                public String getBodyContentType() {
+                    return "application/json; charset=utf-8";
+                }
+
+                @Override
+                public byte[] getBody() throws AuthFailureError {
+                    try {
+                        return mRequestBody == null ? null : mRequestBody.getBytes("utf-8");
+                    } catch (UnsupportedEncodingException uee) {
+                        VolleyLog.wtf("Unsupported Encoding while trying to get the bytes of %s using %s", mRequestBody, "utf-8");
+                        return null;
+                    }
+                }
+            };
+
+            requestQueue.add(stringRequest);
+        }
+
+        public void rejectRequestRent(final RentalHeader rentalHeader, final String message){
+            RequestQueue requestQueue = Volley.newRequestQueue(getContext());
+            User user = new User();
+            user = (User) SPUtility.getSPUtil(getContext()).getObject("USER_OBJECT", User.class);
+            String URL = Constants.REJECT_REQUEST_RENT+rentalHeader.getRentalHeaderId();
+
+            Log.d("rejectRequestRentURL", URL);
+            Log.d("rejectRequestRent", rentalHeader.toString());
+
+            final Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd").registerTypeAdapter(Date.class, GsonDateDeserializer.getInstance()).create();
+            final String mRequestBody = gson.toJson(rentalHeader);
+
+
+            Log.d("LOG_VOLLEY", mRequestBody);
+            final User finalUser = user;
+            StringRequest stringRequest = new StringRequest(Request.Method.GET, URL, new Response.Listener<String>() {
+                @Override
+                public void onResponse(String response) {
+                    Log.i("rejectRequestRentRes", response);
+                    RentalHeader rentalHeaderModel = gson.fromJson(response, RentalHeader.class);
+
+                    UserNotification un = new UserNotification();
+                    un.setActionName("rental");
+                    un.setBookActionPerformedOn(rentalHeaderModel.getRentalDetail().getBookOwner());
+                    un.setExtraMessage(message);
+                    un.setUserPerformer(finalUser);
+                    un.setUser(rentalHeaderModel.getUserId());
+                    un.setActionStatus("Rejected");
+                    un.setActionId(Math.round(rentalHeaderModel.getRentalHeaderId()));
+
+                    addUserNotifRent(un);
+                }
+            }, new Response.ErrorListener() {
+                @Override
+                public void onErrorResponse(VolleyError error) {
+                    Log.e("LOG_VOLLEY", error.toString());
+                }
+            }) {
+                @Override
+                public String getBodyContentType() {
+                    return "application/json; charset=utf-8";
+                }
+
+                @Override
+                public byte[] getBody() throws AuthFailureError {
+                    try {
+                        return mRequestBody == null ? null : mRequestBody.getBytes("utf-8");
+                    } catch (UnsupportedEncodingException uee) {
+                        VolleyLog.wtf("Unsupported Encoding while trying to get the bytes of %s using %s", mRequestBody, "utf-8");
+                        return null;
+                    }
+                }
+            };
+
+            requestQueue.add(stringRequest);
+        }
+
+        public void acceptRequestRent(RentalHeader rentalHeader){
+            RequestQueue requestQueue = Volley.newRequestQueue(getContext());
+            User user = new User();
+            user = (User) SPUtility.getSPUtil(getContext()).getObject("USER_OBJECT", User.class);
+            String URL = Constants.ACCEPT_REQUEST_RENT+rentalHeader.getRentalHeaderId();
+
+            Log.d("AcceptRequestRentURL", URL);
+
+            final Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd").registerTypeAdapter(Date.class, GsonDateDeserializer.getInstance()).create();
+            final String mRequestBody = gson.toJson(rentalHeader);
+
+
+            Log.d("LOG_VOLLEY", mRequestBody);
+            StringRequest stringRequest = new StringRequest(Request.Method.GET, URL, new Response.Listener<String>() {
+                @Override
+                public void onResponse(String response) {
+                    Log.i("AcceptRequestRentRes", response);
+                    RentalHeader rentalHeaderModel = gson.fromJson(response, RentalHeader.class);
+                    Intent intent = new Intent(getContext(), NotificationAct.class);
+                    context.startActivity(intent);
                 }
             }, new Response.ErrorListener() {
                 @Override
@@ -1901,6 +2061,97 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
 
             requestQueue.add(stringRequest);
         }
+
+        public void addUserNotifRent(UserNotification userNotification) {
+            RequestQueue requestQueue = Volley.newRequestQueue(getContext());
+            User user = new User();
+            user = (User) SPUtility.getSPUtil(getContext()).getObject("USER_OBJECT", User.class);
+            d("UserIdReceive", String.valueOf(user.getUserId()));
+            String URL = Constants.POST_USER_NOTIFICATION;
+
+
+            final Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd").registerTypeAdapter(Date.class, GsonDateDeserializer.getInstance()).create();
+            final String mRequestBody = gson.toJson(userNotification);
+
+
+            d("LOG_VOLLEY", mRequestBody);
+            StringRequest stringRequest = new StringRequest(Request.Method.POST, URL, new Response.Listener<String>() {
+                @Override
+                public void onResponse(String response) {
+                    Log.i("userNotificationPost", response);
+                    UserNotification un = gson.fromJson(response, UserNotification.class);
+                    updateRentalExtra(un);
+                    Intent intent = new Intent(getContext(), NotificationAct.class);
+                    context.startActivity(intent);
+                }
+            }, new Response.ErrorListener() {
+                @Override
+                public void onErrorResponse(VolleyError error) {
+                    Log.e("LOG_VOLLEY", error.toString());
+                }
+            }) {
+                @Override
+                public String getBodyContentType() {
+                    return "application/json; charset=utf-8";
+                }
+
+                @Override
+                public byte[] getBody() throws AuthFailureError {
+                    try {
+                        return mRequestBody == null ? null : mRequestBody.getBytes("utf-8");
+                    } catch (UnsupportedEncodingException uee) {
+                        VolleyLog.wtf("Unsupported Encoding while trying to get the bytes of %s using %s", mRequestBody, "utf-8");
+                        return null;
+                    }
+                }
+            };
+
+            requestQueue.add(stringRequest);
+        }
+
+        public void updateRentalExtra(UserNotification un){
+            RequestQueue requestQueue = Volley.newRequestQueue(getContext());
+            User user = new User();
+            user = (User) SPUtility.getSPUtil(getContext()).getObject("USER_OBJECT", User.class);
+            String URL = Constants.UPDATE_RENTAL_EXTRA+un.getUserNotificationId();
+
+            final Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd").registerTypeAdapter(Date.class, GsonDateDeserializer.getInstance()).create();
+            final String mRequestBody = gson.toJson(un);
+
+
+            Log.d("LOG_VOLLEY", mRequestBody);
+            final User finalUser = user;
+            StringRequest stringRequest = new StringRequest(Request.Method.GET, URL, new Response.Listener<String>() {
+                @Override
+                public void onResponse(String response) {
+                    Log.i("rejectRequestRentRes", response);
+                }
+            }, new Response.ErrorListener() {
+                @Override
+                public void onErrorResponse(VolleyError error) {
+                    Log.e("LOG_VOLLEY", error.toString());
+                }
+            }) {
+                @Override
+                public String getBodyContentType() {
+                    return "application/json; charset=utf-8";
+                }
+
+                @Override
+                public byte[] getBody() throws AuthFailureError {
+                    try {
+                        return mRequestBody == null ? null : mRequestBody.getBytes("utf-8");
+                    } catch (UnsupportedEncodingException uee) {
+                        VolleyLog.wtf("Unsupported Encoding while trying to get the bytes of %s using %s", mRequestBody, "utf-8");
+                        return null;
+                    }
+                }
+            };
+
+            requestQueue.add(stringRequest);
+        }
+
+
 
         public void addUserNotif(UserNotification userNotification) {
             RequestQueue requestQueue = Volley.newRequestQueue(context);
@@ -2392,8 +2643,6 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
                         }
                     } else if (status.equals("change")) {
                         swapOwners(swapHeaderMod);
-//                        updateBookOwner(position, true, swapHeaderMod);
-//                        updateBookOwner(position, false, swapHeaderMod);
                     }else if(status.equals("summ")){
                         meetUpSumm(position, swapHeaderMod);
                     }else if(status.equals("delivered")){

@@ -159,7 +159,6 @@ public class RequestActivity extends AppCompatActivity
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
-        // Handle navigation view item clicks here.
         Log.d("onNavigationItem", "inside");
 
         int id = item.getItemId();
@@ -172,9 +171,6 @@ public class RequestActivity extends AppCompatActivity
             startActivity(intent);
         } else if (id == R.id.profile) {
             Intent intent = new Intent(RequestActivity.this, ProfileActivity.class);
-//            User user = userModel;
-//            Log.d("User Id", String.valueOf(userModel.getUserId()));
-//            Log.d("User name", userModel.getUserFname()+" "+userModel.getUserLname());
             Bundle bundlePass = new Bundle();
             User userModel = new User();
             userModel = (User) SPUtility.getSPUtil(this).getObject("USER_OBJECT", User.class);

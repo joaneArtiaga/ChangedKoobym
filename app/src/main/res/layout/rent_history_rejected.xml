@@ -76,7 +76,8 @@
         android:gravity="center_horizontal"
         android:layout_below="@+id/linearLayout6"
         android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true">
+        android:layout_alignParentStart="true"
+        android:layout_marginBottom="10dp">
 
         <Button
             android:id="@+id/btnDeliveryOkay"

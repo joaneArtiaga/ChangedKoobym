@@ -135,18 +135,11 @@ public class ToReceiveRentAdapter extends RecyclerView.Adapter<ToReceiveRentAdap
                 Log.d("currentStat", bookList.get(position).getRentalExtraMessage());
                 if(bookList.get(position).getRentalExtraMessage().equals("Delivered")){
                     AlertDialog ad = new AlertDialog.Builder(context).create();
-                    ad.setTitle("Confirmation");
-                    ad.setMessage("Did you receive the book?");
-                    ad.setButton(AlertDialog.BUTTON_POSITIVE, "Yes", new DialogInterface.OnClickListener() {
+                    ad.setMessage("Will notify the owner that you received the book.");
+                    ad.setButton(AlertDialog.BUTTON_POSITIVE, "Okay", new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
                             received(bookList.get(position));
-                        }
-                    });
-                    ad.setButton(AlertDialog.BUTTON_NEGATIVE, "Not Yet", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            dialog.dismiss();
                         }
                     });
                     ad.show();
@@ -260,10 +253,7 @@ public class ToReceiveRentAdapter extends RecyclerView.Adapter<ToReceiveRentAdap
     }
 
     private void received(final RentalHeader rentalHeader){
-//        String URL = "http://104.198.152.85/Koobym/rentalDetail/suggested/%d";
-//        String URL = Constants.WEB_SERVICE_URL+"rentalDetail/suggested/%d";
         String URL = Constants.RENT_RECEIVE+rentalHeader.getRentalHeaderId();
-//        URL = String.format(URL, userId);
         Log.d("receiveToReceiveURL", URL);
         Log.d("receiveToReceive", rentalHeader.toString());
 
@@ -288,10 +278,7 @@ public class ToReceiveRentAdapter extends RecyclerView.Adapter<ToReceiveRentAdap
     }
 
     private void complete(final RentalHeader rentalHeader, int userRateId){
-//        String URL = "http://104.198.152.85/Koobym/rentalDetail/suggested/%d";
-//        String URL = Constants.WEB_SERVICE_URL+"rentalDetail/suggested/%d";
         String URL = Constants.RENT_COMPLETE+rentalHeader.getRentalHeaderId()+"/"+userRateId;
-//        URL = String.format(URL, userId);
         Log.d("completeToReceiveURL", URL);
         Log.d("completeToReceive", rentalHeader.toString());
 
@@ -317,7 +304,6 @@ public class ToReceiveRentAdapter extends RecyclerView.Adapter<ToReceiveRentAdap
 
     public void userRate(final UserRating userRating, final RentalHeader rentalHeaderMod) {
         RequestQueue requestQueue = Volley.newRequestQueue(context);
-//        String URL = "http://104.197.4.32:8080/Koobym/user/add";
         String URL = Constants.POST_USER_RATE;
 
 
@@ -343,11 +329,6 @@ public class ToReceiveRentAdapter extends RecyclerView.Adapter<ToReceiveRentAdap
 
                 complete(rentalHeaderMod, ur.getUserRatingId());
 
-
-//                    if (bool == false) {
-//                        Intent intent = new Intent(context, HistoryActivity.class);
-//                        context.startActivity(intent);
-//                    }
             }
         }, new Response.ErrorListener() {
             @Override

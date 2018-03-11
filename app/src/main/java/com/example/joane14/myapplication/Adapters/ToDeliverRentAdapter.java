@@ -110,7 +110,8 @@ public class ToDeliverRentAdapter extends RecyclerView.Adapter<ToDeliverRentAdap
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(date);
         calendar.add(calendar.DATE, bookList.get(position).getRentalDetail().getDaysForRent());
-        newDate = df.format(calendar.getTime());
+        Calendar c = Calendar.getInstance();
+        newDate = df.format(c.getTime());
 
         Log.d("CurrentDate: "+newDate, "ReturnDate: "+bookList.get(position).getDateDeliver());
         if(newDate.equals(bookList.get(position).getDateDeliver())){
@@ -132,19 +133,20 @@ public class ToDeliverRentAdapter extends RecyclerView.Adapter<ToDeliverRentAdap
             }
         });
 
-
-        if(bookList.get(position).getStatus().equals("")){
-            holder.mRate.setImageResource(R.drawable.torate);
-        }else{
-            holder.mRate.setImageResource(R.drawable.notrate);
-        }
-
         final String finalNewDate = newDate;
         holder.mRate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if(currDate.equals(bookList.get(position).getDateDeliver())){
-                    delivered(bookList.get(position));
+                    AlertDialog ad = new AlertDialog.Builder(context).create();
+                    ad.setMessage("Will notify the renter of your book delivery.");
+                    ad.setButton(AlertDialog.BUTTON_POSITIVE, "Okay", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            delivered(bookList.get(position));
+                        }
+                    });
+                    ad.show();
                 }else{
                     AlertDialog alertDialog = new AlertDialog.Builder(context).create();
                     alertDialog.setTitle("Alert!");
@@ -162,10 +164,7 @@ public class ToDeliverRentAdapter extends RecyclerView.Adapter<ToDeliverRentAdap
     }
 
     private void delivered(final RentalHeader rentalHeader){
-//        String URL = "http://104.198.152.85/Koobym/rentalDetail/suggested/%d";
-//        String URL = Constants.WEB_SERVICE_URL+"rentalDetail/suggested/%d";
         String URL = Constants.RENT_DELIVERED+rentalHeader.getRentalHeaderId();
-//        URL = String.format(URL, userId);
         Log.d("deliverToReceiveURL", URL);
         Log.d("deliverToReceive", rentalHeader.toString());
 

@@ -355,17 +355,14 @@ public class RequestRentFrag extends Fragment {
 
     public void getRequestReceived(){
         RequestQueue requestQueue = Volley.newRequestQueue(getContext());
-//        String URL = "http://104.197.4.32:8080/Koobym/user/add";
         User user = new User();
         user = (User) SPUtility.getSPUtil(getContext()).getObject("USER_OBJECT", User.class);
         String URL = Constants.GET_REQUEST_RECEIVED+user.getUserId();
-//        String URL = Constants.WEB_SERVICE_URL+"user/add";
 
         Log.d("RequestRent", URL);
-        final RentalHeader rentalHeader =new RentalHeader();
 
         final Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd").registerTypeAdapter(Date.class, GsonDateDeserializer.getInstance()).create();
-        final String mRequestBody = gson.toJson(rentalHeader);
+        final String mRequestBody = gson.toJson(user);
 
 
         Log.d("LOG_VOLLEY", mRequestBody);
@@ -373,7 +370,6 @@ public class RequestRentFrag extends Fragment {
             @Override
             public void onResponse(String response) {
                 Log.i("ResponseRequestReceived", response);
-//                RentalHeader rentalHeaderModel = gson.fromJson(response, RentalHeader.class);
                 rentalHeaderList.clear();
                 rentalHeaderList.addAll(Arrays.asList(gson.fromJson(response, RentalHeader[].class)));
                 mAdapterRent.notifyDataSetChanged();
