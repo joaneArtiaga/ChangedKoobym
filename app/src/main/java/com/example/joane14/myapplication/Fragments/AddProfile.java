@@ -628,8 +628,6 @@ public class AddProfile extends Fragment implements AdapterView.OnItemClickListe
 
     public void CreateTimePicker(final int pos) {
 
-//        userDayTime = new UserDayTime();
-
         final java.util.Calendar c = java.util.Calendar.getInstance();
         int mHour = c.get(java.util.Calendar.HOUR_OF_DAY);
         int mMinute = c.get(java.util.Calendar.MINUTE);
@@ -722,8 +720,6 @@ public class AddProfile extends Fragment implements AdapterView.OnItemClickListe
         }
     }
 
-
-//    String uploadUrl = Constants.WEB_SERVICE_URL+"image/upload";
 
     private void uploadFile(final String path) {
 
@@ -825,57 +821,6 @@ public class AddProfile extends Fragment implements AdapterView.OnItemClickListe
     @Override
     public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
         fromSelected = true;
-//        if (firstLocBool == true) {
-//            Log.d("Loc", String.valueOf(places.get(i).getLatitude()));
-//            Log.d("Loc", String.valueOf(places.get(i).getLongitude()));
-//            mFirstLoc.setText(places.get(i).getDescription());
-//            firstLocBool = false;
-//            LocationModel locationModel = new LocationModel();
-//            locationModel.setLocationName(places.get(i).getDescription());
-//            locationModel.setLongitude(Double.toString(places.get(i).getLongitude()));
-//            locationModel.setLatitude(Double.toString(places.get(i).getLatitude()));
-//            locationModel.setStatus("Address");
-//            locationList.add(locationModel);
-//        }
-//
-//        if (secondLocBool == true) {
-//            Log.d("Loc", String.valueOf(places.get(i).getLatitude()));
-//            Log.d("Loc", String.valueOf(places.get(i).getLongitude()));
-//            mSecondLoc.setText(places.get(i).getDescription());
-//            secondLocBool = false;
-//            LocationModel locationModel = new LocationModel();
-//            locationModel.setLocationName(places.get(i).getDescription());
-//            locationModel.setLongitude(Double.toString(places.get(i).getLongitude()));
-//            locationModel.setLatitude(Double.toString(places.get(i).getLatitude()));
-//            locationModel.setStatus("MeetUp");
-//            locationList.add(locationModel);
-//        }
-//
-//        if (thirdLocBool == true) {
-//            Log.d("Loc", String.valueOf(places.get(i).getLatitude()));
-//            Log.d("Loc", String.valueOf(places.get(i).getLongitude()));
-//            mThirdLoc.setText(places.get(i).getDescription());
-//            thirdLocBool = false;
-//            LocationModel locationModel = new LocationModel();
-//            locationModel.setLocationName(places.get(i).getDescription());
-//            locationModel.setLongitude(Double.toString(places.get(i).getLongitude()));
-//            locationModel.setLatitude(Double.toString(places.get(i).getLatitude()));
-//            locationModel.setStatus("MeetUp");
-//            locationList.add(locationModel);
-//        }
-//
-//        if (addressBool == true) {
-//            Log.d("Loc", String.valueOf(places.get(i).getLatitude()));
-//            Log.d("Loc", places.get(i).getLongitude()+"");
-//            mAddress.setText(places.get(i).getDescription());
-//            addressBool = false;
-//            LocationModel locationModel = new LocationModel();
-//            locationModel.setLocationName(places.get(i).getDescription());
-//            locationModel.setLongitude(Double.toString(places.get(i).getLongitude()));
-//            locationModel.setLatitude(Double.toString(places.get(i).getLatitude()));
-//            locationModel.setStatus("MeetUp");
-//            locationList.add(locationModel);
-//        }
         locationName = places.get(i).getDescription();
         placeAutoCompletePopupWindow.dismiss();
         PlacesUtility.getPlaceDetails(getActivity(), places.get(i).getId(), getPlaceDetails);

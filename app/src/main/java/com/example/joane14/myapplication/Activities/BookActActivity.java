@@ -1,7 +1,6 @@
 package com.example.joane14.myapplication.Activities;
 
 import android.content.Intent;
-import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.support.annotation.NonNull;
@@ -20,13 +19,10 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.example.joane14.myapplication.Adapters.ToDeliverRentAdapter;
-import com.example.joane14.myapplication.Fragments.DisplayBookReview;
 import com.example.joane14.myapplication.Fragments.ToDeliver;
 import com.example.joane14.myapplication.Fragments.ToDeliverAuctionFragment;
 import com.example.joane14.myapplication.Fragments.ToDeliverRentFragment;
@@ -91,27 +87,33 @@ public class BookActActivity extends AppCompatActivity
             Picasso.with(BookActActivity.this).load(userModel.getImageFilename()).fit().into(profileImg);
         }
 
-        ImageButton mDeliver = (ImageButton) findViewById(R.id.toDeliverBA);
-        ImageButton mReceive = (ImageButton) findViewById(R.id.toReceiveBA);
-        ImageButton mReturnn = (ImageButton) findViewById(R.id.toReturnBA);
+        final ImageButton mDeliver = (ImageButton) findViewById(R.id.toDeliverBA);
+        final ImageButton mReceive = (ImageButton) findViewById(R.id.toReceiveBA);
+        final ImageButton mReturnn = (ImageButton) findViewById(R.id.toReturnBA);
         final TextView tvDeliver = (TextView) findViewById(R.id.tvBAdeliver);
         final TextView tvReceive = (TextView) findViewById(R.id.tvBAreceive);
         final TextView tvReturn = (TextView) findViewById(R.id.tvBAreturn);
 
         FragmentTransaction fragT = getSupportFragmentManager().beginTransaction();
-        tvDeliver.setTextColor(ContextCompat.getColor(BookActActivity.this, R.color.colorLightOrange));
-        tvReceive.setTextColor(ContextCompat.getColor(BookActActivity.this, R.color.colorDark));
-        tvReturn.setTextColor(ContextCompat.getColor(BookActActivity.this, R.color.colorDark));
+        tvDeliver.setTextColor(ContextCompat.getColor(BookActActivity.this, R.color.colorOrange));
+        tvReceive.setTextColor(ContextCompat.getColor(BookActActivity.this, R.color.colorLightOrange));
+        tvReturn.setTextColor(ContextCompat.getColor(BookActActivity.this, R.color.colorLightOrange));
+        mReceive.setImageResource(R.drawable.lighttoreceive);
+        mDeliver.setImageResource(R.drawable.newtodeliver);
+        mReturnn.setImageResource(R.drawable.lighttoreceive);
         fragT.replace(R.id.fragment_container_book_activity, ToDeliver.newInstance());
         fragT.commit();
 
         mDeliver.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                mReceive.setImageResource(R.drawable.lighttoreceive);
+                mDeliver.setImageResource(R.drawable.newtodeliver);
+                mReturnn.setImageResource(R.drawable.lighttoreturn);
                 FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-                tvDeliver.setTextColor(ContextCompat.getColor(BookActActivity.this, R.color.colorLightOrange));
-                tvReceive.setTextColor(ContextCompat.getColor(BookActActivity.this, R.color.colorDark));
-                tvReturn.setTextColor(ContextCompat.getColor(BookActActivity.this, R.color.colorDark));
+                tvDeliver.setTextColor(ContextCompat.getColor(BookActActivity.this, R.color.colorOrange));
+                tvReceive.setTextColor(ContextCompat.getColor(BookActActivity.this, R.color.colorLightOrange));
+                tvReturn.setTextColor(ContextCompat.getColor(BookActActivity.this, R.color.colorLightOrange));
                 ft.replace(R.id.fragment_container_book_activity, ToDeliver.newInstance());
                 ft.commit();
             }
@@ -120,10 +122,13 @@ public class BookActActivity extends AppCompatActivity
         mReceive.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                mReceive.setImageResource(R.drawable.newtoreceive);
+                mDeliver.setImageResource(R.drawable.lighttodeliver);
+                mReturnn.setImageResource(R.drawable.lighttoreturn);
                 FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-                tvDeliver.setTextColor(ContextCompat.getColor(BookActActivity.this, R.color.colorDark));
-                tvReceive.setTextColor(ContextCompat.getColor(BookActActivity.this, R.color.colorLightOrange));
-                tvReturn.setTextColor(ContextCompat.getColor(BookActActivity.this, R.color.colorDark));
+                tvDeliver.setTextColor(ContextCompat.getColor(BookActActivity.this, R.color.colorLightOrange));
+                tvReceive.setTextColor(ContextCompat.getColor(BookActActivity.this, R.color.colorOrange));
+                tvReturn.setTextColor(ContextCompat.getColor(BookActActivity.this, R.color.colorLightOrange));
                 ft.replace(R.id.fragment_container_book_activity, ToReceive.newInstance());
                 ft.commit();
             }
@@ -132,10 +137,13 @@ public class BookActActivity extends AppCompatActivity
         mReturnn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                mReceive.setImageResource(R.drawable.lighttoreceive);
+                mDeliver.setImageResource(R.drawable.lighttodeliver);
+                mReturnn.setImageResource(R.drawable.newtoreturn);
                 FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-                tvDeliver.setTextColor(ContextCompat.getColor(BookActActivity.this, R.color.colorDark));
-                tvReceive.setTextColor(ContextCompat.getColor(BookActActivity.this, R.color.colorDark));
-                tvReturn.setTextColor(ContextCompat.getColor(BookActActivity.this, R.color.colorLightOrange));
+                tvDeliver.setTextColor(ContextCompat.getColor(BookActActivity.this, R.color.colorLightOrange));
+                tvReceive.setTextColor(ContextCompat.getColor(BookActActivity.this, R.color.colorLightOrange));
+                tvReturn.setTextColor(ContextCompat.getColor(BookActActivity.this, R.color.colorOrange));
                 ft.replace(R.id.fragment_container_book_activity, ToReturnFrag.newInstance());
                 ft.commit();
             }

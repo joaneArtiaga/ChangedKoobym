@@ -10,21 +10,14 @@
     tools:context="com.example.joane14.myapplication.Activities.BookActActivity"
     tools:showIn="@layout/app_bar_book_activity">
 
-    <!--<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"-->
-        <!--android:layout_width="match_parent"-->
-        <!--android:layout_height="match_parent"-->
-        <!--android:fillViewport="true">-->
-        <!---->
-    <!--</ScrollView>-->
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="65dp"
+        android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:layout_gravity="center"
         android:gravity="center"
-        android:layout_marginTop="10dp"
-        android:background="@color/colorWhite">
+        android:layout_marginTop="5dp">
 
         <LinearLayout
             android:layout_width="100dp"
@@ -35,12 +28,12 @@
             <ImageButton
                 android:id="@+id/toDeliverBA"
                 android:layout_gravity="center_horizontal"
-                android:layout_width="30dp"
-                android:layout_height="30dp"
+                android:layout_width="60dp"
+                android:layout_height="80dp"
                 android:background="@null"
                 android:adjustViewBounds="true"
                 android:scaleType="fitXY"
-                android:src="@drawable/todeliver"/>
+                android:src="@drawable/lighttodeliver"/>
 
             <TextView
                 android:id="@+id/tvBAdeliver"
@@ -59,12 +52,12 @@
             <ImageButton
                 android:id="@+id/toReceiveBA"
                 android:layout_gravity="center_horizontal"
-                android:layout_width="30dp"
-                android:layout_height="30dp"
+                android:layout_width="60dp"
+                android:layout_height="80dp"
                 android:background="@null"
                 android:adjustViewBounds="true"
                 android:scaleType="fitXY"
-                android:src="@drawable/toreceive"/>
+                android:src="@drawable/lighttoreceive"/>
 
             <TextView
                 android:id="@+id/tvBAreceive"
@@ -82,13 +75,13 @@
 
             <ImageButton
                 android:id="@+id/toReturnBA"
-                android:layout_width="30dp"
-                android:layout_height="30dp"
+                android:layout_width="60dp"
+                android:layout_height="80dp"
                 android:layout_gravity="center_horizontal"
                 android:adjustViewBounds="true"
                 android:background="@null"
                 android:scaleType="fitXY"
-                android:src="@drawable/toreturn" />
+                android:src="@drawable/lighttoreturn" />
 
 
             <TextView

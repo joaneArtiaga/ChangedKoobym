@@ -11,28 +11,26 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="65dp"
+        android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:layout_gravity="center"
-        android:gravity="center"
-        android:layout_marginTop="10dp"
-        android:background="@color/colorWhite">
+        android:gravity="center">
 
         <LinearLayout
             android:layout_width="100dp"
             android:layout_height="match_parent"
             android:orientation="vertical"
-            android:padding="10dp">
+            android:padding="5dp">
 
             <ImageButton
                 android:id="@+id/rentHistory"
                 android:layout_gravity="center_horizontal"
-                android:layout_width="30dp"
-                android:layout_height="30dp"
+                android:layout_width="70dp"
+                android:layout_height="80dp"
                 android:background="@null"
                 android:adjustViewBounds="true"
                 android:scaleType="fitXY"
-                android:src="@drawable/rentrequest"/>
+                android:src="@drawable/frent"/>
 
             <TextView
                 android:id="@+id/tvRentHistory"
@@ -48,17 +46,17 @@
             android:layout_width="100dp"
             android:layout_height="match_parent"
             android:orientation="vertical"
-            android:padding="10dp">
+            android:padding="5dp">
 
             <ImageButton
                 android:id="@+id/swapHistory"
                 android:layout_gravity="center_horizontal"
-                android:layout_width="30dp"
-                android:layout_height="30dp"
+                android:layout_width="70dp"
+                android:layout_height="80dp"
                 android:background="@null"
                 android:adjustViewBounds="true"
                 android:scaleType="fitXY"
-                android:src="@drawable/swaprequest"/>
+                android:src="@drawable/fswap"/>
 
             <TextView
                 android:id="@+id/tvSwapHistory"
@@ -74,18 +72,17 @@
             android:layout_width="100dp"
             android:layout_height="match_parent"
             android:orientation="vertical"
-            android:padding="10dp">
+            android:padding="5dp">
 
             <ImageButton
                 android:id="@+id/auctionHistory"
-                android:layout_width="30dp"
-                android:layout_height="30dp"
+                android:layout_width="70dp"
+                android:layout_height="80dp"
                 android:layout_gravity="center_horizontal"
                 android:adjustViewBounds="true"
                 android:background="@null"
                 android:scaleType="fitXY"
-                android:src="@drawable/auction" />
-
+                android:src="@drawable/fauction" />
 
             <TextView
                 android:id="@+id/tvAuctionHistory"

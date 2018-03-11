@@ -123,17 +123,20 @@ public class HistoryActivity extends AppCompatActivity
             Picasso.with(HistoryActivity.this).load(userModel.getImageFilename()).fit().into(profileImg);
         }
 
-        ImageButton mRent = (ImageButton) findViewById(R.id.rentHistory);
-        ImageButton mSwap = (ImageButton) findViewById(R.id.swapHistory);
-        ImageButton mAuction = (ImageButton) findViewById(R.id.auctionHistory);
+        final ImageButton mRent = (ImageButton) findViewById(R.id.rentHistory);
+        final ImageButton mSwap = (ImageButton) findViewById(R.id.swapHistory);
+        final ImageButton mAuction = (ImageButton) findViewById(R.id.auctionHistory);
         final TextView tvRent = (TextView) findViewById(R.id.tvRentHistory);
         final TextView tvSwap = (TextView) findViewById(R.id.tvSwapHistory);
         final TextView tvAuction = (TextView) findViewById(R.id.tvAuctionHistory);
 
         getNotificationCount();
-        tvRent.setTextColor(ContextCompat.getColor(HistoryActivity.this, R.color.colorLightOrange));
-        tvSwap.setTextColor(ContextCompat.getColor(HistoryActivity.this, R.color.colorDark));
-        tvAuction.setTextColor(ContextCompat.getColor(HistoryActivity.this, R.color.colorDark));
+        mRent.setImageResource(R.drawable.darkerrent);
+        mSwap.setImageResource(R.drawable.fswap);
+        mAuction.setImageResource(R.drawable.fauction);
+        tvRent.setTextColor(ContextCompat.getColor(HistoryActivity.this, R.color.colorOrange));
+        tvSwap.setTextColor(ContextCompat.getColor(HistoryActivity.this, R.color.colorLightOrange));
+        tvAuction.setTextColor(ContextCompat.getColor(HistoryActivity.this, R.color.colorLightOrange));
 
         FragmentTransaction fragt = getSupportFragmentManager().beginTransaction();
         fragt.replace(R.id.fragment_history_container, HistoryRent.newInstance());
@@ -143,10 +146,13 @@ public class HistoryActivity extends AppCompatActivity
             @Override
             public void onClick(View v) {
                 Log.d("HistoryBtn", "Rent");
-                tvRent.setTextColor(ContextCompat.getColor(HistoryActivity.this, R.color.colorLightOrange));
-                tvSwap.setTextColor(ContextCompat.getColor(HistoryActivity.this, R.color.colorDark));
-                tvAuction.setTextColor(ContextCompat.getColor(HistoryActivity.this, R.color.colorDark));
 
+                mRent.setImageResource(R.drawable.darkerrent);
+                mSwap.setImageResource(R.drawable.fswap);
+                mAuction.setImageResource(R.drawable.fauction);
+                tvRent.setTextColor(ContextCompat.getColor(HistoryActivity.this, R.color.colorOrange));
+                tvSwap.setTextColor(ContextCompat.getColor(HistoryActivity.this, R.color.colorLightOrange));
+                tvAuction.setTextColor(ContextCompat.getColor(HistoryActivity.this, R.color.colorLightOrange));
                 FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
                 ft.replace(R.id.fragment_history_container, HistoryRent.newInstance());
                 ft.commit();
@@ -157,9 +163,13 @@ public class HistoryActivity extends AppCompatActivity
             @Override
             public void onClick(View v) {
                 Log.d("HistoryBtn", "Swap");
-                tvRent.setTextColor(ContextCompat.getColor(HistoryActivity.this, R.color.colorDark));
-                tvSwap.setTextColor(ContextCompat.getColor(HistoryActivity.this, R.color.colorLightOrange));
-                tvAuction.setTextColor(ContextCompat.getColor(HistoryActivity.this, R.color.colorDark));
+
+                mRent.setImageResource(R.drawable.frent);
+                mSwap.setImageResource(R.drawable.darkerswap);
+                mAuction.setImageResource(R.drawable.fauction);
+                tvRent.setTextColor(ContextCompat.getColor(HistoryActivity.this, R.color.colorLightOrange));
+                tvSwap.setTextColor(ContextCompat.getColor(HistoryActivity.this, R.color.colorOrange));
+                tvAuction.setTextColor(ContextCompat.getColor(HistoryActivity.this, R.color.colorLightOrange));
 
                 FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
                 ft.replace(R.id.fragment_history_container, HistorySwap.newInstance());
@@ -171,9 +181,13 @@ public class HistoryActivity extends AppCompatActivity
             @Override
             public void onClick(View v) {
                 Log.d("HistoryBtn", "Auction");
-                tvRent.setTextColor(ContextCompat.getColor(HistoryActivity.this, R.color.colorDark));
-                tvSwap.setTextColor(ContextCompat.getColor(HistoryActivity.this, R.color.colorDark));
-                tvAuction.setTextColor(ContextCompat.getColor(HistoryActivity.this, R.color.colorLightOrange));
+
+                mRent.setImageResource(R.drawable.frent);
+                mSwap.setImageResource(R.drawable.fswap);
+                mAuction.setImageResource(R.drawable.darkerauction);
+                tvRent.setTextColor(ContextCompat.getColor(HistoryActivity.this, R.color.colorLightOrange));
+                tvSwap.setTextColor(ContextCompat.getColor(HistoryActivity.this, R.color.colorLightOrange));
+                tvAuction.setTextColor(ContextCompat.getColor(HistoryActivity.this, R.color.colorOrange));
 
                 FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
                 ft.replace(R.id.fragment_history_container, HistoryAuction.newInstance());

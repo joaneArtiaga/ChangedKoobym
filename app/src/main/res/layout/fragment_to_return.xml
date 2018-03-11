@@ -5,16 +5,6 @@
     android:orientation="vertical"
     tools:context="com.example.joane14.myapplication.Fragments.ToReturnFrag">
 
-
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="To Return"
-        android:textSize="15dp"
-        android:layout_marginLeft="5dp"
-        android:background="@color/colorLightOrange"
-        android:textStyle="bold|italic"/>
-
     <android.support.v7.widget.RecyclerView
         android:id="@+id/my_recycler_view_to_return"
         android:layout_width="match_parent"

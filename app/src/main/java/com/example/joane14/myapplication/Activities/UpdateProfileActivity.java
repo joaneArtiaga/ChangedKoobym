@@ -20,6 +20,7 @@ import android.widget.ListPopupWindow;
 import android.widget.TextView;
 
 import com.android.volley.AuthFailureError;
+import com.android.volley.NetworkResponse;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
@@ -28,8 +29,11 @@ import com.android.volley.VolleyLog;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.bumptech.glide.Glide;
+import com.esafirm.imagepicker.features.ImagePicker;
+import com.esafirm.imagepicker.model.Image;
 import com.example.joane14.myapplication.Adapters.PlaceAutoCompleteAdapter;
 import com.example.joane14.myapplication.Fragments.Constants;
+import com.example.joane14.myapplication.Fragments.VolleyMultipartRequest;
 import com.example.joane14.myapplication.Model.Book;
 import com.example.joane14.myapplication.Model.LocationModel;
 import com.example.joane14.myapplication.Model.Place;
@@ -40,18 +44,24 @@ import com.example.joane14.myapplication.Utilities.SPUtility;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.squareup.picasso.Picasso;
 
+import org.apache.commons.io.FileUtils;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.File;
+import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 
 import static android.util.Log.d;
 
@@ -69,7 +79,12 @@ public class UpdateProfileActivity extends AppCompatActivity implements AdapterV
     PlaceAutoCompleteAdapter placeAutoCompleteAdapter;
     List<Place> places;
     Boolean mFirstBool, mSecondBool, mThirdBool, fromSelected, mAddressBool;
+    int mAddressPos;
     List<LocationModel> location;
+    List<Integer> locPos;
+    User userToPut;
+    User user;
+    ImageView ivProfile;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -78,11 +93,16 @@ public class UpdateProfileActivity extends AppCompatActivity implements AdapterV
 
         calendar = Calendar.getInstance();
 
+        mAddressPos = 0;
+        userToPut = new User();
+
         fromSelected =false;
         mFirstBool = false;
         mSecondBool = false;
         mThirdBool = false;
         mAddressBool = false;
+
+        locPos = new ArrayList<Integer>();
 
         final SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 
@@ -94,13 +114,13 @@ public class UpdateProfileActivity extends AppCompatActivity implements AdapterV
         final EditText mEmail = (EditText) findViewById(R.id.etMailUP);
         final EditText mContact = (EditText) findViewById(R.id.etContactUP);
         Button mBtnUpdate = (Button) findViewById(R.id.btnUpdateProfile);
-        ImageView ivProfile = (ImageView) findViewById(R.id.ivProfileUP);
+        ivProfile = (ImageView) findViewById(R.id.ivProfileUP);
 
         mFirst = (AutoCompleteTextView) findViewById(R.id.location1UP);
         mSecond = (AutoCompleteTextView) findViewById(R.id.location2UP);
         mThird = (AutoCompleteTextView) findViewById(R.id.location3UP);
 
-        User user = new User();
+        user = new User();
 
         user = (User) SPUtility.getSPUtil(this).getObject("USER_OBJECT", User.class);
 
@@ -123,10 +143,26 @@ public class UpdateProfileActivity extends AppCompatActivity implements AdapterV
 
         location = user.getLocationArray();
 
-        mFirst.setText(location.get(0).getLocationName());
-        mSecond.setText(location.get(1).getLocationName());
-        mThird.setText(location.get(2).getLocationName());
+        for(int init=0; init<location.size(); init++){
+            if(location.get(init).getStatus().equals("Addresss")){
+                mAddressPos = init;
+            }else{
+                locPos.add(init);
+            }
+        }
 
+        mFirst.setText(location.get(locPos.get(0)).getLocationName());
+        mSecond.setText(location.get(locPos.get(1)).getLocationName());
+        mThird.setText(location.get(locPos.get(2)).getLocationName());
+
+        Glide.with(this).load(user.getImageFilename()).centerCrop().into(ivProfile);
+
+        ivProfile.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                openImageChooser();
+            }
+        });
         mAddress.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -246,8 +282,6 @@ public class UpdateProfileActivity extends AppCompatActivity implements AdapterV
             }
         });
 
-        Glide.with(this).load(user.getImageFilename()).centerCrop().into(ivProfile);
-
         mBirtdate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -271,11 +305,10 @@ public class UpdateProfileActivity extends AppCompatActivity implements AdapterV
 
         };
         final User finalUser = user;
+        final User finalUser1 = user;
         mBtnUpdate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
-                User userToPut = new User();
 
                 userToPut = finalUser;
                 userToPut.setUserFname(mFirstName.getText().toString());
@@ -289,7 +322,11 @@ public class UpdateProfileActivity extends AppCompatActivity implements AdapterV
                 userToPut.setUsername(mUserName.getText().toString());
                 userToPut.setEmail(mEmail.getText().toString());
                 userToPut.setPhoneNumber(mContact.getText().toString());
+                userToPut.setLocationArray(location);
 
+                userToPut.setDayTimeModel(finalUser1.getDayTimeModel());
+                userToPut.setGenreArray(finalUser1.getGenreArray());
+                userToPut.setImageFilename(finalUser1.getImageFilename());
                 updateUser(userToPut);
             }
         });
@@ -306,32 +343,75 @@ public class UpdateProfileActivity extends AppCompatActivity implements AdapterV
         }
     };
 
-    Response.Listener<String> getPlaceDetails = new Response.Listener<String>() {
-        @Override
-        public void onResponse(String response) {
-            Log.d("place details = ", response);
-            try {
-                JSONObject object = new JSONObject(response);
-                JSONObject obj = object.getJSONObject("result");
-                obj = obj.getJSONObject("geometry");
-                obj = obj.getJSONObject("location");
-                Log.d("lat", Double.toString(obj.getDouble("lat")));
-                Log.d("lng", Double.toString(obj.getDouble("lng")));
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
-        }
-    };
-
     private void changeSuggestedPlaces() {
         placeAutoCompletePopupWindow.show();
         placeAutoCompleteAdapter.notifyDataSetChanged();
         Log.d("size of result", Integer.toString(places.size()));
     }
 
+    private void openImageChooser() {
+        ImagePicker.create(this)
+                .single()
+                .start(1);
+    }
+
+    private void uploadFile(final String path) {
+
+        String uploadUrl = Constants.UPLOAD_IMAGE;
+        RequestQueue requestQueue = Volley.newRequestQueue(getApplicationContext());
+        VolleyMultipartRequest multipartRequest = new VolleyMultipartRequest(Request.Method.POST, uploadUrl, new Response.Listener<NetworkResponse>() {
+            @Override
+            public void onResponse(NetworkResponse response) {
+                String resultResponse = new String(response.data);
+                // parse success output
+                Log.d("RESULT OF UOPLOAD", resultResponse);
+                user.setImageFilename(resultResponse);
+
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                error.printStackTrace();
+            }
+        }) {
+            @Override
+            protected Map<String, String> getParams() {
+                Map<String, String> params = new HashMap<>();
+
+                return params;
+            }
+
+            @Override
+            protected Map<String, DataPart> getByteData() {
+                Map<String, DataPart> params = new HashMap<>();
+                try {
+                    File file = new File(path);
+                    Log.d("FILE NAME = ", file.getName());
+                    params.put("file", new DataPart(file.getName(), FileUtils.readFileToByteArray(new File(path)), "image/jpeg"));
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+
+                return params;
+            }
+        };
+        requestQueue.add(multipartRequest);
+    }
+
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        Log.d("onActivityResult", "inside");
+        if (requestCode == 1 && resultCode == RESULT_OK && data != null) {
+            ArrayList<Image> images = (ArrayList<Image>) ImagePicker.getImages(data);
+            for (Image image : images) {
+                Picasso.with(getApplicationContext()).load(new File(image.getPath())).fit().into(ivProfile);
+                final String path = image.getPath();
+                uploadFile(path);
+            }
+        }
+    }
+
     public void updateUser(final User userModel){
         RequestQueue requestQueue = Volley.newRequestQueue(this);
-//        String URL = "http://104.197.4.32:8080/Koobym/user/add";
         String URL = Constants.UPDATE_USER;
 
         final User user = (User) SPUtility.getSPUtil(UpdateProfileActivity.this).getObject("USER_OBJECT", User.class);
@@ -394,54 +474,72 @@ public class UpdateProfileActivity extends AppCompatActivity implements AdapterV
         Log.d("sdf", sdf.format(calendar.getTime()).toString());
     }
 
+    String locationName;
+
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         fromSelected = true;
-        if (mFirstBool == true) {
-            mFirst.setText(places.get(position).getDescription());
-            mFirstBool = false;
-            LocationModel locationModel = new LocationModel();
-            locationModel.setLocationName(places.get(position).getDescription());
-            locationModel.setLongitude(Double.toString(places.get(position).getLongitude()));
-            locationModel.setLatitude(Double.toString(places.get(position).getLatitude()));
-            locationModel.setStatus("MeetUp");
-            location.add(locationModel);
-        }
 
-        if (mSecondBool == true) {
-            mSecond.setText(places.get(position).getDescription());
-            mSecondBool = false;
-            LocationModel locationModel = new LocationModel();
-            locationModel.setLocationName(places.get(position).getDescription());
-            locationModel.setLongitude(Double.toString(places.get(position).getLongitude()));
-            locationModel.setLatitude(Double.toString(places.get(position).getLatitude()));
-            locationModel.setStatus("MeetUp");
-            location.add(locationModel);
-        }
-
-        if (mThirdBool == true) {
-            mThird.setText(places.get(position).getDescription());
-            mThirdBool = false;
-            LocationModel locationModel = new LocationModel();
-            locationModel.setLocationName(places.get(position).getDescription());
-            locationModel.setLongitude(Double.toString(places.get(position).getLongitude()));
-            locationModel.setLatitude(Double.toString(places.get(position).getLatitude()));
-            locationModel.setStatus("MeetUp");
-            location.add(locationModel);
-        }
-
-        if (mAddressBool == true) {
-            mAddress.setText(places.get(position).getDescription());
-            mAddressBool = false;
-            LocationModel locationModel = new LocationModel();
-            locationModel.setLocationName(places.get(position).getDescription());
-            locationModel.setLongitude(Double.toString(places.get(position).getLongitude()));
-            locationModel.setLatitude(Double.toString(places.get(position).getLatitude()));
-            locationModel.setStatus("MeetUp");
-            location.add(locationModel);
-        }
-
+        locationName = places.get(position).getDescription();
         placeAutoCompletePopupWindow.dismiss();
         PlacesUtility.getPlaceDetails(UpdateProfileActivity.this, places.get(position).getId(), getPlaceDetails);
     }
+
+    Response.Listener<String> getPlaceDetails = new Response.Listener<String>() {
+        @Override
+        public void onResponse(String response) {
+            Log.d("place details = ", response);
+            try {
+                JSONObject object = new JSONObject(response);
+                JSONObject obj = object.getJSONObject("result");
+                obj = obj.getJSONObject("geometry");
+                obj = obj.getJSONObject("location");
+                Log.d("lat", Double.toString(obj.getDouble("lat")));
+                Log.d("lng", Double.toString(obj.getDouble("lng")));
+
+                if (mFirstBool == true) {
+                    Log.d("Loc", Double.toString(obj.getDouble("lat")));
+                    Log.d("Loc", Double.toString(obj.getDouble("lng")));
+                    mFirst.setText(locationName);
+                    mFirstBool = false;
+                    location.get(locPos.get(0)).setLocationName(locationName);
+                    location.get(locPos.get(0)).setLongitude(Double.toString(obj.getDouble("lng")));
+                    location.get(locPos.get(0)).setLatitude(Double.toString(obj.getDouble("lat")));
+                }
+
+                if (mSecondBool == true) {
+                    Log.d("Loc", Double.toString(obj.getDouble("lat")));
+                    Log.d("Loc", Double.toString(obj.getDouble("lng")));
+                    mSecond.setText(locationName);
+                    mSecondBool = false;
+                    location.get(locPos.get(1)).setLocationName(locationName);
+                    location.get(locPos.get(1)).setLongitude(Double.toString(obj.getDouble("lng")));
+                    location.get(locPos.get(1)).setLatitude(Double.toString(obj.getDouble("lat")));
+                }
+
+                if (mThirdBool == true) {
+                    Log.d("Loc", Double.toString(obj.getDouble("lat")));
+                    Log.d("Loc", Double.toString(obj.getDouble("lng")));
+                    mThird.setText(locationName);
+                    mThirdBool = false;
+                    location.get(locPos.get(2)).setLocationName(locationName);
+                    location.get(locPos.get(2)).setLongitude(Double.toString(obj.getDouble("lng")));
+                    location.get(locPos.get(2)).setLatitude(Double.toString(obj.getDouble("lat")));
+                }
+
+                if (mAddressBool == true) {
+                    Log.d("Loc", Double.toString(obj.getDouble("lng")));
+                    Log.d("Loc", Double.toString(obj.getDouble("lng")));
+                    mAddress.setText(locationName);
+                    mAddressBool = false;
+                    location.get(mAddressPos).setLocationName(locationName);
+                    location.get(mAddressPos).setLongitude(Double.toString(obj.getDouble("lng")));
+                    location.get(mAddressPos).setLatitude(Double.toString(obj.getDouble("lat")));
+                }
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
+    };
+
 }

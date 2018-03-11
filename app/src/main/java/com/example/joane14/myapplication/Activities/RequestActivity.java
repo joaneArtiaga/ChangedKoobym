@@ -119,8 +119,8 @@ public class RequestActivity extends AppCompatActivity
 
         getNotificationCount();
 
-        ImageButton mRent = (ImageButton) findViewById(R.id.rentRequest);
-        ImageButton mSwap = (ImageButton) findViewById(R.id.swapRequest);
+        final ImageButton mRent = (ImageButton) findViewById(R.id.rentRequest);
+        final ImageButton mSwap = (ImageButton) findViewById(R.id.swapRequest);
         final TextView tvRent = (TextView) findViewById(R.id.tvRentRequest);
         final TextView tvSwap = (TextView) findViewById(R.id.tvSwapRequest);
 
@@ -128,14 +128,18 @@ public class RequestActivity extends AppCompatActivity
         ft.replace(R.id.fragment_container_request, RequestRentFrag.newInstance());
         ft.commit();
 
-
-        tvRent.setTextColor(ContextCompat.getColor(RequestActivity.this, R.color.colorLightOrange));
+        mRent.setImageResource(R.drawable.darkerrent);
+        mSwap.setImageResource(R.drawable.fswap);
+        tvRent.setTextColor(ContextCompat.getColor(RequestActivity.this, R.color.colorOrange));
+        tvSwap.setTextColor(ContextCompat.getColor(RequestActivity.this, R.color.colorLightOrange));
 
         mRent.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                tvRent.setTextColor(ContextCompat.getColor(RequestActivity.this, R.color.colorLightOrange));
-                tvSwap.setTextColor(ContextCompat.getColor(RequestActivity.this, R.color.colorDark));
+                mRent.setImageResource(R.drawable.darkerrent);
+                mSwap.setImageResource(R.drawable.fswap);
+                tvRent.setTextColor(ContextCompat.getColor(RequestActivity.this, R.color.colorOrange));
+                tvSwap.setTextColor(ContextCompat.getColor(RequestActivity.this, R.color.colorLightOrange));
                 FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
                 fragmentTransaction.replace(R.id.fragment_container_request, RequestRentFrag.newInstance());
                 fragmentTransaction.commit();
@@ -145,8 +149,10 @@ public class RequestActivity extends AppCompatActivity
         mSwap.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                tvRent.setTextColor(ContextCompat.getColor(RequestActivity.this, R.color.colorDark));
-                tvSwap.setTextColor(ContextCompat.getColor(RequestActivity.this, R.color.colorLightOrange));
+                mRent.setImageResource(R.drawable.frent);
+                mSwap.setImageResource(R.drawable.darkerswap);
+                tvRent.setTextColor(ContextCompat.getColor(RequestActivity.this, R.color.colorLightOrange));
+                tvSwap.setTextColor(ContextCompat.getColor(RequestActivity.this, R.color.colorOrange));
                 FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
                 fragmentTransaction.replace(R.id.fragment_container_request, RequestSwapFrag.newInstance());
                 fragmentTransaction.commit();

@@ -400,15 +400,14 @@
 
             <Button
                 android:id="@+id/btnNextAdd"
-                android:layout_width="200dp"
-                android:layout_height="50dp"
+                android:layout_width="150dp"
+                android:layout_height="30dp"
                 android:layout_gravity="center"
                 android:layout_marginBottom="20dp"
                 android:layout_marginTop="15dp"
-                android:background="@drawable/rounded_edittext"
-                android:backgroundTint="@color/colorLightOrange"
+                android:background="@drawable/rounded_button"
                 android:text="Create Account"
-                android:textColor="@color/colorDark" />
+                android:textColor="@color/colorWhite"/>
 
         </LinearLayout>
 
