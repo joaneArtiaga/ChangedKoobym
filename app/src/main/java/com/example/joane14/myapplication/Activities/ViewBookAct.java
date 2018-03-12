@@ -154,6 +154,7 @@ public class ViewBookAct extends AppCompatActivity implements
         Button mRentBtn = (Button) findViewById(R.id.btnVbRent);
         TextView mContent = (TextView) findViewById(R.id.vbContent);
         TextView mCondition = (TextView) findViewById(R.id.vbCondition);
+        TextView mGenre = (TextView) findViewById(R.id.vbGenre);
         ImageView mBookImg = (ImageView) findViewById(R.id.vbBookPic);
         LinearLayout buttonLinear = (LinearLayout) findViewById(R.id.button_ll);
         LinearLayout lockInLinear = (LinearLayout) findViewById(R.id.lockInLinear);
@@ -176,6 +177,20 @@ public class ViewBookAct extends AppCompatActivity implements
                 buttonLinear.setVisibility(View.GONE);
             }
 
+            String genreStr = "";
+            int genreSize = rentalDetailModel.getBookOwner().getBookObj().getBookGenre().size();
+            if(genreSize>1){
+                for(int init=0;init<genreSize; init++){
+                    genreStr = genreStr + rentalDetailModel.getBookOwner().getBookObj().getBookGenre().get(init).getGenreName();
+                    if(genreSize-1>init){
+                        genreStr = genreStr + ", ";
+                    }
+                }
+            }else{
+                genreStr = rentalDetailModel.getBookOwner().getBookObj().getBookGenre().get(0).getGenreName();
+            }
+
+            mGenre.setText(genreStr);
             String author = "";
 
             if(rentalDetailModel.getBookOwner().getBookObj().getBookAuthor().size()!=0){
@@ -197,7 +212,7 @@ public class ViewBookAct extends AppCompatActivity implements
             Glide.with(this).load(rentalDetailModel.getBookOwner().getBookObj().getBookFilename()).centerCrop().into(mBookImg);
             mContent.setText(rentalDetailModel.getBookOwner().getBookObj().getBookDescription());
             mCondition.setText(rentalDetailModel.getBookOwner().getStatusDescription());
-            makeTextViewResizable(mContent, 5, "See More", true);
+            makeTextViewResizable(mContent, 5, "View More", true);
 
             mRating.setRating(Float.parseFloat(String.valueOf(rentalDetailModel.getBookOwner().getRate())));
 
@@ -249,6 +264,20 @@ public class ViewBookAct extends AppCompatActivity implements
                 buttonLinear.setVisibility(View.GONE);
             }
 
+            String genreStr = "";
+            int genreSize = swapDetail.getBookOwner().getBookObj().getBookGenre().size();
+            if(genreSize>1){
+                for(int init=0;init<genreSize; init++){
+                    genreStr = genreStr + swapDetail.getBookOwner().getBookObj().getBookGenre().get(init).getGenreName();
+                    if(genreSize-1>init){
+                        genreStr = genreStr + ", ";
+                    }
+                }
+            }else{
+                genreStr = swapDetail.getBookOwner().getBookObj().getBookGenre().get(0).getGenreName();
+            }
+
+            mGenre.setText(genreStr);
             String author = "";
 
             if(swapDetail.getBookOwner().getBookObj().getBookAuthor().size()!=0){
@@ -270,25 +299,10 @@ public class ViewBookAct extends AppCompatActivity implements
             Glide.with(this).load(swapDetail.getBookOwner().getBookObj().getBookFilename()).centerCrop().into(mBookImg);
             mContent.setText(swapDetail.getBookOwner().getBookObj().getBookDescription());
             mCondition.setText(swapDetail.getBookOwner().getStatusDescription());
-            makeTextViewResizable(mContent, 5, "See More", true);
+            makeTextViewResizable(mContent, 5, "View More", true);
 
             getRatings(swapDetail.getBookOwner().getBookOwnerId());
-//            getCount();
-
-//            Bundle bundle = new Bundle();
-//            bundle.putSerializable("swapDetail", swapDetail);
-//
-//            FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-//            ft.replace(R.id.fragment_review_container, DisplayBookReview.newInstance(bundle));
-//            ft.commit();
-
             Log.d("SwapComment", "Display");
-//            Bundle bundle = new Bundle();
-//            bundle.putSerializable("swapComment", swapDetail);
-//            DisplaySwapComments displaySwapComments = DisplaySwapComments.newInstance(bundle);
-//            FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
-//            fragmentTransaction.replace(R.id.fragment_review_container, displaySwapComments, displaySwapComments.getTag());
-//            fragmentTransaction.commit();
 
             mRentBtn.setText("Request to Swap");
 
@@ -321,13 +335,27 @@ public class ViewBookAct extends AppCompatActivity implements
             lockInLinear.setVisibility(View.GONE);
             mHeaderRP.setText("Starting Price");
             mLPrice.setText(String.valueOf(auctionDetailModel.getStartingPrice()));
-//            mRPrice.setVisibility(View.GONE);
 
             final User user = (User) SPUtility.getSPUtil(ViewBookAct.this).getObject("USER_OBJECT", User.class);
 
             if(user.getUserId()==auctionDetailModel.getBookOwner().getUserObj().getUserId()){
                 buttonLinear.setVisibility(View.GONE);
             }
+
+            String genreStr = "";
+            int genreSize = auctionDetailModel.getBookOwner().getBookObj().getBookGenre().size();
+            if(genreSize>1){
+                for(int init=0;init<genreSize; init++){
+                    genreStr = genreStr + auctionDetailModel.getBookOwner().getBookObj().getBookGenre().get(init).getGenreName();
+                    if(genreSize-1>init){
+                        genreStr = genreStr + ", ";
+                    }
+                }
+            }else{
+                genreStr = auctionDetailModel.getBookOwner().getBookObj().getBookGenre().get(0).getGenreName();
+            }
+
+            mGenre.setText(genreStr);
 
             String author = "";
 
@@ -350,25 +378,11 @@ public class ViewBookAct extends AppCompatActivity implements
             Glide.with(this).load(auctionDetailModel.getBookOwner().getBookObj().getBookFilename()).centerCrop().into(mBookImg);
             mContent.setText(auctionDetailModel.getBookOwner().getBookObj().getBookDescription());
             mCondition.setText(auctionDetailModel.getBookOwner().getStatusDescription());
-            makeTextViewResizable(mContent, 5, "See More", true);
+            makeTextViewResizable(mContent, 5, "View More", true);
 
             getRatings(auctionDetailModel.getBookOwner().getBookOwnerId());
-//            getCount();
-
-//            Bundle bundle = new Bundle();
-//            bundle.putSerializable("swapDetail", swapDetail);
-//
-//            FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-//            ft.replace(R.id.fragment_review_container, DisplayBookReview.newInstance(bundle));
-//            ft.commit();
 
             Log.d("SwapComment", "Display");
-//            Bundle bundle = new Bundle();
-//            bundle.putSerializable("swapComment", swapDetail);
-//            DisplaySwapComments displaySwapComments = DisplaySwapComments.newInstance(bundle);
-//            FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
-//            fragmentTransaction.replace(R.id.fragment_review_container, displaySwapComments, displaySwapComments.getTag());
-//            fragmentTransaction.commit();
 
             mRentBtn.setText("Bid");
 
@@ -383,16 +397,6 @@ public class ViewBookAct extends AppCompatActivity implements
                 }
             });
 
-//            mRentBtn.setOnClickListener(new View.OnClickListener() {
-//                @Override
-//                public void onClick(View v) {
-//                    Intent intent = new Intent(ViewBookAct.this, SwapBookChooser.class);
-//                    Bundle bundle = new Bundle();
-//                    bundle.putSerializable("swapDetail", auctionDetailModel);
-//                    intent.putExtras(bundle);
-//                    startActivity(intent);
-//                }
-//            });
         }
     }
 
@@ -651,7 +655,6 @@ public class ViewBookAct extends AppCompatActivity implements
                 SwapHeader sh = gson.fromJson(response, SwapHeader.class);
 
                 UserNotification un = new UserNotification();
-//                Log.d("Ssh.getUser = "+swapHeader.getUser().getUserFname(), "user = "+swapDetail.getBookOwner().getUserObj().getUserFname());
 
                 un.setActionId(sh.getSwapHeaderId());
                 un.setBookActionPerformedOn(swapDetail.getBookOwner());
@@ -659,7 +662,7 @@ public class ViewBookAct extends AppCompatActivity implements
                 un.setUserPerformer(user);
                 un.setActionName("swap");
                 un.setActionStatus("Request");
-//
+
                 addUserNotif(un);
             }
         }, new Response.ErrorListener() {
@@ -800,7 +803,7 @@ public class ViewBookAct extends AppCompatActivity implements
                     if (viewMore) {
                         makeTextViewResizable(tv, -1, "View Less", false);
                     } else {
-                        makeTextViewResizable(tv, 3, "View More", true);
+                        makeTextViewResizable(tv, 5, "View More", true);
                     }
 
                 }
@@ -813,7 +816,6 @@ public class ViewBookAct extends AppCompatActivity implements
 
     public void addRentalHeader(RentalHeader rentalHeader){
         RequestQueue requestQueue = Volley.newRequestQueue(this);
-//        String URL = "http://104.197.4.32:8080/Koobym/user/add";
         String URL = Constants.POST_RENTAL_HEADER;
 
         final Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd").registerTypeAdapter(Date.class, GsonDateDeserializer.getInstance()).create();
@@ -858,7 +860,6 @@ public class ViewBookAct extends AppCompatActivity implements
 
     private void checkIfExist(int userId, int rentalDetailId) {
         RequestQueue requestQueue = Volley.newRequestQueue(this);
-//        String URL = "http://104.197.4.32:8080/Koobym/user/add";
         String URL = Constants.CHECK_EXIST+"/"+userId+"/"+rentalDetailId;
 
         d("CheckURL", URL);
@@ -895,27 +896,46 @@ public class ViewBookAct extends AppCompatActivity implements
                                 @SuppressLint("NewApi")
                                 @Override
                                 public void onClick(DialogInterface arg0, int arg1) {
-                                    Toast.makeText(ViewBookAct.this, "You agreed to the terms and condition.", Toast.LENGTH_SHORT).show();
-                                    timeOutDialog();
-                                    RentalHeader rentalHeader = new RentalHeader();
+//                                    Toast.makeText(ViewBookAct.this, "You agreed to the terms and condition.", Toast.LENGTH_SHORT).show();
+//                                    timeOutDialog();
 
-                                    User user = (User) SPUtility.getSPUtil(ViewBookAct.this).getObject("USER_OBJECT", User.class);
-                                    String nextDateStr="";
+                                    final android.support.v7.app.AlertDialog.Builder alertDialogBuilder = new android.support.v7.app.AlertDialog.Builder(ViewBookAct.this);
+                                    alertDialogBuilder.setMessage("The owner will be notified of your request.");
+                                    alertDialogBuilder.setPositiveButton("Okay",
+                                            new DialogInterface.OnClickListener() {
+                                                @Override
+                                                public void onClick(DialogInterface arg0, int arg1) {
+                                                    RentalHeader rentalHeader = new RentalHeader();
 
-                                    @SuppressLint({"NewApi", "LocalSuppress"})
-                                    Calendar c = Calendar.getInstance();
+                                                    User user = (User) SPUtility.getSPUtil(ViewBookAct.this).getObject("USER_OBJECT", User.class);
+                                                    String nextDateStr="";
+
+                                                    @SuppressLint({"NewApi", "LocalSuppress"})
+                                                    Calendar c = Calendar.getInstance();
 
 
-                                    @SuppressLint({"NewApi", "LocalSuppress"})
-                                    DateFormat format = new SimpleDateFormat("yyyy-MM-dd");
-                                    nextDateStr = format.format(c.getTime());
+                                                    @SuppressLint({"NewApi", "LocalSuppress"})
+                                                    DateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+                                                    nextDateStr = format.format(c.getTime());
 
-                                    rentalHeader.setRentalDetail(rentalDetailModel);
-                                    rentalHeader.setRentalTimeStamp(nextDateStr);
-                                    rentalHeader.setUserId(user);
-                                    rentalHeader.setTotalPrice((float) rentalDetailModel.getCalculatedPrice());
-                                    rentalHeader.setStatus("Request");
-                                    addRentalHeader(rentalHeader);
+                                                    rentalHeader.setRentalDetail(rentalDetailModel);
+                                                    rentalHeader.setRentalTimeStamp(nextDateStr);
+                                                    rentalHeader.setUserId(user);
+                                                    rentalHeader.setTotalPrice((float) rentalDetailModel.getCalculatedPrice());
+                                                    rentalHeader.setStatus("Request");
+                                                    addRentalHeader(rentalHeader);
+                                                    alertDialogBuilder.setOnDismissListener(new DialogInterface.OnDismissListener() {
+                                                        @Override
+                                                        public void onDismiss(DialogInterface dialog) {
+                                                            dialog.dismiss();
+                                                        }
+                                                    });
+                                                }
+                                            });
+
+                                    android.support.v7.app.AlertDialog alertDialog = alertDialogBuilder.create();
+                                    alertDialog.show();
+
                                 }
                             });
 
@@ -994,20 +1014,17 @@ public class ViewBookAct extends AppCompatActivity implements
                 .setNegativeButton("cacel", null);
         mAlertDialog = builder.create();
         mAlertDialog.show();
-        // dismiss dialog in TIME_OUT ms
         mHandler.sendEmptyMessageDelayed(MSG_DISMISS_DIALOG, TIME_OUT);
     }
 
     public void getCount(){
         RequestQueue requestQueue = Volley.newRequestQueue(this);
-//        String URL = "http://104.197.4.32:8080/Koobym/user/add";
         User user = new User();
         user = (User) SPUtility.getSPUtil(this).getObject("USER_OBJECT", User.class);
         d("UserIdReceive", String.valueOf(user.getUserId()));
         String URL = Constants.GET_COUNT+rentalDetailModel.getBookOwner().getBookOwnerId();
 
         d("CountURL", URL);
-//        String URL = Constants.WEB_SERVICE_URL+"user/add";
 
         final RentalHeader rentalHeader =new RentalHeader();
 
@@ -1049,12 +1066,10 @@ public class ViewBookAct extends AppCompatActivity implements
 
     public void getRatings(int bookOwnerId){
         RequestQueue requestQueue = Volley.newRequestQueue(this);
-//        String URL = "http://104.197.4.32:8080/Koobym/user/add";
         User user = new User();
         user = (User) SPUtility.getSPUtil(this).getObject("USER_OBJECT", User.class);
         d("UserIdReceive", String.valueOf(user.getUserId()));
         String URL = Constants.GET_RATINGS+"/"+bookOwnerId;
-//        String URL = Constants.WEB_SERVICE_URL+"user/add";
 
         final RentalHeader rentalHeader =new RentalHeader();
 
@@ -1072,7 +1087,6 @@ public class ViewBookAct extends AppCompatActivity implements
 
                 mRating.setRating(fl);
 
-//                d("RatingAdapter: "+rentalDetailModel.getBookOwner().getBookObj().getBookTitle(), String.valueOf(fl));
             }
         }, new Response.ErrorListener() {
             @Override
@@ -1102,7 +1116,6 @@ public class ViewBookAct extends AppCompatActivity implements
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
-        // Handle navigation view item clicks here.
         d("onNavigationItem", "inside");
 
         int id = item.getItemId();
@@ -1115,9 +1128,6 @@ public class ViewBookAct extends AppCompatActivity implements
             startActivity(intent);
         } else if (id == R.id.profile) {
             Intent intent = new Intent(ViewBookAct.this, ProfileActivity.class);
-//            User user = userModel;
-//            Log.d("User Id", String.valueOf(userModel.getUserId()));
-//            Log.d("User name", userModel.getUserFname()+" "+userModel.getUserLname());
             Bundle bundlePass = new Bundle();
             User userModel = new User();
             userModel = (User) SPUtility.getSPUtil(ViewBookAct.this).getObject("USER_OBJECT", User.class);

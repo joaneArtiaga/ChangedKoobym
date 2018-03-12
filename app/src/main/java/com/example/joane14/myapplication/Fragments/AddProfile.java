@@ -102,7 +102,7 @@ public class AddProfile extends Fragment implements AdapterView.OnItemClickListe
     private RecyclerView.LayoutManager layoutManager;
     private static RecyclerView recyclerView;
 
-    Boolean firstLocBool, secondLocBool, thirdLocBool, addressBool, mMondayBool, mTuesdayBool, mWednesdayBool, mThursdayBool, mFridayBool;
+    Boolean firstLocBool, secondLocBool, thirdLocBool, addressBool, mMondayBool, mTuesdayBool, mWednesdayBool, mThursdayBool, mFridayBool, mSaturdayBool, mSundayBool;
 
     public AddProfile() {
 
@@ -141,6 +141,8 @@ public class AddProfile extends Fragment implements AdapterView.OnItemClickListe
         mWednesdayBool = false;
         mThursdayBool = false;
         mFridayBool = false;
+        mSaturdayBool = false;
+        mSundayBool = false;
 
         locationList = new ArrayList<LocationModel>();
         userDayTimeList = new ArrayList<UserDayTime>();
@@ -167,6 +169,8 @@ public class AddProfile extends Fragment implements AdapterView.OnItemClickListe
         final CheckBox mWednesday = (CheckBox) view.findViewById(R.id.cbWednesday);
         final CheckBox mThursday = (CheckBox) view.findViewById(R.id.cbThursday);
         final CheckBox mFriday = (CheckBox) view.findViewById(R.id.cbFriday);
+        final CheckBox mSaturday = (CheckBox) view.findViewById(R.id.cbSaturday);
+        final CheckBox mSunday = (CheckBox) view.findViewById(R.id.cbSunday);
 
         places = new ArrayList<>();
         placeAutoCompleteAdapter = new PlaceAutoCompleteAdapter(getContext(), places);
@@ -176,19 +180,48 @@ public class AddProfile extends Fragment implements AdapterView.OnItemClickListe
         placeAutoCompletePopupWindow.setModal(false);
         placeAutoCompletePopupWindow.setOnItemClickListener(this);
 
+        mSunday.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if(isChecked==true){
+                    selectedDays.add("Sunday");
+                }else{
+                    for(int init=0; init<selectedDays.size(); init++){
+                        if(selectedDays.get(init).equals("Sunday")){
+                            selectedDays.remove(init);
+                            break;
+                        }
+                    }
+                }
+            }
+        });
+        mSaturday.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if(isChecked==true){
+                    selectedDays.add("Saturday");
+                }else{
+                    for(int init=0; init<selectedDays.size(); init++){
+                        if(selectedDays.get(init).equals("Saturday")){
+                            selectedDays.remove(init);
+                            break;
+                        }
+                    }
+                }
+            }
+        });
         mMonday.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if (mMondayBool == true) {
-                    for (int init = 0; init < 5; init++) {
-                        if (selectedDays.get(init).equals("Monday")) {
+                if(isChecked==true){
+                    selectedDays.add("Monday");
+                }else{
+                    for(int init=0; init<selectedDays.size(); init++){
+                        if(selectedDays.get(init).equals("Monday")){
                             selectedDays.remove(init);
+                            break;
                         }
                     }
-                    mMondayBool = false;
-                }else {
-                    selectedDays.add("Monday");
-                    mMondayBool = true;
                 }
             }
         });
@@ -196,16 +229,15 @@ public class AddProfile extends Fragment implements AdapterView.OnItemClickListe
         mTuesday.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if (mTuesdayBool == true) {
-                    for (int init = 0; init < 5; init++) {
-                        if (selectedDays.get(init).equals("Tuesday")) {
+                if(isChecked==true){
+                    selectedDays.add("Tuesday");
+                }else{
+                    for(int init=0; init<selectedDays.size(); init++){
+                        if(selectedDays.get(init).equals("Tuesday")){
                             selectedDays.remove(init);
+                            break;
                         }
                     }
-                    mTuesdayBool = false;
-                } else {
-                    selectedDays.add("Tuesday");
-                    mTuesdayBool = true;
                 }
             }
         });
@@ -213,16 +245,15 @@ public class AddProfile extends Fragment implements AdapterView.OnItemClickListe
         mWednesday.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if (mWednesdayBool == true) {
-                    for (int init = 0; init < 5; init++) {
-                        if (selectedDays.get(init).equals("Wednesday")) {
-                            selectedDays.remove(init);
-                        }
-                        mWednesdayBool = false;
-                    }
-                } else {
-                    mThursdayBool = true;
+                if(isChecked==true){
                     selectedDays.add("Wednesday");
+                }else{
+                    for(int init=0; init<selectedDays.size(); init++){
+                        if(selectedDays.get(init).equals("Wednesday")){
+                            selectedDays.remove(init);
+                            break;
+                        }
+                    }
                 }
             }
         });
@@ -231,16 +262,15 @@ public class AddProfile extends Fragment implements AdapterView.OnItemClickListe
         mThursday.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if (mThursdayBool == true) {
-                    for (int init = 0; init < 5; init++) {
-                        if (selectedDays.get(init).equals("Thursday")) {
+                if(isChecked==true){
+                    selectedDays.add("Thursday");
+                }else{
+                    for(int init=0; init<selectedDays.size(); init++){
+                        if(selectedDays.get(init).equals("Thursday")){
                             selectedDays.remove(init);
+                            break;
                         }
                     }
-                    mThursdayBool = false;
-                } else {
-                    mThursdayBool = true;
-                    selectedDays.add("Thursday");
                 }
 
             }
@@ -249,16 +279,15 @@ public class AddProfile extends Fragment implements AdapterView.OnItemClickListe
         mFriday.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if (mFridayBool == true) {
-                    for (int init = 0; init < 5; init++) {
-                        if (selectedDays.get(init).equals("Friday")) {
+                if(isChecked==true){
+                    selectedDays.add("Friday");
+                }else{
+                    for(int init=0; init<selectedDays.size(); init++){
+                        if(selectedDays.get(init).equals("Friday")){
                             selectedDays.remove(init);
+                            break;
                         }
                     }
-                    mFridayBool = false;
-                } else {
-                    mFridayBool = true;
-                    selectedDays.add("Friday");
                 }
             }
         });
@@ -488,7 +517,7 @@ public class AddProfile extends Fragment implements AdapterView.OnItemClickListe
                     mThirdLoc.setError("Field cannot be empty");
                 }
 
-                if (!(mMonday.isChecked()) && !(mTuesday.isChecked()) && !(mWednesday.isChecked()) && !(mThursday.isChecked()) && !(mFriday.isChecked())) {
+                if (selectedDays.size()==0) {
                     AlertDialog ad = new AlertDialog.Builder(getContext()).create();
                     ad.setTitle("Alert!");
                     ad.setMessage("Should choose available days for meet up.");

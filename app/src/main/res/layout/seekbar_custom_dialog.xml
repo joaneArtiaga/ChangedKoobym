@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical"
     android:layout_gravity="center_horizontal"
     android:layout_width="match_parent"
@@ -7,45 +8,81 @@
     android:id="@+id/seekbar_layout"
     android:padding="10dp">
 
-    <TextView
-        android:id="@+id/tvPriceBar"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:textSize="20dp"
-        android:textStyle="bold"
-        android:textAlignment="center"/>
-
-    <ProgressBar
-        android:layout_width="match_parent"
-        android:layout_height="40dp"
-        android:id="@+id/progBar"
-        style="?android:attr/progressBarStyleHorizontal"/>
-
-    <SeekBar
-        android:id="@+id/seekbarPrice"
-        android:layout_width="fill_parent"
-        android:layout_height="50dp"
-        android:max="1000" />
-
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal">
-
-        <Button
-            android:id="@+id/btnOkay"
-            android:layout_width="150dp"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+        <TextView
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@color/colorLightOrange"
-            android:text="Okay" />
+            android:textSize="20dp"
+            android:textStyle="bold"
+            android:text="Place Bid"
+            android:layout_marginTop="5dp"
+            android:layout_marginLeft="5dp"
+            android:textColor="@color/colorLightOrange"
+            android:textAlignment="center"/>
 
-        <Button
-            android:id="@+id/btnCancel"
-            android:layout_width="150dp"
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@color/colorLightOrange"
-            android:text="Cancel" />
+            android:orientation="horizontal"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:layout_marginTop="5dp">
 
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/colorOrange"
+                android:text="₱"
+                android:textSize="20dp"
+                android:layout_marginRight="5dp"/>
+
+            <TextView
+                android:id="@+id/tvPriceBar"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="1200"
+                android:textAlignment="center"
+                android:textColor="@color/colorOrange"
+                android:textSize="20dp"
+                android:textStyle="bold" />
+
+        </LinearLayout>
+
+        <SeekBar
+            android:id="@+id/seekbarPrice"
+            android:layout_width="fill_parent"
+            android:layout_height="50dp"
+            android:max="1000" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:layout_marginBottom="5dp">
+
+            <Button
+                android:id="@+id/btnOkay"
+                android:layout_width="150dp"
+                android:layout_height="wrap_content"
+                android:background="@drawable/rounded_button"
+                android:text="Place"
+                android:textColor="@color/colorWhite"
+                android:layout_marginRight="10dp"/>
+
+            <Button
+                android:id="@+id/btnCancel"
+                android:layout_width="150dp"
+                android:layout_height="wrap_content"
+                android:textColor="@color/colorWhite"
+                android:background="@drawable/rounded_button"
+                android:text="Cancel" />
+
+        </LinearLayout>
     </LinearLayout>
 
-</LinearLayout>
+</RelativeLayout>

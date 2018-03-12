@@ -330,6 +330,14 @@
                             android:textColor="@color/colorLightOrange"
                             android:id="@+id/cbWednesday"/>
 
+                        <CheckBox
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Friday"
+                            android:gravity="center_horizontal"
+                            android:textColor="@color/colorLightOrange"
+                            android:id="@+id/cbFriday"/>
+
                     </LinearLayout>
 
                     <LinearLayout
@@ -352,16 +360,23 @@
                             android:text="Thursday"
                             android:textColor="@color/colorLightOrange"
                             android:id="@+id/cbThursday"/>
+
+                        <CheckBox
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Saturday"
+                            android:gravity="center_horizontal"
+                            android:textColor="@color/colorLightOrange"
+                            android:id="@+id/cbSaturday"/>
                     </LinearLayout>
                 </LinearLayout>
 
                 <CheckBox
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Friday"
-                    android:gravity="center_horizontal"
+                    android:text="Sunday"
                     android:textColor="@color/colorLightOrange"
-                    android:id="@+id/cbFriday"/>
+                    android:id="@+id/cbSunday"/>
 
             </LinearLayout>
 
@@ -369,25 +384,30 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical">
+
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal">
+                    android:orientation="horizontal"
+                    android:layout_gravity="center_vertical"
+                    android:gravity="center_vertical">
 
                     <TextView
-                        android:layout_width="150dp"
+                        android:layout_width="250dp"
                         android:layout_height="wrap_content"
                         android:layout_gravity="left"
+                        android:gravity="center_vertical"
                         android:text="Time:"
-                        android:textStyle="bold"
+                        android:textColor="@color/colorLightOrange"
                         android:textSize="18dp"
-                        android:textColor="@color/colorLightOrange" />
+                        android:textStyle="bold" />
 
                     <Button
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Add Time"
                         android:id="@+id/addTime"/>
+
                 </LinearLayout>
 
                 <android.support.v7.widget.RecyclerView
@@ -401,13 +421,13 @@
             <Button
                 android:id="@+id/btnNextAdd"
                 android:layout_width="150dp"
-                android:layout_height="30dp"
+                android:layout_height="50dp"
                 android:layout_gravity="center"
                 android:layout_marginBottom="20dp"
                 android:layout_marginTop="15dp"
                 android:background="@drawable/rounded_button"
                 android:text="Create Account"
-                android:textColor="@color/colorWhite"/>
+                android:textColor="@color/colorWhite" />
 
         </LinearLayout>
 

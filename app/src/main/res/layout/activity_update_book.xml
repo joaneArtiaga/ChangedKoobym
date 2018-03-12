@@ -191,14 +191,15 @@
 
             </LinearLayout>
 
-            <ImageButton
+            <Button
                 android:id="@+id/btnUpdateUB"
-                android:layout_width="250dp"
-                android:layout_height="100dp"
+                android:layout_width="150dp"
+                android:layout_height="50dp"
                 android:layout_gravity="center_horizontal"
-                app:srcCompat="@drawable/update"
-                android:scaleType="fitXY"
-                android:background="@null"
+                android:background="@drawable/rounded_button"
+                android:textColor="@color/colorWhite"
+                android:text="UPDATE"
+                android:textSize="20dp"
                 android:adjustViewBounds="true"/>
 
         </LinearLayout>

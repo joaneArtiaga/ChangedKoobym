@@ -69,6 +69,8 @@ public class DisplayMyBooks extends Fragment {
 
         user = new User();
         user = (User) getArguments().getSerializable("user");
+        Log.d("TheUser", user.getUserFname());
+
 
         bookOwnerModelList = new ArrayList<BookOwnerModel>();
         mGridView = (GridView) view.findViewById(R.id.display_books_gridview);
@@ -101,11 +103,8 @@ public class DisplayMyBooks extends Fragment {
     }
 
     private void getAuctionDetail(int bookOwnerId){
-//        String URL = "http://104.198.152.85/Koobym/rentalDetail/suggested/%d";
-//        String URL = Constants.WEB_SERVICE_URL+"rentalDetail/suggested/%d";
-//        String URL = Constants.GET_BOOK_OWNER_SWAP_DETAIL+bookOwnerId;
+
         String URL = Constants.GET_BOOK_OWNER_AUCTION_DETAIL+bookOwnerId;
-//        URL = String.format(URL, userId);
         Log.d("PreferenceURL", URL);
         StringRequest stringRequest = new StringRequest(Request.Method.GET, URL, new Response.Listener<String>() {
             @Override
@@ -118,10 +117,6 @@ public class DisplayMyBooks extends Fragment {
                 bundle.putSerializable("auctionBook",auctionDetailModel);
                 intent.putExtras(bundle);
                 startActivity(intent);
-//                Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd").registerTypeAdapter(Date.class, GsonDateDeserializer.getInstance()).create();
-//                BookOwnerModel[] bookOwnerModels = gson.fromJson(response, BookOwnerModel[].class);
-//                bookOwnerModelList.addAll(Arrays.asList(bookOwnerModels));
-//                mAdapter.notifyDataSetChanged();
             }
         }, new Response.ErrorListener() {
             @Override
@@ -133,11 +128,7 @@ public class DisplayMyBooks extends Fragment {
     }
 
     private void getSwapDetail(int bookOwnerId){
-//        String URL = "http://104.198.152.85/Koobym/rentalDetail/suggested/%d";
-//        String URL = Constants.WEB_SERVICE_URL+"rentalDetail/suggested/%d";
-//        String URL = Constants.GET_BOOK_OWNER_SWAP_DETAIL+bookOwnerId;
         String URL = Constants.GET_BOOK_OWNER_SWAP_DETAIL+bookOwnerId;
-//        URL = String.format(URL, userId);
         Log.d("PreferenceURL", URL);
         StringRequest stringRequest = new StringRequest(Request.Method.GET, URL, new Response.Listener<String>() {
             @Override
@@ -150,10 +141,6 @@ public class DisplayMyBooks extends Fragment {
                 bundle.putSerializable("swapBook",swapDetails);
                 intent.putExtras(bundle);
                 startActivity(intent);
-//                Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd").registerTypeAdapter(Date.class, GsonDateDeserializer.getInstance()).create();
-//                BookOwnerModel[] bookOwnerModels = gson.fromJson(response, BookOwnerModel[].class);
-//                bookOwnerModelList.addAll(Arrays.asList(bookOwnerModels));
-//                mAdapter.notifyDataSetChanged();
             }
         }, new Response.ErrorListener() {
             @Override
@@ -165,10 +152,7 @@ public class DisplayMyBooks extends Fragment {
     }
 
     private void getRentalDetail(int bookOwnerId){
-//        String URL = "http://104.198.152.85/Koobym/rentalDetail/suggested/%d";
-//        String URL = Constants.WEB_SERVICE_URL+"rentalDetail/suggested/%d";
         String URL = Constants.GET_BOOK_OWNER_RENTAL_DETAIL+bookOwnerId;
-//        URL = String.format(URL, userId);
         Log.d("PreferenceURL", URL);
         StringRequest stringRequest = new StringRequest(Request.Method.GET, URL, new Response.Listener<String>() {
             @Override
@@ -181,10 +165,6 @@ public class DisplayMyBooks extends Fragment {
                 bundle.putSerializable("viewBook",rentalDetails);
                 intent.putExtras(bundle);
                 startActivity(intent);
-//                Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd").registerTypeAdapter(Date.class, GsonDateDeserializer.getInstance()).create();
-//                BookOwnerModel[] bookOwnerModels = gson.fromJson(response, BookOwnerModel[].class);
-//                bookOwnerModelList.addAll(Arrays.asList(bookOwnerModels));
-//                mAdapter.notifyDataSetChanged();
             }
         }, new Response.ErrorListener() {
             @Override

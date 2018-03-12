@@ -241,6 +241,14 @@ public class AddBookOwner extends AppCompatActivity {
                 if(isChecked==true){
                     mBookCondition.setEnabled(true);
                 }else{
+                    if(mBookCondition.getText().length()!=0){
+                        for(int init=0;init<bookDescList.size(); init++){
+                            if(bookDescList.get(init).equals(mBookCondition.getText().toString())){
+                                bookDescList.remove(init);
+                                break;
+                            }
+                        }
+                    }
                     mBookCondition.setEnabled(false);
                 }
             }
@@ -293,18 +301,18 @@ public class AddBookOwner extends AppCompatActivity {
                         }
                         Log.d("bookCond", bookCond);
 
-//                        bookOwnerModel.setStatusDescription(mBookCondition.getText().toString());
-//                        bookOwnerModel.setBookObj(bookModel);
-//                        bookOwnerModel.setUserObj(user);
-//                        bookOwnerModel.setNoRenters(0);
-//                        addBook();
-//                        Intent intent = new Intent(getApplicationContext(), ProfileActivity.class);
-//                        Bundle bundlePass = new Bundle();
-//                        User userModel = new User();
-//                        userModel = (User) SPUtility.getSPUtil(getApplicationContext()).getObject("USER_OBJECT", User.class);
-//                        bundlePass.putSerializable("userModelPass", userModel);
-//                        intent.putExtras(bundlePass);
-//                        startActivity(intent);
+                        bookOwnerModel.setStatusDescription(bookCond);
+                        bookOwnerModel.setBookObj(bookModel);
+                        bookOwnerModel.setUserObj(user);
+                        bookOwnerModel.setNoRenters(0);
+                        addBook();
+                        Intent intent = new Intent(getApplicationContext(), ProfileActivity.class);
+                        Bundle bundlePass = new Bundle();
+                        User userModel = new User();
+                        userModel = (User) SPUtility.getSPUtil(getApplicationContext()).getObject("USER_OBJECT", User.class);
+                        bundlePass.putSerializable("userModelPass", userModel);
+                        intent.putExtras(bundlePass);
+                        startActivity(intent);
                     }
                 }else{
                     int sizeCond = bookDescList.size();
@@ -325,18 +333,18 @@ public class AddBookOwner extends AppCompatActivity {
                     }
                     Log.d("bookCondElse", bookCond);
 
-//                    bookOwnerModel.setStatusDescription(mBookCondition.getText().toString());
-//                    bookOwnerModel.setBookObj(bookModel);
-//                    bookOwnerModel.setUserObj(user);
-//                    bookOwnerModel.setNoRenters(0);
-//                    addBook();
-//                    Intent intent = new Intent(getApplicationContext(), ProfileActivity.class);
-//                    Bundle bundlePass = new Bundle();
-//                    User userModel = new User();
-//                    userModel = (User) SPUtility.getSPUtil(getApplicationContext()).getObject("USER_OBJECT", User.class);
-//                    bundlePass.putSerializable("userModelPass", userModel);
-//                    intent.putExtras(bundlePass);
-//                    startActivity(intent);
+                    bookOwnerModel.setStatusDescription(bookCond);
+                    bookOwnerModel.setBookObj(bookModel);
+                    bookOwnerModel.setUserObj(user);
+                    bookOwnerModel.setNoRenters(0);
+                    addBook();
+                    Intent intent = new Intent(getApplicationContext(), ProfileActivity.class);
+                    Bundle bundlePass = new Bundle();
+                    User userModel = new User();
+                    userModel = (User) SPUtility.getSPUtil(getApplicationContext()).getObject("USER_OBJECT", User.class);
+                    bundlePass.putSerializable("userModelPass", userModel);
+                    intent.putExtras(bundlePass);
+                    startActivity(intent);
                 }
             }
         });

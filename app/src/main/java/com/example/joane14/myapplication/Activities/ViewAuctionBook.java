@@ -149,6 +149,7 @@ ViewAuctionBook extends AppCompatActivity
         TextView mHeaderRP = (TextView) findViewById(R.id.heaedrRP);
         TextView mLPrice = (TextView) findViewById(R.id.vbLockInP);
         TextView mRPrice = (TextView) findViewById(R.id.vbRentalP);
+        TextView mGenre = (TextView) findViewById(R.id.vbGenre);
         TextView mTitle = (TextView) findViewById(R.id.vbTitle);
         Button mViewBtn = (Button) findViewById(R.id.btnVbViewOwner);
         Button mRentBtn = (Button) findViewById(R.id.btnVbRent);
@@ -186,17 +187,29 @@ ViewAuctionBook extends AppCompatActivity
             mTitle.setText(auctionDetailModel.getBookOwner().getBookObj().getBookTitle());
 
             mRating.setRating(Float.parseFloat(String.valueOf(auctionDetailModel.getBookOwner().getRate())));
-//
             priceLinear.setVisibility(View.GONE);
-//            mHeaderRP.setText("Starting Price");
             mRPrice.setText(String.valueOf(auctionDetailModel.getStartingPrice()));
-//            mRPrice.setVisibility(View.GONE);
 
             final User user = (User) SPUtility.getSPUtil(ViewAuctionBook.this).getObject("USER_OBJECT", User.class);
 
             if (user.getUserId() == auctionDetailModel.getBookOwner().getUserObj().getUserId()) {
                 buttonLinear.setVisibility(View.GONE);
             }
+
+            String genreStr = "";
+            int genreSize = auctionDetailModel.getBookOwner().getBookObj().getBookGenre().size();
+            if(genreSize>1){
+                for(int init=0;init<genreSize; init++){
+                    genreStr = genreStr + auctionDetailModel.getBookOwner().getBookObj().getBookGenre().get(init).getGenreName();
+                    if(genreSize-1>init){
+                        genreStr = genreStr + ", ";
+                    }
+                }
+            }else{
+                genreStr = auctionDetailModel.getBookOwner().getBookObj().getBookGenre().get(0).getGenreName();
+            }
+
+            mGenre.setText(genreStr);
 
             String author = "";
 
@@ -222,22 +235,7 @@ ViewAuctionBook extends AppCompatActivity
             makeTextViewResizable(mContent, 5, "See More", true);
 
             getRatings(auctionDetailModel.getBookOwner().getBookOwnerId());
-//            getCount();
-
-//            Bundle bundle = new Bundle();
-//            bundle.putSerializable("swapDetail", swapDetail);
-//
-//            FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-//            ft.replace(R.id.fragment_review_container, DisplayBookReview.newInstance(bundle));
-//            ft.commit();
-
             Log.d("SwapComment", "Display");
-//            Bundle bundle = new Bundle();
-//            bundle.putSerializable("swapComment", swapDetail);
-//            DisplaySwapComments displaySwapComments = DisplaySwapComments.newInstance(bundle);
-//            FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
-//            fragmentTransaction.replace(R.id.fragment_review_container, displaySwapComments, displaySwapComments.getTag());
-//            fragmentTransaction.commit();
 
             mRentBtn.setText("Bid");
 
@@ -255,9 +253,6 @@ ViewAuctionBook extends AppCompatActivity
             mRentBtn.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-
-
-                    Log.d("BidTriggered", "YES");
                     Log.d("BidTriggered", auctionDetailModel.getAuctionStatus());
 
                     if (auctionDetailModel.getAuctionStatus().equals("start")) {
@@ -271,30 +266,12 @@ ViewAuctionBook extends AppCompatActivity
                         Button mBtnCancel = (Button) layout.findViewById(R.id.btnCancel);
 
                         mPriceBar = (TextView) layout.findViewById(R.id.tvPriceBar);
-                        final ProgressBar mProgBar = (ProgressBar) layout.findViewById(R.id.progBar);
                         final SeekBar mSeekBar = (SeekBar) layout.findViewById(R.id.seekbarPrice);
                         getMaximumBid(auctionDetailModel);
-
-//                        int prog = Math.round(auctionDetailModel.getStartingPrice());
-//
-//                        if(flag == false){
-//                            Log.d("bidComment", "empty : "+prog);
-//                            mProgBar.setProgress(prog);
-//                            mPriceBar.setText("" + prog);
-//                        }else{
-//                            prog = prog + auctionHeaderModelMod.get(0).getAuctionComment();
-//
-//                            Log.d("bidComment", "not empty : "+prog);
-//                            mProgBar.setProgress(prog);
-//                            mPriceBar.setText("" + prog);
-//                        }
-
-
 
                         mSeekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
                             @Override
                             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-//                                getMaximumBid(auctionDetailModel);
 
                                 Log.d("startProgress", progress+"");
 
@@ -309,7 +286,6 @@ ViewAuctionBook extends AppCompatActivity
 
                                 priceNiya = progress;
 
-                                mProgBar.setProgress(progress);
                                 mPriceBar.setText("" + progress);
                             }
 
@@ -332,7 +308,6 @@ ViewAuctionBook extends AppCompatActivity
                                 String currDate = sdf.format(calendar.getTime());
 
 
-                                int price = mProgBar.getProgress() + Math.round(auctionDetailModel.getStartingPrice());
                                 Log.d("SeekBarPrice", priceNiya+"");
 
                                 AuctionComment auctionComment = new AuctionComment();

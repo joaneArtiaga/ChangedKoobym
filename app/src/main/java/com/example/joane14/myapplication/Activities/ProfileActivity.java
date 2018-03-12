@@ -112,10 +112,6 @@ public class ProfileActivity extends AppCompatActivity implements
 
         ViewPager viewPager = (ViewPager) findViewById(R.id.viewpager);
 
-        setupViewPager(viewPager);
-        TabLayout tab = (TabLayout) findViewById(R.id.result_tabs);
-
-        tab.setupWithViewPager(viewPager);
 
         book = new Book();
         bookOwner = new BookOwnerModel();
@@ -127,12 +123,8 @@ public class ProfileActivity extends AppCompatActivity implements
 
 
             this.userObj = (User) getIntent().getExtras().getSerializable("userModelPass");
-            User userMod = (User) SPUtility.getSPUtil(this).getObject("USER_OBJECT", User.class);
 
             getNotificationCount();
-
-            Log.d("User filename", userObj.getImageFilename());
-            Log.d("User Id", String.valueOf(userObj.getUserId()));
 
             Log.d("User Login", userObj.getUserFname());
             mBundle.putSerializable("userDetails", userObj);
@@ -150,10 +142,12 @@ public class ProfileActivity extends AppCompatActivity implements
                 }
             });
 
-        } else {
-            Log.d("null oi", "mao white screen");
         }
 
+        setupViewPager(viewPager);
+        TabLayout tab = (TabLayout) findViewById(R.id.result_tabs);
+
+        tab.setupWithViewPager(viewPager);
         mBackBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -199,7 +193,6 @@ public class ProfileActivity extends AppCompatActivity implements
     }
 
     private void setupViewPager(ViewPager viewPager) {
-        userObj = (User) SPUtility.getSPUtil(getApplicationContext()).getObject("USER_OBJECT", User.class);
         Bundle bundle = new Bundle();
         bundle.putSerializable("user", userObj);
         RentTransaction.Adapter adapter = new RentTransaction.Adapter(getSupportFragmentManager());

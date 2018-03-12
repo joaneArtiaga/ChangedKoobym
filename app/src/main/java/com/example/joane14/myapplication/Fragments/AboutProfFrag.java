@@ -67,6 +67,7 @@ public class AboutProfFrag extends Fragment {
 
 
         user = (User) getArguments().getSerializable("user");
+        Log.d("TheUser", user.getUserFname());
         getUserRating();
 
         mAddress = (TextView) view.findViewById(R.id.profAddress);

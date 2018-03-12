@@ -553,7 +553,6 @@ public class UpdateBookActivity extends AppCompatActivity {
     public void customAuctionDialog(final String status){
         final Dialog dialog = new Dialog(this);
         dialog.setContentView(R.layout.auction_custom_dialog);
-        dialog.setTitle("Auction Settings");
         final DayModel day;
         final TimeModel time;
         final DatePickerDialog.OnDateSetListener mDatePicker;
