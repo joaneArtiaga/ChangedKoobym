@@ -1388,12 +1388,6 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
                         adapterDate.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                         mSpinDate.setAdapter(adapterDate);
 
-
-                        timeStr.add("09:00 - 10:00 am");
-                        timeStr.add("12:00 - 02:00 pm");
-                        timeStr.add("04:00 - 06:00 pm");
-                        timeStr.add("07:00 - 09:00 pm");
-
                         mSpinDate.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
                             @Override
                             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {

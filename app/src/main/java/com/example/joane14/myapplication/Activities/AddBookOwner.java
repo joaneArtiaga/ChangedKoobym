@@ -301,6 +301,7 @@ public class AddBookOwner extends AppCompatActivity {
                         }
                         Log.d("bookCond", bookCond);
 
+                        bookModel.setStatus("Not Available");
                         bookOwnerModel.setStatusDescription(bookCond);
                         bookOwnerModel.setBookObj(bookModel);
                         bookOwnerModel.setUserObj(user);
@@ -314,6 +315,8 @@ public class AddBookOwner extends AppCompatActivity {
                         intent.putExtras(bundlePass);
                         startActivity(intent);
                     }
+                }else if(mDate.getText().length()==0){
+                    mDate.setError("Field must not be empty");
                 }else{
                     int sizeCond = bookDescList.size();
                     Log.d("SizeBook", sizeCond+"");
@@ -550,6 +553,14 @@ public class AddBookOwner extends AppCompatActivity {
                 Log.i("addBookOwner", response);
 
                 BookOwnerModel bookOwnerModel1 = gson.fromJson(response, BookOwnerModel.class);
+
+                Intent intent = new Intent(AddBookOwner.this, ProfileActivity.class);
+                Bundle bundlePass = new Bundle();
+                User userModel = new User();
+                userModel = (User) SPUtility.getSPUtil(getApplicationContext()).getObject("USER_OBJECT", User.class);
+                bundlePass.putSerializable("userModelPass", userModel);
+                intent.putExtras(bundlePass);
+                startActivity(intent);
 
                 Log.d("bookOwnerAdd", "");
 

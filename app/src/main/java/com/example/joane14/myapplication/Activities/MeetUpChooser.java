@@ -149,17 +149,6 @@ public class MeetUpChooser extends FragmentActivity implements OnMapReadyCallbac
                                 final int position = mHashMap.get(marker);
                                 Log.d("MarkerPosition", String.valueOf(position));
                                 if(getIntent().getExtras().getBoolean("return")==true){
-//                                    Intent intent = new Intent(MeetUpChooser.this,TimeDateChooser.class);
-//                                    Bundle mBundle = new Bundle();
-//                                    mBundle.putSerializable("rentHeader", rentalHeader);
-//                                    mBundle.putBoolean("return", true);
-//                                    mBundle.putSerializable("locationChose", locationModelList.get(position));
-//                                    intent.putExtra("confirm", mBundle);
-//                                    meetUp.setLocation(locationModelList.get(position));
-//                                    mBundle.putSerializable("meetUp", meetUp);
-//                                    intent.putExtras(mBundle);
-//                                    startActivity(intent);
-
                                     final Dialog dialogCustom = new Dialog(MeetUpChooser.this);
                                     LayoutInflater inflater = (LayoutInflater) MeetUpChooser.this.getSystemService(LAYOUT_INFLATER_SERVICE);
                                     View layout = inflater.inflate(R.layout.return_custom_dialog, (ViewGroup) findViewById(R.id.seekbar_layout));

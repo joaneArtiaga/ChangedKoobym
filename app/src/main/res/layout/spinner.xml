@@ -1,47 +1,73 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
-
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Choose Day Range:"
-        android:textColor="@color/colorLightOrange"
-        android:textSize="20dp" />
-
-    <Spinner
-        android:id="@+id/spinnerDay"
-        android:layout_width="150dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="25dp"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true"
-        android:layout_marginRight="15dp"
-        android:layout_marginEnd="15dp"
-        android:entries="@array/days_category"/>
+    android:layout_height="match_parent"
+    android:padding="10dp">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/buttonLL"
-        android:orientation="horizontal">
+        android:orientation="vertical"
+        android:padding="10dp">
 
-        <Button
-            android:id="@+id/btnOkay"
-            android:layout_width="wrap_content"
+        <TextView
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@color/colorLightOrange"
-            android:text="Okay" />
+            android:text="Choose Day Range:"
+            android:textColor="@color/colorLightOrange"
+            android:textStyle="bold"
+            android:textSize="20dp" />
 
-        <Button
-            android:id="@+id/btnCancel"
-            android:layout_width="wrap_content"
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@color/colorLightOrange"
-            android:text="Cancel" />
+            android:orientation="horizontal"
+            android:layout_marginTop="10dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Day Range:"
+                android:textSize="15dp"
+                android:textColor="@color/colorLightOrange"
+                android:textStyle="bold"/>
+
+            <Spinner
+                android:id="@+id/spinnerDay"
+                android:layout_width="150dp"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="15dp"
+                android:layout_marginEnd="15dp"
+                android:entries="@array/days_category"/>
+
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/buttonLL"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:layout_marginTop="10dp"
+            android:orientation="horizontal">
+
+            <Button
+                android:id="@+id/btnOkay"
+                android:layout_width="80dp"
+                android:textColor="@color/colorWhite"
+                android:layout_height="wrap_content"
+                android:background="@drawable/rounded_button"
+                android:layout_marginRight="10dp"
+                android:text="Okay" />
+
+            <Button
+                android:id="@+id/btnCancel"
+                android:layout_width="80dp"
+                android:textColor="@color/colorWhite"
+                android:layout_height="wrap_content"
+                android:background="@drawable/rounded_button"
+                android:text="Cancel" />
+        </LinearLayout>
+
+
     </LinearLayout>
-
-</LinearLayout>
+</RelativeLayout>

@@ -588,7 +588,6 @@ public class AddProfile extends Fragment implements AdapterView.OnItemClickListe
         day = new DayModel();
         time = new TimeModel();
 
-        // set the custom dialog components - text, image and button
         etTimeFrom = (EditText) dialog.findViewById(R.id.tcFrom);
         etTimeTo = (EditText) dialog.findViewById(R.id.tcTo);
         Button mBtnOkay = (Button) dialog.findViewById(R.id.btnOkay);
@@ -637,7 +636,7 @@ public class AddProfile extends Fragment implements AdapterView.OnItemClickListe
             @Override
             public void onClick(View v) {
                 userDayTime = new UserDayTime();
-                time.setStrTime(etTimeTo.getText().toString() + " - " + etTimeFrom.getText().toString());
+                time.setStrTime(etTimeFrom.getText().toString() + " - " + etTimeTo.getText().toString());
                 userDayTime.setDay(day);
                 userDayTime.setTime(time);
                 userDayTimeList.add(userDayTime);

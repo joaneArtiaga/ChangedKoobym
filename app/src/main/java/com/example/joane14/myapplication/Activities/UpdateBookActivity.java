@@ -21,6 +21,7 @@ import android.text.style.ClickableSpan;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewTreeObserver;
+import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -94,6 +95,7 @@ public class UpdateBookActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_update_book);
 
+        getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
         calendar = java.util.Calendar.getInstance();
 
         rentalDetailModel = new RentalDetail();
@@ -123,16 +125,14 @@ public class UpdateBookActivity extends AppCompatActivity {
         mDatePub = (EditText) findViewById(R.id.tvDatePublishedUB);
         Spinner mBookStat = (Spinner) findViewById(R.id.spinnerStatusUB);
         ImageView mBookImg = (ImageView) findViewById(R.id.ivBookImgUB);
-        ImageButton mUpdateBtn = (ImageButton) findViewById(R.id.btnUpdateUB);
+        Button mUpdateBtn = (Button) findViewById(R.id.btnUpdateUB);
 
-        List<String> statusBook = new ArrayList<String>();
-        statusBook.add("Rent");
-        statusBook.add("Swap");
-        statusBook.add("Not Advertised");
-        statusBook.add("Auction");
-
+        final List<String> statusBook = new ArrayList<String>();
 
         if(getIntent().getExtras().getSerializable("viewBook")!=null){
+            statusBook.add("Swap");
+            statusBook.add("Not Advertised");
+            statusBook.add("Auction");
             rentalDetailModel = (RentalDetail) getIntent().getExtras().getSerializable("viewBook");
 
             mBookTitle.setText(rentalDetailModel.getBookOwner().getBookObj().getBookTitle());
@@ -158,6 +158,7 @@ public class UpdateBookActivity extends AppCompatActivity {
             }
             mAuthor.setText(author);
 
+            statusBook.remove(0);
             ArrayAdapter<String> adapter = new ArrayAdapter<String>(UpdateBookActivity.this, android.R.layout.simple_dropdown_item_1line, statusBook);
             adapter.setDropDownViewResource(R.layout.support_simple_spinner_dropdown_item);
             mBookStat.setAdapter(adapter);
@@ -169,6 +170,7 @@ public class UpdateBookActivity extends AppCompatActivity {
                 @Override
                 public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                     chosen = position;
+                    Log.d("chosen-"+position, statusBook.get(position));
                 }
 
                 @Override
@@ -206,28 +208,25 @@ public class UpdateBookActivity extends AppCompatActivity {
             mUpdateBtn.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    if(chosen==1){
+                    if(statusBook.get(chosen).equals("Swap")){
                         bookOwnerModel = rentalDetailModel.getBookOwner();
+                        bookOwnerModel.getBookObj().setStatus("Available");
                         bookOwnerModel.setBookStat("Available");
                         bookOwnerModel.setStatus("Swap");
                         bookOwnerModel.setStatusDescription(mBookCond.getText().toString());
                         bookOwnerModel.setDateBought(mDatePub.getText().toString());
                         updateBookOwner(bookOwnerModel, "Rent");
-                    }else if(chosen==2){
+                    }else if(statusBook.get(chosen).equals("Not Advertised")){
                         bookOwnerModel = rentalDetailModel.getBookOwner();
+                        bookOwnerModel.getBookObj().setStatus("Available");
                         bookOwnerModel.setBookStat("Available");
                         bookOwnerModel.setStatus("NotAdvertised");
                         bookOwnerModel.setStatusDescription(mBookCond.getText().toString());
                         bookOwnerModel.setDateBought(mDatePub.getText().toString());
                         updateBookOwner(bookOwnerModel, "Rent");
-                    }else if(chosen==0){
-                        Log.d("editText", mBookCond.getText().toString());
+                    }else if(statusBook.get(chosen).equals("Auction")){
                         bookOwnerModel = rentalDetailModel.getBookOwner();
-                        bookOwnerModel.setStatusDescription(mBookCond.getText().toString());
-                        bookOwnerModel.setDateBought(mDatePub.getText().toString());
-                        updateBookOwner(bookOwnerModel, "none");
-                    }else{
-                        bookOwnerModel = rentalDetailModel.getBookOwner();
+                        bookOwnerModel.getBookObj().setStatus("Available");
                         bookOwnerModel.setBookStat("Available");
                         bookOwnerModel.setStatus("Auction");
                         customAuctionDialog("Rent");
@@ -235,6 +234,10 @@ public class UpdateBookActivity extends AppCompatActivity {
                 }
             });
         }else if(getIntent().getExtras().getSerializable("swapBook")!=null){
+            statusBook.add("Rent");
+            statusBook.add("Not Advertised");
+            statusBook.add("Auction");
+
             swapDetailModel = (SwapDetail) getIntent().getExtras().getSerializable("swapBook");
 
             mBookTitle.setText(swapDetailModel.getBookOwner().getBookObj().getBookTitle());
@@ -271,6 +274,7 @@ public class UpdateBookActivity extends AppCompatActivity {
                 @Override
                 public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                     chosen = position;
+                    Log.d("chosen-"+position, statusBook.get(position));
                 }
 
                 @Override
@@ -285,27 +289,25 @@ public class UpdateBookActivity extends AppCompatActivity {
             mUpdateBtn.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    if(chosen==0){
+                    if(statusBook.get(chosen).equals("Rent")){
                         bookOwnerModel = swapDetailModel.getBookOwner();
+                        bookOwnerModel.getBookObj().setStatus("Available");
                         bookOwnerModel.setBookStat("Available");
                         bookOwnerModel.setStatus("Rent");
                         bookOwnerModel.setStatusDescription(mBookCond.getText().toString());
                         bookOwnerModel.setDateBought(mDatePub.getText().toString());
                         customDialog("Swap");
-                    }else if(chosen==1){
+                    }else if(statusBook.get(chosen).equals("Not Advertised")){
                         bookOwnerModel = swapDetailModel.getBookOwner();
-                        bookOwnerModel.setStatusDescription(mBookCond.getText().toString());
-                        bookOwnerModel.setDateBought(mDatePub.getText().toString());
-                        updateBookOwner(bookOwnerModel, "none");
-                    }else if(chosen==2){
-                        bookOwnerModel = swapDetailModel.getBookOwner();
+                        bookOwnerModel.getBookObj().setStatus("Available");
                         bookOwnerModel.setBookStat("Available");
                         bookOwnerModel.setStatus("none");
                         bookOwnerModel.setStatusDescription(mBookCond.getText().toString());
                         bookOwnerModel.setDateBought(mDatePub.getText().toString());
                         updateBookOwner(bookOwnerModel, "Swap");
-                    }else if(chosen==3){
+                    }else if(statusBook.get(chosen).equals("Auction")){
                         bookOwnerModel = swapDetailModel.getBookOwner();
+                        bookOwnerModel.getBookObj().setStatus("Available");
                         bookOwnerModel.setBookStat("Available");
                         bookOwnerModel.setStatus("Auction");
                         bookOwnerModel.setStatusDescription(mBookCond.getText().toString());
@@ -315,6 +317,10 @@ public class UpdateBookActivity extends AppCompatActivity {
                 }
             });
         }else if(getIntent().getExtras().getSerializable("auctionBook")!=null){
+            statusBook.add("Rent");
+            statusBook.add("Swap");
+            statusBook.add("Not Advertised");
+
             auctionDetailModel = (AuctionDetailModel) getIntent().getExtras().getSerializable("auctionBook");
 
             mBookTitle.setText(auctionDetailModel.getBookOwner().getBookObj().getBookTitle());
@@ -351,6 +357,7 @@ public class UpdateBookActivity extends AppCompatActivity {
                 @Override
                 public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                     chosen = position;
+                    Log.d("chosen-"+position, statusBook.get(position));
                 }
 
                 @Override
@@ -365,37 +372,39 @@ public class UpdateBookActivity extends AppCompatActivity {
             mUpdateBtn.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    if(chosen==0){
+                    if(statusBook.get(chosen).equals("Rent")){
                         bookOwnerModel = auctionDetailModel.getBookOwner();
+                        bookOwnerModel.getBookObj().setStatus("Available");
                         bookOwnerModel.setBookStat("Available");
                         bookOwnerModel.setStatus("Rent");
                         bookOwnerModel.setStatusDescription(mBookCond.getText().toString());
                         bookOwnerModel.setDateBought(mDatePub.getText().toString());
                         customDialog("Auction");
-                    }else if(chosen==1){
+                    }else if(statusBook.get(chosen).equals("Swap")){
                         BookOwnerModel bookOwnerModel = new BookOwnerModel();
                         bookOwnerModel = auctionDetailModel.getBookOwner();
+                        bookOwnerModel.getBookObj().setStatus("Available");
                         bookOwnerModel.setBookStat("Available");
                         bookOwnerModel.setStatus("Swap");
                         bookOwnerModel.setStatusDescription(mBookCond.getText().toString());
                         bookOwnerModel.setDateBought(mDatePub.getText().toString());
                         updateBookOwner(bookOwnerModel, "Auction");
-                    }else if(chosen==2){
+                    }else if(statusBook.get(chosen).equals("Not Advertised")){
                         bookOwnerModel = auctionDetailModel.getBookOwner();
+                        bookOwnerModel.getBookObj().setStatus("Available");
                         bookOwnerModel.setBookStat("Available");
-                        bookOwnerModel.setStatus("NotAdvertised");
+                        bookOwnerModel.setStatus("none");
                         bookOwnerModel.setStatusDescription(mBookCond.getText().toString());
                         bookOwnerModel.setDateBought(mDatePub.getText().toString());
                         updateBookOwner(bookOwnerModel, "Auction");
-                    }else if(chosen==3){
-                        bookOwnerModel = rentalDetailModel.getBookOwner();
-                        bookOwnerModel.setStatusDescription(mBookCond.getText().toString());
-                        bookOwnerModel.setDateBought(mDatePub.getText().toString());
-                        updateBookOwner(bookOwnerModel, "none");
                     }
                 }
             });
         }else if(getIntent().getExtras().getSerializable("notAdBook")!=null){
+            statusBook.add("Rent");
+            statusBook.add("Swap");
+            statusBook.add("Auction");
+
             BookOwnerModel bookOwner = new BookOwnerModel();
 
             bookOwner = (BookOwnerModel) getIntent().getExtras().getSerializable("notAdBook");
@@ -434,6 +443,7 @@ public class UpdateBookActivity extends AppCompatActivity {
                 @Override
                 public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                     chosen = position;
+                    Log.d("chosen", statusBook.get(position));
                 }
 
                 @Override
@@ -449,25 +459,26 @@ public class UpdateBookActivity extends AppCompatActivity {
             mUpdateBtn.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    if(chosen==0){
+                    if(statusBook.get(chosen).equals("Rent")){
                         bookOwnerModel = finalBookOwner;
+                        bookOwnerModel.getBookObj().setStatus("Available");
+                        bookOwnerModel.setBookStat("Available");
                         bookOwnerModel.setStatus("Rent");
                         bookOwnerModel.setStatusDescription(mBookCond.getText().toString());
                         bookOwnerModel.setDateBought(mDatePub.getText().toString());
                         customDialog("NotAdvertised");
-                    }else if(chosen==1){
+                    }else if(statusBook.get(chosen).equals("Swap")){
                         bookOwnerModel = finalBookOwner;
+                        bookOwnerModel.setBookStat("Available");
+                        bookOwnerModel.getBookObj().setStatus("Available");
                         bookOwnerModel.setStatus("Swap");
                         bookOwnerModel.setStatusDescription(mBookCond.getText().toString());
                         bookOwnerModel.setDateBought(mDatePub.getText().toString());
                         updateBookOwner(bookOwnerModel, "NotAdvertised");
-                    }else if(chosen==2){
-                        bookOwnerModel = rentalDetailModel.getBookOwner();
-                        bookOwnerModel.setStatusDescription(mBookCond.getText().toString());
-                        bookOwnerModel.setDateBought(mDatePub.getText().toString());
-                        updateBookOwner(bookOwnerModel, "none");
-                    }else if(chosen==3){
+                    }else if(statusBook.get(chosen).equals("Auction")){
                         bookOwnerModel=finalBookOwner;
+                        bookOwnerModel.setBookStat("Available");
+                        bookOwnerModel.getBookObj().setStatus("Available");
                         bookOwnerModel.setStatus("Auction");
                         bookOwnerModel.setStatusDescription(mBookCond.getText().toString());
                         bookOwnerModel.setDateBought(mDatePub.getText().toString());
