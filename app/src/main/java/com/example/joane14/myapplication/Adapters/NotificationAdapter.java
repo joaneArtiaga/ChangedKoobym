@@ -1388,6 +1388,10 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
                         adapterDate.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                         mSpinDate.setAdapter(adapterDate);
 
+                        final ArrayAdapter<String> adapterTime = new ArrayAdapter<String>(context, android.R.layout.simple_spinner_item, timeStr);
+                        adapterTime.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                        mSpinTime.setAdapter(adapterTime);
+
                         mSpinDate.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
                             @Override
                             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
@@ -1421,10 +1425,6 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
                                     calendar.setTime(selectedDate);
                                     int dayOfWeek = calendar.get(Calendar.DAY_OF_WEEK);
 
-                                    timeStr.add("09:00 - 10:00 am");
-                                    timeStr.add("12:00 - 02:00 pm");
-                                    timeStr.add("04:00 - 06:00 pm");
-                                    timeStr.add("07:00 - 09:00 pm");
                                     for(int init=0; init<daytime.size(); init++){
                                         Log.d("iterateUserTime", daytime.get(init).getTime().getStrTime());
                                     }
@@ -1487,7 +1487,7 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
                                             }
                                         }
                                     }
-
+                                    adapterTime.notifyDataSetChanged();
                                 } catch (ParseException e) {
                                     e.printStackTrace();
                                 }
@@ -1499,9 +1499,6 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
                             }
                         });
 
-                        ArrayAdapter<String> adapterTime = new ArrayAdapter<String>(context, android.R.layout.simple_spinner_item, timeStr);
-                        adapterTime.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-                        mSpinTime.setAdapter(adapterTime);
 
                         mSpinTime.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
                             @Override
@@ -2309,11 +2306,6 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
                             mSpinDate.setAdapter(adapterDate);
 
 
-                            timeStr.add("09:00 - 10:00 am");
-                            timeStr.add("12:00 - 02:00 pm");
-                            timeStr.add("04:00 - 06:00 pm");
-                            timeStr.add("07:00 - 09:00 pm");
-
                             mSpinDate.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
                                 @Override
                                 public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
@@ -2328,10 +2320,6 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
                                         calendar.setTime(selectedDate);
                                         int dayOfWeek = calendar.get(Calendar.DAY_OF_WEEK);
 
-                                        timeStr.add("09:00 - 10:00 am");
-                                        timeStr.add("12:00 - 02:00 pm");
-                                        timeStr.add("04:00 - 06:00 pm");
-                                        timeStr.add("07:00 - 09:00 pm");
                                         for(int init=0; init<daytime.size(); init++){
                                             Log.d("iterateUserTime", daytime.get(init).getTime().getStrTime());
                                         }
@@ -2882,11 +2870,10 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
                         adapterDate.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                         mSpinDate.setAdapter(adapterDate);
 
+                        final ArrayAdapter<String> adapterTime = new ArrayAdapter<String>(context, android.R.layout.simple_spinner_item, timeStr);
+                        adapterTime.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                        mSpinTime.setAdapter(adapterTime);
 
-                        timeStr.add("09:00 - 10:00 am");
-                        timeStr.add("12:00 - 02:00 pm");
-                        timeStr.add("04:00 - 06:00 pm");
-                        timeStr.add("07:00 - 09:00 pm");
 
                         mSpinDate.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
                             @Override
@@ -2896,17 +2883,12 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
                                     swapHeaderMod.setDateDelivered(dateMeetUp.get(position));
                                     Log.d("dateDelivered", dateMeetUp.get(position));
 
-//                                    timeStr = new ArrayList<String>();
                                     String dayOfDate = "";
                                     Calendar calendar = Calendar.getInstance();
                                     Date selectedDate = format.parse(dateMeetUp.get(position));
                                     calendar.setTime(selectedDate);
                                     int dayOfWeek = calendar.get(Calendar.DAY_OF_WEEK);
 
-                                    timeStr.add("09:00 - 10:00 am");
-                                    timeStr.add("12:00 - 02:00 pm");
-                                    timeStr.add("04:00 - 06:00 pm");
-                                    timeStr.add("07:00 - 09:00 pm");
                                     for(int init=0; init<daytime.size(); init++){
                                         Log.d("iterateUserTime", daytime.get(init).getTime().getStrTime());
                                     }
@@ -2983,6 +2965,7 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
                                             }
                                         }
                                     }
+                                    adapterTime.notifyDataSetChanged();
 
                                 } catch (ParseException e) {
                                     e.printStackTrace();
@@ -2994,10 +2977,6 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
 
                             }
                         });
-
-                        ArrayAdapter<String> adapterTime = new ArrayAdapter<String>(context, android.R.layout.simple_spinner_item, timeStr);
-                        adapterTime.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-                        mSpinTime.setAdapter(adapterTime);
 
                         mSpinTime.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
                             @Override
