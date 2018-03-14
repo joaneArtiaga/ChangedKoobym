@@ -69,7 +69,9 @@
         android:layout_below="@+id/textView11"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="18dp"
-        android:background="@color/colorTuftBrush"
+        android:layout_marginBottom="10dp"
+        android:background="@drawable/rounded_button"
+        android:textColor="@color/colorWhite"
         android:text="Okay" />
 
     <TextView

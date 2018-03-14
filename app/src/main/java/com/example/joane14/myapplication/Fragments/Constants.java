@@ -179,6 +179,8 @@ public class Constants {
 
     public static final String GET_RATINGS = WEB_SERVICE_URL + "bookOwnerReview/getAverageRatingOfBookOwner/";
 
+    public static final String GET_COUNT_REQ = WEB_SERVICE_URL + "rentalHeader/allRequested/";
+
     public static final String GET_COUNT = WEB_SERVICE_URL + "rentalHeader/getCount/";
 
     public static final String GET_USER_NOTIFICATION = WEB_SERVICE_URL + "userNotification/notificationForUser/";

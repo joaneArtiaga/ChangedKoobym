@@ -118,11 +118,6 @@ public class DisplayBooksAdapter extends BaseAdapter {
                 statusBook.setText("RENTED");
                 statusLinear.setBackgroundColor(ContextCompat.getColor(context, R.color.colorLightRent));
             }
-//            if(rentalDetailModel==null){
-//                Log.d("NullMan", "ang pisti");
-//            }else{
-//                Log.d("NullMan", "joke dili diay");
-//            }
         }else if(bookOwnerModel.getStatus().equals("Swap")){
 //           getSwapDetail(bookOwnerModel.getBookOwnerId());
 

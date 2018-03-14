@@ -90,6 +90,7 @@ public class AddBookOwner extends AppCompatActivity {
         category = "";
         if(getIntent().getExtras().getSerializable("bookPass")!=null){
             bookModel = (Book) getIntent().getExtras().getSerializable("bookPass");
+            bookModel.setStatus("Not Available");
         }
 
         dateBought = "";

@@ -830,7 +830,13 @@ public class UpdateBookActivity extends AppCompatActivity {
         final Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd").registerTypeAdapter(Date.class, GsonDateDeserializer.getInstance()).create();
         final String mRequestBody = gson.toJson(bookOwnerModelToPost);
 
-
+        int maxLogSize = 2000;
+        for (int i = 0; i <= mRequestBody.length() / maxLogSize; i++) {
+            int start = i * maxLogSize;
+            int end = (i + 1) * maxLogSize;
+            end = end > mRequestBody.length() ? mRequestBody.length() : end;
+            Log.d("BookOwnerPostVolley", mRequestBody.substring(start, end));
+        }
         d("BookOwnerPostVolley", mRequestBody);
         StringRequest stringRequest = new StringRequest(Request.Method.PUT, URL, new Response.Listener<String>() {
             @RequiresApi(api = Build.VERSION_CODES.N)

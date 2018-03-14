@@ -63,6 +63,7 @@ import com.example.joane14.myapplication.Fragments.DisplayBookReview;
 import com.example.joane14.myapplication.Fragments.DisplaySwapComments;
 import com.example.joane14.myapplication.Fragments.MapLandingPage;
 import com.example.joane14.myapplication.Fragments.VolleyUtil;
+import com.example.joane14.myapplication.Model.AuctionComment;
 import com.example.joane14.myapplication.Model.AuctionDetailModel;
 import com.example.joane14.myapplication.Model.RentalDetail;
 import com.example.joane14.myapplication.Model.RentalHeader;
@@ -858,7 +859,7 @@ public class ViewBookAct extends AppCompatActivity implements
         requestQueue.add(stringRequest);
     }
 
-    private void checkIfExist(int userId, int rentalDetailId) {
+    private void checkIfExist(final int userId, final int rentalDetailId) {
         RequestQueue requestQueue = Volley.newRequestQueue(this);
         String URL = Constants.CHECK_EXIST+"/"+userId+"/"+rentalDetailId;
 
@@ -876,14 +877,6 @@ public class ViewBookAct extends AppCompatActivity implements
 
                 d("ResponseExist", response);
 
-                if(response.equals("")){
-                    d("ResponseExist", "is null");
-                }else{
-                    d("ResponseExist", "not null");
-                }
-
-
-
                 if(response==null||response.isEmpty()){
                     AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(ViewBookAct.this);
                     alertDialogBuilder.setTitle("Terms and Condition");
@@ -896,9 +889,6 @@ public class ViewBookAct extends AppCompatActivity implements
                                 @SuppressLint("NewApi")
                                 @Override
                                 public void onClick(DialogInterface arg0, int arg1) {
-//                                    Toast.makeText(ViewBookAct.this, "You agreed to the terms and condition.", Toast.LENGTH_SHORT).show();
-//                                    timeOutDialog();
-
                                     final android.support.v7.app.AlertDialog.Builder alertDialogBuilder = new android.support.v7.app.AlertDialog.Builder(ViewBookAct.this);
                                     alertDialogBuilder.setMessage("The owner will be notified of your request.");
                                     alertDialogBuilder.setPositiveButton("Okay",
@@ -1038,6 +1028,69 @@ public class ViewBookAct extends AppCompatActivity implements
             public void onResponse(String response) {
                 Log.i("CountBookResponse", response);
                 mRenters.setText("Rented by "+response+" people.");
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.e("LOG_VOLLEY", error.toString());
+            }
+        }) {
+            @Override
+            public String getBodyContentType() {
+                return "application/json; charset=utf-8";
+            }
+
+            @Override
+            public byte[] getBody() throws AuthFailureError {
+                try {
+                    return mRequestBody == null ? null : mRequestBody.getBytes("utf-8");
+                } catch (UnsupportedEncodingException uee) {
+                    VolleyLog.wtf("Unsupported Encoding while trying to get the bytes of %s using %s", mRequestBody, "utf-8");
+                    return null;
+                }
+            }
+        };
+
+        requestQueue.add(stringRequest);
+    }
+
+    public void getCountReq(int userId, final int rentalDetailId){
+        RequestQueue requestQueue = Volley.newRequestQueue(this);
+        User user = new User();
+        user = (User) SPUtility.getSPUtil(this).getObject("USER_OBJECT", User.class);
+        d("UserIdReceive", String.valueOf(user.getUserId()));
+        String URL = Constants.GET_COUNT_REQ+"/"+userId;
+
+        final RentalHeader rentalHeader =new RentalHeader();
+
+        final Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd").registerTypeAdapter(Date.class, GsonDateDeserializer.getInstance()).create();
+        final String mRequestBody = gson.toJson(rentalHeader);
+
+
+        d("LOG_VOLLEY", mRequestBody);
+        final User finalUser = user;
+        StringRequest stringRequest = new StringRequest(Request.Method.GET, URL, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                Log.i("ViewBookResponse", response);
+                List<RentalHeader> rh = new ArrayList<RentalHeader>();
+                rh.clear();
+                rh.addAll(Arrays.asList(gson.fromJson(response, RentalHeader[].class)));
+
+                if(rh.size()>3){
+                    AlertDialog ad = new AlertDialog.Builder(getApplicationContext()).create();
+                    ad.setMessage("You cannot request more than 3 rent books.");
+                    ad.setButton(AlertDialog.BUTTON_POSITIVE, "Okay", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            dialog.dismiss();
+                        }
+                    });
+                    ad.show();
+                }else{
+                    checkIfExist(finalUser.getUserId(), rentalDetailId);
+                }
+
             }
         }, new Response.ErrorListener() {
             @Override
