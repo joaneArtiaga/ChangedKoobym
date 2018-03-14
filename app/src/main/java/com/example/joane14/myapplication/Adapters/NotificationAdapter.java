@@ -197,7 +197,7 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
                 Log.d("notifAuc", "lose");
                 message = "The book, "+userNotification.getBookActionPerformedOn().getBookObj().getBookTitle()+", you tried bidding just ended. Your bid unfortunately lost.";
             }else if(userNotificationList.get(position).getActionStatus().equals("own")){
-                message = "The book, "+userNotification.getBookActionPerformedOn().getBookObj().getBookTitle()+", you auctioned just ended. The highest bid is "+userNotification.getExtraMessage()+" by "+userNotification.getUserPerformer().getUserFname()+" "+userNotification.getUserPerformer().getUserLname();
+                message = "Your book, "+userNotification.getBookActionPerformedOn().getBookObj().getBookTitle()+", that is for auction just ended. The highest bid is "+userNotification.getExtraMessage()+" by "+userNotification.getUserPerformer().getUserFname()+" "+userNotification.getUserPerformer().getUserLname();
             }else if(userNotification.getActionStatus().equals("delivered")){
                 message = userNotification.getUserPerformer().getUserFname()+" "+userNotification.getUserPerformer().getUserLname()+" delivered the book, "+userNotification.getBookActionPerformedOn().getBookObj().getBookTitle()+".";
             }else if(userNotification.getActionStatus().equals("Complete")){
@@ -2306,6 +2306,10 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
                             mSpinDate.setAdapter(adapterDate);
 
 
+                            final ArrayAdapter<String> adapterTime = new ArrayAdapter<String>(context, android.R.layout.simple_spinner_item, timeStr);
+                            adapterTime.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                            mSpinTime.setAdapter(adapterTime);
+
                             mSpinDate.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
                                 @Override
                                 public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
@@ -2396,7 +2400,7 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
                                                 }
                                             }
                                         }
-
+                                        adapterTime.notifyDataSetChanged();
                                     } catch (ParseException e) {
                                         e.printStackTrace();
                                     }
@@ -2408,9 +2412,6 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
                                 }
                             });
 
-                            ArrayAdapter<String> adapterTime = new ArrayAdapter<String>(context, android.R.layout.simple_spinner_item, timeStr);
-                            adapterTime.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-                            mSpinTime.setAdapter(adapterTime);
 
                             mSpinTime.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
                                 @Override

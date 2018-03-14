@@ -338,7 +338,18 @@ ViewAuctionBook extends AppCompatActivity
                     }else if(auctionDetailModel.getAuctionStatus().equals("stop")){
                         AlertDialog ad = new AlertDialog.Builder(ViewAuctionBook.this).create();
                         ad.setTitle("ALERT!");
-                        ad.setMessage("You can't bid because the Aution already ended.");
+                        ad.setMessage("You can't bid because the Auction has already ended.");
+                        ad.setButton(AlertDialog.BUTTON_NEUTRAL, "Okay", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                dialog.dismiss();
+                            }
+                        });
+                        ad.show();
+                    }else if(auctionDetailModel.getAuctionStatus().equals("pending")){
+                        AlertDialog ad = new AlertDialog.Builder(ViewAuctionBook.this).create();
+                        ad.setTitle("ALERT!");
+                        ad.setMessage("You can't bid because the Auction has not yet started.");
                         ad.setButton(AlertDialog.BUTTON_NEUTRAL, "Okay", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
