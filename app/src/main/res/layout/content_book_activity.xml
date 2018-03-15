@@ -38,6 +38,8 @@
             <TextView
                 android:id="@+id/tvBAdeliver"
                 android:layout_width="match_parent"
+                android:layout_gravity="center"
+                android:gravity="center"
                 android:layout_height="wrap_content"
                 android:text="To Deliver"
                 android:textColor="@color/colorDark"/>
@@ -64,6 +66,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="To Receive"
+                android:layout_gravity="center"
+                android:gravity="center"
                 android:textColor="@color/colorDark"/>
 
         </LinearLayout>
@@ -89,6 +93,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="To Return"
+                android:layout_gravity="center"
+                android:gravity="center"
                 android:textColor="@color/colorDark" />
 
         </LinearLayout>
