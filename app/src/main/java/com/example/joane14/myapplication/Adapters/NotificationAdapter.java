@@ -3542,8 +3542,14 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
         if(diff<=0){
             diff+=7;
         }
-        diff++;
+//        diff++;
+
+        DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
         c.add(Calendar.DAY_OF_MONTH, diff);
+        Calendar cal = Calendar.getInstance();
+        cal.add(Calendar.DAY_OF_WEEK, diff);
+        Log.d("nextDate month",df.format(c.getTime()));
+        Log.d("nextDate week",df.format(c.getTime()));
         return c.getTime();
     }
 
