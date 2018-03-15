@@ -72,23 +72,16 @@ public class ToDeliverRentAdapter extends RecyclerView.Adapter<ToDeliverRentAdap
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
         final String currDate = sdf.format(cal.getTime());
 
-        Log.d("DeliverRent\t"+"CurrDate:"+currDate, "DeliveryDate:"+bookList.get(position).getDateDeliver());
-        if(currDate.equals(bookList.get(position).getDateDeliver())){
-            holder.mRate.setImageResource(R.drawable.checkbookact);
-        }else{
-            holder.mRate.setImageResource(R.drawable.notrate);
-        }
-
         holder.mNotify.setVisibility(View.GONE);
 
         holder.mBookTitle.setText(bookList.get(position).getRentalDetail().getBookOwner().getBookObj().getBookTitle());
         holder.mBookDate.setText(bookList.get(position).getRentalTimeStamp());
-        holder.mPrice.setText(String.valueOf(bookList.get(position).getRentalDetail().getCalculatedPrice()));
+        holder.mPrice.setText(holder.mPrice.getText().toString()+"   "+String.valueOf(bookList.get(position).getRentalDetail().getCalculatedPrice()));
         holder.mRenterName.setText(bookList.get(position).getUserId().getUserFname()+" "+bookList.get(position).getUserId().getUserLname());
         if(bookList.get(position).getDateDeliver()==null){
             Log.d("EndDateDeliverRent", "walay sulod");
         }else{
-            holder.mDate.setText(bookList.get(position).getDateDeliver());
+            holder.mDate.setText(bookList.get(position).getDateDeliver()+"  ");
         }
         if(bookList.get(position).getMeetUp()==null){
 
@@ -110,15 +103,8 @@ public class ToDeliverRentAdapter extends RecyclerView.Adapter<ToDeliverRentAdap
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(date);
         calendar.add(calendar.DATE, bookList.get(position).getRentalDetail().getDaysForRent());
-        Calendar c = Calendar.getInstance();
+        final Calendar c = Calendar.getInstance();
         newDate = df.format(c.getTime());
-
-        Log.d("CurrentDate: "+newDate, "ReturnDate: "+bookList.get(position).getDateDeliver());
-        if(newDate.equals(bookList.get(position).getDateDeliver())){
-            holder.mRate.setImageResource(R.drawable.checkbookact);
-        }else{
-            holder.mRate.setImageResource(R.drawable.notrate);
-        }
 
         Glide.with(context).load(bookList.get(position).getRentalDetail().getBookOwner().getBookObj().getBookFilename()).centerCrop().into(holder.mIvBookImg);
 
@@ -133,11 +119,28 @@ public class ToDeliverRentAdapter extends RecyclerView.Adapter<ToDeliverRentAdap
             }
         });
 
+        Date dateToCompare = new Date();
+        try {
+            dateToCompare = df.parse(bookList.get(position).getDateDeliver());
+
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
+        Log.d("CurrentDate: "+newDate, "ReturnDate: "+bookList.get(position).getDateDeliver());
+        Log.d("returnedBoolean", dateToCompare.compareTo(c.getTime())+"");
+        if(dateToCompare.after(c.getTime())|| newDate.equals(bookList.get(position).getDateDeliver())){
+            holder.mRate.setImageResource(R.drawable.checkbookact);
+        }else{
+            holder.mRate.setImageResource(R.drawable.notrate);
+        }
+
         final String finalNewDate = newDate;
+        final Date finalDateToCompare = dateToCompare;
         holder.mRate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(currDate.equals(bookList.get(position).getDateDeliver())){
+                if(finalDateToCompare.after(c.getTime())|| finalNewDate.equals(bookList.get(position).getDateDeliver())){
                     AlertDialog ad = new AlertDialog.Builder(context).create();
                     ad.setMessage("Will notify the renter of your book delivery.");
                     ad.setButton(AlertDialog.BUTTON_POSITIVE, "Okay", new DialogInterface.OnClickListener() {

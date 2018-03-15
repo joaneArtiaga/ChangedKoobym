@@ -80,12 +80,6 @@ public class ToDeliverSwapAdapter extends RecyclerView.Adapter<ToDeliverSwapAdap
         final String currDAte = sdf.format(c);
 
         d("swapHeader", bookList.get(position).toString());
-//        Log.d("CurrentDate: "+currDAte, "ReturnDate: "+bookList.get(position).getSwapHeader().getDateDelivered());
-        if(currDAte.equals(bookList.get(position).getDateDelivered())){
-            holder.mRate.setImageResource(R.drawable.checkbookact);
-        }else{
-            holder.mRate.setImageResource(R.drawable.notrate);
-        }
 
         holder.mNotify.setVisibility(View.GONE);
 
@@ -118,10 +112,31 @@ public class ToDeliverSwapAdapter extends RecyclerView.Adapter<ToDeliverSwapAdap
             }
         });
 
+        final Calendar calendar = Calendar.getInstance();
+
+        DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
+
+        Date dateToCompare = new Date();
+        try {
+            dateToCompare = df.parse(bookList.get(position).getDateDelivered());
+
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
+        final String newDate = df.format(calendar.getTime());
+
+        if(dateToCompare.after(calendar.getTime())|| newDate.equals(bookList.get(position).getDateDelivered())){
+            holder.mRate.setImageResource(R.drawable.checkbookact);
+        }else{
+            holder.mRate.setImageResource(R.drawable.notrate);
+        }
+
+        final Date finalDateToCompare = dateToCompare;
         holder.mRate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(currDAte.equals(bookList.get(position).getDateDelivered())){
+                if(finalDateToCompare.after(calendar.getTime())|| newDate.equals(bookList.get(position).getDateDelivered())){
                     final AlertDialog ad = new AlertDialog.Builder(context).create();
                     ad.setTitle("Confirmation");
                     ad.setMessage("Will notify "+bookList.get(position).getRequestedSwapDetail().getBookOwner().getUserObj().getUserFname()+" "+bookList.get(position).getRequestedSwapDetail().getBookOwner().getUserObj().getUserFname()+" that the book has been delivered.");
@@ -162,8 +177,6 @@ public class ToDeliverSwapAdapter extends RecyclerView.Adapter<ToDeliverSwapAdap
         final SwapRequestAdapter adapter = new SwapRequestAdapter(context, newShd);
 
         holder.ly.setAdapter(adapter);
-
-
 
     }
 

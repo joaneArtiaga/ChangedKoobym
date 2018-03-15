@@ -10,6 +10,7 @@ import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
@@ -90,6 +91,7 @@ public class UpdateProfileActivity extends AppCompatActivity implements AdapterV
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_update_profile);
+        getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
 
         calendar = Calendar.getInstance();
 
@@ -143,11 +145,12 @@ public class UpdateProfileActivity extends AppCompatActivity implements AdapterV
 
         location = user.getLocationArray();
 
+
         for(int init=0; init<location.size(); init++){
-            if(location.get(init).getStatus().equals("Addresss")){
-                mAddressPos = init;
-            }else{
+            if(location.get(init).getStatus().equals("MeetUp")){
                 locPos.add(init);
+            }else{
+                mAddressPos = init;
             }
         }
 

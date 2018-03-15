@@ -2,8 +2,12 @@ package com.example.joane14.myapplication.Activities;
 
 import android.app.AlertDialog;
 import android.content.Intent;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
+import android.content.pm.Signature;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Base64;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -43,6 +47,8 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.UnsupportedEncodingException;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.Date;
 
 
@@ -70,6 +76,20 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        try {
+            PackageInfo info = getPackageManager().getPackageInfo(
+                    "com.example.joane14.myapplication",
+                    PackageManager.GET_SIGNATURES);
+            for (Signature signature : info.signatures) {
+                MessageDigest md = MessageDigest.getInstance("SHA");
+                md.update(signature.toByteArray());
+                Log.d("KeyHash:", Base64.encodeToString(md.digest(), Base64.DEFAULT));
+            }
+        } catch (PackageManager.NameNotFoundException e) {
+
+        } catch (NoSuchAlgorithmException e) {
+
+        }
 
         if(SPUtility.getSPUtil(this).contains("USER_OBJECT")){
             Log.d("inside", "contain SPUtility");
@@ -85,7 +105,6 @@ public class MainActivity extends AppCompatActivity {
             }else{
                 Log.d("spUser", "is not null");
             }
-//                    intent.putExtra("recommned", b);
             SPUtility.getSPUtil(MainActivity.this).putObject("USER_OBJECT ", spUser);
             startActivity(intent);
         }else{
@@ -102,7 +121,6 @@ public class MainActivity extends AppCompatActivity {
         FacebookSdk.sdkInitialize(this.getApplicationContext());
         callbackManager = CallbackManager.Factory.create();
 
-//        register();
         mLogin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -115,7 +133,6 @@ public class MainActivity extends AppCompatActivity {
         mBtnRegister.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-//                registerUser();
                 Intent intent = new Intent(MainActivity.this, SignUp.class);
                 Bundle bundle = new Bundle();
                 bundle.putBoolean("Genre", true);
@@ -125,6 +142,7 @@ public class MainActivity extends AppCompatActivity {
 
         });
         mbundle = new Bundle();
+
         if (isLoggedIn()) {
             Log.d("Logged in", "True");
 
@@ -142,7 +160,6 @@ public class MainActivity extends AppCompatActivity {
             Intent intent = new Intent(MainActivity.this, LandingPage.class);
             intent.putExtra("ProfileBundle", mbundle);
             startActivity(intent);
-//            getUserData();
         } else {
             Log.d("Logged in", "False");
         }
@@ -218,7 +235,6 @@ public class MainActivity extends AppCompatActivity {
 
     public void checkFB(final User user) {
         RequestQueue requestQueue = Volley.newRequestQueue(this);
-//        String URL = "http://104.197.4.32:8080/Koobym/user/login";
         String URL = Constants.CHECK_FB_USER +"/"+user.getUserFbId();
 
         Log.d("UserFb", URL);
@@ -233,7 +249,10 @@ public class MainActivity extends AppCompatActivity {
                 if(response == null || response.length() == 0){
                     Log.d("fbResponse", response);
                     SPUtility.getSPUtil(MainActivity.this).putObject("USER_OBJECT", user);
-                    Intent intent = new Intent(MainActivity.this, LocationChooser.class);
+                    Intent intent = new Intent(MainActivity.this, SignUp.class);
+                    Bundle bundle = new Bundle();
+                    bundle.putBoolean("Genre", true);
+                    intent.putExtras(bundle);
                     startActivity(intent);
                 }else{
                     Log.d("FBUser", "exist");
@@ -279,7 +298,6 @@ public class MainActivity extends AppCompatActivity {
 
     public void login(View view) {
         RequestQueue requestQueue = Volley.newRequestQueue(this);
-//        String URL = "http://104.198.152.85/Koobym/user/login";
         String URL = Constants.WEB_SERVICE_URL +"user/login";
         User user = new User();
         user.setUsername(mUsername);
@@ -307,7 +325,6 @@ public class MainActivity extends AppCompatActivity {
                     Log.d("userResponse ",user.getImageFilename());
                     Log.d("userResponse ",user.getDayTimeModel().get(0).getTime().getStrTime());
                     Bundle b = new Bundle();
-//                    intent.putExtra("recommned", b);
                     SPUtility.getSPUtil(MainActivity.this).putObject("USER_OBJECT", user);
                     if(user==null){
                         Log.d("User", "null");

@@ -53,6 +53,10 @@ public class Constants {
 
     public static final String POST_SWAP_HEADER = WEB_SERVICE_URL + "swapHeader/add";
 
+    public static final String PUT_SWAP_DETAIL = WEB_SERVICE_URL + "swapDetail/update";
+
+    public static final String PUT_BOOK_OWNER= WEB_SERVICE_URL + "bookOwner/update";
+
     public static final String POST_AUCTION_HEADER = WEB_SERVICE_URL + "auctionHeader/add";
 
     public static final String GET_RENTAL_HEADER_MY_REQUEST = WEB_SERVICE_URL + "rentalHeader/myRequestById/";
@@ -179,7 +183,11 @@ public class Constants {
 
     public static final String GET_RATINGS = WEB_SERVICE_URL + "bookOwnerReview/getAverageRatingOfBookOwner/";
 
-    public static final String GET_COUNT_REQ = WEB_SERVICE_URL + "rentalHeader/allRequested/";
+    public static final String VALIDATE_AUCTION = WEB_SERVICE_URL + "auctionHeader/canAuction/";
+
+    public static final String VALIDATE_SWAP = WEB_SERVICE_URL + "swapHeader/canSwap/";
+
+    public static final String VALIDATE_RENT = WEB_SERVICE_URL + "rentalHeader/canRent/";
 
     public static final String GET_COUNT = WEB_SERVICE_URL + "rentalHeader/getCount/";
 

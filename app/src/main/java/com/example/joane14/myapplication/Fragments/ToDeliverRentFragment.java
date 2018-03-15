@@ -81,11 +81,9 @@ public class ToDeliverRentFragment extends Fragment {
 
     public void getMyDeliveries(){
         RequestQueue requestQueue = Volley.newRequestQueue(getContext());
-//        String URL = "http://104.197.4.32:8080/Koobym/user/add";
         User user = new User();
         user = (User) SPUtility.getSPUtil(getContext()).getObject("USER_OBJECT", User.class);
         String URL = Constants.GET_TRANSACTION_TO_DELIVER+user.getUserId();
-//        String URL = Constants.WEB_SERVICE_URL+"user/add";
 
         final RentalHeader rentalHeader =new RentalHeader();
 
@@ -100,7 +98,6 @@ public class ToDeliverRentFragment extends Fragment {
             @Override
             public void onResponse(String response) {
                 Log.i("ResponseRentalHeader", response);
-//                RentalHeader rentalHeaderModel = gson.fromJson(response, RentalHeader.class);
                 rentalHeaderList.clear();
                 rentalHeaderList.addAll(Arrays.asList(gson.fromJson(response, RentalHeader[].class)));
                 mAdapter.notifyDataSetChanged();

@@ -44,6 +44,9 @@ public class AboutProfFrag extends Fragment {
     User user;
     TextView mAddress, mPhone, mBirth, mLoc1, mLoc2, mLoc3;
     RatingBar mRate;
+    List<Integer> locPos;
+    int mAddressPos;
+
 
     public AboutProfFrag() {
     }
@@ -65,6 +68,8 @@ public class AboutProfFrag extends Fragment {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_about_prof, container, false);
 
+        mAddressPos = 0;
+        locPos = new ArrayList<Integer>();
 
         user = (User) getArguments().getSerializable("user");
         Log.d("TheUser", user.getUserFname());
@@ -83,11 +88,19 @@ public class AboutProfFrag extends Fragment {
 
         mLocList = user.getLocationArray();
 
-        mLoc1.setText(mLocList.get(0).getLocationName());
-        mLoc2.setText(mLocList.get(1).getLocationName());
-        mLoc3.setText(mLocList.get(2).getLocationName());
+        for(int init=0; init<mLocList.size(); init++){
+            if(mLocList.get(init).getStatus().equals("MeetUp")){
+                locPos.add(init);
+            }else{
+                mAddressPos = init;
+            }
+        }
 
-        mAddress.setText(user.getAddress());
+        mLoc1.setText(mLocList.get(locPos.get(0)).getLocationName());
+        mLoc2.setText(mLocList.get(locPos.get(1)).getLocationName());
+        mLoc3.setText(mLocList.get(locPos.get(2)).getLocationName());
+
+        mAddress.setText(mLocList.get(mAddressPos).getLocationName());
         mPhone.setText(user.getPhoneNumber());
 
         @SuppressLint({"NewApi", "LocalSuppress"})

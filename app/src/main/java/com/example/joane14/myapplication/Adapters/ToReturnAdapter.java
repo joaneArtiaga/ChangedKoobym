@@ -93,18 +93,62 @@ public class ToReturnAdapter extends RecyclerView.Adapter<ToReturnAdapter.BookHo
     @Override
     public void onBindViewHolder(final ToReturnAdapter.BookHolder holder, final int position) {
 
+        Calendar calendar = Calendar.getInstance();
         Date c = Calendar.getInstance().getTime();
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
         final String currDAte = sdf.format(c);
 
+        Date dateReturn = null;
+
+        try {
+            dateReturn = sdf.parse(bookList.get(position).getRentalReturnDate());
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        Calendar thatDay = Calendar.getInstance();
+        thatDay.setTime(dateReturn);
+        long diff = calendar.getTimeInMillis() - thatDay.getTimeInMillis();
+        long daysDiff = diff / (24*60*60*1000);
+
+        float lockin = 0f;
+
+        Log.d("diffDays", daysDiff+"");
+
+
+        lockin = daysDiff*50;
+
+        float lockinPrice=0f;
+
+        lockinPrice = bookList.get(position).getTotalPrice()/2;
+
+        float diffLp = 0f;
+
+        diffLp = lockinPrice - lockin;
+
+        if(diffLp<0){
+            holder.mPrice.setText("(- ₱ "+String.format("%.2f", Math.abs(diffLp))+")");
+        }else{
+            holder.mPrice.setText("₱  "+String.format("%.2f", diffLp));
+        }
+
         holder.mBookTitle.setText(bookList.get(position).getRentalDetail().getBookOwner().getBookObj().getBookTitle());
         holder.mRenter.setText("Available "+bookList.get(position).getRentalDetail().getDaysForRent()+" days for rent.");
-        holder.mPrice.setText(String.valueOf(bookList.get(position).getRentalDetail().getCalculatedPrice()));
         holder.mBookDate.setText(bookList.get(position).getRentalTimeStamp());
+        DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
+        final Calendar cal = Calendar.getInstance();
 
+        Date dateToCompare = new Date();
+        try {
+            dateToCompare = df.parse(bookList.get(position).getRentalReturnDate());
+
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        String newDate = "";
+        newDate = df.format(cal.getTime());
 
         Log.d("toReturn\t CurrentDate: "+currDAte, "ReturnDate: "+bookList.get(position).getRentalReturnDate());
-        if(currDAte.equals(bookList.get(position).getRentalReturnDate())){
+        if(dateToCompare.after(cal.getTime())|| newDate.equals(bookList.get(position).getDateDeliver())){
             holder.mRate.setImageResource(R.drawable.checkbookact);
         }else{
             holder.mRate.setImageResource(R.drawable.notrate);
@@ -113,7 +157,7 @@ public class ToReturnAdapter extends RecyclerView.Adapter<ToReturnAdapter.BookHo
         if(bookList.get(position).getRentalEndDate()==null){
             Log.d("EndDateReturnRent", "walay sulod");
         }else{
-            holder.mDate.setText(bookList.get(position).getRentalEndDate());
+            holder.mDate.setText(bookList.get(position).getRentalReturnDate());
         }
 
 
@@ -165,12 +209,14 @@ public class ToReturnAdapter extends RecyclerView.Adapter<ToReturnAdapter.BookHo
             }
         });
 
+        final Date finalDateToCompare = dateToCompare;
+        final String finalNewDate = newDate;
         holder.mRate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
 
-                if(currDAte.equals(bookList.get(position).getRentalReturnDate())){
+                if(finalDateToCompare.after(cal.getTime())|| finalNewDate.equals(bookList.get(position).getDateDeliver())){
                     AlertDialog ad = new AlertDialog.Builder(context).create();
                     ad.setTitle("Confirmation");
                     ad.setMessage("Did you receive the book?");

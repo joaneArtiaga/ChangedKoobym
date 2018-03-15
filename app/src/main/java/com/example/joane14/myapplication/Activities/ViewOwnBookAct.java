@@ -420,6 +420,7 @@ public class ViewOwnBookAct extends AppCompatActivity
 
             final User user = (User) SPUtility.getSPUtil(ViewOwnBookAct.this).getObject("USER_OBJECT", User.class);
 
+            mTitle.setText(auctionDetail.getBookOwner().getBookObj().getBookTitle());
             String genreStr = "";
             int genreSize = auctionDetail.getBookOwner().getBookObj().getBookGenre().size();
             if(genreSize>1){

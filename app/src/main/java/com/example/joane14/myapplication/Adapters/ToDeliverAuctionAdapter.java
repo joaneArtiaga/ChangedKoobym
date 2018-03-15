@@ -93,12 +93,6 @@ public class ToDeliverAuctionAdapter extends RecyclerView.Adapter<ToDeliverAucti
         holder.mBookDate.setText(bookList.get(position).getAuctionHeaderDateStamp());
         holder.mRenterName.setText(bookList.get(position).getUser().getUserFname()+" "+bookList.get(position).getUser().getUserLname());
 
-        Log.d("CurrentDate: "+currDAte, "ReturnDate: "+bookList.get(position).getDateDelivered());
-        if(currDAte.equals(bookList.get(position).getDateDelivered())){
-            holder.mRate.setImageResource(R.drawable.checkbookact);
-        }else{
-            holder.mRate.setImageResource(R.drawable.notrate);
-        }
 
         if(bookList.get(position).getMeetUp()==null){
 
@@ -116,7 +110,6 @@ public class ToDeliverAuctionAdapter extends RecyclerView.Adapter<ToDeliverAucti
 
         Glide.with(context).load(bookList.get(position).getAuctionDetail().getBookOwner().getBookObj().getBookFilename()).centerCrop().into(holder.mIvBookImg);
 
-//        Log.d("displayImage", bookList.get(position).getBookOwner().getBookObj().getBookFilename());
 
         holder.mProfile.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -129,25 +122,31 @@ public class ToDeliverAuctionAdapter extends RecyclerView.Adapter<ToDeliverAucti
             }
         });
 
-        holder.mRate.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                AlertDialog alertDialog = new AlertDialog.Builder(context).create();
-                alertDialog.setTitle("Alert!");
-                alertDialog.setMessage("The renter has not yet confirmed that he/she received the book already.");
-                alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "Okay", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        dialog.dismiss();
-                    }
-                });
-            }
-        });
 
+        final Calendar calendar = Calendar.getInstance();
+
+        DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
+
+        Date dateToCompare = new Date();
+        try {
+            dateToCompare = df.parse(bookList.get(position).getDateDelivered());
+
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
+        final String newDate = df.format(calendar.getTime());
+        if(dateToCompare.after(calendar.getTime())|| newDate.equals(bookList.get(position).getDateDelivered())){
+            holder.mRate.setImageResource(R.drawable.checkbookact);
+        }else{
+            holder.mRate.setImageResource(R.drawable.notrate);
+        }
+
+        final Date finalDateToCompare = dateToCompare;
         holder.mRate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(currDAte.equals(bookList.get(position).getDateDelivered())){
+                if(finalDateToCompare.after(calendar.getTime())|| newDate.equals(bookList.get(position).getDateDelivered())){
                     AlertDialog alertDialog = new AlertDialog.Builder(context).create();
                     alertDialog.setMessage("Will notify the bidder that the book has been delivered");
                     alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, "Okay", new DialogInterface.OnClickListener() {
@@ -175,7 +174,6 @@ public class ToDeliverAuctionAdapter extends RecyclerView.Adapter<ToDeliverAucti
 
     public void delivered(AuctionHeader auctionHeader) {
         RequestQueue requestQueue = Volley.newRequestQueue(context);
-//        String URL = "http://192.168.1.6:8080/Koobym/swapHeader/add";
         String URL = Constants.AUCTION_DELIVERED + auctionHeader.getAuctionHeaderId();
 
         Log.d("auctionDeliveredURL", URL);

@@ -22,6 +22,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
@@ -101,6 +102,8 @@ public class SearchActivity extends AppCompatActivity
         mSearchBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
+
                 if(mSearch.getText().length()!=0&&spinCat.getSelectedItem()!=null){
                     mResult.setText("'"+mSearch.getText().toString()+"'");
 

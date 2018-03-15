@@ -37,6 +37,7 @@ import com.example.joane14.myapplication.Activities.ViewBookAct;
 import com.example.joane14.myapplication.Adapters.RequestSwapAdapter;
 import com.example.joane14.myapplication.Adapters.SwapBookChooserAdapter;
 import com.example.joane14.myapplication.Adapters.SwapRequestAdapter;
+import com.example.joane14.myapplication.Model.BookOwnerModel;
 import com.example.joane14.myapplication.Model.RentalHeader;
 import com.example.joane14.myapplication.Model.SwapDetail;
 import com.example.joane14.myapplication.Model.SwapHeader;
@@ -110,12 +111,19 @@ public class RequestSwapFrag extends Fragment {
                 Glide.with(getContext()).load(rh.getSwapDetail().getBookOwner().getBookObj().getBookFilename()).centerCrop().into(ivBook);
 
                 mTitle.setText(rh.getSwapDetail().getBookOwner().getBookObj().getBookTitle());
-                mOwner.setText(rh.getUser().getUserFname()+" "+rh.getUser().getUserLname());
+                mOwner.setText(rh.getUser().getUserFname() + " " + rh.getUser().getUserLname());
 
                 ListView ly = (ListView) dialogCustom.findViewById(R.id.listSwap);
                 List<SwapHeaderDetail> sdList = new ArrayList<SwapHeaderDetail>();
                 sdList = rh.getSwapHeaderDetail();
+                List<SwapHeaderDetail> shdList = new ArrayList<SwapHeaderDetail>();
 
+                for(int init=0; init<sdList.size();init++){
+                    if(sdList.get(init).getSwapType().equals("Requestee")){
+                        sdList.remove(init);
+                        break;
+                    }
+                }
 
                 final SwapRequestAdapter adapter = new SwapRequestAdapter(getActivity(), sdList);
 
@@ -147,9 +155,9 @@ public class RequestSwapFrag extends Fragment {
                         mSubmitReason.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
-                                if(etReason.getText().length()==0){
+                                if (etReason.getText().length() == 0) {
                                     etReason.setError("Field should not be empty.");
-                                }else{
+                                } else {
                                     rh.setStatus("Rejected");
                                     String message = etReason.getText().toString();
                                     rejectRequest(rh, message);
@@ -166,11 +174,105 @@ public class RequestSwapFrag extends Fragment {
         return view;
     }
 
-    public void rejectRequest(final SwapHeader swapHeader, final String message){
+    public void updateBookOwner(BookOwnerModel bookOwnerModel) {
+        RequestQueue requestQueue = Volley.newRequestQueue(getContext());
+        final User user = (User) SPUtility.getSPUtil(getContext()).getObject("USER_OBJECT", User.class);
+
+        String URL = Constants.PUT_BOOK_OWNER;
+        d("SwapURL", URL);
+        final Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd").registerTypeAdapter(Date.class, GsonDateDeserializer.getInstance()).create();
+        final String mRequestBody = gson.toJson(bookOwnerModel);
+
+        int maxLogSize = 2000;
+        for (int i = 0; i <= mRequestBody.length() / maxLogSize; i++) {
+            int start = i * maxLogSize;
+            int end = (i + 1) * maxLogSize;
+            end = end > mRequestBody.length() ? mRequestBody.length() : end;
+            Log.d("updateBookOWner", mRequestBody.substring(start, end));
+        }
+        StringRequest stringRequest = new StringRequest(Request.Method.PUT, URL, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                Log.i("updateBookOWner", response);
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.e("LOG_VOLLEY", error.toString());
+                error.printStackTrace();
+            }
+        }) {
+            @Override
+            public String getBodyContentType() {
+                return "application/json; charset=utf-8";
+            }
+
+            @Override
+            public byte[] getBody() throws AuthFailureError {
+                try {
+                    return mRequestBody == null ? null : mRequestBody.getBytes("utf-8");
+                } catch (UnsupportedEncodingException uee) {
+                    VolleyLog.wtf("Unsupported Encoding while trying to get the bytes of %s using %s", mRequestBody, "utf-8");
+                    return null;
+                }
+            }
+        };
+
+        requestQueue.add(stringRequest);
+    }
+
+    public void updateSwapDetail(SwapDetail swapDetailModel) {
+        RequestQueue requestQueue = Volley.newRequestQueue(getContext());
+        final User user = (User) SPUtility.getSPUtil(getContext()).getObject("USER_OBJECT", User.class);
+
+        String URL = Constants.PUT_SWAP_DETAIL;
+        d("SwapURL", URL);
+        final Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd").registerTypeAdapter(Date.class, GsonDateDeserializer.getInstance()).create();
+        final String mRequestBody = gson.toJson(swapDetailModel);
+
+        int maxLogSize = 2000;
+        for (int i = 0; i <= mRequestBody.length() / maxLogSize; i++) {
+            int start = i * maxLogSize;
+            int end = (i + 1) * maxLogSize;
+            end = end > mRequestBody.length() ? mRequestBody.length() : end;
+            Log.d("updateSwapDetail", mRequestBody.substring(start, end));
+        }
+        StringRequest stringRequest = new StringRequest(Request.Method.PUT, URL, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                Log.i("updateSwapDetail", response);
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.e("LOG_VOLLEY", error.toString());
+                error.printStackTrace();
+            }
+        }) {
+            @Override
+            public String getBodyContentType() {
+                return "application/json; charset=utf-8";
+            }
+
+            @Override
+            public byte[] getBody() throws AuthFailureError {
+                try {
+                    return mRequestBody == null ? null : mRequestBody.getBytes("utf-8");
+                } catch (UnsupportedEncodingException uee) {
+                    VolleyLog.wtf("Unsupported Encoding while trying to get the bytes of %s using %s", mRequestBody, "utf-8");
+                    return null;
+                }
+            }
+        };
+
+        requestQueue.add(stringRequest);
+    }
+
+    public void rejectRequest(final SwapHeader swapHeader, final String message) {
         RequestQueue requestQueue = Volley.newRequestQueue(getContext());
         User user = new User();
         user = (User) SPUtility.getSPUtil(getContext()).getObject("USER_OBJECT", User.class);
-        String URL = Constants.REJECT_REQUEST_SWAP+swapHeader.getSwapHeaderId();
+        String URL = Constants.REJECT_REQUEST_SWAP + swapHeader.getSwapHeaderId();
 
         Log.d("rejectRequestRentURL", URL);
         Log.d("rejectRequestRent", swapHeader.toString());
@@ -197,6 +299,20 @@ public class RequestSwapFrag extends Fragment {
                 un.setActionId(Math.round(swapHeaderModel.getSwapHeaderId()));
 
                 addUserNotif(un);
+
+                for(int init=0; init<swapHeaderModel.getSwapHeaderDetail().size(); init++){
+                    if(swapHeaderModel.getSwapHeaderDetail().get(init).getSwapType().equals("Requestor")){
+                        SwapDetail sd = new SwapDetail();
+                        BookOwnerModel bo = new BookOwnerModel();
+                        sd = swapHeader.getSwapDetail();
+                        bo = sd.getBookOwner();
+                        sd.setSwapStatus("Available");
+                        bo.getBookObj().setStatus("Available");
+                        bo.setBookStat("Available");
+                        updateSwapDetail(sd);
+                        updateBookOwner(bo);
+                    }
+                }
             }
         }, new Response.ErrorListener() {
             @Override
@@ -223,11 +339,11 @@ public class RequestSwapFrag extends Fragment {
         requestQueue.add(stringRequest);
     }
 
-    public void updateSwapExtra(UserNotification un){
+    public void updateSwapExtra(UserNotification un) {
         RequestQueue requestQueue = Volley.newRequestQueue(getContext());
         User user = new User();
         user = (User) SPUtility.getSPUtil(getContext()).getObject("USER_OBJECT", User.class);
-        String URL = Constants.UPDATE_SWAP_EXTRA+un.getUserNotificationId();
+        String URL = Constants.UPDATE_SWAP_EXTRA + un.getUserNotificationId();
 
         final Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd").registerTypeAdapter(Date.class, GsonDateDeserializer.getInstance()).create();
         final String mRequestBody = gson.toJson(un);
@@ -312,11 +428,11 @@ public class RequestSwapFrag extends Fragment {
         requestQueue.add(stringRequest);
     }
 
-    public void acceptRequest(SwapHeader swapHeader){
+    public void acceptRequest(SwapHeader swapHeader) {
         RequestQueue requestQueue = Volley.newRequestQueue(getContext());
         User user = new User();
         user = (User) SPUtility.getSPUtil(getContext()).getObject("USER_OBJECT", User.class);
-        String URL = Constants.ACCEPT_REQUEST_SWAP+swapHeader.getSwapHeaderId();
+        String URL = Constants.ACCEPT_REQUEST_SWAP + swapHeader.getSwapHeaderId();
 
         Log.d("AcceptRequestRentURL", URL);
 
@@ -330,6 +446,15 @@ public class RequestSwapFrag extends Fragment {
             public void onResponse(String response) {
                 Log.i("AcceptRequestSwapRes", response);
                 SwapHeader swapHeaderModel = gson.fromJson(response, SwapHeader.class);
+                SwapDetail sd = new SwapDetail();
+                BookOwnerModel bo = new BookOwnerModel();
+                sd = swapHeaderModel.getSwapDetail();
+                bo = sd.getBookOwner();
+                sd.setSwapStatus("Not Available");
+                bo.setBookStat("Not Available");
+                bo.getBookObj().setStatus("Not Available");
+                updateBookOwner(bo);
+                updateSwapDetail(sd);
                 Intent intent = new Intent(getContext(), RequestActivity.class);
                 startActivity(intent);
             }

@@ -86,7 +86,7 @@ public class RequestSwapAdapter extends BaseAdapter {
             convertView = mInflater.inflate(R.layout.item_shelf, null);
         }
 
-        bookOwnerModel = bookOwnerModelList.get(position).getRequestedSwapDetail().getBookOwner();
+        bookOwnerModel = bookOwnerModelList.get(position).getSwapDetail().getBookOwner();
 
         ImageView bookPic = (ImageView) convertView.findViewById(R.id.displayBookPic);
         TextView bookTitle = (TextView) convertView.findViewById(R.id.lpBookTitle);

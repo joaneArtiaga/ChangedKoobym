@@ -257,6 +257,7 @@
                 android:layout_gravity="center_horizontal"/>
         </LinearLayout>
     </ScrollView>
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -289,4 +290,5 @@
             android:textColor="@color/colorWhite"
             android:background="@drawable/rounded_button"/>
     </LinearLayout>
+
 </RelativeLayout>

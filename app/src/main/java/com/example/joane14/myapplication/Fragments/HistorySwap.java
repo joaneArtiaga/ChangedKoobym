@@ -15,6 +15,7 @@ import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.GridView;
 import android.widget.ImageView;
+import android.widget.ListView;
 import android.widget.TextView;
 
 import com.android.volley.AuthFailureError;
@@ -28,8 +29,10 @@ import com.android.volley.toolbox.Volley;
 import com.bumptech.glide.Glide;
 import com.example.joane14.myapplication.Activities.GsonDateDeserializer;
 import com.example.joane14.myapplication.Adapters.HistorySwapAdapter;
+import com.example.joane14.myapplication.Adapters.SwapRequestAdapter;
 import com.example.joane14.myapplication.Model.RentalHeader;
 import com.example.joane14.myapplication.Model.SwapHeader;
+import com.example.joane14.myapplication.Model.SwapHeaderDetail;
 import com.example.joane14.myapplication.Model.User;
 import com.example.joane14.myapplication.R;
 import com.example.joane14.myapplication.Utilities.SPUtility;
@@ -88,18 +91,29 @@ public class HistorySwap extends Fragment {
                     dialogCustom.setContentView(R.layout.swap_history_complete);
 
                     TextView mTitleSwap = (TextView) dialogCustom.findViewById(R.id.bookTitleSwap);
-                    TextView mTitleSwapReq = (TextView) dialogCustom.findViewById(R.id.bookTitleSwapReq);
                     TextView mSwappedWith = (TextView) dialogCustom.findViewById(R.id.swappedWith);
                     TextView mSwappedOn = (TextView) dialogCustom.findViewById(R.id.swappedOn);
                     ImageView ivBookSwap = (ImageView) dialogCustom.findViewById(R.id.ivSwap);
-                    ImageView ivBookSwapReq = (ImageView) dialogCustom.findViewById(R.id.ivBookDelivery);
                     Button btnOkay = (Button) dialogCustom.findViewById(R.id.btnDeliveryOkay);
+                    ListView ly = (ListView) dialogCustom.findViewById(R.id.listSwap);
 
+                    List<SwapHeaderDetail> newSHD = new ArrayList<SwapHeaderDetail>();
+
+                    newSHD = swapHeader.getSwapHeaderDetail();
+                    List<SwapHeaderDetail> shdList = new ArrayList<SwapHeaderDetail>();
+
+                    for(int init=0; init<newSHD.size(); init++){
+                        if(newSHD.get(init).getSwapType().equals("Requestor")){
+                            shdList.add(newSHD.get(init));
+                        }
+                    }
+
+                    final SwapRequestAdapter adapter = new SwapRequestAdapter(getActivity(), shdList);
+
+                    ly.setAdapter(adapter);
                     Glide.with(getContext()).load(swapHeader.getSwapDetail().getBookOwner().getBookObj().getBookFilename()).centerCrop().into(ivBookSwap);
-                    Glide.with(getContext()).load(swapHeader.getRequestedSwapDetail().getBookOwner().getBookObj().getBookFilename()).centerCrop().into(ivBookSwapReq);
 
                     mTitleSwap.setText(swapHeader.getSwapDetail().getBookOwner().getBookObj().getBookTitle());
-                    mTitleSwapReq.setText(swapHeader.getRequestedSwapDetail().getBookOwner().getBookObj().getBookTitle());
 
                     User user = (User) SPUtility.getSPUtil(getContext()).getObject("USER_OBJECT", User.class);
 
@@ -122,18 +136,31 @@ public class HistorySwap extends Fragment {
                     final Dialog dialogCustom = new Dialog(getContext());
                     dialogCustom.setContentView(R.layout.swap_history_rejected);
                     TextView mTitleSwap = (TextView) dialogCustom.findViewById(R.id.bookTitleSwap);
-                    TextView mTitleSwapReq = (TextView) dialogCustom.findViewById(R.id.bookTitleSwapReq);
                     TextView mRejection = (TextView) dialogCustom.findViewById(R.id.rejectReason);
                     ImageView ivBookSwap = (ImageView) dialogCustom.findViewById(R.id.ivSwap);
-                    ImageView ivBookSwapReq = (ImageView) dialogCustom.findViewById(R.id.ivBookDelivery);
                     Button btnOkay = (Button) dialogCustom.findViewById(R.id.btnDeliveryOkay);
+                    ListView ly = (ListView) dialogCustom.findViewById(R.id.listSwap);
+
+                    List<SwapHeaderDetail> newSHD = new ArrayList<SwapHeaderDetail>();
+
+                    newSHD = swapHeader.getSwapHeaderDetail();
+
+                    List<SwapHeaderDetail> shdList = new ArrayList<SwapHeaderDetail>();
+
+                    for(int init=0; init<newSHD.size(); init++){
+                        if(newSHD.get(init).getSwapType().equals("Requestor")){
+                            shdList.add(newSHD.get(init));
+                        }
+                    }
+
+                    final SwapRequestAdapter adapter = new SwapRequestAdapter(getActivity(), shdList);
+
+                    ly.setAdapter(adapter);
 
 
                     Glide.with(getContext()).load(swapHeader.getSwapDetail().getBookOwner().getBookObj().getBookFilename()).centerCrop().into(ivBookSwap);
-                    Glide.with(getContext()).load(swapHeader.getRequestedSwapDetail().getBookOwner().getBookObj().getBookFilename()).centerCrop().into(ivBookSwapReq);
 
                     mTitleSwap.setText(swapHeader.getSwapDetail().getBookOwner().getBookObj().getBookTitle());
-                    mTitleSwapReq.setText(swapHeader.getRequestedSwapDetail().getBookOwner().getBookObj().getBookTitle());
                     mRejection.setText(swapHeader.getSwapExtraMessage());
 
                     btnOkay.setOnClickListener(new View.OnClickListener() {

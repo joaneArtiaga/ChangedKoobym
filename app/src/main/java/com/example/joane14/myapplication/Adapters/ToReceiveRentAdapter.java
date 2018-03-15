@@ -93,28 +93,69 @@ public class ToReceiveRentAdapter extends RecyclerView.Adapter<ToReceiveRentAdap
     @Override
     public void onBindViewHolder(ToReceiveRentAdapter.BookHolder holder, final int position) {
 
-        if(bookList.get(position).getRentalExtraMessage()!=null){
+        if(bookList.get(position).getRentalExtraMessage()=="Delivered"){
             holder.mBtnRate.setImageResource(R.drawable.checkbookact);
         }else{
             holder.mBtnRate.setImageResource(R.drawable.notrate);
         }
         holder.mBtnMail.setVisibility(View.GONE);
 
-        holder.mBookTitle.setText(bookList.get(position).getRentalDetail().getBookOwner().getBookObj().getBookTitle());
-        holder.mBookDate.setText(bookList.get(position).getRentalTimeStamp());
-        holder.mPrice.setText(String.valueOf(bookList.get(position).getRentalDetail().getCalculatedPrice()));
-        holder.mBookRenter.setText(bookList.get(position).getRentalDetail().getBookOwner().getUserObj().getUserFname()+" "+bookList.get(position).getRentalDetail().getBookOwner().getUserObj().getUserLname());
-        if(bookList.get(position).getDateDeliver()==null){
-            Log.d("EndDateReceiveRent", "walay sulod");
-        }else{
+        if(bookList.get(position).getStatus().equals("Delivered")){
+            holder.mBookDate.setText(bookList.get(position).getRentalTimeStamp());
+            holder.mPrice.setText(String.valueOf(bookList.get(position).getRentalDetail().getCalculatedPrice()));
             holder.mDate.setText(bookList.get(position).getDateDeliver());
-        }
-        if(bookList.get(position).getMeetUp()==null){
-
-        }else{
             holder.mTime.setText(bookList.get(position).getMeetUp().getUserDayTime().getTime().getStrTime());
             holder.mLocation.setText(bookList.get(position).getMeetUp().getLocation().getLocationName());
+        }else{
+
+            Calendar calendar = Calendar.getInstance();
+            Date c = Calendar.getInstance().getTime();
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+            final String currDAte = sdf.format(c);
+
+            Date dateReturn = null;
+
+            try {
+                dateReturn = sdf.parse(bookList.get(position).getRentalReturnDate());
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+            Calendar thatDay = Calendar.getInstance();
+            thatDay.setTime(dateReturn);
+            long diff = calendar.getTimeInMillis() - thatDay.getTimeInMillis();
+            long daysDiff = diff / (24*60*60*1000);
+
+            float lockin = 0f;
+
+            Log.d("diffDays", daysDiff+"");
+
+
+            lockin = daysDiff*50;
+
+            float lockinPrice=0f;
+
+            lockinPrice = bookList.get(position).getTotalPrice()/2;
+
+            float diffLp = 0f;
+
+            diffLp = lockinPrice - lockin;
+
+            if(diffLp<0){
+                holder.mPrice.setText("(- ₱ "+String.format("%.2f", Math.abs(diffLp))+")");
+            }else{
+                holder.mPrice.setText("₱  "+String.format("%.2f", diffLp));
+            }
+
+
+            holder.mBookDate.setText(bookList.get(position).getRentalTimeStamp());
+            holder.mDate.setText(bookList.get(position).getRentalReturnDate());
+            holder.mTime.setText(bookList.get(position).getReturnMeetUp().getUserDayTime().getTime().getStrTime());
+            holder.mLocation.setText(bookList.get(position).getReturnMeetUp().getLocation().getLocationName());
         }
+
+        holder.mBookTitle.setText(bookList.get(position).getRentalDetail().getBookOwner().getBookObj().getBookTitle());
+        holder.mBookRenter.setText(bookList.get(position).getRentalDetail().getBookOwner().getUserObj().getUserFname()+" "+bookList.get(position).getRentalDetail().getBookOwner().getUserObj().getUserLname());
+
 
         Glide.with(context).load(bookList.get(position).getRentalDetail().getBookOwner().getBookObj().getBookFilename()).centerCrop().into(holder.mIvBook);
 

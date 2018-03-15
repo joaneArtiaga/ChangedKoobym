@@ -149,10 +149,8 @@ public class AddProfile extends Fragment implements AdapterView.OnItemClickListe
         userDayTime = new UserDayTime();
 
         userModel = new User();
-//        String filename = "123-1501684832903Screenshot_20170802-014107.jpg";
 
         slctImage = (ImageView) view.findViewById(R.id.displayPic);
-//        Picasso.with(getContext()).load(String.format(Constants.IMAGE_URL, filename)).fit().into(slctImage);
         mNextAdd = (Button) view.findViewById(R.id.btnNextAdd);
 
         mFirstName = (EditText) view.findViewById(R.id.firstName);

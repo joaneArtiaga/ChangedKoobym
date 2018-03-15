@@ -48,9 +48,9 @@ public class CountdownFrag extends Fragment {
 
         auctionDetailModel = (AuctionDetailModel) getArguments().getSerializable("auctionBook");
         if(auctionDetailModel!=null){
-            Log.d("auction", "not empty");
+            Log.d("auctionCountdown", "not empty");
         }else{
-            Log.d("auction", "empty");
+            Log.d("auctionCountdown", "empty");
         }
 
         Log.d("Countdown", "inside");
@@ -58,7 +58,6 @@ public class CountdownFrag extends Fragment {
         txtTimerHour = (TextView) view.findViewById(R.id.txtTimerHour);
         txtTimerMinute = (TextView) view.findViewById(R.id.txtTimerMinute);
         txtTimerSec = (TextView) view.findViewById(R.id.txtTimerSecond);
-        tvEvent = (TextView) view.findViewById(R.id.tvhappyevent);
 
 
         countDownStart();

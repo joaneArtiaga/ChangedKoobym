@@ -151,9 +151,11 @@ public class ProfileActivity extends AppCompatActivity implements
         mBackBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
-                    onBackPressed();
-                }
+                Intent intent = new Intent(ProfileActivity.this , LandingPage.class);
+                Bundle bundle = new Bundle();
+                bundle.putBoolean("fromRegister", false);
+                intent.putExtra("user", bundle);
+                startActivity(intent);
             }
         });
 

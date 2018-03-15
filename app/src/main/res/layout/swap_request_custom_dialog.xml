@@ -46,15 +46,16 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Reject"
+            android:layout_marginRight="10dp"
             android:textColor="@color/colorWhite"
-            android:background="@drawable/rounded_button"
+            android:background="@drawable/rounded_button_reject"
             android:id="@+id/btnReject"/>
 
         <Button
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textColor="@color/colorWhite"
-            android:background="@drawable/rounded_button"
+            android:background="@drawable/rounded_button_accept"
             android:text="Accept"
             android:id="@+id/btnAccept"/>
 

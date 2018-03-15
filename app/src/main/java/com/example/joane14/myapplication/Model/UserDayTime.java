@@ -56,14 +56,15 @@ public class UserDayTime implements Serializable {
     }
 
 
-    @Override
-    public String toString() {
-        return "UserDayTimeModel{" +
-                "userId=" + userId +
-                ", day='" + day.getStrDay() + '\'' +
-                ", time=" + time.getStrTime() +
-                '}';
-    }
+//    @Override
+//    public String toString() {
+//        return "UserDayTimeModel{" +
+//                "userId=" + userId +
+//                ", day='" + day.getStrDay() + '\'' +
+//                ", time=" + time.getStrTime() +
+//                '}';
+//    }
+
 }
 
 

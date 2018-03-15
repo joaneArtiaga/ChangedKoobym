@@ -158,24 +158,31 @@ ViewAuctionBook extends AppCompatActivity
         ImageView mBookImg = (ImageView) findViewById(R.id.vbBookPic);
         LinearLayout buttonLinear = (LinearLayout) findViewById(R.id.button_ll);
         LinearLayout priceLinear = (LinearLayout) findViewById(R.id.linearPriceLI);
+        FrameLayout fl = (FrameLayout) findViewById(R.id.countdown_container);
 
         mRating = (RatingBar) findViewById(R.id.vbRating);
 
         if (getIntent().getExtras().getSerializable("auctionBook") != null) {
+
             auctionDetailModel = new AuctionDetailModel();
             auctionDetailModel = (AuctionDetailModel) getIntent().getExtras().getSerializable("auctionBook");
 
             priceCompare = auctionDetailModel.getStartingPrice();
-
-            FrameLayout containerForCounter = (FrameLayout) findViewById(R.id.fragment_bid_container);
-
-            FragmentManager fragmentManager = getSupportFragmentManager();
             Bundle bundle = new Bundle();
+            FragmentManager fragmentManager = getSupportFragmentManager();
             FragmentTransaction ft = fragmentManager.beginTransaction();
 
+            Log.d("stat", auctionDetailModel.getStatus());
+            if(auctionDetailModel.getAuctionStatus().equals("start")){
+                FragmentTransaction ft1 = fragmentManager.beginTransaction();
                 bundle.putSerializable("auctionBook", auctionDetailModel);
                 CountdownFrag cdf = CountdownFrag.newInstance(bundle);
-                ft.replace(R.id.countdown_container, cdf);
+                ft1.replace(R.id.countdown_container, cdf);
+                ft1.commit();
+
+            }else{
+                fl.setVisibility(View.GONE);
+            }
 
 
             bundle.putSerializable("auctionComment", auctionDetailModel);
@@ -337,7 +344,7 @@ ViewAuctionBook extends AppCompatActivity
 
                     }else if(auctionDetailModel.getAuctionStatus().equals("stop")){
                         AlertDialog ad = new AlertDialog.Builder(ViewAuctionBook.this).create();
-                        ad.setTitle("ALERT!");
+                        ad.setTitle("Alert!");
                         ad.setMessage("You can't bid because the Auction has already ended.");
                         ad.setButton(AlertDialog.BUTTON_NEUTRAL, "Okay", new DialogInterface.OnClickListener() {
                             @Override
@@ -348,7 +355,7 @@ ViewAuctionBook extends AppCompatActivity
                         ad.show();
                     }else if(auctionDetailModel.getAuctionStatus().equals("pending")){
                         AlertDialog ad = new AlertDialog.Builder(ViewAuctionBook.this).create();
-                        ad.setTitle("ALERT!");
+                        ad.setTitle("Alert!");
                         ad.setMessage("You can't bid because the Auction has not yet started.");
                         ad.setButton(AlertDialog.BUTTON_NEUTRAL, "Okay", new DialogInterface.OnClickListener() {
                             @Override

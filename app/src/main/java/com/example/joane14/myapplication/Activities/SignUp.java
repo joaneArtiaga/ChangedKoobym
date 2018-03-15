@@ -122,6 +122,19 @@ public class SignUp extends AppCompatActivity implements
 
     }
 
+    @Override
+    public void OnAddFbUser(User user, List<LocationModel> locList, List<UserDayTime> udt) {
+
+        mBundle = new Bundle();
+        user.setGenreArray(this.genres);
+        this.locations = locList;
+        this.userDayTimeList = udt;
+        this.userModel = user;
+
+        register();
+
+    }
+
     private void register() {
         RequestQueue requestQueue = Volley.newRequestQueue(this);
 //        String URL = "http://104.198.152.85/Koobym/user/add";
@@ -141,7 +154,7 @@ public class SignUp extends AppCompatActivity implements
         user.setPhoneNumber(userModel.getPhoneNumber());
         user.setGenreArray(genres);
         user.setLocationArray(this.locations);
-        user.setDayTimeModel(userDayTimeList);
+        user.setDayTimeModel(this.userDayTimeList);
         user.setUserFbId(userModel.getUserFbId());
 
         for(int init=0; init<userDayTimeList.size(); init++){
@@ -152,7 +165,6 @@ public class SignUp extends AppCompatActivity implements
             Log.d("SeoNull", this.locations.get(init).toString());
         }
 
-//        user.setDayTimeModel();
         final Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd").registerTypeAdapter(Date.class, GsonDateDeserializer.getInstance()).create();
         final String mRequestBody = gson.toJson(user);
 
@@ -213,13 +225,5 @@ public class SignUp extends AppCompatActivity implements
 
         Genre genreModel = new Genre();
         changeFragment(genreModel);
-    }
-
-    @Override
-    public void OnAddFbUser(User user) {
-
-        this.userModel = user;
-        register();
-
     }
 }

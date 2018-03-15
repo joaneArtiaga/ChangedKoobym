@@ -52,6 +52,7 @@ import com.example.joane14.myapplication.Activities.ViewBookAct;
 import com.example.joane14.myapplication.Fragments.Constants;
 import com.example.joane14.myapplication.Model.AuctionDetailModel;
 import com.example.joane14.myapplication.Model.AuctionHeader;
+import com.example.joane14.myapplication.Model.BookOwnerModel;
 import com.example.joane14.myapplication.Model.BookOwnerRating;
 import com.example.joane14.myapplication.Model.BookOwnerReview;
 import com.example.joane14.myapplication.Model.DayModel;
@@ -1399,6 +1400,7 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
                                 try {
                                     rentalHeaderMod.setDateDeliver(dateMeetUp.get(position));
 
+                                    timeStr.clear();
                                     DayModel dayModel = new DayModel();
                                     dayModel.setStrDay(dateMeetUp.get(position));
 
@@ -1429,6 +1431,8 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
                                         Log.d("iterateUserTime", daytime.get(init).getTime().getStrTime());
                                     }
 
+                                    Log.d("dayOfWeek", Integer.toString(dayOfWeek));
+
                                     if(dayOfWeek==Calendar.MONDAY){
                                         DayModel day = new DayModel();
                                         for(int init=0; init<daytime.size(); init++){
@@ -1438,7 +1442,9 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
                                                 timeStr.add(daytime.get(init).getTime().getStrTime());
                                             }
                                         }
-                                    }else if(dayOfWeek==Calendar.TUESDAY){
+                                    }
+
+                                    if(dayOfWeek==Calendar.TUESDAY){
                                         DayModel day = new DayModel();
                                         for(int init=0; init<daytime.size(); init++){
                                             if(daytime.get(init).getDay().getStrDay().equals("Tuesday")){
@@ -1446,7 +1452,9 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
                                                 timeStr.add(daytime.get(init).getTime().getStrTime());
                                             }
                                         }
-                                    }else if(dayOfWeek==Calendar.WEDNESDAY){
+                                    }
+
+                                    if(dayOfWeek==Calendar.WEDNESDAY){
                                         DayModel day = new DayModel();
                                         for(int init=0; init<daytime.size(); init++){
                                             if(daytime.get(init).getDay().getStrDay().equals("Wednesday")){
@@ -1454,7 +1462,9 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
                                                 timeStr.add(daytime.get(init).getTime().getStrTime());
                                             }
                                         }
-                                    }else if(dayOfWeek==Calendar.THURSDAY){
+                                    }
+
+                                    if(dayOfWeek==Calendar.THURSDAY){
                                         DayModel day = new DayModel();
                                         for(int init=0; init<daytime.size(); init++){
                                             if(daytime.get(init).getDay().getStrDay().equals("Thursday")){
@@ -1462,7 +1472,9 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
                                                 timeStr.add(daytime.get(init).getTime().getStrTime());
                                             }
                                         }
-                                    }else if(dayOfWeek==Calendar.FRIDAY){
+                                    }
+
+                                    if(dayOfWeek==Calendar.FRIDAY){
                                         DayModel day = new DayModel();
                                         for(int init=0; init<daytime.size(); init++){
                                             if(daytime.get(init).getDay().getStrDay().equals("Friday")){
@@ -1470,7 +1482,9 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
                                                 timeStr.add(daytime.get(init).getTime().getStrTime());
                                             }
                                         }
-                                    }else if(dayOfWeek==Calendar.SATURDAY){
+                                    }
+
+                                    if(dayOfWeek==Calendar.SATURDAY){
                                         DayModel day = new DayModel();
                                         for(int init=0; init<daytime.size(); init++){
                                             if(daytime.get(init).getDay().getStrDay().equals("Saturday")){
@@ -1478,7 +1492,9 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
                                                 timeStr.add(daytime.get(init).getTime().getStrTime());
                                             }
                                         }
-                                    }else if(dayOfWeek==Calendar.SUNDAY){
+                                    }
+
+                                    if(dayOfWeek==Calendar.SUNDAY){
                                         DayModel day = new DayModel();
                                         for(int init=0; init<daytime.size(); init++){
                                             if(daytime.get(init).getDay().getStrDay().equals("Sunday")){
@@ -2318,6 +2334,8 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
                                         auctionHeaderMod.setDateDelivered(dateMeetUp.get(position));
                                         Log.d("dateDelivered", dateMeetUp.get(position));
 
+                                        timeStr.clear();
+
                                         String dayOfDate = "";
                                         Calendar calendar = Calendar.getInstance();
                                         Date selectedDate = format.parse(dateMeetUp.get(position));
@@ -2330,8 +2348,6 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
 
                                         if(dayOfWeek==Calendar.MONDAY){
                                             DayModel day = new DayModel();
-                                            day.setStrDay("Monday");
-                                            udt.setDay(day);
                                             for(int init=0; init<daytime.size(); init++){
                                                 Log.d("userTime", daytime.get(init).getTime().getStrTime());
                                                 if(daytime.get(init).getDay().getStrDay().equals("Monday")){
@@ -2339,60 +2355,60 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
                                                     timeStr.add(daytime.get(init).getTime().getStrTime());
                                                 }
                                             }
-                                        }else if(dayOfWeek==Calendar.TUESDAY){
+                                        }
+
+                                        if(dayOfWeek==Calendar.TUESDAY){
                                             DayModel day = new DayModel();
-                                            day.setStrDay("Tuesday");
-                                            udt.setDay(day);
                                             for(int init=0; init<daytime.size(); init++){
                                                 if(daytime.get(init).getDay().getStrDay().equals("Tuesday")){
                                                     Log.d("TimeAdded", daytime.get(init).getTime().getStrTime());
                                                     timeStr.add(daytime.get(init).getTime().getStrTime());
                                                 }
                                             }
-                                        }else if(dayOfWeek==Calendar.WEDNESDAY){
+                                        }
+
+                                        if(dayOfWeek==Calendar.WEDNESDAY){
                                             DayModel day = new DayModel();
-                                            day.setStrDay("Wednesday");
-                                            udt.setDay(day);
                                             for(int init=0; init<daytime.size(); init++){
                                                 if(daytime.get(init).getDay().getStrDay().equals("Wednesday")){
                                                     Log.d("TimeAdded", daytime.get(init).getTime().getStrTime());
                                                     timeStr.add(daytime.get(init).getTime().getStrTime());
                                                 }
                                             }
-                                        }else if(dayOfWeek==Calendar.THURSDAY){
+                                        }
+
+                                        if(dayOfWeek==Calendar.THURSDAY){
                                             DayModel day = new DayModel();
-                                            day.setStrDay("Thursday");
-                                            udt.setDay(day);
                                             for(int init=0; init<daytime.size(); init++){
                                                 if(daytime.get(init).getDay().getStrDay().equals("Thursday")){
                                                     Log.d("TimeAdded", daytime.get(init).getTime().getStrTime());
                                                     timeStr.add(daytime.get(init).getTime().getStrTime());
                                                 }
                                             }
-                                        }else if(dayOfWeek==Calendar.FRIDAY){
+                                        }
+
+                                        if(dayOfWeek==Calendar.FRIDAY){
                                             DayModel day = new DayModel();
-                                            day.setStrDay("Friday");
-                                            udt.setDay(day);
                                             for(int init=0; init<daytime.size(); init++){
                                                 if(daytime.get(init).getDay().getStrDay().equals("Friday")){
                                                     Log.d("TimeAdded", daytime.get(init).getTime().getStrTime());
                                                     timeStr.add(daytime.get(init).getTime().getStrTime());
                                                 }
                                             }
-                                        }else if(dayOfWeek==Calendar.SATURDAY){
+                                        }
+
+                                        if(dayOfWeek==Calendar.SATURDAY){
                                             DayModel day = new DayModel();
-                                            day.setStrDay("Saturday");
-                                            udt.setDay(day);
                                             for(int init=0; init<daytime.size(); init++){
                                                 if(daytime.get(init).getDay().getStrDay().equals("Saturday")){
                                                     Log.d("TimeAdded", daytime.get(init).getTime().getStrTime());
                                                     timeStr.add(daytime.get(init).getTime().getStrTime());
                                                 }
                                             }
-                                        }else if(dayOfWeek==Calendar.SUNDAY){
+                                        }
+
+                                        if(dayOfWeek==Calendar.SUNDAY){
                                             DayModel day = new DayModel();
-                                            day.setStrDay("Sunday");
-                                            udt.setDay(day);
                                             for(int init=0; init<daytime.size(); init++){
                                                 if(daytime.get(init).getDay().getStrDay().equals("Sunday")){
                                                     Log.d("TimeAdded", daytime.get(init).getTime().getStrTime());
@@ -2884,6 +2900,8 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
                                     swapHeaderMod.setDateDelivered(dateMeetUp.get(position));
                                     Log.d("dateDelivered", dateMeetUp.get(position));
 
+                                    timeStr.clear();
+
                                     String dayOfDate = "";
                                     Calendar calendar = Calendar.getInstance();
                                     Date selectedDate = format.parse(dateMeetUp.get(position));
@@ -2896,8 +2914,6 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
 
                                     if(dayOfWeek==Calendar.MONDAY){
                                         DayModel day = new DayModel();
-                                        day.setStrDay("Monday");
-                                        udt.setDay(day);
                                         for(int init=0; init<daytime.size(); init++){
                                             Log.d("userTime", daytime.get(init).getTime().getStrTime());
                                             if(daytime.get(init).getDay().getStrDay().equals("Monday")){
@@ -2905,60 +2921,60 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
                                                 timeStr.add(daytime.get(init).getTime().getStrTime());
                                             }
                                         }
-                                    }else if(dayOfWeek==Calendar.TUESDAY){
+                                    }
+
+                                    if(dayOfWeek==Calendar.TUESDAY){
                                         DayModel day = new DayModel();
-                                        day.setStrDay("Tuesday");
-                                        udt.setDay(day);
                                         for(int init=0; init<daytime.size(); init++){
                                             if(daytime.get(init).getDay().getStrDay().equals("Tuesday")){
                                                 Log.d("TimeAdded", daytime.get(init).getTime().getStrTime());
                                                 timeStr.add(daytime.get(init).getTime().getStrTime());
                                             }
                                         }
-                                    }else if(dayOfWeek==Calendar.WEDNESDAY){
+                                    }
+
+                                    if(dayOfWeek==Calendar.WEDNESDAY){
                                         DayModel day = new DayModel();
-                                        day.setStrDay("Wednesday");
-                                        udt.setDay(day);
                                         for(int init=0; init<daytime.size(); init++){
                                             if(daytime.get(init).getDay().getStrDay().equals("Wednesday")){
                                                 Log.d("TimeAdded", daytime.get(init).getTime().getStrTime());
                                                 timeStr.add(daytime.get(init).getTime().getStrTime());
                                             }
                                         }
-                                    }else if(dayOfWeek==Calendar.THURSDAY){
+                                    }
+
+                                    if(dayOfWeek==Calendar.THURSDAY){
                                         DayModel day = new DayModel();
-                                        day.setStrDay("Thursday");
-                                        udt.setDay(day);
                                         for(int init=0; init<daytime.size(); init++){
                                             if(daytime.get(init).getDay().getStrDay().equals("Thursday")){
                                                 Log.d("TimeAdded", daytime.get(init).getTime().getStrTime());
                                                 timeStr.add(daytime.get(init).getTime().getStrTime());
                                             }
                                         }
-                                    }else if(dayOfWeek==Calendar.FRIDAY){
+                                    }
+
+                                    if(dayOfWeek==Calendar.FRIDAY){
                                         DayModel day = new DayModel();
-                                        day.setStrDay("Friday");
-                                        udt.setDay(day);
                                         for(int init=0; init<daytime.size(); init++){
                                             if(daytime.get(init).getDay().getStrDay().equals("Friday")){
                                                 Log.d("TimeAdded", daytime.get(init).getTime().getStrTime());
                                                 timeStr.add(daytime.get(init).getTime().getStrTime());
                                             }
                                         }
-                                    }else if(dayOfWeek==Calendar.SATURDAY){
+                                    }
+
+                                    if(dayOfWeek==Calendar.SATURDAY){
                                         DayModel day = new DayModel();
-                                        day.setStrDay("Saturday");
-                                        udt.setDay(day);
                                         for(int init=0; init<daytime.size(); init++){
                                             if(daytime.get(init).getDay().getStrDay().equals("Saturday")){
                                                 Log.d("TimeAdded", daytime.get(init).getTime().getStrTime());
                                                 timeStr.add(daytime.get(init).getTime().getStrTime());
                                             }
                                         }
-                                    }else if(dayOfWeek==Calendar.SUNDAY){
+                                    }
+
+                                    if(dayOfWeek==Calendar.SUNDAY){
                                         DayModel day = new DayModel();
-                                        day.setStrDay("Sunday");
-                                        udt.setDay(day);
                                         for(int init=0; init<daytime.size(); init++){
                                             if(daytime.get(init).getDay().getStrDay().equals("Sunday")){
                                                 Log.d("TimeAdded", daytime.get(init).getTime().getStrTime());
@@ -3060,10 +3076,13 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
 
                                 List<SwapHeaderDetail> newSHD = new ArrayList<SwapHeaderDetail>();
 
+                                newSHD = swapHeaderMod.getSwapHeaderDetail();
+
 
                                 for(int init=0; init<swapDetailList.size(); init++){
-                                    if(swapDetailList.get(init).getSwapType().equals("Requestor")){
-                                        newSHD.add(swapDetailList.get(init));
+                                    if(swapDetailList.get(init).getSwapType().equals("Requestee")){
+                                        newSHD.remove(init);
+                                        break;
                                     }
                                 }
 
@@ -3523,14 +3542,8 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
         if(diff<=0){
             diff+=7;
         }
+        diff++;
         c.add(Calendar.DAY_OF_MONTH, diff);
-//        for ( int i = 0; i < 7; i++ ) {
-//            if ( c.get(java.util.Calendar.DAY_OF_WEEK) == dayOfWeek ) {
-//                return c.getTime();
-//            } else {
-//                c.add(java.util.Calendar.DAY_OF_WEEK, 1);
-//            }
-//        }
         return c.getTime();
     }
 
@@ -3565,6 +3578,18 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
                 un.setActionId(Math.round(swapHeaderModel.getSwapHeaderId()));
 
                 addUserNotif(un);
+
+                for(int init=0; init<swapHeaderModel.getSwapHeaderDetail().size(); init++){
+                    if(swapHeaderModel.getSwapHeaderDetail().get(init).getSwapType().equals("Requestor")){
+                        SwapDetail sd = new SwapDetail();
+                        BookOwnerModel bo = new BookOwnerModel();
+                        sd.setSwapStatus("Available");
+                        bo.getBookObj().setStatus("Available");
+                        bo.setBookStat("Available");
+                        updateSwapDetail(sd);
+                        updateBookOwner(bo);
+                    }
+                }
             }
         }, new Response.ErrorListener() {
             @Override
@@ -3609,6 +3634,18 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
             public void onResponse(String response) {
                 Log.i("AcceptRequestSwapRes", response);
                 SwapHeader swapHeaderModel = gson.fromJson(response, SwapHeader.class);
+
+                SwapDetail sd = new SwapDetail();
+                BookOwnerModel bo = new BookOwnerModel();
+                sd = swapHeaderModel.getSwapDetail();
+                bo = sd.getBookOwner();
+                sd.setSwapStatus("Not Available");
+                bo.setBookStat("Not Available");
+                bo.getBookObj().setStatus("Not Available");
+                updateBookOwner(bo);
+                updateSwapDetail(sd);
+
+
                 Intent intent = new Intent(context, NotificationAct.class);
                 context.startActivity(intent);
             }
@@ -3616,6 +3653,100 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
             @Override
             public void onErrorResponse(VolleyError error) {
                 Log.e("LOG_VOLLEY", error.toString());
+            }
+        }) {
+            @Override
+            public String getBodyContentType() {
+                return "application/json; charset=utf-8";
+            }
+
+            @Override
+            public byte[] getBody() throws AuthFailureError {
+                try {
+                    return mRequestBody == null ? null : mRequestBody.getBytes("utf-8");
+                } catch (UnsupportedEncodingException uee) {
+                    VolleyLog.wtf("Unsupported Encoding while trying to get the bytes of %s using %s", mRequestBody, "utf-8");
+                    return null;
+                }
+            }
+        };
+
+        requestQueue.add(stringRequest);
+    }
+
+    public void updateBookOwner(BookOwnerModel bookOwnerModel) {
+        RequestQueue requestQueue = Volley.newRequestQueue(context);
+        final User user = (User) SPUtility.getSPUtil(context).getObject("USER_OBJECT", User.class);
+
+        String URL = Constants.PUT_BOOK_OWNER;
+        d("SwapURL", URL);
+        final Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd").registerTypeAdapter(Date.class, GsonDateDeserializer.getInstance()).create();
+        final String mRequestBody = gson.toJson(bookOwnerModel);
+
+        int maxLogSize = 2000;
+        for (int i = 0; i <= mRequestBody.length() / maxLogSize; i++) {
+            int start = i * maxLogSize;
+            int end = (i + 1) * maxLogSize;
+            end = end > mRequestBody.length() ? mRequestBody.length() : end;
+            Log.d("updateBookOWner", mRequestBody.substring(start, end));
+        }
+        StringRequest stringRequest = new StringRequest(Request.Method.PUT, URL, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                Log.i("updateBookOWner", response);
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.e("LOG_VOLLEY", error.toString());
+                error.printStackTrace();
+            }
+        }) {
+            @Override
+            public String getBodyContentType() {
+                return "application/json; charset=utf-8";
+            }
+
+            @Override
+            public byte[] getBody() throws AuthFailureError {
+                try {
+                    return mRequestBody == null ? null : mRequestBody.getBytes("utf-8");
+                } catch (UnsupportedEncodingException uee) {
+                    VolleyLog.wtf("Unsupported Encoding while trying to get the bytes of %s using %s", mRequestBody, "utf-8");
+                    return null;
+                }
+            }
+        };
+
+        requestQueue.add(stringRequest);
+    }
+
+    public void updateSwapDetail(SwapDetail swapDetailModel) {
+        RequestQueue requestQueue = Volley.newRequestQueue(context);
+        final User user = (User) SPUtility.getSPUtil(context).getObject("USER_OBJECT", User.class);
+
+        String URL = Constants.PUT_SWAP_DETAIL;
+        d("SwapURL", URL);
+        final Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd").registerTypeAdapter(Date.class, GsonDateDeserializer.getInstance()).create();
+        final String mRequestBody = gson.toJson(swapDetailModel);
+
+        int maxLogSize = 2000;
+        for (int i = 0; i <= mRequestBody.length() / maxLogSize; i++) {
+            int start = i * maxLogSize;
+            int end = (i + 1) * maxLogSize;
+            end = end > mRequestBody.length() ? mRequestBody.length() : end;
+            Log.d("updateSwapDetail", mRequestBody.substring(start, end));
+        }
+        StringRequest stringRequest = new StringRequest(Request.Method.PUT, URL, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                Log.i("updateSwapDetail", response);
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.e("LOG_VOLLEY", error.toString());
+                error.printStackTrace();
             }
         }) {
             @Override

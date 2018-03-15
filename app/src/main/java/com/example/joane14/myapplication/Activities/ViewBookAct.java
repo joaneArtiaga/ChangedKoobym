@@ -65,6 +65,7 @@ import com.example.joane14.myapplication.Fragments.MapLandingPage;
 import com.example.joane14.myapplication.Fragments.VolleyUtil;
 import com.example.joane14.myapplication.Model.AuctionComment;
 import com.example.joane14.myapplication.Model.AuctionDetailModel;
+import com.example.joane14.myapplication.Model.BookOwnerModel;
 import com.example.joane14.myapplication.Model.RentalDetail;
 import com.example.joane14.myapplication.Model.RentalHeader;
 import com.example.joane14.myapplication.Model.SwapDetail;
@@ -135,12 +136,12 @@ public class ViewBookAct extends AppCompatActivity implements
         rentalDetailModel = new RentalDetail();
 
 
-        if(SPUtility.getSPUtil(this).contains("USER_OBJECT")){
+        if (SPUtility.getSPUtil(this).contains("USER_OBJECT")) {
             User userModel = new User();
             userModel = (User) SPUtility.getSPUtil(this).getObject("USER_OBJECT", User.class);
-            mName.setText(userModel.getUserFname()+" "+userModel.getUserLname());
+            mName.setText(userModel.getUserFname() + " " + userModel.getUserLname());
             mEmail.setText(userModel.getEmail());
-            Picasso.with(ViewBookAct.this).load( userModel.getImageFilename()).fit().into(profileImg);
+            Picasso.with(ViewBookAct.this).load(userModel.getImageFilename()).fit().into(profileImg);
         }
         getNotificationCount();
 
@@ -163,51 +164,51 @@ public class ViewBookAct extends AppCompatActivity implements
 
         mRating = (RatingBar) findViewById(R.id.vbRating);
 
-        if (getIntent().getExtras().getSerializable("viewBook")!=null){
+        if (getIntent().getExtras().getSerializable("viewBook") != null) {
 
             rentalDetailModel = (RentalDetail) getIntent().getExtras().getSerializable("viewBook");
 
             mTitle.setText(rentalDetailModel.getBookOwner().getBookObj().getBookTitle());
 
-            mLPrice.setText("₱ "+String.format("%.2f",rentalDetailModel.getCalculatedPrice()));
-            mRPrice.setText("₱ "+String.format("%.2f",rentalDetailModel.getCalculatedPrice()/2));
+            mLPrice.setText("₱ " + String.format("%.2f", rentalDetailModel.getCalculatedPrice()));
+            mRPrice.setText("₱ " + String.format("%.2f", rentalDetailModel.getCalculatedPrice() / 2));
 
             final User user = (User) SPUtility.getSPUtil(ViewBookAct.this).getObject("USER_OBJECT", User.class);
 
-            if(user.getUserId()==rentalDetailModel.getBookOwner().getUserObj().getUserId()){
+            if (user.getUserId() == rentalDetailModel.getBookOwner().getUserObj().getUserId()) {
                 buttonLinear.setVisibility(View.GONE);
             }
 
             String genreStr = "";
             int genreSize = rentalDetailModel.getBookOwner().getBookObj().getBookGenre().size();
-            if(genreSize>1){
-                for(int init=0;init<genreSize; init++){
+            if (genreSize > 1) {
+                for (int init = 0; init < genreSize; init++) {
                     genreStr = genreStr + rentalDetailModel.getBookOwner().getBookObj().getBookGenre().get(init).getGenreName();
-                    if(genreSize-1>init){
+                    if (genreSize - 1 > init) {
                         genreStr = genreStr + ", ";
                     }
                 }
-            }else{
+            } else {
                 genreStr = rentalDetailModel.getBookOwner().getBookObj().getBookGenre().get(0).getGenreName();
             }
 
             mGenre.setText(genreStr);
             String author = "";
 
-            if(rentalDetailModel.getBookOwner().getBookObj().getBookAuthor().size()!=0){
-                for(int init=0; init<rentalDetailModel.getBookOwner().getBookObj().getBookAuthor().size(); init++){
-                    if(!(rentalDetailModel.getBookOwner().getBookObj().getBookAuthor().get(init).getAuthorFName().equals(""))){
-                        author+=rentalDetailModel.getBookOwner().getBookObj().getBookAuthor().get(init).getAuthorFName()+" ";
-                        if(!(rentalDetailModel.getBookOwner().getBookObj().getBookAuthor().get(init).getAuthorLName().equals(""))){
-                            author+=rentalDetailModel.getBookOwner().getBookObj().getBookAuthor().get(init).getAuthorLName();
-                            if(init+1<rentalDetailModel.getBookOwner().getBookObj().getBookAuthor().size()){
-                                author+=", ";
+            if (rentalDetailModel.getBookOwner().getBookObj().getBookAuthor().size() != 0) {
+                for (int init = 0; init < rentalDetailModel.getBookOwner().getBookObj().getBookAuthor().size(); init++) {
+                    if (!(rentalDetailModel.getBookOwner().getBookObj().getBookAuthor().get(init).getAuthorFName().equals(""))) {
+                        author += rentalDetailModel.getBookOwner().getBookObj().getBookAuthor().get(init).getAuthorFName() + " ";
+                        if (!(rentalDetailModel.getBookOwner().getBookObj().getBookAuthor().get(init).getAuthorLName().equals(""))) {
+                            author += rentalDetailModel.getBookOwner().getBookObj().getBookAuthor().get(init).getAuthorLName();
+                            if (init + 1 < rentalDetailModel.getBookOwner().getBookObj().getBookAuthor().size()) {
+                                author += ", ";
                             }
                         }
                     }
                 }
-            }else{
-                author="Unknown Author";
+            } else {
+                author = "Unknown Author";
             }
             mAuthor.setText(author);
             Glide.with(this).load(rentalDetailModel.getBookOwner().getBookObj().getBookFilename()).centerCrop().into(mBookImg);
@@ -241,10 +242,10 @@ public class ViewBookAct extends AppCompatActivity implements
             mRentBtn.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    checkIfExist(user.getUserId(), rentalDetailModel.getRental_detailId());
+                    validateRent(user.getUserId(), rentalDetailModel);
                 }
             });
-        }else if(getIntent().getExtras().getSerializable("swapBook")!=null){
+        } else if (getIntent().getExtras().getSerializable("swapBook") != null) {
             swapDetail = new SwapDetail();
             swapDetail = (SwapDetail) getIntent().getExtras().getSerializable("swapBook");
 
@@ -254,47 +255,47 @@ public class ViewBookAct extends AppCompatActivity implements
 
             mHeaderRP.setText("Swap Price");
             mLPrice.setText(String.valueOf(swapDetail.getSwapPrice()));
-            mRPrice.setText(String.valueOf(swapDetail.getSwapPrice()/2));
+            mRPrice.setText(String.valueOf(swapDetail.getSwapPrice() / 2));
             mRPrice.setVisibility(View.GONE);
             mHeaderRP.setVisibility(View.GONE);
             priceLinear.setVisibility(View.GONE);
 
             final User user = (User) SPUtility.getSPUtil(ViewBookAct.this).getObject("USER_OBJECT", User.class);
 
-            if(user.getUserId()==swapDetail.getBookOwner().getUserObj().getUserId()){
+            if (user.getUserId() == swapDetail.getBookOwner().getUserObj().getUserId()) {
                 buttonLinear.setVisibility(View.GONE);
             }
 
             String genreStr = "";
             int genreSize = swapDetail.getBookOwner().getBookObj().getBookGenre().size();
-            if(genreSize>1){
-                for(int init=0;init<genreSize; init++){
+            if (genreSize > 1) {
+                for (int init = 0; init < genreSize; init++) {
                     genreStr = genreStr + swapDetail.getBookOwner().getBookObj().getBookGenre().get(init).getGenreName();
-                    if(genreSize-1>init){
+                    if (genreSize - 1 > init) {
                         genreStr = genreStr + ", ";
                     }
                 }
-            }else{
+            } else {
                 genreStr = swapDetail.getBookOwner().getBookObj().getBookGenre().get(0).getGenreName();
             }
 
             mGenre.setText(genreStr);
             String author = "";
 
-            if(swapDetail.getBookOwner().getBookObj().getBookAuthor().size()!=0){
-                for(int init=0; init<swapDetail.getBookOwner().getBookObj().getBookAuthor().size(); init++){
-                    if(!(swapDetail.getBookOwner().getBookObj().getBookAuthor().get(init).getAuthorFName().equals(""))){
-                        author+=swapDetail.getBookOwner().getBookObj().getBookAuthor().get(init).getAuthorFName()+" ";
-                        if(!(swapDetail.getBookOwner().getBookObj().getBookAuthor().get(init).getAuthorLName().equals(""))){
-                            author+=swapDetail.getBookOwner().getBookObj().getBookAuthor().get(init).getAuthorLName();
-                            if(init+1<swapDetail.getBookOwner().getBookObj().getBookAuthor().size()){
-                                author+=", ";
+            if (swapDetail.getBookOwner().getBookObj().getBookAuthor().size() != 0) {
+                for (int init = 0; init < swapDetail.getBookOwner().getBookObj().getBookAuthor().size(); init++) {
+                    if (!(swapDetail.getBookOwner().getBookObj().getBookAuthor().get(init).getAuthorFName().equals(""))) {
+                        author += swapDetail.getBookOwner().getBookObj().getBookAuthor().get(init).getAuthorFName() + " ";
+                        if (!(swapDetail.getBookOwner().getBookObj().getBookAuthor().get(init).getAuthorLName().equals(""))) {
+                            author += swapDetail.getBookOwner().getBookObj().getBookAuthor().get(init).getAuthorLName();
+                            if (init + 1 < swapDetail.getBookOwner().getBookObj().getBookAuthor().size()) {
+                                author += ", ";
                             }
                         }
                     }
                 }
-            }else{
-                author="Unknown Author";
+            } else {
+                author = "Unknown Author";
             }
             mAuthor.setText(author);
             Glide.with(this).load(swapDetail.getBookOwner().getBookObj().getBookFilename()).centerCrop().into(mBookImg);
@@ -321,10 +322,10 @@ public class ViewBookAct extends AppCompatActivity implements
             mRentBtn.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    checkExist();
+                    validateSwap(user.getUserId());
                 }
             });
-        }else if(getIntent().getExtras().getSerializable("auctionBook")!=null){
+        } else if (getIntent().getExtras().getSerializable("auctionBook") != null) {
             auctionDetailModel = new AuctionDetailModel();
             auctionDetailModel = (AuctionDetailModel) getIntent().getExtras().getSerializable("auctionBook");
 
@@ -339,20 +340,20 @@ public class ViewBookAct extends AppCompatActivity implements
 
             final User user = (User) SPUtility.getSPUtil(ViewBookAct.this).getObject("USER_OBJECT", User.class);
 
-            if(user.getUserId()==auctionDetailModel.getBookOwner().getUserObj().getUserId()){
+            if (user.getUserId() == auctionDetailModel.getBookOwner().getUserObj().getUserId()) {
                 buttonLinear.setVisibility(View.GONE);
             }
 
             String genreStr = "";
             int genreSize = auctionDetailModel.getBookOwner().getBookObj().getBookGenre().size();
-            if(genreSize>1){
-                for(int init=0;init<genreSize; init++){
+            if (genreSize > 1) {
+                for (int init = 0; init < genreSize; init++) {
                     genreStr = genreStr + auctionDetailModel.getBookOwner().getBookObj().getBookGenre().get(init).getGenreName();
-                    if(genreSize-1>init){
+                    if (genreSize - 1 > init) {
                         genreStr = genreStr + ", ";
                     }
                 }
-            }else{
+            } else {
                 genreStr = auctionDetailModel.getBookOwner().getBookObj().getBookGenre().get(0).getGenreName();
             }
 
@@ -360,20 +361,20 @@ public class ViewBookAct extends AppCompatActivity implements
 
             String author = "";
 
-            if(auctionDetailModel.getBookOwner().getBookObj().getBookAuthor().size()!=0){
-                for(int init=0; init<auctionDetailModel.getBookOwner().getBookObj().getBookAuthor().size(); init++){
-                    if(!(auctionDetailModel.getBookOwner().getBookObj().getBookAuthor().get(init).getAuthorFName().equals(""))){
-                        author+=auctionDetailModel.getBookOwner().getBookObj().getBookAuthor().get(init).getAuthorFName()+" ";
-                        if(!(auctionDetailModel.getBookOwner().getBookObj().getBookAuthor().get(init).getAuthorLName().equals(""))){
-                            author+=auctionDetailModel.getBookOwner().getBookObj().getBookAuthor().get(init).getAuthorLName();
-                            if(init+1<auctionDetailModel.getBookOwner().getBookObj().getBookAuthor().size()){
-                                author+=", ";
+            if (auctionDetailModel.getBookOwner().getBookObj().getBookAuthor().size() != 0) {
+                for (int init = 0; init < auctionDetailModel.getBookOwner().getBookObj().getBookAuthor().size(); init++) {
+                    if (!(auctionDetailModel.getBookOwner().getBookObj().getBookAuthor().get(init).getAuthorFName().equals(""))) {
+                        author += auctionDetailModel.getBookOwner().getBookObj().getBookAuthor().get(init).getAuthorFName() + " ";
+                        if (!(auctionDetailModel.getBookOwner().getBookObj().getBookAuthor().get(init).getAuthorLName().equals(""))) {
+                            author += auctionDetailModel.getBookOwner().getBookObj().getBookAuthor().get(init).getAuthorLName();
+                            if (init + 1 < auctionDetailModel.getBookOwner().getBookObj().getBookAuthor().size()) {
+                                author += ", ";
                             }
                         }
                     }
                 }
-            }else{
-                author="Unknown Author";
+            } else {
+                author = "Unknown Author";
             }
             mAuthor.setText(author);
             Glide.with(this).load(auctionDetailModel.getBookOwner().getBookObj().getBookFilename()).centerCrop().into(mBookImg);
@@ -401,11 +402,11 @@ public class ViewBookAct extends AppCompatActivity implements
         }
     }
 
-    public void checkExist(){
+    public void checkExist() {
         RequestQueue requestQueue = Volley.newRequestQueue(this);
         final User user = (User) SPUtility.getSPUtil(this).getObject("USER_OBJECT", User.class);
 
-        String URL = Constants.CHECK_SWAP_REQUEST+user.getUserId()+"/"+swapDetail.getSwapDetailId();
+        String URL = Constants.CHECK_SWAP_REQUEST + user.getUserId() + "/" + swapDetail.getSwapDetailId();
         d("SwapURL", URL);
         final Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd").registerTypeAdapter(Date.class, GsonDateDeserializer.getInstance()).create();
         final String mRequestBody = gson.toJson(swapDetail);
@@ -415,9 +416,9 @@ public class ViewBookAct extends AppCompatActivity implements
             @Override
             public void onResponse(String response) {
                 Log.i("SwapDetailResponse", response);
-                if(response.length()==0){
+                if (response.length() == 0) {
                     getMySwapDetail();
-                }else {
+                } else {
                     AlertDialog ad = new AlertDialog.Builder(ViewBookAct.this).create();
                     ad.setTitle("Alert!");
                     ad.setMessage("You already sent a request for this book. You can't send a request again.");
@@ -456,11 +457,11 @@ public class ViewBookAct extends AppCompatActivity implements
         requestQueue.add(stringRequest);
     }
 
-    public void getMySwapDetail(){
+    public void getMySwapDetail() {
         RequestQueue requestQueue = Volley.newRequestQueue(this);
         final User user = (User) SPUtility.getSPUtil(this).getObject("USER_OBJECT", User.class);
 
-        String URL = Constants.GET_ALL_MY_SWAP+user.getUserId();
+        String URL = Constants.GET_ALL_MY_SWAP + user.getUserId();
         d("SwapURL", URL);
         final Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd").registerTypeAdapter(Date.class, GsonDateDeserializer.getInstance()).create();
         final String mRequestBody = gson.toJson(swapDetail);
@@ -471,7 +472,7 @@ public class ViewBookAct extends AppCompatActivity implements
             public void onResponse(String response) {
                 Log.i("SwapDetailResponse", response);
 
-                if(response.length()==0){
+                if (response.length() == 0) {
                     AlertDialog ad = new AlertDialog.Builder(ViewBookAct.this).create();
                     ad.setTitle("Alert!");
                     ad.setMessage("You don't have any books that are available for swap.");
@@ -481,7 +482,8 @@ public class ViewBookAct extends AppCompatActivity implements
                             dialog.dismiss();
                         }
                     });
-                }else{
+                    ad.show();
+                } else {
                     final List<SwapDetail> swapDetailList = new ArrayList<SwapDetail>();
                     swapDetailList.addAll(Arrays.asList(gson.fromJson(response, SwapDetail[].class)));
 
@@ -493,7 +495,7 @@ public class ViewBookAct extends AppCompatActivity implements
 
                     sdList = swapDetailList;
                     ly.setAdapter(adapter);
-                    Log.d("lySelectedNum", ly.getCheckedItemCount()+"");
+                    Log.d("lySelectedNum", ly.getCheckedItemCount() + "");
                     Button mOkay = (Button) view.findViewById(R.id.btnReq);
                     Button mCancel = (Button) view.findViewById(R.id.btnCancel);
 
@@ -501,8 +503,8 @@ public class ViewBookAct extends AppCompatActivity implements
                         @RequiresApi(api = Build.VERSION_CODES.N)
                         @Override
                         public void onClick(View v) {
-                            List<SwapDetail> requesteeSwapDetail  = adapter.getSelectedSwap();
-                            if(requesteeSwapDetail.size()!=0){
+                            List<SwapDetail> requesteeSwapDetail = adapter.getSelectedSwap();
+                            if (requesteeSwapDetail.size() != 0) {
                                 List<SwapHeaderDetail> listSHD = new ArrayList<SwapHeaderDetail>();
 
                                 Calendar cal = Calendar.getInstance();
@@ -523,7 +525,7 @@ public class ViewBookAct extends AppCompatActivity implements
 
                                 swapHeader.setDateTimeStamp(currDate);
 
-                                for(int init=0; init<requesteeSwapDetail.size(); init++){
+                                for (int init = 0; init < requesteeSwapDetail.size(); init++) {
                                     SwapHeaderDetail shd = new SwapHeaderDetail();
 
                                     shd.setSwapDetail(requesteeSwapDetail.get(init));
@@ -543,12 +545,12 @@ public class ViewBookAct extends AppCompatActivity implements
 
                                 Log.d("This user ", user.getUserFname());
 
-                                Log.d("SwapDetailRead:"+swapDetail.getBookOwner().getBookObj().getBookTitle(), "user:"+ swapHeader.getSwapDetail().getBookOwner().getUserObj().getUserFname());
-                                Log.d("ReqDetail:"+ swapHeader.getRequestedSwapDetail().getBookOwner().getBookObj().getBookTitle(), "user:"+swapHeader.getRequestedSwapDetail().getBookOwner().getUserObj().getUserFname());
+                                Log.d("SwapDetailRead:" + swapDetail.getBookOwner().getBookObj().getBookTitle(), "user:" + swapHeader.getSwapDetail().getBookOwner().getUserObj().getUserFname());
+                                Log.d("ReqDetail:" + swapHeader.getRequestedSwapDetail().getBookOwner().getBookObj().getBookTitle(), "user:" + swapHeader.getRequestedSwapDetail().getBookOwner().getUserObj().getUserFname());
 
 
                                 addSwapHeader(swapHeader);
-                            }else{
+                            } else {
                                 AlertDialog ad = new AlertDialog.Builder(ViewBookAct.this).create();
                                 ad.setTitle("Alert!");
                                 ad.setMessage("You should choose a book/s for it to be swapped.");
@@ -607,8 +609,8 @@ public class ViewBookAct extends AppCompatActivity implements
         }
     };
 
-    private void getSwapDetail(int bookOwnerId){
-        String URL = Constants.GET_BOOK_OWNER_SWAP_DETAIL+bookOwnerId;
+    private void getSwapDetail(int bookOwnerId) {
+        String URL = Constants.GET_BOOK_OWNER_SWAP_DETAIL + bookOwnerId;
         Log.d("PreferenceURL", URL);
         StringRequest stringRequest = new StringRequest(Request.Method.GET, URL, new Response.Listener<String>() {
             @Override
@@ -618,7 +620,7 @@ public class ViewBookAct extends AppCompatActivity implements
                 SwapDetail swapDetails = gson.fromJson(response, SwapDetail.class);
                 Intent intent = new Intent(ViewBookAct.this, ViewBookAct.class);
                 Bundle bundle = new Bundle();
-                bundle.putSerializable("swapBook",swapDetails);
+                bundle.putSerializable("swapBook", swapDetails);
                 intent.putExtras(bundle);
                 startActivity(intent);
             }
@@ -627,11 +629,11 @@ public class ViewBookAct extends AppCompatActivity implements
             public void onErrorResponse(VolleyError error) {
                 Log.e("LOG_VOLLEY", error.toString());
             }
-        }) ;
+        });
         VolleyUtil.volleyRQInstance(ViewBookAct.this).add(stringRequest);
     }
 
-    public void addSwapHeader(SwapHeader swapHeaderToPost){
+    public void addSwapHeader(SwapHeader swapHeaderToPost) {
         RequestQueue requestQueue = Volley.newRequestQueue(this);
         final User user = (User) SPUtility.getSPUtil(this).getObject("USER_OBJECT", User.class);
 
@@ -652,7 +654,6 @@ public class ViewBookAct extends AppCompatActivity implements
             @Override
             public void onResponse(String response) {
                 Log.i("AddSHRes", response);
-
                 SwapHeader sh = gson.fromJson(response, SwapHeader.class);
 
                 UserNotification un = new UserNotification();
@@ -665,6 +666,116 @@ public class ViewBookAct extends AppCompatActivity implements
                 un.setActionStatus("Request");
 
                 addUserNotif(un);
+
+                for(int init=0; init<sh.getSwapHeaderDetail().size(); init++){
+                    Log.d("swapHeaderDetailLoop", "yes");
+                    if(sh.getSwapHeaderDetail().get(init).getSwapType().equals("Requestor")){
+                        SwapDetail sd = new SwapDetail();
+                        BookOwnerModel bo = new BookOwnerModel();
+                        sd = sh.getSwapHeaderDetail().get(init).getSwapDetail();
+                        bo = sd.getBookOwner();
+                        bo.setBookStat("Not Available");
+                        bo.getBookObj().setStatus("Not Available");
+                        sd.setSwapStatus("Not Available");
+                        sd.getBookOwner().setBookStat("Not Available");
+                        updateSwapDetail(sd);
+                        updateBookOwner(bo);
+                    }
+                }
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.e("LOG_VOLLEY", error.toString());
+                error.printStackTrace();
+            }
+        }) {
+            @Override
+            public String getBodyContentType() {
+                return "application/json; charset=utf-8";
+            }
+
+            @Override
+            public byte[] getBody() throws AuthFailureError {
+                try {
+                    return mRequestBody == null ? null : mRequestBody.getBytes("utf-8");
+                } catch (UnsupportedEncodingException uee) {
+                    VolleyLog.wtf("Unsupported Encoding while trying to get the bytes of %s using %s", mRequestBody, "utf-8");
+                    return null;
+                }
+            }
+        };
+
+        requestQueue.add(stringRequest);
+    }
+
+    public void updateBookOwner(BookOwnerModel bookOwnerModel) {
+        RequestQueue requestQueue = Volley.newRequestQueue(this);
+        final User user = (User) SPUtility.getSPUtil(this).getObject("USER_OBJECT", User.class);
+
+        String URL = Constants.PUT_BOOK_OWNER;
+        d("SwapURL", URL);
+        final Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd").registerTypeAdapter(Date.class, GsonDateDeserializer.getInstance()).create();
+        final String mRequestBody = gson.toJson(bookOwnerModel);
+
+        int maxLogSize = 2000;
+        for (int i = 0; i <= mRequestBody.length() / maxLogSize; i++) {
+            int start = i * maxLogSize;
+            int end = (i + 1) * maxLogSize;
+            end = end > mRequestBody.length() ? mRequestBody.length() : end;
+            Log.d("updateBookOWner", mRequestBody.substring(start, end));
+        }
+        StringRequest stringRequest = new StringRequest(Request.Method.PUT, URL, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                Log.i("updateBookOWner", response);
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.e("LOG_VOLLEY", error.toString());
+                error.printStackTrace();
+            }
+        }) {
+            @Override
+            public String getBodyContentType() {
+                return "application/json; charset=utf-8";
+            }
+
+            @Override
+            public byte[] getBody() throws AuthFailureError {
+                try {
+                    return mRequestBody == null ? null : mRequestBody.getBytes("utf-8");
+                } catch (UnsupportedEncodingException uee) {
+                    VolleyLog.wtf("Unsupported Encoding while trying to get the bytes of %s using %s", mRequestBody, "utf-8");
+                    return null;
+                }
+            }
+        };
+
+        requestQueue.add(stringRequest);
+    }
+
+    public void updateSwapDetail(SwapDetail swapDetailModel) {
+        RequestQueue requestQueue = Volley.newRequestQueue(this);
+        final User user = (User) SPUtility.getSPUtil(this).getObject("USER_OBJECT", User.class);
+
+        String URL = Constants.PUT_SWAP_DETAIL;
+        d("SwapURL", URL);
+        final Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd").registerTypeAdapter(Date.class, GsonDateDeserializer.getInstance()).create();
+        final String mRequestBody = gson.toJson(swapDetailModel);
+
+        int maxLogSize = 2000;
+        for (int i = 0; i <= mRequestBody.length() / maxLogSize; i++) {
+            int start = i * maxLogSize;
+            int end = (i + 1) * maxLogSize;
+            end = end > mRequestBody.length() ? mRequestBody.length() : end;
+            Log.d("updateSwapDetail", mRequestBody.substring(start, end));
+        }
+        StringRequest stringRequest = new StringRequest(Request.Method.PUT, URL, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                Log.i("updateSwapDetail", response);
             }
         }, new Response.ErrorListener() {
             @Override
@@ -717,7 +828,7 @@ public class ViewBookAct extends AppCompatActivity implements
                     public void onClick(DialogInterface dialog, int which) {
                         Intent intent = new Intent(ViewBookAct.this, ViewBookAct.class);
                         Bundle bundle = new Bundle();
-                        bundle.putSerializable("swapBook",swapDetail);
+                        bundle.putSerializable("swapBook", swapDetail);
                         intent.putExtras(bundle);
                         startActivity(intent);
                     }
@@ -749,9 +860,9 @@ public class ViewBookAct extends AppCompatActivity implements
         requestQueue.add(stringRequest);
     }
 
-    public static void makeTextViewResizable(final TextView textView, final int maxLine, final String expandText, final boolean viewMore){
-        Log.d("makeTextViewResizable","inside");
-        if(textView.getTag() == null){
+    public static void makeTextViewResizable(final TextView textView, final int maxLine, final String expandText, final boolean viewMore) {
+        Log.d("makeTextViewResizable", "inside");
+        if (textView.getTag() == null) {
             textView.setTag(textView.getText());
         }
 
@@ -765,15 +876,15 @@ public class ViewBookAct extends AppCompatActivity implements
 
                 observer.removeGlobalOnLayoutListener(this);
 
-                if(maxLine == 0){
+                if (maxLine == 0) {
                     lineEndText = textView.getLayout().getLineEnd(0);
-                    text = textView.getText().subSequence(0, lineEndText - expandText.length()-1)+" "+ expandText;
-                }else if(maxLine > 0 && textView.getLineCount() >= maxLine){
+                    text = textView.getText().subSequence(0, lineEndText - expandText.length() - 1) + " " + expandText;
+                } else if (maxLine > 0 && textView.getLineCount() >= maxLine) {
                     lineEndText = textView.getLayout().getLineEnd(maxLine - 1);
-                    text = textView.getText().subSequence(0, lineEndText - expandText.length()-1)+" "+ expandText;
-                }else{
-                    lineEndText = textView.getLayout().getLineEnd(textView.getLayout().getLineCount()-1);
-                    text = textView.getText().subSequence(0, lineEndText)+" "+ expandText;
+                    text = textView.getText().subSequence(0, lineEndText - expandText.length() - 1) + " " + expandText;
+                } else {
+                    lineEndText = textView.getLayout().getLineEnd(textView.getLayout().getLineCount() - 1);
+                    text = textView.getText().subSequence(0, lineEndText) + " " + expandText;
                 }
 
                 textView.setText(text);
@@ -815,7 +926,7 @@ public class ViewBookAct extends AppCompatActivity implements
 
     }
 
-    public void addRentalHeader(RentalHeader rentalHeader){
+    public void addRentalHeader(RentalHeader rentalHeader) {
         RequestQueue requestQueue = Volley.newRequestQueue(this);
         String URL = Constants.POST_RENTAL_HEADER;
 
@@ -861,7 +972,7 @@ public class ViewBookAct extends AppCompatActivity implements
 
     private void checkIfExist(final int userId, final int rentalDetailId) {
         RequestQueue requestQueue = Volley.newRequestQueue(this);
-        String URL = Constants.CHECK_EXIST+"/"+userId+"/"+rentalDetailId;
+        String URL = Constants.CHECK_EXIST + "/" + userId + "/" + rentalDetailId;
 
         d("CheckURL", URL);
 
@@ -877,7 +988,7 @@ public class ViewBookAct extends AppCompatActivity implements
 
                 d("ResponseExist", response);
 
-                if(response==null||response.isEmpty()){
+                if (response == null || response.isEmpty()) {
                     AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(ViewBookAct.this);
                     alertDialogBuilder.setTitle("Terms and Condition");
                     alertDialogBuilder.setMessage("\n\n1.\tThis book must be returned on time.\n" +
@@ -898,7 +1009,7 @@ public class ViewBookAct extends AppCompatActivity implements
                                                     RentalHeader rentalHeader = new RentalHeader();
 
                                                     User user = (User) SPUtility.getSPUtil(ViewBookAct.this).getObject("USER_OBJECT", User.class);
-                                                    String nextDateStr="";
+                                                    String nextDateStr = "";
 
                                                     @SuppressLint({"NewApi", "LocalSuppress"})
                                                     Calendar c = Calendar.getInstance();
@@ -929,7 +1040,7 @@ public class ViewBookAct extends AppCompatActivity implements
                                 }
                             });
 
-                    alertDialogBuilder.setNegativeButton("Disagree",new DialogInterface.OnClickListener() {
+                    alertDialogBuilder.setNegativeButton("Disagree", new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
                             Toast.makeText(ViewBookAct.this, "You disagreed to the terms and condition.", Toast.LENGTH_SHORT).show();
@@ -939,10 +1050,10 @@ public class ViewBookAct extends AppCompatActivity implements
 
                     AlertDialog alertDialog = alertDialogBuilder.create();
                     alertDialog.show();
-                }else{
+                } else {
 
                     android.support.v7.app.AlertDialog.Builder alertDialogBuilder = new android.support.v7.app.AlertDialog.Builder(ViewBookAct.this);
-                    alertDialogBuilder.setTitle("!!!");
+                    alertDialogBuilder.setTitle("Alert!");
                     alertDialogBuilder.setMessage("You already requested for this book. You can't request again.");
                     alertDialogBuilder.setPositiveButton("Okay",
                             new DialogInterface.OnClickListener() {
@@ -997,26 +1108,26 @@ public class ViewBookAct extends AppCompatActivity implements
         }
     };
 
-    private void timeOutDialog() {
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setMessage("Please wait for the approval of the owner.\n You will get notification once approved by the owner.");
-        builder.setPositiveButton("OK", null)
-                .setNegativeButton("cacel", null);
-        mAlertDialog = builder.create();
-        mAlertDialog.show();
-        mHandler.sendEmptyMessageDelayed(MSG_DISMISS_DIALOG, TIME_OUT);
-    }
+//    private void timeOutDialog() {
+//        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+//        builder.setMessage("Please wait for the approval of the owner.\n You will get notification once approved by the owner.");
+//        builder.setPositiveButton("OK", null)
+//                .setNegativeButton("cacel", null);
+//        mAlertDialog = builder.create();
+//        mAlertDialog.show();
+//        mHandler.sendEmptyMessageDelayed(MSG_DISMISS_DIALOG, TIME_OUT);
+//    }
 
-    public void getCount(){
+    public void getCount() {
         RequestQueue requestQueue = Volley.newRequestQueue(this);
         User user = new User();
         user = (User) SPUtility.getSPUtil(this).getObject("USER_OBJECT", User.class);
         d("UserIdReceive", String.valueOf(user.getUserId()));
-        String URL = Constants.GET_COUNT+rentalDetailModel.getBookOwner().getBookOwnerId();
+        String URL = Constants.GET_COUNT + rentalDetailModel.getBookOwner().getBookOwnerId();
 
         d("CountURL", URL);
 
-        final RentalHeader rentalHeader =new RentalHeader();
+        final RentalHeader rentalHeader = new RentalHeader();
 
         final Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd").registerTypeAdapter(Date.class, GsonDateDeserializer.getInstance()).create();
         final String mRequestBody = gson.toJson(rentalHeader);
@@ -1027,7 +1138,7 @@ public class ViewBookAct extends AppCompatActivity implements
             @Override
             public void onResponse(String response) {
                 Log.i("CountBookResponse", response);
-                mRenters.setText("Rented by "+response+" people.");
+                mRenters.setText("Rented by " + response + " people.");
             }
         }, new Response.ErrorListener() {
             @Override
@@ -1054,14 +1165,71 @@ public class ViewBookAct extends AppCompatActivity implements
         requestQueue.add(stringRequest);
     }
 
-    public void getCountReq(int userId, final int rentalDetailId){
+    public void validateSwap(int userId) {
         RequestQueue requestQueue = Volley.newRequestQueue(this);
         User user = new User();
         user = (User) SPUtility.getSPUtil(this).getObject("USER_OBJECT", User.class);
         d("UserIdReceive", String.valueOf(user.getUserId()));
-        String URL = Constants.GET_COUNT_REQ+"/"+userId;
+        String URL = Constants.VALIDATE_SWAP + "/" + userId;
 
-        final RentalHeader rentalHeader =new RentalHeader();
+
+        final Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd").registerTypeAdapter(Date.class, GsonDateDeserializer.getInstance()).create();
+        final String mRequestBody = gson.toJson(userId);
+
+
+        d("LOG_VOLLEY", mRequestBody);
+        final User finalUser = user;
+        StringRequest stringRequest = new StringRequest(Request.Method.GET, URL, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                Log.i("validate", response);
+                if (response.equals("true")) {
+                    checkExist();
+                } else {
+                    AlertDialog ad = new AlertDialog.Builder(getApplicationContext()).create();
+                    ad.setMessage("Maximum Rent Books is 3 only. You cannot request this book.");
+                    ad.setButton(AlertDialog.BUTTON_POSITIVE, "Okay", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                            dialogInterface.dismiss();
+                        }
+                    });
+                }
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.e("LOG_VOLLEY", error.toString());
+            }
+        }) {
+            @Override
+            public String getBodyContentType() {
+                return "application/json; charset=utf-8";
+            }
+
+            @Override
+            public byte[] getBody() throws AuthFailureError {
+                try {
+                    return mRequestBody == null ? null : mRequestBody.getBytes("utf-8");
+                } catch (UnsupportedEncodingException uee) {
+                    VolleyLog.wtf("Unsupported Encoding while trying to get the bytes of %s using %s", mRequestBody, "utf-8");
+                    return null;
+                }
+            }
+        };
+
+        requestQueue.add(stringRequest);
+    }
+
+
+    public void validateRent(final int userId, final RentalDetail rentalDetail) {
+        RequestQueue requestQueue = Volley.newRequestQueue(this);
+        User user = new User();
+        user = (User) SPUtility.getSPUtil(this).getObject("USER_OBJECT", User.class);
+        d("UserIdReceive", String.valueOf(user.getUserId()));
+        String URL = Constants.VALIDATE_RENT + "/" + userId;
+
+        final RentalHeader rentalHeader = new RentalHeader();
 
         final Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd").registerTypeAdapter(Date.class, GsonDateDeserializer.getInstance()).create();
         final String mRequestBody = gson.toJson(rentalHeader);
@@ -1072,23 +1240,18 @@ public class ViewBookAct extends AppCompatActivity implements
         StringRequest stringRequest = new StringRequest(Request.Method.GET, URL, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
-                Log.i("ViewBookResponse", response);
-                List<RentalHeader> rh = new ArrayList<RentalHeader>();
-                rh.clear();
-                rh.addAll(Arrays.asList(gson.fromJson(response, RentalHeader[].class)));
-
-                if(rh.size()>3){
+                Log.i("validate", response);
+                if (response.equals("true")) {
+                    checkIfExist(userId, rentalDetail.getRental_detailId());
+                } else {
                     AlertDialog ad = new AlertDialog.Builder(getApplicationContext()).create();
-                    ad.setMessage("You cannot request more than 3 rent books.");
+                    ad.setMessage("Maximum Rent Books is 3 only. You cannot request this book.");
                     ad.setButton(AlertDialog.BUTTON_POSITIVE, "Okay", new DialogInterface.OnClickListener() {
                         @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            dialog.dismiss();
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                            dialogInterface.dismiss();
                         }
                     });
-                    ad.show();
-                }else{
-                    checkIfExist(finalUser.getUserId(), rentalDetailId);
                 }
 
             }
@@ -1117,14 +1280,14 @@ public class ViewBookAct extends AppCompatActivity implements
         requestQueue.add(stringRequest);
     }
 
-    public void getRatings(int bookOwnerId){
+    public void getRatings(int bookOwnerId) {
         RequestQueue requestQueue = Volley.newRequestQueue(this);
         User user = new User();
         user = (User) SPUtility.getSPUtil(this).getObject("USER_OBJECT", User.class);
         d("UserIdReceive", String.valueOf(user.getUserId()));
-        String URL = Constants.GET_RATINGS+"/"+bookOwnerId;
+        String URL = Constants.GET_RATINGS + "/" + bookOwnerId;
 
-        final RentalHeader rentalHeader =new RentalHeader();
+        final RentalHeader rentalHeader = new RentalHeader();
 
         final Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd").registerTypeAdapter(Date.class, GsonDateDeserializer.getInstance()).create();
         final String mRequestBody = gson.toJson(rentalHeader);

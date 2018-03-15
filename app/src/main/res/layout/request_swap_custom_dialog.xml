@@ -96,7 +96,7 @@
             android:id="@+id/btnRequestReject"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:background="@color/colorAuction"
+            android:background="@drawable/rounded_button_reject"
             android:text="Reject"
             android:layout_marginRight="15dp"
             android:textColor="@color/colorWhite" />
@@ -105,7 +105,7 @@
             android:id="@+id/btnRequestAccept"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:background="@color/colorRent"
+            android:background="@drawable/rounded_button_accept"
             android:text="Accept"
             android:textColor="@color/colorWhite" />
 
