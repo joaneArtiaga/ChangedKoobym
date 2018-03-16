@@ -2601,14 +2601,12 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
 
         public void getSwapHeader(final int position, final String status) {
             RequestQueue requestQueue = Volley.newRequestQueue(context);
-//        String URL = "http://104.197.4.32:8080/Koobym/user/add";
             User user = new User();
             user = (User) SPUtility.getSPUtil(context).getObject("USER_OBJECT", User.class);
 
             String URL = Constants.GET_SWAP_DETAIL + userNotificationList.get(position).getActionId();
 
             d("getSwapHeader", URL);
-//        String URL = Constants.WEB_SERVICE_URL+"user/add";
 
             final SwapHeader swapHeader = new SwapHeader();
 
@@ -2733,6 +2731,7 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
                         btnOkay.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
+
 
                                 Intent intent = new Intent(context, NotificationAct.class);
                                 context.startActivity(intent);
@@ -3589,6 +3588,8 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
                     if(swapHeaderModel.getSwapHeaderDetail().get(init).getSwapType().equals("Requestor")){
                         SwapDetail sd = new SwapDetail();
                         BookOwnerModel bo = new BookOwnerModel();
+                        sd = swapHeader.getSwapHeaderDetail().get(init).getSwapDetail();
+                        bo = sd.getBookOwner();
                         sd.setSwapStatus("Available");
                         bo.getBookObj().setStatus("Available");
                         bo.setBookStat("Available");

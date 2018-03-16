@@ -2,9 +2,9 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/fragment_container_books"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:id="@+id/fragment_container_books"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
     tools:context="com.example.joane14.myapplication.Activities.ViewBookAct"
     tools:showIn="@layout/app_bar_view_book2">
@@ -21,8 +21,8 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="130dp"
-                android:padding="10dp"
-                android:orientation="horizontal">
+                android:orientation="horizontal"
+                android:padding="10dp">
 
 
                 <ImageView
@@ -35,209 +35,209 @@
                 <LinearLayout
                     android:layout_width="250dp"
                     android:layout_height="match_parent"
-                    android:padding="5dp"
-                    android:orientation="vertical">
+                    android:orientation="vertical"
+                    android:padding="5dp">
 
                     <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
                         android:id="@+id/vbTitle"
-                        android:textStyle="bold"
-                        android:textSize="20dp"
-                        android:textColor="@color/colorLightOrange"/>
-
-                    <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:textColor="@color/colorLightOrange"
+                        android:textSize="20dp"
+                        android:textStyle="bold" />
+
+                    <TextView
                         android:id="@+id/vbAuthor"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:textColor="@color/colorLightOrange"
                         android:textSize="15dp"
-                        android:textStyle="italic"
-                        android:textColor="@color/colorLightOrange"/>
+                        android:textStyle="italic" />
 
                     <RatingBar
                         android:id="@+id/vbRating"
+                        style="?android:attr/ratingBarStyleSmall"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:isIndicator="true"
                         android:numStars="5"
+                        android:progressTint="@color/colorLightOrange"
                         android:stepSize="0.2"
-                        android:theme="@style/RatingBar"
-                        style="?android:attr/ratingBarStyleSmall"
-                        android:progressTint="@color/colorLightOrange"/>
+                        android:theme="@style/RatingBar" />
 
                     <View
                         android:layout_width="match_parent"
                         android:layout_height="1dp"
-                        android:background="@color/colorLightOrange"
-                        android:layout_marginTop="10dp"/>
+                        android:layout_marginTop="10dp"
+                        android:background="@color/colorLightOrange" />
 
                     <TextView
+                        android:id="@+id/vbRenters"
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:id="@+id/vbRenters"/>
+                        android:layout_height="wrap_content" />
 
                 </LinearLayout>
             </LinearLayout>
 
             <FrameLayout
+                android:id="@+id/countdown_container"
                 android:layout_width="match_parent"
                 android:layout_height="200dp"
-                android:id="@+id/countdown_container"
-                android:layout_gravity="center_horizontal"/>
+                android:layout_gravity="center_horizontal" />
 
 
             <Spinner
                 android:id="@+id/spinnerStatus"
                 android:layout_width="350dp"
                 android:layout_height="30dp"
+                android:layout_gravity="center_horizontal"
                 android:layout_marginTop="5dp"
                 android:entries="@array/book_status"
-                android:layout_gravity="center_horizontal"
-                android:gravity="center_horizontal"/>
+                android:gravity="center_horizontal" />
 
             <LinearLayout
                 android:layout_width="330dp"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:background="@drawable/rounded_ll"
+                android:layout_gravity="center_horizontal"
                 android:layout_marginTop="10dp"
-                android:padding="10dp"
-                android:layout_gravity="center_horizontal">
+                android:background="@drawable/rounded_ll"
+                android:orientation="vertical"
+                android:padding="10dp">
 
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="Description"
+                    android:textColor="@color/colorLightOrange"
                     android:textSize="20dp"
-                    android:textStyle="bold"
-                    android:textColor="@color/colorLightOrange"/>
+                    android:textStyle="bold" />
 
                 <View
                     android:layout_width="match_parent"
                     android:layout_height="1dp"
-                    android:background="@color/colorLightOrange"
-                    android:layout_marginTop="5dp"/>
+                    android:layout_marginTop="5dp"
+                    android:background="@color/colorLightOrange" />
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:layout_marginTop="5dp">
+                    android:layout_marginTop="5dp"
+                    android:orientation="horizontal">
 
                     <TextView
                         android:layout_width="100dp"
                         android:layout_height="wrap_content"
-                        android:textStyle="bold"
-                        android:textSize="15dp"
                         android:text="Book Content:"
-                        android:textColor="@color/colorLightOrange"/>
+                        android:textColor="@color/colorLightOrange"
+                        android:textSize="15dp"
+                        android:textStyle="bold" />
 
                     <TextView
+                        android:id="@+id/vbContent"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:id="@+id/vbContent"
-                        android:textSize="15dp"
-                        android:textColor="@color/colorOrange"/>
+                        android:textColor="@color/colorOrange"
+                        android:textSize="15dp" />
                 </LinearLayout>
 
                 <View
                     android:layout_width="match_parent"
                     android:layout_height="1dp"
-                    android:background="@color/colorLightOrange"
-                    android:layout_marginTop="5dp"/>
+                    android:layout_marginTop="5dp"
+                    android:background="@color/colorLightOrange" />
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:layout_marginTop="10dp">
+                    android:layout_marginTop="10dp"
+                    android:orientation="horizontal">
 
                     <TextView
                         android:layout_width="100dp"
                         android:layout_height="wrap_content"
                         android:text="Book Condition:"
+                        android:textColor="@color/colorLightOrange"
                         android:textSize="15dp"
-                        android:textStyle="bold"
-                        android:textColor="@color/colorLightOrange"/>
+                        android:textStyle="bold" />
 
                     <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
                         android:id="@+id/vbCondition"
-                        android:textSize="15dp"
-                        android:textColor="@color/colorOrange"/>
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textColor="@color/colorOrange"
+                        android:textSize="15dp" />
                 </LinearLayout>
             </LinearLayout>
 
             <LinearLayout
-                android:layout_width="330dp"
                 android:id="@+id/llprice"
+                android:layout_width="330dp"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
+                android:layout_marginTop="7dp"
                 android:background="@drawable/rounded_ll"
                 android:orientation="vertical"
-                android:padding="7dp"
-                android:layout_marginTop="7dp">
+                android:padding="7dp">
 
 
                 <LinearLayout
+                    android:id="@+id/rentalLL"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:id="@+id/rentalLL">
+                    android:orientation="horizontal">
 
                     <TextView
-                        android:layout_width="150dp"
                         android:id="@+id/headerRP"
+                        android:layout_width="150dp"
                         android:layout_height="wrap_content"
-                        android:textSize="15dp"
-                        android:textStyle="bold"
+                        android:text="Rental Price:"
                         android:textColor="@color/colorLightOrange"
-                        android:text="Rental Price:"/>
+                        android:textSize="15dp"
+                        android:textStyle="bold" />
 
                     <TextView
+                        android:id="@+id/vbRentalP"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:textSize="15dp"
                         android:textColor="@color/colorOrange"
-                        android:id="@+id/vbRentalP"/>
+                        android:textSize="15dp" />
 
                 </LinearLayout>
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:layout_marginTop="5dp">
+                    android:layout_marginTop="5dp"
+                    android:orientation="horizontal">
 
                     <TextView
-                        android:layout_width="150dp"
                         android:id="@+id/headerLP"
+                        android:layout_width="150dp"
+                        android:layout_height="wrap_content"
+                        android:text="Lock-in Price:"
                         android:textColor="@color/colorLightOrange"
                         android:textSize="15dp"
-                        android:textStyle="bold"
-                        android:layout_height="wrap_content"
-                        android:text="Lock-in Price:"/>
+                        android:textStyle="bold" />
 
                     <TextView
+                        android:id="@+id/vbLockInP"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:textSize="15dp"
                         android:textColor="@color/colorOrange"
-                        android:id="@+id/vbLockInP"/>
+                        android:textSize="15dp" />
 
                 </LinearLayout>
             </LinearLayout>
 
             <LinearLayout
+                android:id="@+id/priceLL"
                 android:layout_width="330dp"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
+                android:layout_marginTop="7dp"
                 android:background="@drawable/rounded_ll"
                 android:orientation="vertical"
-                android:padding="7dp"
-                android:id="@+id/priceLL"
-                android:layout_marginTop="7dp">
+                android:padding="7dp">
 
 
                 <LinearLayout
@@ -248,61 +248,68 @@
                     <TextView
                         android:layout_width="150dp"
                         android:layout_height="wrap_content"
-                        android:textSize="15dp"
-                        android:textStyle="bold"
+                        android:text="Genre:"
                         android:textColor="@color/colorLightOrange"
-                        android:text="Genre:"/>
+                        android:textSize="15dp"
+                        android:textStyle="bold" />
 
                     <TextView
+                        android:id="@+id/vbGenre"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:textSize="15dp"
                         android:textColor="@color/colorOrange"
-                        android:id="@+id/vbGenre"/>
+                        android:textSize="15dp" />
 
                 </LinearLayout>
 
             </LinearLayout>
 
             <FrameLayout
+                android:id="@+id/fragment_review_container"
                 android:layout_width="330dp"
                 android:layout_height="500dp"
-                android:id="@+id/fragment_review_container"
-                android:layout_gravity="center_horizontal"/>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:layout_gravity="center_horizontal"
-                android:padding="7dp"
-                android:gravity="center_horizontal"
-                android:id="@+id/button_ll">
-
-                <Button
-                    android:layout_width="0dp"
-                    android:layout_weight="1"
-                    android:layout_height="50dp"
-                    android:text="Update"
-                    android:textSize="15dp"
-                    android:layout_marginRight="10dp"
-                    android:textColor="@color/colorWhite"
-                    android:background="@drawable/rounded_button"
-                    android:id="@+id/btnVbUpdate"
-                    android:gravity="center"/>
-
-                <Button
-                    android:layout_width="0dp"
-                    android:layout_height="50dp"
-                    android:layout_weight="1"
-                    android:textSize="15dp"
-                    android:text="Delete"
-                    android:textColor="@color/colorWhite"
-                    android:background="@drawable/rounded_button"
-                    android:id="@+id/btnVbDElete"
-                    android:gravity="center" />
-
-            </LinearLayout>
+                android:layout_gravity="center_horizontal" />
         </LinearLayout>
     </ScrollView>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true">
+
+        <LinearLayout
+            android:id="@+id/button_ll"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:gravity="center_horizontal"
+            android:orientation="horizontal"
+            android:padding="7dp">
+
+            <Button
+                android:id="@+id/btnVbUpdate"
+                android:layout_width="0dp"
+                android:layout_height="50dp"
+                android:layout_marginRight="10dp"
+                android:layout_weight="1"
+                android:background="@drawable/rounded_button"
+                android:gravity="center"
+                android:text="Update"
+                android:textColor="@color/colorWhite"
+                android:textSize="15dp" />
+
+            <Button
+                android:id="@+id/btnVbDElete"
+                android:layout_width="0dp"
+                android:layout_height="50dp"
+                android:layout_weight="1"
+                android:background="@drawable/rounded_button"
+                android:gravity="center"
+                android:text="Delete"
+                android:textColor="@color/colorWhite"
+                android:textSize="15dp" />
+
+        </LinearLayout>
+
+    </RelativeLayout>
 </RelativeLayout>
