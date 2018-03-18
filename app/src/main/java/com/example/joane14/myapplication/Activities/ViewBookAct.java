@@ -671,6 +671,7 @@ public class ViewBookAct extends AppCompatActivity implements
                 un.setUserPerformer(user);
                 un.setActionName("swap");
                 un.setActionStatus("Request");
+                un.setProcessedBool(false);
 
                 addUserNotif(un);
 

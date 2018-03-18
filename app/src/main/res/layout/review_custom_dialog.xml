@@ -31,7 +31,7 @@
                 android:layout_height="wrap_content"
                 android:textColor="@color/colorOrange"
                 android:text="Book Title"
-                android:textSize="20dp"
+                android:textSize="18dp"
                 android:textStyle="bold"
                 android:textAlignment="gravity"
                 android:gravity="right"

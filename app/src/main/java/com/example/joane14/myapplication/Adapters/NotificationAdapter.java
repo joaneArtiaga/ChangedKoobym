@@ -307,7 +307,6 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
 
 
             this.context = context;
-//            final String rateNumber="";
 
             rateNumber = 0f;
             mMessage = (TextView) itemView.findViewById(R.id.notifMessage);
@@ -373,19 +372,14 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
                                 if (userNotificationList.get(position).getActionStatus().equals("Request")) {
                                     getSwapHeader(position, "Request");
                                     getRead(position);
-//                                    acceptSwap(position);
                                 } else if (userNotificationList.get(position).getActionStatus().equals("Approved")) {
                                     Log.d("ApprovedNotif", "Inside");
                                     getSwapHeader(position, "Approved");
-//                                    getSwapHeader(position, "meetUp");
-//                                    updateReceive(position, "Confirm");
                                     getRead(position);
                                 } else if (userNotificationList.get(position).getActionStatus().equals("Confirm")) {
                                     Log.d("ConfirmNotif", "Inside");
                                     getRead(position);
                                     getSwapHeader(position, "Confirm");
-//                                    getSwapHeader(position, "summ");
-//                                    toDeliverDialog(position);
                                 } else if (userNotificationList.get(position).getActionStatus().equals("ToReceive")) {
                                     Log.d("ToReceiveNotif", "Inside");
                                     toGiveDialog(position);
@@ -395,7 +389,6 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
                                     Log.d("CompletedNotif", "Inside");
                                     getRead(position);
                                     getSwapHeader(position, "Completed");
-//                                    getSwapHeader(position, "change");
                                 } else if (userNotificationList.get(position).getActionStatus().equals("delivered")) {
                                     getRead(position);
                                     getSwapHeader(position, "delivered");
@@ -1025,14 +1018,12 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
 
         public void getRead(int position) {
             RequestQueue requestQueue = Volley.newRequestQueue(context);
-//        String URL = "http://104.197.4.32:8080/Koobym/user/add";
             User user = new User();
             user = (User) SPUtility.getSPUtil(context).getObject("USER_OBJECT", User.class);
             d("UserIdReceive", String.valueOf(user.getUserId()));
             String URL = Constants.PUT_USER_READ + userNotificationList.get(position).getUserNotificationId();
 
             d("CountURL", URL);
-//        String URL = Constants.WEB_SERVICE_URL+"user/add";
 
             final RentalHeader rentalHeader = new RentalHeader();
 
@@ -1071,6 +1062,8 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
             requestQueue.add(stringRequest);
         }
 
+
+
         public void getRentalHeader(final int position, final String status) {
             RequestQueue requestQueue = Volley.newRequestQueue(context);
 //        String URL = "http://104.197.4.32:8080/Koobym/user/add";
@@ -1097,23 +1090,7 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
                     Log.i("rentalHeaderResponseId", response);
                     final RentalHeader rentalHeaderMod = gson.fromJson(response, RentalHeader.class);
 
-                    if (status.equals("view")) {
-                        Intent intent = new Intent(context, ViewBookAct.class);
-                        Bundle bundle = new Bundle();
-                        bundle.putSerializable("viewBook", rentalHeaderMod.getRentalDetail());
-                        intent.putExtras(bundle);
-                        context.startActivity(intent);
-                    } else if (status.equals("meetUp")) {
-
-                        if (finalUser.getUserId() == userNotificationList.get(position).getUser().getUserId()) {
-                            Intent intent = new Intent(context, MeetUpChooser.class);
-                            Bundle bundle = new Bundle();
-                            bundle.putSerializable("rentalHeader", rentalHeaderMod);
-                            intent.putExtras(bundle);
-                            context.startActivity(intent);
-                        }
-                    } else if (status.equals("return")) {
-//                        rentalHeaderObj = rentalHeaderMod;
+                    if (status.equals("return")) {
                         AlertDialog ad = new AlertDialog.Builder(context).create();
                         ad.setTitle("Confirmation");
                         ad.setMessage("Location:\t" + rentalHeaderMod.getReturnMeetUp().getLocation().getLocationName() +
@@ -1149,6 +1126,7 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
                                             un.setActionName("rental");
                                             un.setBookActionPerformedOn(userNotificationList.get(position).getBookActionPerformedOn());
                                             un.setExtraMessage(etReason.getText().toString());
+                                            un.setProcessedBool(false);
 
                                             addUserNotif(un);
                                             dialog.dismiss();
@@ -1680,6 +1658,7 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
                     un.setUserPerformer(finalUser);
                     un.setUser(rentalHeaderModel.getUserId());
                     un.setActionStatus("Rejected");
+                    un.setProcessedBool(false);
                     un.setActionId(Math.round(rentalHeaderModel.getRentalHeaderId()));
 
                     addUserNotifRent(un);
@@ -1978,6 +1957,7 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
             StringRequest stringRequest = new StringRequest(Request.Method.GET, URL, new Response.Listener<String>() {
                 @Override
                 public void onResponse(String response) {
+                    getProcessed(getAdapterPosition());
                     Log.i("confirmEarlyNotif", response);
                     Intent intent = new Intent(context, LandingPage.class);
                     Bundle bundle = new Bundle();
@@ -2229,255 +2209,267 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
                     final AuctionHeader auctionHeaderMod = gson.fromJson(response, AuctionHeader.class);
 
                     if (status.equals("win")) {
+                        if(userNotificationList.get(position).getProcessedBool()==false||userNotificationList.get(position).getProcessedBool()==null){
+                            if (finalUser.getUserId() == userNotificationList.get(position).getUser().getUserId()) {
 
-                        if (finalUser.getUserId() == userNotificationList.get(position).getUser().getUserId()) {
+                                Date nextDate = new Date();
+                                locbool = false;
+                                datebool = false;
+                                timebool = false;
 
-                            Date nextDate = new Date();
-                            locbool = false;
-                            datebool = false;
-                            timebool = false;
+                                final MeetUp muModel = new MeetUp();
+                                final Dialog dialog = new Dialog(context);
+                                LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+                                View view = inflater.inflate(R.layout.meet_up_dialog, null);
 
-                            final MeetUp muModel = new MeetUp();
-                            final Dialog dialog = new Dialog(context);
-                            LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-                            View view = inflater.inflate(R.layout.meet_up_dialog, null);
+                                Button mSubmit = (Button) view.findViewById(R.id.btnSubmit);
 
-                            Button mSubmit = (Button) view.findViewById(R.id.btnSubmit);
+                                final Spinner mSpinDate = (Spinner) view.findViewById(R.id.spinnerDate);
+                                final Spinner mSpinTime = (Spinner) view.findViewById(R.id.spinnerTime);
 
-                            final Spinner mSpinDate = (Spinner) view.findViewById(R.id.spinnerDate);
-                            final Spinner mSpinTime = (Spinner) view.findViewById(R.id.spinnerTime);
+                                User userRequestee = auctionHeaderMod.getAuctionDetail().getBookOwner().getUserObj();
 
-                            User userRequestee = auctionHeaderMod.getAuctionDetail().getBookOwner().getUserObj();
+                                List<LocationModel> userLoc = userRequestee.getLocationArray();
+                                final List<LocationModel> meetUpLoc = new ArrayList<LocationModel>();
+                                List<String> meetUpStringLoc = new ArrayList<String>();
+                                final UserDayTime udt = new UserDayTime();
 
-                            List<LocationModel> userLoc = userRequestee.getLocationArray();
-                            final List<LocationModel> meetUpLoc = new ArrayList<LocationModel>();
-                            List<String> meetUpStringLoc = new ArrayList<String>();
-                            final UserDayTime udt = new UserDayTime();
-
-                            for (int init = 0; init < userLoc.size(); init++) {
-                                if (userLoc.get(init).getStatus().equals("MeetUp")) {
-                                    meetUpLoc.add(userLoc.get(init));
-                                    meetUpStringLoc.add(userLoc.get(init).getLocationName());
-                                }
-                            }
-
-                            ArrayAdapter<String> adapterLoc = new ArrayAdapter<String>(context, android.R.layout.simple_spinner_item, meetUpStringLoc);
-                            adapterLoc.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-                            Spinner mSpinLoc = (Spinner) view.findViewById(R.id.spinnerLocation);
-                            mSpinLoc.setAdapter(adapterLoc);
-
-                            mSpinLoc.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-                                @Override
-                                public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                                    locbool = true;
-                                    muModel.setLocation(meetUpLoc.get(position));
-                                }
-
-                                @Override
-                                public void onNothingSelected(AdapterView<?> parent) {
-
-                                }
-                            });
-
-                            final List<UserDayTime> daytime = userRequestee.getDayTimeModel();
-                            final List<String> dateMeetUp = new ArrayList<String>();
-                            final DateFormat format = new SimpleDateFormat("yyyy-MM-dd");
-                            Set<String> removeDuplicate = new HashSet<>();
-
-
-                            for (int init = 0; init < daytime.size(); init++) {
-                                if (daytime.get(init).getDay().getStrDay().equals("Monday")) {
-                                    nextDate = getNextDate(java.util.Calendar.MONDAY);
-                                } else if (daytime.get(init).getDay().getStrDay().equals("Tuesday")) {
-                                    nextDate = getNextDate(Calendar.TUESDAY);
-                                } else if (daytime.get(init).getDay().getStrDay().equals("Wednesday")) {
-                                    nextDate = getNextDate(Calendar.WEDNESDAY);
-                                } else if (daytime.get(init).getDay().getStrDay().equals("Thursday")) {
-                                    nextDate = getNextDate(Calendar.THURSDAY);
-                                } else if (daytime.get(init).getDay().getStrDay().equals("Friday")) {
-                                    nextDate = getNextDate(Calendar.FRIDAY);
-                                } else if (daytime.get(init).getDay().getStrDay().equals("Saturday")) {
-                                    nextDate = getNextDate(Calendar.SATURDAY);
-                                } else if (daytime.get(init).getDay().getStrDay().equals("Sunday")) {
-                                    nextDate = getNextDate(Calendar.SUNDAY);
-                                }
-                                dateMeetUp.add(format.format(nextDate));
-                            }
-
-                            Set<String> dateNoDuplicates = new LinkedHashSet<String>(dateMeetUp);
-                            dateMeetUp.clear();
-                            dateMeetUp.addAll(dateNoDuplicates);
-                            timeStr = new ArrayList<String>();
-
-                            ArrayAdapter<String> adapterDate = new ArrayAdapter<String>(context, android.R.layout.simple_spinner_item, dateMeetUp);
-                            adapterDate.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-                            mSpinDate.setAdapter(adapterDate);
-
-
-                            final ArrayAdapter<String> adapterTime = new ArrayAdapter<String>(context, android.R.layout.simple_spinner_item, timeStr);
-                            adapterTime.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-                            mSpinTime.setAdapter(adapterTime);
-
-                            mSpinDate.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-                                @Override
-                                public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                                    datebool = true;
-                                    try {
-                                        auctionHeaderMod.setDateDelivered(dateMeetUp.get(position));
-                                        Log.d("dateDelivered", dateMeetUp.get(position));
-
-                                        timeStr.clear();
-
-                                        String dayOfDate = "";
-                                        Calendar calendar = Calendar.getInstance();
-                                        Date selectedDate = format.parse(dateMeetUp.get(position));
-                                        calendar.setTime(selectedDate);
-                                        int dayOfWeek = calendar.get(Calendar.DAY_OF_WEEK);
-
-                                        for (int init = 0; init < daytime.size(); init++) {
-                                            Log.d("iterateUserTime", daytime.get(init).getTime().getStrTime());
-                                        }
-
-                                        if (dayOfWeek == Calendar.MONDAY) {
-                                            DayModel day = new DayModel();
-                                            for (int init = 0; init < daytime.size(); init++) {
-                                                Log.d("userTime", daytime.get(init).getTime().getStrTime());
-                                                if (daytime.get(init).getDay().getStrDay().equals("Monday")) {
-                                                    Log.d("TimeAdded", daytime.get(init).getTime().getStrTime());
-                                                    timeStr.add(daytime.get(init).getTime().getStrTime());
-                                                }
-                                            }
-                                        }
-
-                                        if (dayOfWeek == Calendar.TUESDAY) {
-                                            DayModel day = new DayModel();
-                                            for (int init = 0; init < daytime.size(); init++) {
-                                                if (daytime.get(init).getDay().getStrDay().equals("Tuesday")) {
-                                                    Log.d("TimeAdded", daytime.get(init).getTime().getStrTime());
-                                                    timeStr.add(daytime.get(init).getTime().getStrTime());
-                                                }
-                                            }
-                                        }
-
-                                        if (dayOfWeek == Calendar.WEDNESDAY) {
-                                            DayModel day = new DayModel();
-                                            for (int init = 0; init < daytime.size(); init++) {
-                                                if (daytime.get(init).getDay().getStrDay().equals("Wednesday")) {
-                                                    Log.d("TimeAdded", daytime.get(init).getTime().getStrTime());
-                                                    timeStr.add(daytime.get(init).getTime().getStrTime());
-                                                }
-                                            }
-                                        }
-
-                                        if (dayOfWeek == Calendar.THURSDAY) {
-                                            DayModel day = new DayModel();
-                                            for (int init = 0; init < daytime.size(); init++) {
-                                                if (daytime.get(init).getDay().getStrDay().equals("Thursday")) {
-                                                    Log.d("TimeAdded", daytime.get(init).getTime().getStrTime());
-                                                    timeStr.add(daytime.get(init).getTime().getStrTime());
-                                                }
-                                            }
-                                        }
-
-                                        if (dayOfWeek == Calendar.FRIDAY) {
-                                            DayModel day = new DayModel();
-                                            for (int init = 0; init < daytime.size(); init++) {
-                                                if (daytime.get(init).getDay().getStrDay().equals("Friday")) {
-                                                    Log.d("TimeAdded", daytime.get(init).getTime().getStrTime());
-                                                    timeStr.add(daytime.get(init).getTime().getStrTime());
-                                                }
-                                            }
-                                        }
-
-                                        if (dayOfWeek == Calendar.SATURDAY) {
-                                            DayModel day = new DayModel();
-                                            for (int init = 0; init < daytime.size(); init++) {
-                                                if (daytime.get(init).getDay().getStrDay().equals("Saturday")) {
-                                                    Log.d("TimeAdded", daytime.get(init).getTime().getStrTime());
-                                                    timeStr.add(daytime.get(init).getTime().getStrTime());
-                                                }
-                                            }
-                                        }
-
-                                        if (dayOfWeek == Calendar.SUNDAY) {
-                                            DayModel day = new DayModel();
-                                            for (int init = 0; init < daytime.size(); init++) {
-                                                if (daytime.get(init).getDay().getStrDay().equals("Sunday")) {
-                                                    Log.d("TimeAdded", daytime.get(init).getTime().getStrTime());
-                                                    timeStr.add(daytime.get(init).getTime().getStrTime());
-                                                }
-                                            }
-                                        }
-                                        adapterTime.notifyDataSetChanged();
-                                    } catch (ParseException e) {
-                                        e.printStackTrace();
+                                for (int init = 0; init < userLoc.size(); init++) {
+                                    if (userLoc.get(init).getStatus().equals("MeetUp")) {
+                                        meetUpLoc.add(userLoc.get(init));
+                                        meetUpStringLoc.add(userLoc.get(init).getLocationName());
                                     }
                                 }
 
-                                @Override
-                                public void onNothingSelected(AdapterView<?> parent) {
+                                ArrayAdapter<String> adapterLoc = new ArrayAdapter<String>(context, android.R.layout.simple_spinner_item, meetUpStringLoc);
+                                adapterLoc.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                                Spinner mSpinLoc = (Spinner) view.findViewById(R.id.spinnerLocation);
+                                mSpinLoc.setAdapter(adapterLoc);
 
+                                mSpinLoc.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                                    @Override
+                                    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                                        locbool = true;
+                                        muModel.setLocation(meetUpLoc.get(position));
+                                    }
+
+                                    @Override
+                                    public void onNothingSelected(AdapterView<?> parent) {
+
+                                    }
+                                });
+
+                                final List<UserDayTime> daytime = userRequestee.getDayTimeModel();
+                                final List<String> dateMeetUp = new ArrayList<String>();
+                                final DateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+                                Set<String> removeDuplicate = new HashSet<>();
+
+
+                                for (int init = 0; init < daytime.size(); init++) {
+                                    if (daytime.get(init).getDay().getStrDay().equals("Monday")) {
+                                        nextDate = getNextDate(java.util.Calendar.MONDAY);
+                                    } else if (daytime.get(init).getDay().getStrDay().equals("Tuesday")) {
+                                        nextDate = getNextDate(Calendar.TUESDAY);
+                                    } else if (daytime.get(init).getDay().getStrDay().equals("Wednesday")) {
+                                        nextDate = getNextDate(Calendar.WEDNESDAY);
+                                    } else if (daytime.get(init).getDay().getStrDay().equals("Thursday")) {
+                                        nextDate = getNextDate(Calendar.THURSDAY);
+                                    } else if (daytime.get(init).getDay().getStrDay().equals("Friday")) {
+                                        nextDate = getNextDate(Calendar.FRIDAY);
+                                    } else if (daytime.get(init).getDay().getStrDay().equals("Saturday")) {
+                                        nextDate = getNextDate(Calendar.SATURDAY);
+                                    } else if (daytime.get(init).getDay().getStrDay().equals("Sunday")) {
+                                        nextDate = getNextDate(Calendar.SUNDAY);
+                                    }
+                                    dateMeetUp.add(format.format(nextDate));
                                 }
-                            });
+
+                                Set<String> dateNoDuplicates = new LinkedHashSet<String>(dateMeetUp);
+                                dateMeetUp.clear();
+                                dateMeetUp.addAll(dateNoDuplicates);
+                                timeStr = new ArrayList<String>();
+
+                                ArrayAdapter<String> adapterDate = new ArrayAdapter<String>(context, android.R.layout.simple_spinner_item, dateMeetUp);
+                                adapterDate.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                                mSpinDate.setAdapter(adapterDate);
 
 
-                            mSpinTime.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-                                @Override
-                                public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                                    timebool = true;
-                                    User finalUser1 = (User) SPUtility.getSPUtil(context).getObject("USER_OBJECT", User.class);
-                                    udt.setUserId(Long.valueOf(finalUser1.getUserId()));
-                                    TimeModel time = new TimeModel();
-                                    time.setStrTime(timeStr.get(position));
-                                    udt.setTime(time);
-                                }
+                                final ArrayAdapter<String> adapterTime = new ArrayAdapter<String>(context, android.R.layout.simple_spinner_item, timeStr);
+                                adapterTime.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                                mSpinTime.setAdapter(adapterTime);
 
-                                @Override
-                                public void onNothingSelected(AdapterView<?> parent) {
+                                mSpinDate.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                                    @Override
+                                    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                                        datebool = true;
+                                        try {
+                                            auctionHeaderMod.setDateDelivered(dateMeetUp.get(position));
+                                            Log.d("dateDelivered", dateMeetUp.get(position));
 
-                                }
-                            });
+                                            timeStr.clear();
 
-                            mSubmit.setOnClickListener(new View.OnClickListener() {
-                                @Override
-                                public void onClick(View v) {
-                                    if (datebool == true && locbool == true && timebool == true) {
-                                        Log.d("himo ka ug ", "joke pag add na bitaw");
-                                        muModel.setUserDayTime(udt);
-                                        auctionHeaderMod.setMeetUp(muModel);
+                                            String dayOfDate = "";
+                                            Calendar calendar = Calendar.getInstance();
+                                            Date selectedDate = format.parse(dateMeetUp.get(position));
+                                            calendar.setTime(selectedDate);
+                                            int dayOfWeek = calendar.get(Calendar.DAY_OF_WEEK);
 
-                                        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(context);
-                                        alertDialogBuilder.setTitle("Meet Up Summary");
-                                        alertDialogBuilder.setMessage("Date:\t" + auctionHeaderMod.getDateDelivered() +
-                                                "\n\nTime:\t" + muModel.getUserDayTime().getTime().getStrTime() +
-                                                "\n\nLocation:\t" + muModel.getLocation().getLocationName());
-                                        alertDialogBuilder.setPositiveButton("Okay",
-                                                new DialogInterface.OnClickListener() {
-                                                    @RequiresApi(api = Build.VERSION_CODES.N)
-                                                    @Override
-                                                    public void onClick(DialogInterface arg0, int arg1) {
-                                                        addMeetUpAuction(auctionHeaderMod, muModel, position);
+                                            for (int init = 0; init < daytime.size(); init++) {
+                                                Log.d("iterateUserTime", daytime.get(init).getTime().getStrTime());
+                                            }
+
+                                            if (dayOfWeek == Calendar.MONDAY) {
+                                                DayModel day = new DayModel();
+                                                for (int init = 0; init < daytime.size(); init++) {
+                                                    Log.d("userTime", daytime.get(init).getTime().getStrTime());
+                                                    if (daytime.get(init).getDay().getStrDay().equals("Monday")) {
+                                                        Log.d("TimeAdded", daytime.get(init).getTime().getStrTime());
+                                                        timeStr.add(daytime.get(init).getTime().getStrTime());
                                                     }
-                                                });
-
-                                        AlertDialog alertDialog = alertDialogBuilder.create();
-                                        alertDialog.show();
-                                    } else {
-                                        AlertDialog ad = new AlertDialog.Builder(context).create();
-                                        ad.setTitle("Alert!");
-                                        ad.setMessage("You should fill all data.");
-                                        ad.setButton(AlertDialog.BUTTON_POSITIVE, "Okay", new DialogInterface.OnClickListener() {
-                                            @Override
-                                            public void onClick(DialogInterface dialog, int which) {
-                                                dialog.dismiss();
+                                                }
                                             }
-                                        });
-                                        ad.show();
+
+                                            if (dayOfWeek == Calendar.TUESDAY) {
+                                                DayModel day = new DayModel();
+                                                for (int init = 0; init < daytime.size(); init++) {
+                                                    if (daytime.get(init).getDay().getStrDay().equals("Tuesday")) {
+                                                        Log.d("TimeAdded", daytime.get(init).getTime().getStrTime());
+                                                        timeStr.add(daytime.get(init).getTime().getStrTime());
+                                                    }
+                                                }
+                                            }
+
+                                            if (dayOfWeek == Calendar.WEDNESDAY) {
+                                                DayModel day = new DayModel();
+                                                for (int init = 0; init < daytime.size(); init++) {
+                                                    if (daytime.get(init).getDay().getStrDay().equals("Wednesday")) {
+                                                        Log.d("TimeAdded", daytime.get(init).getTime().getStrTime());
+                                                        timeStr.add(daytime.get(init).getTime().getStrTime());
+                                                    }
+                                                }
+                                            }
+
+                                            if (dayOfWeek == Calendar.THURSDAY) {
+                                                DayModel day = new DayModel();
+                                                for (int init = 0; init < daytime.size(); init++) {
+                                                    if (daytime.get(init).getDay().getStrDay().equals("Thursday")) {
+                                                        Log.d("TimeAdded", daytime.get(init).getTime().getStrTime());
+                                                        timeStr.add(daytime.get(init).getTime().getStrTime());
+                                                    }
+                                                }
+                                            }
+
+                                            if (dayOfWeek == Calendar.FRIDAY) {
+                                                DayModel day = new DayModel();
+                                                for (int init = 0; init < daytime.size(); init++) {
+                                                    if (daytime.get(init).getDay().getStrDay().equals("Friday")) {
+                                                        Log.d("TimeAdded", daytime.get(init).getTime().getStrTime());
+                                                        timeStr.add(daytime.get(init).getTime().getStrTime());
+                                                    }
+                                                }
+                                            }
+
+                                            if (dayOfWeek == Calendar.SATURDAY) {
+                                                DayModel day = new DayModel();
+                                                for (int init = 0; init < daytime.size(); init++) {
+                                                    if (daytime.get(init).getDay().getStrDay().equals("Saturday")) {
+                                                        Log.d("TimeAdded", daytime.get(init).getTime().getStrTime());
+                                                        timeStr.add(daytime.get(init).getTime().getStrTime());
+                                                    }
+                                                }
+                                            }
+
+                                            if (dayOfWeek == Calendar.SUNDAY) {
+                                                DayModel day = new DayModel();
+                                                for (int init = 0; init < daytime.size(); init++) {
+                                                    if (daytime.get(init).getDay().getStrDay().equals("Sunday")) {
+                                                        Log.d("TimeAdded", daytime.get(init).getTime().getStrTime());
+                                                        timeStr.add(daytime.get(init).getTime().getStrTime());
+                                                    }
+                                                }
+                                            }
+                                            adapterTime.notifyDataSetChanged();
+                                        } catch (ParseException e) {
+                                            e.printStackTrace();
+                                        }
                                     }
+
+                                    @Override
+                                    public void onNothingSelected(AdapterView<?> parent) {
+
+                                    }
+                                });
+
+
+                                mSpinTime.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                                    @Override
+                                    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                                        timebool = true;
+                                        User finalUser1 = (User) SPUtility.getSPUtil(context).getObject("USER_OBJECT", User.class);
+                                        udt.setUserId(Long.valueOf(finalUser1.getUserId()));
+                                        TimeModel time = new TimeModel();
+                                        time.setStrTime(timeStr.get(position));
+                                        udt.setTime(time);
+                                    }
+
+                                    @Override
+                                    public void onNothingSelected(AdapterView<?> parent) {
+
+                                    }
+                                });
+
+                                mSubmit.setOnClickListener(new View.OnClickListener() {
+                                    @Override
+                                    public void onClick(View v) {
+                                        if (datebool == true && locbool == true && timebool == true) {
+                                            Log.d("himo ka ug ", "joke pag add na bitaw");
+                                            muModel.setUserDayTime(udt);
+                                            auctionHeaderMod.setMeetUp(muModel);
+
+                                            AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(context);
+                                            alertDialogBuilder.setTitle("Meet Up Summary");
+                                            alertDialogBuilder.setMessage("Date:\t" + auctionHeaderMod.getDateDelivered() +
+                                                    "\n\nTime:\t" + muModel.getUserDayTime().getTime().getStrTime() +
+                                                    "\n\nLocation:\t" + muModel.getLocation().getLocationName());
+                                            alertDialogBuilder.setPositiveButton("Okay",
+                                                    new DialogInterface.OnClickListener() {
+                                                        @RequiresApi(api = Build.VERSION_CODES.N)
+                                                        @Override
+                                                        public void onClick(DialogInterface arg0, int arg1) {
+                                                            addMeetUpAuction(auctionHeaderMod, muModel, position);
+                                                        }
+                                                    });
+
+                                            AlertDialog alertDialog = alertDialogBuilder.create();
+                                            alertDialog.show();
+                                        } else {
+                                            AlertDialog ad = new AlertDialog.Builder(context).create();
+                                            ad.setTitle("Alert!");
+                                            ad.setMessage("You should fill all data.");
+                                            ad.setButton(AlertDialog.BUTTON_POSITIVE, "Okay", new DialogInterface.OnClickListener() {
+                                                @Override
+                                                public void onClick(DialogInterface dialog, int which) {
+                                                    dialog.dismiss();
+                                                }
+                                            });
+                                            ad.show();
+                                        }
+                                    }
+                                });
+                                dialog.setContentView(view);
+                                dialog.show();
+                            }
+                        }else{
+                            AlertDialog ad = new AlertDialog.Builder(context).create();
+                            ad.setTitle("Alert!");
+                            ad.setMessage("You already chose a meet up time, date and location.");
+                            ad.setButton(AlertDialog.BUTTON_POSITIVE, "Okay", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    dialog.dismiss();
                                 }
                             });
-                            dialog.setContentView(view);
-                            dialog.show();
+                            ad.show();
                         }
                     } else if (status.equals("own")) {
                         Intent intent = new Intent(context, ProfileActivity.class);
@@ -2520,6 +2512,7 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
                         btnOkay.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
+                                getProcessed(position);
                                 Intent intent = new Intent(context, NotificationAct.class);
                                 context.startActivity(intent);
                             }
@@ -2544,6 +2537,7 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
                         btnOkay.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
+                                getProcessed(position);
                                 Intent intent = new Intent(context, NotificationAct.class);
                                 context.startActivity(intent);
                             }
@@ -2567,6 +2561,7 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
                         alertDialogBuilder.setPositiveButton("Okay", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
+                                getProcessed(position);
                                 Intent intent = new Intent(context, NotificationAct.class);
                                 context.startActivity(intent);
                             }
@@ -2672,6 +2667,7 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
                         btnOkay.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
+                                getProcessed(position);
                                 Intent intent = new Intent(context, NotificationAct.class);
                                 context.startActivity(intent);
                             }
@@ -2710,6 +2706,7 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
                         btnOkay.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
+                                getProcessed(position);
                                 Intent intent = new Intent(context, NotificationAct.class);
                                 context.startActivity(intent);
                             }
@@ -2718,6 +2715,7 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
                         btnRating.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
+                                getProcessed(position);
                                 getUserRating(position);
                             }
                         });
@@ -2758,325 +2756,354 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
                         btnOkay.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
-
-
+                                getProcessed(position);
                                 Intent intent = new Intent(context, NotificationAct.class);
                                 context.startActivity(intent);
-
                             }
                         });
                         dialogCustom.show();
                     } else if (status.equals("Request")) {
-                        List<SwapHeaderDetail> swapDetailList = new ArrayList<SwapHeaderDetail>();
-                        swapDetailList = swapHeaderMod.getSwapHeaderDetail();
+                        if(userNotificationList.get(position).getProcessedBool()==false||userNotificationList.get(position)==null){
 
-                        final Dialog dialog = new Dialog(context);
-                        LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-                        View view = inflater.inflate(R.layout.swap_request_custom_dialog, null);
+                            List<SwapHeaderDetail> swapDetailList = new ArrayList<SwapHeaderDetail>();
+                            swapDetailList = swapHeaderMod.getSwapHeaderDetail();
 
-                        TextView tvmessage = (TextView) view.findViewById(R.id.messageTV);
-                        TextView tvOwner = (TextView) view.findViewById(R.id.bookOwnerSwap);
-                        ListView ly = (ListView) view.findViewById(R.id.listSwap);
+                            final Dialog dialog = new Dialog(context);
+                            LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+                            View view = inflater.inflate(R.layout.swap_request_custom_dialog, null);
 
-                        tvmessage.setText(swapHeaderMod.getRequestedSwapDetail().getBookOwner().getUserObj().getUserFname() + " " + swapHeaderMod.getRequestedSwapDetail().getBookOwner().getUserObj().getUserLname() + " requested your book " + swapHeaderMod.getSwapDetail().getBookOwner().getBookObj().getBookTitle() + " to be swapped.");
-                        List<SwapHeaderDetail> newSHD = new ArrayList<SwapHeaderDetail>();
+                            TextView tvmessage = (TextView) view.findViewById(R.id.messageTV);
+                            TextView tvOwner = (TextView) view.findViewById(R.id.bookOwnerSwap);
+                            ListView ly = (ListView) view.findViewById(R.id.listSwap);
 
-                        for (int init = 0; init < swapDetailList.size(); init++) {
-                            if (swapDetailList.get(init).getSwapType().equals("Requestor")) {
-                                newSHD.add(swapDetailList.get(init));
-                            }
-                        }
+                            tvmessage.setText(swapHeaderMod.getRequestedSwapDetail().getBookOwner().getUserObj().getUserFname() + " " + swapHeaderMod.getRequestedSwapDetail().getBookOwner().getUserObj().getUserLname() + " requested your book " + swapHeaderMod.getSwapDetail().getBookOwner().getBookObj().getBookTitle() + " to be swapped.");
+                            List<SwapHeaderDetail> newSHD = new ArrayList<SwapHeaderDetail>();
 
-                        final SwapRequestAdapter adapter = new SwapRequestAdapter(act, newSHD);
-
-                        Log.d("Message: ", message);
-//                        tvmessage.setText(message);
-                        tvOwner.setText(userNotificationList.get(position).getUserPerformer().getUserFname() + " " + userNotificationList.get(position).getUserPerformer().getUserLname() + "'s book request/s:");
-                        ly.setAdapter(adapter);
-
-
-                        Button mOkay = (Button) view.findViewById(R.id.btnAccept);
-                        Button mCancel = (Button) view.findViewById(R.id.btnReject);
-
-                        mOkay.setOnClickListener(new View.OnClickListener() {
-                            @RequiresApi(api = Build.VERSION_CODES.N)
-                            @Override
-                            public void onClick(View v) {
-                                acceptRequest(swapHeaderMod);
-                            }
-                        });
-
-                        mCancel.setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View v) {
-                                final Dialog dialogCustom = new Dialog(getContext());
-                                dialogCustom.setContentView(R.layout.reject_custom_dialog);
-                                final EditText etReason = (EditText) dialogCustom.findViewById(R.id.etReason);
-                                Button mSubmitReason = (Button) dialogCustom.findViewById(R.id.submitReject);
-
-                                mSubmitReason.setOnClickListener(new View.OnClickListener() {
-                                    @Override
-                                    public void onClick(View v) {
-                                        if (etReason.getText().length() == 0) {
-                                            etReason.setError("Field should not be empty.");
-                                        } else {
-                                            swapHeaderMod.setStatus("Rejected");
-                                            String message = etReason.getText().toString();
-                                            rejectRequest(swapHeaderMod, message);
-                                        }
-                                    }
-                                });
-                                dialogCustom.show();
-                            }
-                        });
-                        dialog.setContentView(view);
-                        dialog.show();
-                    } else if (status.equals("Approved")) {
-                        Date nextDate = new Date();
-                        locbool = false;
-                        datebool = false;
-                        timebool = false;
-
-                        final MeetUp muModel = new MeetUp();
-                        final Dialog dialog = new Dialog(context);
-                        LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-                        View view = inflater.inflate(R.layout.meet_up_dialog, null);
-
-                        Button mSubmit = (Button) view.findViewById(R.id.btnSubmit);
-
-                        final Spinner mSpinDate = (Spinner) view.findViewById(R.id.spinnerDate);
-                        final Spinner mSpinTime = (Spinner) view.findViewById(R.id.spinnerTime);
-
-                        User userRequestee = swapHeaderMod.getSwapDetail().getBookOwner().getUserObj();
-
-                        List<LocationModel> userLoc = userRequestee.getLocationArray();
-                        final List<LocationModel> meetUpLoc = new ArrayList<LocationModel>();
-                        List<String> meetUpStringLoc = new ArrayList<String>();
-                        final UserDayTime udt = new UserDayTime();
-
-                        for (int init = 0; init < userLoc.size(); init++) {
-                            if (userLoc.get(init).getStatus().equals("MeetUp")) {
-                                meetUpLoc.add(userLoc.get(init));
-                                meetUpStringLoc.add(userLoc.get(init).getLocationName());
-                            }
-                        }
-
-                        ArrayAdapter<String> adapterLoc = new ArrayAdapter<String>(context, android.R.layout.simple_spinner_item, meetUpStringLoc);
-                        adapterLoc.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-                        Spinner mSpinLoc = (Spinner) view.findViewById(R.id.spinnerLocation);
-                        mSpinLoc.setAdapter(adapterLoc);
-
-                        mSpinLoc.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-                            @Override
-                            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                                locbool = true;
-                                muModel.setLocation(meetUpLoc.get(position));
-                            }
-
-                            @Override
-                            public void onNothingSelected(AdapterView<?> parent) {
-
-                            }
-                        });
-
-                        final List<UserDayTime> daytime = userRequestee.getDayTimeModel();
-                        final List<String> dateMeetUp = new ArrayList<String>();
-                        final DateFormat format = new SimpleDateFormat("yyyy-MM-dd");
-                        Set<String> removeDuplicate = new HashSet<>();
-
-
-                        for (int init = 0; init < daytime.size(); init++) {
-                            if (daytime.get(init).getDay().getStrDay().equals("Monday")) {
-                                nextDate = getNextDate(java.util.Calendar.MONDAY);
-                            } else if (daytime.get(init).getDay().getStrDay().equals("Tuesday")) {
-                                nextDate = getNextDate(Calendar.TUESDAY);
-                            } else if (daytime.get(init).getDay().getStrDay().equals("Wednesday")) {
-                                nextDate = getNextDate(Calendar.WEDNESDAY);
-                            } else if (daytime.get(init).getDay().getStrDay().equals("Thursday")) {
-                                nextDate = getNextDate(Calendar.THURSDAY);
-                            } else if (daytime.get(init).getDay().getStrDay().equals("Friday")) {
-                                nextDate = getNextDate(Calendar.FRIDAY);
-                            } else if (daytime.get(init).getDay().getStrDay().equals("Saturday")) {
-                                nextDate = getNextDate(Calendar.SATURDAY);
-                            } else if (daytime.get(init).getDay().getStrDay().equals("Sunday")) {
-                                nextDate = getNextDate(Calendar.SUNDAY);
-                            }
-                            dateMeetUp.add(format.format(nextDate));
-                        }
-
-                        Set<String> dateNoDuplicates = new LinkedHashSet<String>(dateMeetUp);
-                        dateMeetUp.clear();
-                        dateMeetUp.addAll(dateNoDuplicates);
-                        timeStr = new ArrayList<String>();
-
-                        ArrayAdapter<String> adapterDate = new ArrayAdapter<String>(context, android.R.layout.simple_spinner_item, dateMeetUp);
-                        adapterDate.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-                        mSpinDate.setAdapter(adapterDate);
-
-                        final ArrayAdapter<String> adapterTime = new ArrayAdapter<String>(context, android.R.layout.simple_spinner_item, timeStr);
-                        adapterTime.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-                        mSpinTime.setAdapter(adapterTime);
-
-
-                        mSpinDate.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-                            @Override
-                            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                                datebool = true;
-                                try {
-                                    swapHeaderMod.setDateDelivered(dateMeetUp.get(position));
-                                    Log.d("dateDelivered", dateMeetUp.get(position));
-
-                                    timeStr.clear();
-
-                                    String dayOfDate = "";
-                                    Calendar calendar = Calendar.getInstance();
-                                    Date selectedDate = format.parse(dateMeetUp.get(position));
-                                    calendar.setTime(selectedDate);
-                                    int dayOfWeek = calendar.get(Calendar.DAY_OF_WEEK);
-
-                                    for (int init = 0; init < daytime.size(); init++) {
-                                        Log.d("iterateUserTime", daytime.get(init).getTime().getStrTime());
-                                    }
-
-                                    if (dayOfWeek == Calendar.MONDAY) {
-                                        DayModel day = new DayModel();
-                                        for (int init = 0; init < daytime.size(); init++) {
-                                            Log.d("userTime", daytime.get(init).getTime().getStrTime());
-                                            if (daytime.get(init).getDay().getStrDay().equals("Monday")) {
-                                                Log.d("TimeAdded", daytime.get(init).getTime().getStrTime());
-                                                timeStr.add(daytime.get(init).getTime().getStrTime());
-                                            }
-                                        }
-                                    }
-
-                                    if (dayOfWeek == Calendar.TUESDAY) {
-                                        DayModel day = new DayModel();
-                                        for (int init = 0; init < daytime.size(); init++) {
-                                            if (daytime.get(init).getDay().getStrDay().equals("Tuesday")) {
-                                                Log.d("TimeAdded", daytime.get(init).getTime().getStrTime());
-                                                timeStr.add(daytime.get(init).getTime().getStrTime());
-                                            }
-                                        }
-                                    }
-
-                                    if (dayOfWeek == Calendar.WEDNESDAY) {
-                                        DayModel day = new DayModel();
-                                        for (int init = 0; init < daytime.size(); init++) {
-                                            if (daytime.get(init).getDay().getStrDay().equals("Wednesday")) {
-                                                Log.d("TimeAdded", daytime.get(init).getTime().getStrTime());
-                                                timeStr.add(daytime.get(init).getTime().getStrTime());
-                                            }
-                                        }
-                                    }
-
-                                    if (dayOfWeek == Calendar.THURSDAY) {
-                                        DayModel day = new DayModel();
-                                        for (int init = 0; init < daytime.size(); init++) {
-                                            if (daytime.get(init).getDay().getStrDay().equals("Thursday")) {
-                                                Log.d("TimeAdded", daytime.get(init).getTime().getStrTime());
-                                                timeStr.add(daytime.get(init).getTime().getStrTime());
-                                            }
-                                        }
-                                    }
-
-                                    if (dayOfWeek == Calendar.FRIDAY) {
-                                        DayModel day = new DayModel();
-                                        for (int init = 0; init < daytime.size(); init++) {
-                                            if (daytime.get(init).getDay().getStrDay().equals("Friday")) {
-                                                Log.d("TimeAdded", daytime.get(init).getTime().getStrTime());
-                                                timeStr.add(daytime.get(init).getTime().getStrTime());
-                                            }
-                                        }
-                                    }
-
-                                    if (dayOfWeek == Calendar.SATURDAY) {
-                                        DayModel day = new DayModel();
-                                        for (int init = 0; init < daytime.size(); init++) {
-                                            if (daytime.get(init).getDay().getStrDay().equals("Saturday")) {
-                                                Log.d("TimeAdded", daytime.get(init).getTime().getStrTime());
-                                                timeStr.add(daytime.get(init).getTime().getStrTime());
-                                            }
-                                        }
-                                    }
-
-                                    if (dayOfWeek == Calendar.SUNDAY) {
-                                        DayModel day = new DayModel();
-                                        for (int init = 0; init < daytime.size(); init++) {
-                                            if (daytime.get(init).getDay().getStrDay().equals("Sunday")) {
-                                                Log.d("TimeAdded", daytime.get(init).getTime().getStrTime());
-                                                timeStr.add(daytime.get(init).getTime().getStrTime());
-                                            }
-                                        }
-                                    }
-                                    adapterTime.notifyDataSetChanged();
-
-                                } catch (ParseException e) {
-                                    e.printStackTrace();
+                            for (int init = 0; init < swapDetailList.size(); init++) {
+                                if (swapDetailList.get(init).getSwapType().equals("Requestor")) {
+                                    newSHD.add(swapDetailList.get(init));
                                 }
                             }
 
-                            @Override
-                            public void onNothingSelected(AdapterView<?> parent) {
+                            final SwapRequestAdapter adapter = new SwapRequestAdapter(act, newSHD);
 
-                            }
-                        });
+                            Log.d("Message: ", message);
+                            tvOwner.setText(userNotificationList.get(position).getUserPerformer().getUserFname() + " " + userNotificationList.get(position).getUserPerformer().getUserLname() + "'s book request/s:");
+                            ly.setAdapter(adapter);
 
-                        mSpinTime.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-                            @Override
-                            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                                timebool = true;
-                                udt.setUserId(Long.valueOf(finalUser1.getUserId()));
-                                TimeModel time = new TimeModel();
-                                time.setStrTime(timeStr.get(position));
-                                udt.setTime(time);
-                            }
 
-                            @Override
-                            public void onNothingSelected(AdapterView<?> parent) {
+                            Button mOkay = (Button) view.findViewById(R.id.btnAccept);
+                            Button mCancel = (Button) view.findViewById(R.id.btnReject);
 
-                            }
-                        });
+                            mOkay.setOnClickListener(new View.OnClickListener() {
+                                @RequiresApi(api = Build.VERSION_CODES.N)
+                                @Override
+                                public void onClick(View v) {
+                                    acceptRequest(swapHeaderMod);
+                                    getProcessed(position);
+                                }
+                            });
 
-                        mSubmit.setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View v) {
-                                if (datebool == true && locbool == true && timebool == true) {
-                                    Log.d("himo ka ug ", "joke pag add na bitaw");
-                                    muModel.setUserDayTime(udt);
-                                    swapHeaderMod.setMeetUp(muModel);
+                            mCancel.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    final Dialog dialogCustom = new Dialog(getContext());
+                                    dialogCustom.setContentView(R.layout.reject_custom_dialog);
+                                    final EditText etReason = (EditText) dialogCustom.findViewById(R.id.etReason);
+                                    Button mSubmitReason = (Button) dialogCustom.findViewById(R.id.submitReject);
 
-                                    AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(context);
-                                    alertDialogBuilder.setTitle("Meet Up Summary");
-                                    alertDialogBuilder.setMessage("Date:\t" + swapHeaderMod.getDateDelivered() +
-                                            "\n\nTime:\t" + muModel.getUserDayTime().getTime().getStrTime() +
-                                            "\n\nLocation:\t" + muModel.getLocation().getLocationName());
-                                    alertDialogBuilder.setPositiveButton("Okay",
-                                            new DialogInterface.OnClickListener() {
-                                                @RequiresApi(api = Build.VERSION_CODES.N)
-                                                @Override
-                                                public void onClick(DialogInterface arg0, int arg1) {
-                                                    addMeetUp(swapHeaderMod, muModel);
-                                                }
-                                            });
-
-                                    AlertDialog alertDialog = alertDialogBuilder.create();
-                                    alertDialog.show();
-                                } else {
-                                    AlertDialog ad = new AlertDialog.Builder(context).create();
-                                    ad.setTitle("Alert!");
-                                    ad.setMessage("You should fill all data.");
-                                    ad.setButton(AlertDialog.BUTTON_POSITIVE, "Okay", new DialogInterface.OnClickListener() {
+                                    mSubmitReason.setOnClickListener(new View.OnClickListener() {
                                         @Override
-                                        public void onClick(DialogInterface dialog, int which) {
-                                            dialog.dismiss();
+                                        public void onClick(View v) {
+                                            if (etReason.getText().length() == 0) {
+                                                etReason.setError("Field should not be empty.");
+                                            } else {
+                                                swapHeaderMod.setStatus("Rejected");
+                                                String message = etReason.getText().toString();
+                                                rejectRequest(swapHeaderMod, message, position);
+                                            }
                                         }
                                     });
-                                    ad.show();
+                                    dialogCustom.show();
+                                }
+                            });
+                            dialog.setContentView(view);
+                            dialog.show();
+                        }else{
+                            AlertDialog ad = new AlertDialog.Builder(context).create();
+                            ad.setTitle("Alert!");
+                            ad.setMessage("You already responded to this request.");
+                            ad.setButton(AlertDialog.BUTTON_POSITIVE, "Okay", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    dialog.dismiss();
+                                }
+                            });
+                            ad.show();
+                        }
+                    } else if (status.equals("Approved")) {
+                        if(userNotificationList.get(position).getProcessedBool()==false||userNotificationList.get(position)==null){
+                            Date nextDate = new Date();
+                            final DayModel dayModel = new DayModel();
+                            locbool = false;
+                            datebool = false;
+                            timebool = false;
+
+                            final MeetUp muModel = new MeetUp();
+                            final Dialog dialog = new Dialog(context);
+                            LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+                            View view = inflater.inflate(R.layout.meet_up_dialog, null);
+
+                            Button mSubmit = (Button) view.findViewById(R.id.btnSubmit);
+
+                            final Spinner mSpinDate = (Spinner) view.findViewById(R.id.spinnerDate);
+                            final Spinner mSpinTime = (Spinner) view.findViewById(R.id.spinnerTime);
+
+                            User userRequestee = swapHeaderMod.getSwapDetail().getBookOwner().getUserObj();
+
+                            List<LocationModel> userLoc = userRequestee.getLocationArray();
+                            final List<LocationModel> meetUpLoc = new ArrayList<LocationModel>();
+                            List<String> meetUpStringLoc = new ArrayList<String>();
+                            final UserDayTime udt = new UserDayTime();
+
+                            for (int init = 0; init < userLoc.size(); init++) {
+                                if (userLoc.get(init).getStatus().equals("MeetUp")) {
+                                    meetUpLoc.add(userLoc.get(init));
+                                    meetUpStringLoc.add(userLoc.get(init).getLocationName());
                                 }
                             }
-                        });
-                        dialog.setContentView(view);
-                        dialog.show();
+
+                            ArrayAdapter<String> adapterLoc = new ArrayAdapter<String>(context, android.R.layout.simple_spinner_item, meetUpStringLoc);
+                            adapterLoc.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                            Spinner mSpinLoc = (Spinner) view.findViewById(R.id.spinnerLocation);
+                            mSpinLoc.setAdapter(adapterLoc);
+
+                            mSpinLoc.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                                @Override
+                                public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                                    locbool = true;
+                                    muModel.setLocation(meetUpLoc.get(position));
+                                }
+
+                                @Override
+                                public void onNothingSelected(AdapterView<?> parent) {
+
+                                }
+                            });
+
+                            final List<UserDayTime> daytime = userRequestee.getDayTimeModel();
+                            final List<String> dateMeetUp = new ArrayList<String>();
+                            final DateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+                            Set<String> removeDuplicate = new HashSet<>();
+
+
+                            for (int init = 0; init < daytime.size(); init++) {
+                                if (daytime.get(init).getDay().getStrDay().equals("Monday")) {
+                                    nextDate = getNextDate(java.util.Calendar.MONDAY);
+                                } else if (daytime.get(init).getDay().getStrDay().equals("Tuesday")) {
+                                    nextDate = getNextDate(Calendar.TUESDAY);
+                                } else if (daytime.get(init).getDay().getStrDay().equals("Wednesday")) {
+                                    nextDate = getNextDate(Calendar.WEDNESDAY);
+                                } else if (daytime.get(init).getDay().getStrDay().equals("Thursday")) {
+                                    nextDate = getNextDate(Calendar.THURSDAY);
+                                } else if (daytime.get(init).getDay().getStrDay().equals("Friday")) {
+                                    nextDate = getNextDate(Calendar.FRIDAY);
+                                } else if (daytime.get(init).getDay().getStrDay().equals("Saturday")) {
+                                    nextDate = getNextDate(Calendar.SATURDAY);
+                                } else if (daytime.get(init).getDay().getStrDay().equals("Sunday")) {
+                                    nextDate = getNextDate(Calendar.SUNDAY);
+                                }
+                                dateMeetUp.add(format.format(nextDate));
+                            }
+
+                            Set<String> dateNoDuplicates = new LinkedHashSet<String>(dateMeetUp);
+                            dateMeetUp.clear();
+                            dateMeetUp.addAll(dateNoDuplicates);
+                            timeStr = new ArrayList<String>();
+
+                            ArrayAdapter<String> adapterDate = new ArrayAdapter<String>(context, android.R.layout.simple_spinner_item, dateMeetUp);
+                            adapterDate.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                            mSpinDate.setAdapter(adapterDate);
+
+                            final ArrayAdapter<String> adapterTime = new ArrayAdapter<String>(context, android.R.layout.simple_spinner_item, timeStr);
+                            adapterTime.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                            mSpinTime.setAdapter(adapterTime);
+
+
+                            mSpinDate.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                                @Override
+                                public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                                    datebool = true;
+                                    try {
+                                        swapHeaderMod.setDateDelivered(dateMeetUp.get(position));
+                                        Log.d("dateDeliveredAdapter", dateMeetUp.get(position));
+
+                                        dayModel.setStrDay(dateMeetUp.get(position));
+
+                                        timeStr.clear();
+
+                                        String dayOfDate = "";
+                                        Calendar calendar = Calendar.getInstance();
+                                        Date selectedDate = format.parse(dateMeetUp.get(position));
+                                        calendar.setTime(selectedDate);
+                                        int dayOfWeek = calendar.get(Calendar.DAY_OF_WEEK);
+
+                                        for (int init = 0; init < daytime.size(); init++) {
+                                            Log.d("iterateUserTime", daytime.get(init).getTime().getStrTime());
+                                        }
+
+                                        if (dayOfWeek == Calendar.MONDAY) {
+                                            DayModel day = new DayModel();
+                                            for (int init = 0; init < daytime.size(); init++) {
+                                                Log.d("userTime", daytime.get(init).getTime().getStrTime());
+                                                if (daytime.get(init).getDay().getStrDay().equals("Monday")) {
+                                                    Log.d("TimeAdded", daytime.get(init).getTime().getStrTime());
+                                                    timeStr.add(daytime.get(init).getTime().getStrTime());
+                                                }
+                                            }
+                                        }
+
+                                        if (dayOfWeek == Calendar.TUESDAY) {
+                                            DayModel day = new DayModel();
+                                            for (int init = 0; init < daytime.size(); init++) {
+                                                if (daytime.get(init).getDay().getStrDay().equals("Tuesday")) {
+                                                    Log.d("TimeAdded", daytime.get(init).getTime().getStrTime());
+                                                    timeStr.add(daytime.get(init).getTime().getStrTime());
+                                                }
+                                            }
+                                        }
+
+                                        if (dayOfWeek == Calendar.WEDNESDAY) {
+                                            DayModel day = new DayModel();
+                                            for (int init = 0; init < daytime.size(); init++) {
+                                                if (daytime.get(init).getDay().getStrDay().equals("Wednesday")) {
+                                                    Log.d("TimeAdded", daytime.get(init).getTime().getStrTime());
+                                                    timeStr.add(daytime.get(init).getTime().getStrTime());
+                                                }
+                                            }
+                                        }
+
+                                        if (dayOfWeek == Calendar.THURSDAY) {
+                                            DayModel day = new DayModel();
+                                            for (int init = 0; init < daytime.size(); init++) {
+                                                if (daytime.get(init).getDay().getStrDay().equals("Thursday")) {
+                                                    Log.d("TimeAdded", daytime.get(init).getTime().getStrTime());
+                                                    timeStr.add(daytime.get(init).getTime().getStrTime());
+                                                }
+                                            }
+                                        }
+
+                                        if (dayOfWeek == Calendar.FRIDAY) {
+                                            DayModel day = new DayModel();
+                                            for (int init = 0; init < daytime.size(); init++) {
+                                                if (daytime.get(init).getDay().getStrDay().equals("Friday")) {
+                                                    Log.d("TimeAdded", daytime.get(init).getTime().getStrTime());
+                                                    timeStr.add(daytime.get(init).getTime().getStrTime());
+                                                }
+                                            }
+                                        }
+
+                                        if (dayOfWeek == Calendar.SATURDAY) {
+                                            DayModel day = new DayModel();
+                                            for (int init = 0; init < daytime.size(); init++) {
+                                                if (daytime.get(init).getDay().getStrDay().equals("Saturday")) {
+                                                    Log.d("TimeAdded", daytime.get(init).getTime().getStrTime());
+                                                    timeStr.add(daytime.get(init).getTime().getStrTime());
+                                                }
+                                            }
+                                        }
+
+                                        if (dayOfWeek == Calendar.SUNDAY) {
+                                            DayModel day = new DayModel();
+                                            for (int init = 0; init < daytime.size(); init++) {
+                                                if (daytime.get(init).getDay().getStrDay().equals("Sunday")) {
+                                                    Log.d("TimeAdded", daytime.get(init).getTime().getStrTime());
+                                                    timeStr.add(daytime.get(init).getTime().getStrTime());
+                                                }
+                                            }
+                                        }
+                                        adapterTime.notifyDataSetChanged();
+
+                                    } catch (ParseException e) {
+                                        e.printStackTrace();
+                                    }
+                                }
+
+                                @Override
+                                public void onNothingSelected(AdapterView<?> parent) {
+
+                                }
+                            });
+
+                            mSpinTime.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                                @Override
+                                public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                                    timebool = true;
+                                    udt.setUserId(Long.valueOf(finalUser1.getUserId()));
+                                    TimeModel time = new TimeModel();
+                                    time.setStrTime(timeStr.get(position));
+                                    udt.setTime(time);
+                                }
+
+                                @Override
+                                public void onNothingSelected(AdapterView<?> parent) {
+
+                                }
+                            });
+
+                            mSubmit.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    if (datebool == true && locbool == true && timebool == true) {
+                                        Log.d("himo ka ug ", "joke pag add na bitaw");
+                                        muModel.setUserDayTime(udt);
+                                        swapHeaderMod.setMeetUp(muModel);
+
+                                        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(context);
+                                        alertDialogBuilder.setTitle("Meet Up Summary");
+                                        alertDialogBuilder.setMessage("Date:\t" + swapHeaderMod.getDateDelivered() +
+                                                "\n\nTime:\t" + muModel.getUserDayTime().getTime().getStrTime() +
+                                                "\n\nLocation:\t" + muModel.getLocation().getLocationName());
+                                        alertDialogBuilder.setPositiveButton("Okay",
+                                                new DialogInterface.OnClickListener() {
+                                                    @RequiresApi(api = Build.VERSION_CODES.N)
+                                                    @Override
+                                                    public void onClick(DialogInterface arg0, int arg1) {
+                                                        muModel.getUserDayTime().setDay(dayModel);
+                                                        addMeetUp(swapHeaderMod, muModel, position);
+                                                    }
+                                                });
+
+                                        AlertDialog alertDialog = alertDialogBuilder.create();
+                                        alertDialog.show();
+                                    } else {
+                                        AlertDialog ad = new AlertDialog.Builder(context).create();
+                                        ad.setTitle("Alert!");
+                                        ad.setMessage("You should fill all data.");
+                                        ad.setButton(AlertDialog.BUTTON_POSITIVE, "Okay", new DialogInterface.OnClickListener() {
+                                            @Override
+                                            public void onClick(DialogInterface dialog, int which) {
+                                                dialog.dismiss();
+                                            }
+                                        });
+                                        ad.show();
+                                    }
+                                }
+                            });
+                            dialog.setContentView(view);
+                            dialog.show();
+                        }else{
+                            AlertDialog ad = new AlertDialog.Builder(context).create();
+                            ad.setTitle("Alert!");
+                            ad.setMessage("You already chose your meetup location, time and date.");
+                            ad.setButton(AlertDialog.BUTTON_POSITIVE, "Okay", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    dialog.dismiss();
+                                }
+                            });
+                            ad.show();
+                        }
                     } else if (status.equals("Confirm")) {
                         AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(context);
                         alertDialogBuilder.setTitle("Meet Up Summary");
@@ -3129,6 +3156,7 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
                         alertDialogBuilder.setNeutralButton("Okay", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
+                                getProcessed(position);
                                 dialog.dismiss();
                             }
                         });
@@ -3277,6 +3305,7 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
                 Log.i("MeetUpResponse", response);
                 MeetUp meetUp = gson.fromJson(response, MeetUp.class);
 
+                getProcessed(position);
                 Calendar c = Calendar.getInstance();
                 updateAuction(auctionHeader, position);
 
@@ -3307,7 +3336,7 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
         requestQueue.add(stringRequest);
     }
 
-    public void addMeetUp(final SwapHeader swapHeader, MeetUp meetUp) {
+    public void addMeetUp(final SwapHeader swapHeader, MeetUp meetUp, final int position) {
         RequestQueue requestQueue = Volley.newRequestQueue(context);
         String URL = Constants.POST_MEET_UP;
 
@@ -3320,6 +3349,9 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
             public void onResponse(String response) {
                 Log.d("MeetUpResponse", "inside");
                 Log.i("MeetUpResponse", response);
+
+                getProcessed(position);
+
                 MeetUp meetUp = gson.fromJson(response, MeetUp.class);
 
                 Calendar c = Calendar.getInstance();
@@ -3390,6 +3422,7 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
                 un.setUser(rentalHeaderMod.getRentalDetail().getBookOwner().getUserObj());
                 un.setUserPerformer(rentalHeaderMod.getUserId());
                 un.setActionStatus("Confirm");
+                un.setProcessedBool(false);
 
                 Intent intent = new Intent(context, NotificationAct.class);
                 context.startActivity(intent);
@@ -3458,6 +3491,7 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
                 un.setUserPerformer(auctionHeaderMod.getUser());
                 un.setActionStatus("Confirm");
                 un.setExtraMessage(userNotificationList.get(position).getExtraMessage());
+                un.setProcessedBool(false);
 
                 Intent intent = new Intent(context, NotificationAct.class);
                 context.startActivity(intent);
@@ -3524,6 +3558,7 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
                 un.setUser(swapHeaderMod.getSwapDetail().getBookOwner().getUserObj());
                 un.setUserPerformer(swapHeaderMod.getUser());
                 un.setActionStatus("Confirm");
+                un.setProcessedBool(false);
 
                 Intent intent = new Intent(context, NotificationAct.class);
                 context.startActivity(intent);
@@ -3575,7 +3610,7 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
         return c.getTime();
     }
 
-    public void rejectRequest(final SwapHeader swapHeader, final String message) {
+    public void rejectRequest(final SwapHeader swapHeader, final String message, final int position) {
         RequestQueue requestQueue = Volley.newRequestQueue(getContext());
         User user = new User();
         user = (User) SPUtility.getSPUtil(getContext()).getObject("USER_OBJECT", User.class);
@@ -3596,6 +3631,7 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
                 Log.i("rejectRequestRentRes", response);
                 SwapHeader swapHeaderModel = gson.fromJson(response, SwapHeader.class);
 
+                getProcessed(position);
                 UserNotification un = new UserNotification();
                 un.setActionName("swap");
                 un.setBookActionPerformedOn(swapHeaderModel.getSwapDetail().getBookOwner());
@@ -3604,6 +3640,7 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
                 un.setUser(swapHeaderModel.getUser());
                 un.setActionStatus("Rejected");
                 un.setActionId(Math.round(swapHeaderModel.getSwapHeaderId()));
+                un.setProcessedBool(false);
 
                 addUserNotif(un);
 
@@ -3730,6 +3767,52 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
             public void onErrorResponse(VolleyError error) {
                 Log.e("LOG_VOLLEY", error.toString());
                 error.printStackTrace();
+            }
+        }) {
+            @Override
+            public String getBodyContentType() {
+                return "application/json; charset=utf-8";
+            }
+
+            @Override
+            public byte[] getBody() throws AuthFailureError {
+                try {
+                    return mRequestBody == null ? null : mRequestBody.getBytes("utf-8");
+                } catch (UnsupportedEncodingException uee) {
+                    VolleyLog.wtf("Unsupported Encoding while trying to get the bytes of %s using %s", mRequestBody, "utf-8");
+                    return null;
+                }
+            }
+        };
+
+        requestQueue.add(stringRequest);
+    }
+
+    public void getProcessed(int position) {
+        RequestQueue requestQueue = Volley.newRequestQueue(context);
+        User user = new User();
+        user = (User) SPUtility.getSPUtil(context).getObject("USER_OBJECT", User.class);
+        d("UserIdReceive", String.valueOf(user.getUserId()));
+        String URL = Constants.PUT_USER_PROCESSED + userNotificationList.get(position).getUserNotificationId();
+
+        d("CountURL", URL);
+
+        final RentalHeader rentalHeader = new RentalHeader();
+
+        final Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd").registerTypeAdapter(Date.class, GsonDateDeserializer.getInstance()).create();
+        final String mRequestBody = gson.toJson(rentalHeader);
+
+
+        d("LOG_VOLLEY", mRequestBody);
+        StringRequest stringRequest = new StringRequest(Request.Method.GET, URL, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.e("LOG_VOLLEY", error.toString());
             }
         }) {
             @Override

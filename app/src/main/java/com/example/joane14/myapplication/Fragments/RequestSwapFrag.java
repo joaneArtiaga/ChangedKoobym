@@ -297,6 +297,7 @@ public class RequestSwapFrag extends Fragment {
                 un.setUser(swapHeaderModel.getUser());
                 un.setActionStatus("Rejected");
                 un.setActionId(Math.round(swapHeaderModel.getSwapHeaderId()));
+                un.setProcessedBool(false);
 
                 addUserNotif(un);
 

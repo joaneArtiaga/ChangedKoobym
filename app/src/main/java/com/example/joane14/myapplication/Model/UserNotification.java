@@ -15,9 +15,17 @@ public class UserNotification implements Serializable {
     private String actionStatus;
     private User userPerformer;
     private BookOwnerModel bookActionPerformedOn;
-    private Boolean read;
+    private Boolean read, processedBool;
     private String extraMessage;
 
+
+    public Boolean getProcessedBool() {
+        return processedBool;
+    }
+
+    public void setProcessedBool(Boolean processedBool) {
+        this.processedBool = processedBool;
+    }
 
     public String getExtraMessage() {
         return extraMessage;

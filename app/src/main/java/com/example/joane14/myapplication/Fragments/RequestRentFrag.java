@@ -232,6 +232,7 @@ public class RequestRentFrag extends Fragment {
                 un.setUser(rentalHeaderModel.getUserId());
                 un.setActionStatus("Rejected");
                 un.setActionId(Math.round(rentalHeaderModel.getRentalHeaderId()));
+                un.setProcessedBool(false);
 
                 addUserNotif(un);
             }

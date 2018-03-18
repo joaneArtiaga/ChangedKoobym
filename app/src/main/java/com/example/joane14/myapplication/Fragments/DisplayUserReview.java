@@ -86,12 +86,8 @@ public class DisplayUserReview extends Fragment {
 
     public void getUserRating(){
         RequestQueue requestQueue = Volley.newRequestQueue(getContext());
-//        String URL = "http://104.197.4.32:8080/Koobym/user/add";
-//        User user = new User();
-//        user = (User) SPUtility.getSPUtil(getContext()).getObject("USER_OBJECT", User.class);
         Log.d("UserIdReceive", String.valueOf(user.getUserId()));
         String URL = Constants.GET_USER_REVIEWS+"/"+user.getUserId();
-//        String URL = Constants.WEB_SERVICE_URL+"user/add";
 
         Log.d("UserReview URL", URL);
         final RentalHeader rentalHeader =new RentalHeader();
@@ -105,7 +101,6 @@ public class DisplayUserReview extends Fragment {
             @Override
             public void onResponse(String response) {
                 Log.i("ResponseRequestReceived", response);
-//                RentalHeader rentalHeaderModel = gson.fromJson(response, RentalHeader.class);
                 userRatingList.clear();
                 userRatingList.addAll(Arrays.asList(gson.fromJson(response, UserRating[].class)));
                 mAdapter.notifyDataSetChanged();

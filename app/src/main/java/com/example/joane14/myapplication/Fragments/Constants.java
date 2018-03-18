@@ -195,6 +195,8 @@ public class Constants {
 
     public static final String PUT_USER_READ = WEB_SERVICE_URL + "userNotification/notificationRead/";
 
+    public static final String PUT_USER_PROCESSED = WEB_SERVICE_URL + "userNotification/notificationProcessed/";
+
     public static final String GET_RENTAL_DETAIL = WEB_SERVICE_URL + "rentalHeader/get/";
 
     public static final String GET_SWAP_DETAIL = WEB_SERVICE_URL + "swapHeader/get/";

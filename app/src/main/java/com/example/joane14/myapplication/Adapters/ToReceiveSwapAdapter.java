@@ -203,7 +203,7 @@ public class ToReceiveSwapAdapter extends RecyclerView.Adapter<ToReceiveSwapAdap
                                         UserRating userRatingMod = new UserRating();
 
                                         userRatingMod.setComment(etReviewMessage.getText().toString());
-                                        userRatingMod.setUserRater(bookList.get(position).getUser());
+                                        userRatingMod.setUserRater(bookList.get(position).getSwapDetail().getBookOwner().getUserObj());
                                         userRatingMod.setUser(bookList.get(position).getRequestedSwapDetail().getBookOwner().getUserObj());
                                         userRatingMod.setReview(reviewMod);
                                         userRatingMod.setRate(rateMod);
@@ -333,6 +333,7 @@ public class ToReceiveSwapAdapter extends RecyclerView.Adapter<ToReceiveSwapAdap
                 un.setExtraMessage(String.valueOf(ur.getUserRatingId()));
                 un.setUser(swapHeader.getSwapDetail().getBookOwner().getUserObj());
                 un.setUserPerformer(swapHeader.getUser());
+                un.setProcessedBool(false);
 
                 addUserNotif(un);
 

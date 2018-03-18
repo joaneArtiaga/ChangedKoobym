@@ -179,7 +179,6 @@ ViewAuctionBook extends AppCompatActivity
                 CountdownFrag cdf = CountdownFrag.newInstance(bundle);
                 ft1.replace(R.id.countdown_container, cdf);
                 ft1.commit();
-
             }else{
                 fl.setVisibility(View.GONE);
                 buttonLinear.setVisibility(View.GONE);
@@ -196,7 +195,7 @@ ViewAuctionBook extends AppCompatActivity
 
             mRating.setRating(Float.parseFloat(String.valueOf(auctionDetailModel.getBookOwner().getRate())));
             priceLinear.setVisibility(View.GONE);
-            mRPrice.setText("₱  "+String.valueOf(auctionDetailModel.getStartingPrice()));
+            mRPrice.setText(String.valueOf(auctionDetailModel.getStartingPrice()));
 
             final User user = (User) SPUtility.getSPUtil(ViewAuctionBook.this).getObject("USER_OBJECT", User.class);
 

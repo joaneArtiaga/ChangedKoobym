@@ -358,11 +358,6 @@ public class ToReturnAdapter extends RecyclerView.Adapter<ToReturnAdapter.BookHo
 
                 bookRate(bookRating, rentalHeaderMod, ur);
 
-
-//                    if (bool == false) {
-//                        Intent intent = new Intent(context, HistoryActivity.class);
-//                        context.startActivity(intent);
-//                    }
             }
         }, new Response.ErrorListener() {
             @Override
@@ -392,7 +387,6 @@ public class ToReturnAdapter extends RecyclerView.Adapter<ToReturnAdapter.BookHo
 
     public void bookRate(final BookOwnerRating bookRating, final RentalHeader rentalHeaderMod, final BookOwnerReview bookOwnerReview) {
         RequestQueue requestQueue = Volley.newRequestQueue(context);
-//        String URL = "http://104.197.4.32:8080/Koobym/user/add";
         String URL = Constants.POST_BOOK_OWNER_RATE;
 
         User user = new User();
@@ -443,10 +437,7 @@ public class ToReturnAdapter extends RecyclerView.Adapter<ToReturnAdapter.BookHo
     }
 
     private void returnToReceive(final RentalHeader rentalHeader, BookOwnerRating bookRating, BookOwnerReview bookReview){
-//        String URL = "http://104.198.152.85/Koobym/rentalDetail/suggested/%d";
-//        String URL = Constants.WEB_SERVICE_URL+"rentalDetail/suggested/%d";
         String URL = Constants.RETURN_TO_RECEIVE+rentalHeader.getRentalHeaderId()+"/"+bookRating.getBookOwnerRatingId()+"/"+bookReview.getBookOwnerReviewId();
-//        URL = String.format(URL, userId);
         Log.d("returnToReceiveURL", URL);
         Log.d("returnToReceive", rentalHeader.toString());
 
@@ -472,10 +463,7 @@ public class ToReturnAdapter extends RecyclerView.Adapter<ToReturnAdapter.BookHo
     }
 
     private void sendMailNotif(final RentalHeader rentalHeader){
-//        String URL = "http://104.198.152.85/Koobym/rentalDetail/suggested/%d";
-//        String URL = Constants.WEB_SERVICE_URL+"rentalDetail/suggested/%d";
         String URL = Constants.SEND_NOTIF_MAIL+rentalHeader.getRentalHeaderId();
-//        URL = String.format(URL, userId);
         Log.d("MailNotif", URL);
         Log.d("MailNotif", rentalHeader.toString());
 
@@ -486,7 +474,6 @@ public class ToReturnAdapter extends RecyclerView.Adapter<ToReturnAdapter.BookHo
                 Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd").registerTypeAdapter(Date.class, GsonDateDeserializer.getInstance()).create();
                 RentalHeader rentalHeaderMod = gson.fromJson(response, RentalHeader.class);
 
-//                rentalHeaderMod.setRentalDetail(rentalHeader.getRentalDetail());
 
                 Intent intent = new Intent(context, MeetUpChooser.class);
                 Bundle bundle = new Bundle();
@@ -495,10 +482,6 @@ public class ToReturnAdapter extends RecyclerView.Adapter<ToReturnAdapter.BookHo
                 intent.putExtras(bundle);
                 context.startActivity(intent);
 
-//                Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd").registerTypeAdapter(Date.class, GsonDateDeserializer.getInstance()).create();
-//                BookOwnerModel[] bookOwnerModels = gson.fromJson(response, BookOwnerModel[].class);
-//                bookOwnerModelList.addAll(Arrays.asList(bookOwnerModels));
-//                mAdapter.notifyDataSetChanged();
             }
         }, new Response.ErrorListener() {
             @Override
@@ -530,17 +513,14 @@ public class ToReturnAdapter extends RecyclerView.Adapter<ToReturnAdapter.BookHo
             mBookTitle = (TextView) itemView.findViewById(R.id.bookTitleBA);
             mDate = (TextView) itemView.findViewById(R.id.dateBA);
             mRenter = (TextView) itemView.findViewById(R.id.renterNameBA);
-//            mRenter = (TextView) itemView.findViewById(R.id.toReceiveRenter);
             mBookDate = (TextView) itemView.findViewById(R.id.bookDateBA);
             mLocation = (TextView) itemView.findViewById(R.id.locationBA);
             mPrice = (TextView) itemView.findViewById(R.id.bookPriceBA);
             mTime = (TextView) itemView.findViewById(R.id.timeBA);
-//            mIvRenter = (ImageView) itemView.findViewById(R.id.toReceiveRenterImage);
             mIvBookImg = (ImageView) itemView.findViewById(R.id.ivBookBA);
             mProfile = (ImageButton) itemView.findViewById(R.id.profileBA);
             mNotify = (ImageButton) itemView.findViewById(R.id.notifyBA);
             mRate = (ImageButton) itemView.findViewById(R.id.rateButtonBA);
-//            itemView.setOnClickListener(this);
 
 
             itemView.setOnClickListener(new View.OnClickListener() {
@@ -550,29 +530,16 @@ public class ToReturnAdapter extends RecyclerView.Adapter<ToReturnAdapter.BookHo
                     Bundle bundle = new Bundle();
                     int position = getAdapterPosition();
                     Log.d("AdapterPosition", "inside "+Integer.toString(position));
-//                    Intent intent = new Intent(LandingPageAdapter.this.context, ViewBookActivity.class);
                     rentalHeaderObj = ToReturnAdapter.this.bookList.get(position);
                     if(rentalHeaderObj==null){
                         Log.d("rentalHeaderAdapter", "is null");
                     }else{
                         Log.d("rentalHeaderAdapter", "is not null");
                     }
-//                    intent.putExtra("ViewBook", "fromAdapter");
-//                    bundle.putSerializable("View", rentalDetailObj);
-//                    intent.putExtras(bundle);
-//                    context.startActivity(intent);
                 }
             });
         }
 
-//        @Override
-//        public void onClick(View v) {
-//            int position = getAdapterPosition();
-//
-//
-//            Log.d("AdapterPosition", "inside "+Integer.toString(position));
-//
-//        }
     }
 
     public String getDetails(int position){
