@@ -74,9 +74,10 @@ public class ToDeliverRentAdapter extends RecyclerView.Adapter<ToDeliverRentAdap
 
         holder.mNotify.setVisibility(View.GONE);
 
+        Log.d("mPrice", holder.mPrice.getText().toString()+"   "+String.valueOf(bookList.get(position).getRentalDetail().getCalculatedPrice()));
         holder.mBookTitle.setText(bookList.get(position).getRentalDetail().getBookOwner().getBookObj().getBookTitle());
         holder.mBookDate.setText(bookList.get(position).getRentalTimeStamp());
-        holder.mPrice.setText("₱  "+holder.mPrice.getText().toString()+"   "+String.valueOf(bookList.get(position).getRentalDetail().getCalculatedPrice()));
+        holder.mPrice.setText(holder.mPrice.getText().toString()+"   "+String.valueOf(bookList.get(position).getRentalDetail().getCalculatedPrice()));
         holder.mRenterName.setText(bookList.get(position).getUserId().getUserFname()+" "+bookList.get(position).getUserId().getUserLname());
         if(bookList.get(position).getDateDeliver()==null){
             Log.d("EndDateDeliverRent", "walay sulod");
@@ -129,7 +130,7 @@ public class ToDeliverRentAdapter extends RecyclerView.Adapter<ToDeliverRentAdap
 
         Log.d("CurrentDate: "+newDate, "ReturnDate: "+bookList.get(position).getDateDeliver());
         Log.d("returnedBoolean", dateToCompare.compareTo(c.getTime())+"");
-        if(dateToCompare.after(c.getTime())|| newDate.equals(bookList.get(position).getDateDeliver())){
+        if(dateToCompare.before(c.getTime())|| newDate.equals(bookList.get(position).getDateDeliver())){
             holder.mRate.setImageResource(R.drawable.checkbookact);
         }else{
             holder.mRate.setImageResource(R.drawable.notrate);
@@ -140,7 +141,7 @@ public class ToDeliverRentAdapter extends RecyclerView.Adapter<ToDeliverRentAdap
         holder.mRate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(finalDateToCompare.after(c.getTime())|| finalNewDate.equals(bookList.get(position).getDateDeliver())){
+                if(finalDateToCompare.before(c.getTime())|| finalNewDate.equals(bookList.get(position).getDateDeliver())){
                     AlertDialog ad = new AlertDialog.Builder(context).create();
                     ad.setMessage("Will notify the renter of your book delivery.");
                     ad.setButton(AlertDialog.BUTTON_POSITIVE, "Okay", new DialogInterface.OnClickListener() {

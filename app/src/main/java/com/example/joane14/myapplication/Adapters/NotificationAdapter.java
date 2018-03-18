@@ -169,6 +169,8 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
                 message = userNotification.getUserPerformer().getUserFname() + " " + userNotification.getUserPerformer().getUserLname() + " returned the book," + userNotification.getBookActionPerformedOn().getBookObj().getBookTitle() + " and rated the book.";
             } else if (userNotification.getActionStatus().equals("Rejected")) {
                 message = userNotification.getUserPerformer().getUserFname() + " " + userNotification.getUserPerformer().getUserLname() + " returned the book," + userNotification.getBookActionPerformedOn().getBookObj().getBookTitle() + " and rejected your request to the book, " + userNotification.getBookActionPerformedOn().getBookObj().getBookTitle();
+            }else if(userNotification.getActionStatus().equals("received")){
+                message = userNotification.getUserPerformer().getUserFname() + " " + userNotification.getUserPerformer().getUserLname() + " received the book," + userNotification.getBookActionPerformedOn().getBookObj().getBookTitle() + ".";
             }
         } else if (userNotification.getActionName().equals("swap")) {
             Log.d("notifSwap", "inside");
@@ -363,6 +365,9 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
                             } else if (userNotificationList.get(position).getActionStatus().equals("Rejected")) {
                                 getRead(position);
                                 getRentalHeader(position, "Rejected");
+                            }else if(userNotificationList.get(position).getActionStatus().equals("received")){
+                                getRead(position);
+                                getRentalHeader(position, "Received");
                             }
 
                         } else if (userNotificationList.get(position).getActionName().equals("swap")) {
@@ -1091,62 +1096,77 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
                     final RentalHeader rentalHeaderMod = gson.fromJson(response, RentalHeader.class);
 
                     if (status.equals("return")) {
-                        AlertDialog ad = new AlertDialog.Builder(context).create();
-                        ad.setTitle("Confirmation");
-                        ad.setMessage("Location:\t" + rentalHeaderMod.getReturnMeetUp().getLocation().getLocationName() +
-                                "Date:\t" + rentalHeaderMod.getReturnMeetUp().getUserDayTime().getDay().getStrDay() +
-                                "\n\nTime:\t" + rentalHeaderMod.getReturnMeetUp().getUserDayTime().getTime().getStrTime());
-                        ad.setButton(AlertDialog.BUTTON_POSITIVE, "Confirm", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                confirmEarlyNotif(rentalHeaderMod);
-                                dialog.dismiss();
-                            }
-                        });
-                        ad.setButton(AlertDialog.BUTTON_NEGATIVE, "Deny", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(final DialogInterface dialog, int which) {
+                        if(userNotificationList.get(position).getProcessedBool()==false||userNotificationList.get(position).getProcessedBool()==null){
+                            AlertDialog ad = new AlertDialog.Builder(context).create();
+                            ad.setTitle("Confirmation");
+                            ad.setMessage("Location:\t" + rentalHeaderMod.getReturnMeetUp().getLocation().getLocationName() +
+                                    "Date:\t" + rentalHeaderMod.getReturnMeetUp().getUserDayTime().getDay().getStrDay() +
+                                    "\n\nTime:\t" + rentalHeaderMod.getReturnMeetUp().getUserDayTime().getTime().getStrTime());
+                            ad.setButton(AlertDialog.BUTTON_POSITIVE, "Confirm", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    confirmEarlyNotif(rentalHeaderMod);
+                                    dialog.dismiss();
+                                }
+                            });
+                            ad.setButton(AlertDialog.BUTTON_NEGATIVE, "Deny", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(final DialogInterface dialog, int which) {
 
-                                final Dialog dialogCustom = new Dialog(context);
-                                dialogCustom.setContentView(R.layout.reject_custom_dialog);
-                                final EditText etReason = (EditText) dialogCustom.findViewById(R.id.etReason);
-                                Button mSubmitReason = (Button) dialogCustom.findViewById(R.id.submitReject);
+                                    final Dialog dialogCustom = new Dialog(context);
+                                    dialogCustom.setContentView(R.layout.reject_custom_dialog);
+                                    final EditText etReason = (EditText) dialogCustom.findViewById(R.id.etReason);
+                                    Button mSubmitReason = (Button) dialogCustom.findViewById(R.id.submitReject);
 
-                                mSubmitReason.setOnClickListener(new View.OnClickListener() {
-                                    @Override
-                                    public void onClick(View v) {
-                                        if (etReason.getText().length() == 0) {
-                                            etReason.setError("Field should not be empty.");
-                                        } else {
-                                            UserNotification un = new UserNotification();
-                                            un.setUser(userNotificationList.get(position).getUserPerformer());
-                                            un.setUserPerformer(userNotificationList.get(position).getUser());
-                                            un.setActionStatus("return-denied");
-                                            un.setActionId(userNotificationList.get(position).getActionId());
-                                            un.setActionName("rental");
-                                            un.setBookActionPerformedOn(userNotificationList.get(position).getBookActionPerformedOn());
-                                            un.setExtraMessage(etReason.getText().toString());
-                                            un.setProcessedBool(false);
+                                    mSubmitReason.setOnClickListener(new View.OnClickListener() {
+                                        @Override
+                                        public void onClick(View v) {
+                                            if (etReason.getText().length() == 0) {
+                                                etReason.setError("Field should not be empty.");
+                                            } else {
+                                                rejectRequestRent(rentalHeaderMod, etReason.getText().toString(), position);
 
-                                            addUserNotif(un);
-                                            dialog.dismiss();
+                                                UserNotification un = new UserNotification();
+                                                un.setUser(userNotificationList.get(position).getUserPerformer());
+                                                un.setUserPerformer(userNotificationList.get(position).getUser());
+                                                un.setActionStatus("return-denied");
+                                                un.setActionId(userNotificationList.get(position).getActionId());
+                                                un.setActionName("rental");
+                                                un.setBookActionPerformedOn(userNotificationList.get(position).getBookActionPerformedOn());
+                                                un.setExtraMessage(etReason.getText().toString());
+                                                un.setProcessedBool(false);
+
+                                                addUserNotif(un);
+                                                dialog.dismiss();
+                                            }
                                         }
-                                    }
-                                });
-                                dialogCustom.show();
+                                    });
+                                    dialogCustom.show();
 //                                denyEarlyNotif(rentalHeaderMod);
-                            }
-                        });
-                        ad.show();
+                                }
+                            });
+                            ad.show();
+                        }else{
+                            AlertDialog ad = new AlertDialog.Builder(context).create();
+                            ad.setTitle("Alert!");
+                            ad.setMessage("You already chose a meet up time, date and location.");
+                            ad.setButton(AlertDialog.BUTTON_POSITIVE, "Okay", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    dialog.dismiss();
+                                }
+                            });
+                            ad.show();
+                        }
                     } else if (status.equals("summary")) {
                         AlertDialog ad = new AlertDialog.Builder(context).create();
                         ad.setTitle("Meet Up Summary");
                         ad.setMessage("Date:\t" + rentalHeaderMod.getDateDeliver() +
-                                "\n\nDay:\t" + rentalHeaderMod.getMeetUp().getUserDayTime().getDay().getStrDay() +
                                 "\n\nTime:\t" + rentalHeaderMod.getMeetUp().getUserDayTime().getTime().getStrTime());
                         ad.setButton(AlertDialog.BUTTON_POSITIVE, "Okay", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
+                                getProcessed(position);
                                 Intent intent = new Intent(context, LandingPage.class);
                                 Bundle bundle = new Bundle();
                                 bundle.putBoolean("fromRegister", false);
@@ -1163,6 +1183,7 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
                         ad.setButton(AlertDialog.BUTTON_NEUTRAL, "Okay", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
+                                getProcessed(position);
                                 Intent intent = new Intent(context, NotificationAct.class);
                                 context.startActivity(intent);
                             }
@@ -1177,6 +1198,7 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
                         ad.setButton(AlertDialog.BUTTON_NEUTRAL, "Okay", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
+                                getProcessed(position);
                                 Intent intent = new Intent(context, NotificationAct.class);
                                 context.startActivity(intent);
                             }
@@ -1206,6 +1228,7 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
                         btnOkay.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
+                                getProcessed(position);
                                 Intent intent = new Intent(context, NotificationAct.class);
                                 context.startActivity(intent);
                             }
@@ -1214,6 +1237,7 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
                         btnSeeRating.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
+                                getProcessed(position);
                                 getBookReview(position, rentalHeaderMod);
                             }
                         });
@@ -1241,6 +1265,7 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
                         btnOkay.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
+                                getProcessed(position);
                                 Intent intent = new Intent(context, NotificationAct.class);
                                 context.startActivity(intent);
                             }
@@ -1263,6 +1288,7 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
                         btnOkay.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
+                                getProcessed(position);
                                 Intent intent = new Intent(context, NotificationAct.class);
                                 context.startActivity(intent);
                             }
@@ -1270,337 +1296,396 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
 
                         dialogCustom.show();
                     } else if (status.equals("Approved")) {
-                        Date nextDate = new Date();
-                        locbool = false;
-                        datebool = false;
-                        timebool = false;
+                        if(userNotificationList.get(position).getProcessedBool()==false||userNotificationList.get(position).getProcessedBool()==null){
+                            Date nextDate = new Date();
+                            locbool = false;
+                            datebool = false;
+                            timebool = false;
 
-                        final MeetUp muModel = new MeetUp();
-                        final MeetUp mureturn = new MeetUp();
+                            final MeetUp muModel = new MeetUp();
+                            final MeetUp mureturn = new MeetUp();
 
-                        final Dialog dialog = new Dialog(context);
-                        LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-                        View view = inflater.inflate(R.layout.rental_meet_up_dialog, null);
+                            final Dialog dialog = new Dialog(context);
+                            LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+                            View view = inflater.inflate(R.layout.rental_meet_up_dialog, null);
 
-                        Button mSubmit = (Button) view.findViewById(R.id.btnSubmit);
+                            Button mSubmit = (Button) view.findViewById(R.id.btnSubmit);
 
-                        final Spinner mSpinDate = (Spinner) view.findViewById(R.id.spinnerDate);
-                        final Spinner mSpinTime = (Spinner) view.findViewById(R.id.spinnerTime);
-                        final TextView mDateReturn = (TextView) view.findViewById(R.id.dateTv);
-                        final TextView mTimeReturn = (TextView) view.findViewById(R.id.tvTime);
-                        final TextView mLocReturn = (TextView) view.findViewById(R.id.tvLocation);
+                            final Spinner mSpinDate = (Spinner) view.findViewById(R.id.spinnerDate);
+                            final Spinner mSpinTime = (Spinner) view.findViewById(R.id.spinnerTime);
+                            final TextView mDateReturn = (TextView) view.findViewById(R.id.dateTv);
+                            final TextView mTimeReturn = (TextView) view.findViewById(R.id.tvTime);
+                            final TextView mLocReturn = (TextView) view.findViewById(R.id.tvLocation);
 
-                        User userOwner = rentalHeaderMod.getRentalDetail().getBookOwner().getUserObj();
+                            User userOwner = rentalHeaderMod.getRentalDetail().getBookOwner().getUserObj();
 
-                        List<LocationModel> userLoc = userOwner.getLocationArray();
-                        final List<LocationModel> meetUpLoc = new ArrayList<LocationModel>();
-                        List<String> meetUpStringLoc = new ArrayList<String>();
-                        final UserDayTime udt = new UserDayTime();
-                        final UserDayTime udtReturn = new UserDayTime();
+                            List<LocationModel> userLoc = userOwner.getLocationArray();
+                            final List<LocationModel> meetUpLoc = new ArrayList<LocationModel>();
+                            List<String> meetUpStringLoc = new ArrayList<String>();
+                            final UserDayTime udt = new UserDayTime();
+                            final UserDayTime udtReturn = new UserDayTime();
 
-                        for (int init = 0; init < userLoc.size(); init++) {
-                            if (userLoc.get(init).getStatus().equals("MeetUp")) {
-                                meetUpLoc.add(userLoc.get(init));
-                                meetUpStringLoc.add(userLoc.get(init).getLocationName());
-                            }
-                        }
-
-                        ArrayAdapter<String> adapterLoc = new ArrayAdapter<String>(context, android.R.layout.simple_spinner_item, meetUpStringLoc);
-                        adapterLoc.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-                        Spinner mSpinLoc = (Spinner) view.findViewById(R.id.spinnerLocation);
-                        mSpinLoc.setAdapter(adapterLoc);
-
-                        mSpinLoc.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-                            @Override
-                            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                                locbool = true;
-                                muModel.setLocation(meetUpLoc.get(position));
-                                mLocReturn.setText(meetUpLoc.get(position).getLocationName());
-                                mureturn.setLocation(meetUpLoc.get(position));
-                            }
-
-                            @Override
-                            public void onNothingSelected(AdapterView<?> parent) {
-
-                            }
-                        });
-
-                        final List<UserDayTime> daytime = userOwner.getDayTimeModel();
-                        final List<String> dateMeetUp = new ArrayList<String>();
-                        final DateFormat format = new SimpleDateFormat("yyyy-MM-dd");
-                        Set<String> removeDuplicate = new HashSet<>();
-
-
-                        for (int init = 0; init < daytime.size(); init++) {
-                            if (daytime.get(init).getDay().getStrDay().equals("Monday")) {
-                                nextDate = getNextDate(java.util.Calendar.MONDAY);
-                            } else if (daytime.get(init).getDay().getStrDay().equals("Tuesday")) {
-                                nextDate = getNextDate(Calendar.TUESDAY);
-                            } else if (daytime.get(init).getDay().getStrDay().equals("Wednesday")) {
-                                nextDate = getNextDate(Calendar.WEDNESDAY);
-                            } else if (daytime.get(init).getDay().getStrDay().equals("Thursday")) {
-                                nextDate = getNextDate(Calendar.THURSDAY);
-                            } else if (daytime.get(init).getDay().getStrDay().equals("Friday")) {
-                                nextDate = getNextDate(Calendar.FRIDAY);
-                            } else if (daytime.get(init).getDay().getStrDay().equals("Saturday")) {
-                                nextDate = getNextDate(Calendar.SATURDAY);
-                            } else if (daytime.get(init).getDay().getStrDay().equals("Sunday")) {
-                                nextDate = getNextDate(Calendar.SUNDAY);
-                            }
-                            dateMeetUp.add(format.format(nextDate));
-                        }
-
-                        Set<String> dateNoDuplicates = new LinkedHashSet<String>(dateMeetUp);
-                        dateMeetUp.clear();
-                        dateMeetUp.addAll(dateNoDuplicates);
-                        timeStr = new ArrayList<String>();
-
-                        ArrayAdapter<String> adapterDate = new ArrayAdapter<String>(context, android.R.layout.simple_spinner_item, dateMeetUp);
-                        adapterDate.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-                        mSpinDate.setAdapter(adapterDate);
-
-                        final ArrayAdapter<String> adapterTime = new ArrayAdapter<String>(context, android.R.layout.simple_spinner_item, timeStr);
-                        adapterTime.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-                        mSpinTime.setAdapter(adapterTime);
-
-                        mSpinDate.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-                            @Override
-                            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                                datebool = true;
-                                try {
-                                    rentalHeaderMod.setDateDeliver(dateMeetUp.get(position));
-
-                                    timeStr.clear();
-                                    DayModel dayModel = new DayModel();
-                                    dayModel.setStrDay(dateMeetUp.get(position));
-
-                                    udt.setDay(dayModel);
-
-                                    Date dateReturn = new Date();
-                                    dateReturn = format.parse(dateMeetUp.get(position));
-
-                                    Calendar cal = Calendar.getInstance();
-                                    cal.setTime(dateReturn);
-
-                                    cal.add(Calendar.DATE, rentalHeaderMod.getRentalDetail().getDaysForRent());
-
-                                    mDateReturn.setText(format.format(cal.getTime()));
-                                    DayModel dayR = new DayModel();
-                                    dayR.setStrDay(format.format(cal.getTime()));
-                                    udtReturn.setDay(dayR);
-                                    rentalHeaderMod.setRentalReturnDate(format.format(cal.getTime()));
-                                    Log.d("dateDelivered", dateMeetUp.get(position));
-
-                                    String dayOfDate = "";
-                                    Calendar calendar = Calendar.getInstance();
-                                    Date selectedDate = format.parse(dateMeetUp.get(position));
-                                    calendar.setTime(selectedDate);
-                                    int dayOfWeek = calendar.get(Calendar.DAY_OF_WEEK);
-
-                                    for (int init = 0; init < daytime.size(); init++) {
-                                        Log.d("iterateUserTime", daytime.get(init).getTime().getStrTime());
-                                    }
-
-                                    Log.d("dayOfWeek", Integer.toString(dayOfWeek));
-
-                                    if (dayOfWeek == Calendar.MONDAY) {
-                                        DayModel day = new DayModel();
-                                        for (int init = 0; init < daytime.size(); init++) {
-                                            Log.d("userTime", daytime.get(init).getTime().getStrTime());
-                                            if (daytime.get(init).getDay().getStrDay().equals("Monday")) {
-                                                Log.d("TimeAdded", daytime.get(init).getTime().getStrTime());
-                                                timeStr.add(daytime.get(init).getTime().getStrTime());
-                                            }
-                                        }
-                                    }
-
-                                    if (dayOfWeek == Calendar.TUESDAY) {
-                                        DayModel day = new DayModel();
-                                        for (int init = 0; init < daytime.size(); init++) {
-                                            if (daytime.get(init).getDay().getStrDay().equals("Tuesday")) {
-                                                Log.d("TimeAdded", daytime.get(init).getTime().getStrTime());
-                                                timeStr.add(daytime.get(init).getTime().getStrTime());
-                                            }
-                                        }
-                                    }
-
-                                    if (dayOfWeek == Calendar.WEDNESDAY) {
-                                        DayModel day = new DayModel();
-                                        for (int init = 0; init < daytime.size(); init++) {
-                                            if (daytime.get(init).getDay().getStrDay().equals("Wednesday")) {
-                                                Log.d("TimeAdded", daytime.get(init).getTime().getStrTime());
-                                                timeStr.add(daytime.get(init).getTime().getStrTime());
-                                            }
-                                        }
-                                    }
-
-                                    if (dayOfWeek == Calendar.THURSDAY) {
-                                        DayModel day = new DayModel();
-                                        for (int init = 0; init < daytime.size(); init++) {
-                                            if (daytime.get(init).getDay().getStrDay().equals("Thursday")) {
-                                                Log.d("TimeAdded", daytime.get(init).getTime().getStrTime());
-                                                timeStr.add(daytime.get(init).getTime().getStrTime());
-                                            }
-                                        }
-                                    }
-
-                                    if (dayOfWeek == Calendar.FRIDAY) {
-                                        DayModel day = new DayModel();
-                                        for (int init = 0; init < daytime.size(); init++) {
-                                            if (daytime.get(init).getDay().getStrDay().equals("Friday")) {
-                                                Log.d("TimeAdded", daytime.get(init).getTime().getStrTime());
-                                                timeStr.add(daytime.get(init).getTime().getStrTime());
-                                            }
-                                        }
-                                    }
-
-                                    if (dayOfWeek == Calendar.SATURDAY) {
-                                        DayModel day = new DayModel();
-                                        for (int init = 0; init < daytime.size(); init++) {
-                                            if (daytime.get(init).getDay().getStrDay().equals("Saturday")) {
-                                                Log.d("TimeAdded", daytime.get(init).getTime().getStrTime());
-                                                timeStr.add(daytime.get(init).getTime().getStrTime());
-                                            }
-                                        }
-                                    }
-
-                                    if (dayOfWeek == Calendar.SUNDAY) {
-                                        DayModel day = new DayModel();
-                                        for (int init = 0; init < daytime.size(); init++) {
-                                            if (daytime.get(init).getDay().getStrDay().equals("Sunday")) {
-                                                Log.d("TimeAdded", daytime.get(init).getTime().getStrTime());
-                                                timeStr.add(daytime.get(init).getTime().getStrTime());
-                                            }
-                                        }
-                                    }
-                                    adapterTime.notifyDataSetChanged();
-                                } catch (ParseException e) {
-                                    e.printStackTrace();
+                            for (int init = 0; init < userLoc.size(); init++) {
+                                if (userLoc.get(init).getStatus().equals("MeetUp")) {
+                                    meetUpLoc.add(userLoc.get(init));
+                                    meetUpStringLoc.add(userLoc.get(init).getLocationName());
                                 }
                             }
 
-                            @Override
-                            public void onNothingSelected(AdapterView<?> parent) {
+                            ArrayAdapter<String> adapterLoc = new ArrayAdapter<String>(context, android.R.layout.simple_spinner_item, meetUpStringLoc);
+                            adapterLoc.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                            Spinner mSpinLoc = (Spinner) view.findViewById(R.id.spinnerLocation);
+                            mSpinLoc.setAdapter(adapterLoc);
 
+                            mSpinLoc.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                                @Override
+                                public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                                    locbool = true;
+                                    muModel.setLocation(meetUpLoc.get(position));
+                                    mLocReturn.setText(meetUpLoc.get(position).getLocationName());
+                                    mureturn.setLocation(meetUpLoc.get(position));
+                                }
+
+                                @Override
+                                public void onNothingSelected(AdapterView<?> parent) {
+
+                                }
+                            });
+
+                            final List<UserDayTime> daytime = userOwner.getDayTimeModel();
+                            final List<String> dateMeetUp = new ArrayList<String>();
+                            final DateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+                            Set<String> removeDuplicate = new HashSet<>();
+
+
+                            for (int init = 0; init < daytime.size(); init++) {
+                                if (daytime.get(init).getDay().getStrDay().equals("Monday")) {
+                                    nextDate = getNextDate(java.util.Calendar.MONDAY);
+                                } else if (daytime.get(init).getDay().getStrDay().equals("Tuesday")) {
+                                    nextDate = getNextDate(Calendar.TUESDAY);
+                                } else if (daytime.get(init).getDay().getStrDay().equals("Wednesday")) {
+                                    nextDate = getNextDate(Calendar.WEDNESDAY);
+                                } else if (daytime.get(init).getDay().getStrDay().equals("Thursday")) {
+                                    nextDate = getNextDate(Calendar.THURSDAY);
+                                } else if (daytime.get(init).getDay().getStrDay().equals("Friday")) {
+                                    nextDate = getNextDate(Calendar.FRIDAY);
+                                } else if (daytime.get(init).getDay().getStrDay().equals("Saturday")) {
+                                    nextDate = getNextDate(Calendar.SATURDAY);
+                                } else if (daytime.get(init).getDay().getStrDay().equals("Sunday")) {
+                                    nextDate = getNextDate(Calendar.SUNDAY);
+                                }
+                                dateMeetUp.add(format.format(nextDate));
                             }
-                        });
 
+                            Set<String> dateNoDuplicates = new LinkedHashSet<String>(dateMeetUp);
+                            dateMeetUp.clear();
+                            dateMeetUp.addAll(dateNoDuplicates);
+                            timeStr = new ArrayList<String>();
 
-                        mSpinTime.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-                            @Override
-                            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                                timebool = true;
-                                udt.setUserId(Long.valueOf(rentalHeaderMod.getUserId().getUserId()));
-                                TimeModel time = new TimeModel();
-                                time.setStrTime(timeStr.get(position));
-                                udt.setTime(time);
-                                mTimeReturn.setText(timeStr.get(position));
-                                udtReturn.setTime(time);
-                            }
+                            ArrayAdapter<String> adapterDate = new ArrayAdapter<String>(context, android.R.layout.simple_spinner_item, dateMeetUp);
+                            adapterDate.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                            mSpinDate.setAdapter(adapterDate);
 
-                            @Override
-                            public void onNothingSelected(AdapterView<?> parent) {
+                            final ArrayAdapter<String> adapterTime = new ArrayAdapter<String>(context, android.R.layout.simple_spinner_item, timeStr);
+                            adapterTime.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                            mSpinTime.setAdapter(adapterTime);
 
-                            }
-                        });
+                            mSpinDate.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                                @Override
+                                public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                                    datebool = true;
+                                    try {
+                                        rentalHeaderMod.setDateDeliver(dateMeetUp.get(position));
 
-                        mSubmit.setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View v) {
-                                if (datebool == true && locbool == true && timebool == true) {
-                                    Log.d("himo ka ug ", "joke pag add na bitaw");
-                                    muModel.setUserDayTime(udt);
-                                    mureturn.setUserDayTime(udtReturn);
-                                    rentalHeaderMod.setMeetUp(muModel);
-                                    rentalHeaderMod.setReturnMeetUp(mureturn);
+                                        timeStr.clear();
+                                        DayModel dayModel = new DayModel();
+                                        dayModel.setStrDay(dateMeetUp.get(position));
 
-                                    AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(context);
-                                    alertDialogBuilder.setTitle("Meet Up Summary");
-                                    alertDialogBuilder.setMessage("Delivery\tDate:\t" + rentalHeaderMod.getDateDeliver() +
-                                            "\n\nTime:\t" + muModel.getUserDayTime().getTime().getStrTime() +
-                                            "\n\nLocation:\t" + muModel.getLocation().getLocationName() + "\n\nReturn\tDate:\t" + rentalHeaderMod.getRentalReturnDate() +
-                                            "\n\nTime:\t" + mureturn.getUserDayTime().getTime().getStrTime() +
-                                            "\n\nLocation:\t" + mureturn.getLocation().getLocationName());
-                                    alertDialogBuilder.setPositiveButton("Okay",
-                                            new DialogInterface.OnClickListener() {
-                                                @RequiresApi(api = Build.VERSION_CODES.N)
-                                                @Override
-                                                public void onClick(DialogInterface arg0, int arg1) {
-                                                    addMeetUpRentalOnly(rentalHeaderMod);
+                                        udt.setDay(dayModel);
+
+                                        Date dateReturn = new Date();
+                                        dateReturn = format.parse(dateMeetUp.get(position));
+
+                                        Calendar cal = Calendar.getInstance();
+                                        cal.setTime(dateReturn);
+
+                                        cal.add(Calendar.DATE, rentalHeaderMod.getRentalDetail().getDaysForRent());
+
+                                        mDateReturn.setText(format.format(cal.getTime()));
+                                        DayModel dayR = new DayModel();
+                                        dayR.setStrDay(format.format(cal.getTime()));
+                                        udtReturn.setDay(dayR);
+                                        rentalHeaderMod.setRentalReturnDate(format.format(cal.getTime()));
+                                        Log.d("dateDelivered", dateMeetUp.get(position));
+
+                                        String dayOfDate = "";
+                                        Calendar calendar = Calendar.getInstance();
+                                        Date selectedDate = format.parse(dateMeetUp.get(position));
+                                        calendar.setTime(selectedDate);
+                                        int dayOfWeek = calendar.get(Calendar.DAY_OF_WEEK);
+
+                                        for (int init = 0; init < daytime.size(); init++) {
+                                            Log.d("iterateUserTime", daytime.get(init).getTime().getStrTime());
+                                        }
+
+                                        Log.d("dayOfWeek", Integer.toString(dayOfWeek));
+
+                                        if (dayOfWeek == Calendar.MONDAY) {
+                                            for (int init = 0; init < daytime.size(); init++) {
+                                                Log.d("userTime", daytime.get(init).getTime().getStrTime());
+                                                if (daytime.get(init).getDay().getStrDay().equals("Monday")) {
+                                                    Log.d("TimeAdded", daytime.get(init).getTime().getStrTime());
+                                                    timeStr.add(daytime.get(init).getTime().getStrTime());
                                                 }
-                                            });
+                                            }
+                                        }
 
-                                    AlertDialog alertDialog = alertDialogBuilder.create();
-                                    alertDialog.show();
-                                } else {
-                                    AlertDialog ad = new AlertDialog.Builder(context).create();
-                                    ad.setTitle("Alert!");
-                                    ad.setMessage("You should fill all data.");
+                                        if (dayOfWeek == Calendar.TUESDAY) {
+                                            for (int init = 0; init < daytime.size(); init++) {
+                                                if (daytime.get(init).getDay().getStrDay().equals("Tuesday")) {
+                                                    Log.d("TimeAdded", daytime.get(init).getTime().getStrTime());
+                                                    timeStr.add(daytime.get(init).getTime().getStrTime());
+                                                }
+                                            }
+                                        }
+
+                                        if (dayOfWeek == Calendar.WEDNESDAY) {
+                                            for (int init = 0; init < daytime.size(); init++) {
+                                                if (daytime.get(init).getDay().getStrDay().equals("Wednesday")) {
+                                                    Log.d("TimeAdded", daytime.get(init).getTime().getStrTime());
+                                                    timeStr.add(daytime.get(init).getTime().getStrTime());
+                                                }
+                                            }
+                                        }
+
+                                        if (dayOfWeek == Calendar.THURSDAY) {
+                                            for (int init = 0; init < daytime.size(); init++) {
+                                                if (daytime.get(init).getDay().getStrDay().equals("Thursday")) {
+                                                    Log.d("TimeAdded", daytime.get(init).getTime().getStrTime());
+                                                    timeStr.add(daytime.get(init).getTime().getStrTime());
+                                                }
+                                            }
+                                        }
+
+                                        if (dayOfWeek == Calendar.FRIDAY) {
+                                            for (int init = 0; init < daytime.size(); init++) {
+                                                if (daytime.get(init).getDay().getStrDay().equals("Friday")) {
+                                                    Log.d("TimeAdded", daytime.get(init).getTime().getStrTime());
+                                                    timeStr.add(daytime.get(init).getTime().getStrTime());
+                                                }
+                                            }
+                                        }
+
+                                        if (dayOfWeek == Calendar.SATURDAY) {
+                                            for (int init = 0; init < daytime.size(); init++) {
+                                                if (daytime.get(init).getDay().getStrDay().equals("Saturday")) {
+                                                    Log.d("TimeAdded", daytime.get(init).getTime().getStrTime());
+                                                    timeStr.add(daytime.get(init).getTime().getStrTime());
+                                                }
+                                            }
+                                        }
+
+                                        if (dayOfWeek == Calendar.SUNDAY) {
+                                            for (int init = 0; init < daytime.size(); init++) {
+                                                if (daytime.get(init).getDay().getStrDay().equals("Sunday")) {
+                                                    Log.d("TimeAdded", daytime.get(init).getTime().getStrTime());
+                                                    timeStr.add(daytime.get(init).getTime().getStrTime());
+                                                }
+                                            }
+                                        }
+                                        adapterTime.notifyDataSetChanged();
+                                    } catch (ParseException e) {
+                                        e.printStackTrace();
+                                    }
+                                }
+
+                                @Override
+                                public void onNothingSelected(AdapterView<?> parent) {
+
+                                }
+                            });
+
+
+                            mSpinTime.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                                @Override
+                                public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                                    timebool = true;
+                                    udt.setUserId(Long.valueOf(rentalHeaderMod.getUserId().getUserId()));
+                                    TimeModel time = new TimeModel();
+                                    time.setStrTime(timeStr.get(position));
+                                    udt.setTime(time);
+                                    mTimeReturn.setText(timeStr.get(position));
+                                    udtReturn.setTime(time);
+                                }
+
+                                @Override
+                                public void onNothingSelected(AdapterView<?> parent) {
+
+                                }
+                            });
+
+                            mSubmit.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    if (datebool == true && locbool == true && timebool == true) {
+                                        Log.d("himo ka ug ", "joke pag add na bitaw");
+                                        muModel.setUserDayTime(udt);
+                                        mureturn.setUserDayTime(udtReturn);
+                                        rentalHeaderMod.setMeetUp(muModel);
+                                        rentalHeaderMod.setReturnMeetUp(mureturn);
+
+                                        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(context);
+                                        alertDialogBuilder.setTitle("Meet Up Summary");
+                                        alertDialogBuilder.setMessage("Delivery\tDate:\t" + rentalHeaderMod.getDateDeliver() +
+                                                "\n\nTime:\t" + muModel.getUserDayTime().getTime().getStrTime() +
+                                                "\n\nLocation:\t" + muModel.getLocation().getLocationName() + "\n\nReturn\tDate:\t" + rentalHeaderMod.getRentalReturnDate() +
+                                                "\n\nTime:\t" + mureturn.getUserDayTime().getTime().getStrTime() +
+                                                "\n\nLocation:\t" + mureturn.getLocation().getLocationName());
+                                        alertDialogBuilder.setPositiveButton("Okay",
+                                                new DialogInterface.OnClickListener() {
+                                                    @RequiresApi(api = Build.VERSION_CODES.N)
+                                                    @Override
+                                                    public void onClick(DialogInterface arg0, int arg1) {
+                                                        addMeetUpRentalOnly(rentalHeaderMod, position);
+                                                    }
+                                                });
+
+                                        AlertDialog alertDialog = alertDialogBuilder.create();
+                                        alertDialog.show();
+                                    } else {
+                                        AlertDialog ad = new AlertDialog.Builder(context).create();
+                                        ad.setTitle("Alert!");
+                                        ad.setMessage("You should fill all data.");
+                                        ad.setButton(AlertDialog.BUTTON_POSITIVE, "Okay", new DialogInterface.OnClickListener() {
+                                            @Override
+                                            public void onClick(DialogInterface dialog, int which) {
+                                                dialog.dismiss();
+                                            }
+                                        });
+                                        ad.show();
+                                    }
+                                }
+                            });
+                            dialog.setContentView(view);
+                            dialog.show();
+                        }else{
+                            AlertDialog ad = new AlertDialog.Builder(context).create();
+                            ad.setTitle("Alert!");
+                            ad.setMessage("You alread chose a meet up time, date and location.");
+                            ad.setButton(AlertDialog.BUTTON_POSITIVE, "Okay", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    dialog.dismiss();
+                                }
+                            });
+                            ad.show();
+                        }
+                    } else if (status.equals("Request")) {
+                        if(userNotificationList.get(position).getProcessedBool()==false||userNotificationList.get(position).getProcessedBool()==null){
+                            final Dialog dialogCustom = new Dialog(context);
+                            dialogCustom.setContentView(R.layout.rent_request_custom_dialog);
+                            TextView mTitle = (TextView) dialogCustom.findViewById(R.id.bookTitle);
+                            TextView mRequestor = (TextView) dialogCustom.findViewById(R.id.requestor);
+                            ImageView ivBook = (ImageView) dialogCustom.findViewById(R.id.ivBook);
+                            Button mAccept = (Button) dialogCustom.findViewById(R.id.btnAccept);
+                            Button mReject = (Button) dialogCustom.findViewById(R.id.btnReject);
+
+                            mTitle.setText(userNotificationList.get(position).getBookActionPerformedOn().getBookObj().getBookTitle());
+
+                            Glide.with(context).load(userNotificationList.get(position).getBookActionPerformedOn().getBookObj().getBookFilename()).centerCrop().into(ivBook);
+                            mRequestor.setText(userNotificationList.get(position).getUserPerformer().getUserFname() + " " + userNotificationList.get(position).getUserPerformer().getUserLname());
+
+                            mReject.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    final Dialog dialogCustom = new Dialog(getContext());
+                                    dialogCustom.setContentView(R.layout.reject_custom_dialog);
+                                    final EditText etReason = (EditText) dialogCustom.findViewById(R.id.etReason);
+                                    Button mSubmitReason = (Button) dialogCustom.findViewById(R.id.submitReject);
+
+                                    mSubmitReason.setOnClickListener(new View.OnClickListener() {
+                                        @Override
+                                        public void onClick(View v) {
+                                            if (etReason.getText().length() == 0) {
+                                                etReason.setError("Field should not be empty.");
+                                            } else {
+                                                rentalHeaderMod.setStatus("Rejected");
+                                                String message = etReason.getText().toString();
+                                                rejectRequestRent(rentalHeaderMod, message, position);
+                                                UserNotification un = new UserNotification();
+                                                un.setActionName("rental");
+                                                un.setBookActionPerformedOn(rentalHeaderMod.getRentalDetail().getBookOwner());
+                                                un.setExtraMessage(message);
+                                                un.setUserPerformer(finalUser);
+                                                un.setUser(rentalHeaderMod.getUserId());
+                                                un.setActionStatus("Rejected");
+                                                un.setProcessedBool(false);
+                                                un.setActionId(Math.round(rentalHeaderMod.getRentalHeaderId()));
+
+                                                addUserNotifRent(un);
+                                            }
+                                        }
+                                    });
+                                    dialogCustom.show();
+                                }
+                            });
+
+                            mAccept.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    AlertDialog ad = new AlertDialog.Builder(getContext()).create();
+                                    ad.setMessage("The renter will be notified.");
                                     ad.setButton(AlertDialog.BUTTON_POSITIVE, "Okay", new DialogInterface.OnClickListener() {
                                         @Override
                                         public void onClick(DialogInterface dialog, int which) {
-                                            dialog.dismiss();
+                                            acceptRequestRent(rentalHeaderMod, position);
                                         }
                                     });
                                     ad.show();
                                 }
-                            }
-                        });
-                        dialog.setContentView(view);
-                        dialog.show();
-                    } else if (status.equals("Request")) {
+                            });
+
+
+                            dialogCustom.show();
+                        }else{
+                            AlertDialog ad = new AlertDialog.Builder(context).create();
+                            ad.setTitle("Alert!");
+                            ad.setMessage("You already responded to this request.");
+                            ad.setButton(AlertDialog.BUTTON_POSITIVE, "Okay", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    dialog.dismiss();
+                                }
+                            });
+                            ad.show();
+                        }
+                    }else if(status.equals("Received")){
                         final Dialog dialogCustom = new Dialog(context);
-                        dialogCustom.setContentView(R.layout.rent_request_custom_dialog);
-                        TextView mTitle = (TextView) dialogCustom.findViewById(R.id.bookTitle);
-                        TextView mRequestor = (TextView) dialogCustom.findViewById(R.id.requestor);
-                        ImageView ivBook = (ImageView) dialogCustom.findViewById(R.id.ivBook);
-                        Button mAccept = (Button) dialogCustom.findViewById(R.id.btnAccept);
-                        Button mReject = (Button) dialogCustom.findViewById(R.id.btnReject);
+                        dialogCustom.setContentView(R.layout.received_book_custom_dialog);
+                        TextView mTitle = (TextView) dialogCustom.findViewById(R.id.bookTitleDelivery);
+                        TextView mOwner = (TextView) dialogCustom.findViewById(R.id.deliveredBy);
+                        TextView mLocation = (TextView) dialogCustom.findViewById(R.id.locationDelivery);
+                        TextView mDate = (TextView) dialogCustom.findViewById(R.id.dateDelivery);
+                        TextView mTime = (TextView) dialogCustom.findViewById(R.id.timeDelivery);
+                        ImageView ivBook = (ImageView) dialogCustom.findViewById(R.id.ivBookDelivery);
+                        Button btnOkay = (Button) dialogCustom.findViewById(R.id.btnDeliveryOkay);
 
-                        mTitle.setText(userNotificationList.get(position).getBookActionPerformedOn().getBookObj().getBookTitle());
+                        Glide.with(context).load(rentalHeaderMod.getRentalDetail().getBookOwner().getBookObj().getBookFilename()).centerCrop().into(ivBook);
 
-                        Glide.with(context).load(userNotificationList.get(position).getBookActionPerformedOn().getBookObj().getBookFilename()).centerCrop().into(ivBook);
-                        mRequestor.setText(userNotificationList.get(position).getUserPerformer().getUserFname() + " " + userNotificationList.get(position).getUserPerformer().getUserLname());
+                        mTitle.setText(rentalHeaderMod.getRentalDetail().getBookOwner().getBookObj().getBookTitle());
+                        mOwner.setText(rentalHeaderMod.getUserId().getUserFname() + " " + rentalHeaderMod.getUserId().getUserLname());
+                        mLocation.setText(rentalHeaderMod.getMeetUp().getLocation().getLocationName());
+                        mDate.setText(rentalHeaderMod.getDateDeliver().toString());
+                        mTime.setText(rentalHeaderMod.getMeetUp().getUserDayTime().getTime().getStrTime());
 
-                        mReject.setOnClickListener(new View.OnClickListener() {
+                        btnOkay.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
-                                final Dialog dialogCustom = new Dialog(getContext());
-                                dialogCustom.setContentView(R.layout.reject_custom_dialog);
-                                final EditText etReason = (EditText) dialogCustom.findViewById(R.id.etReason);
-                                Button mSubmitReason = (Button) dialogCustom.findViewById(R.id.submitReject);
-
-                                mSubmitReason.setOnClickListener(new View.OnClickListener() {
-                                    @Override
-                                    public void onClick(View v) {
-                                        if (etReason.getText().length() == 0) {
-                                            etReason.setError("Field should not be empty.");
-                                        } else {
-                                            rentalHeaderMod.setStatus("Rejected");
-                                            String message = etReason.getText().toString();
-                                            rejectRequestRent(rentalHeaderMod, message);
-                                        }
-                                    }
-                                });
-                                dialogCustom.show();
+                                getProcessed(position);
+                                Intent intent = new Intent(context, NotificationAct.class);
+                                context.startActivity(intent);
                             }
                         });
-
-                        mAccept.setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View v) {
-                                AlertDialog ad = new AlertDialog.Builder(getContext()).create();
-                                ad.setMessage("The renter will be notified.");
-                                ad.setButton(AlertDialog.BUTTON_POSITIVE, "Okay", new DialogInterface.OnClickListener() {
-                                    @Override
-                                    public void onClick(DialogInterface dialog, int which) {
-                                        acceptRequestRent(rentalHeaderMod);
-                                    }
-                                });
-                                ad.show();
-                            }
-                        });
-
 
                         dialogCustom.show();
                     }
@@ -1630,7 +1715,7 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
             requestQueue.add(stringRequest);
         }
 
-        public void rejectRequestRent(final RentalHeader rentalHeader, final String message) {
+        public void rejectRequestRent(final RentalHeader rentalHeader, final String message, final int position) {
             RequestQueue requestQueue = Volley.newRequestQueue(getContext());
             User user = new User();
             user = (User) SPUtility.getSPUtil(getContext()).getObject("USER_OBJECT", User.class);
@@ -1651,17 +1736,7 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
                     Log.i("rejectRequestRentRes", response);
                     RentalHeader rentalHeaderModel = gson.fromJson(response, RentalHeader.class);
 
-                    UserNotification un = new UserNotification();
-                    un.setActionName("rental");
-                    un.setBookActionPerformedOn(rentalHeaderModel.getRentalDetail().getBookOwner());
-                    un.setExtraMessage(message);
-                    un.setUserPerformer(finalUser);
-                    un.setUser(rentalHeaderModel.getUserId());
-                    un.setActionStatus("Rejected");
-                    un.setProcessedBool(false);
-                    un.setActionId(Math.round(rentalHeaderModel.getRentalHeaderId()));
-
-                    addUserNotifRent(un);
+                    getProcessed(position);
                 }
             }, new Response.ErrorListener() {
                 @Override
@@ -1688,7 +1763,7 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
             requestQueue.add(stringRequest);
         }
 
-        public void acceptRequestRent(RentalHeader rentalHeader) {
+        public void acceptRequestRent(RentalHeader rentalHeader, final int position) {
             RequestQueue requestQueue = Volley.newRequestQueue(getContext());
             User user = new User();
             user = (User) SPUtility.getSPUtil(getContext()).getObject("USER_OBJECT", User.class);
@@ -1705,6 +1780,7 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
                 @Override
                 public void onResponse(String response) {
                     Log.i("AcceptRequestRentRes", response);
+                    getProcessed(position);
                     RentalHeader rentalHeaderModel = gson.fromJson(response, RentalHeader.class);
                     Intent intent = new Intent(getContext(), NotificationAct.class);
                     context.startActivity(intent);
@@ -2213,6 +2289,7 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
                             if (finalUser.getUserId() == userNotificationList.get(position).getUser().getUserId()) {
 
                                 Date nextDate = new Date();
+                                final DayModel dayModel = new DayModel();
                                 locbool = false;
                                 datebool = false;
                                 timebool = false;
@@ -2306,6 +2383,10 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
                                             auctionHeaderMod.setDateDelivered(dateMeetUp.get(position));
                                             Log.d("dateDelivered", dateMeetUp.get(position));
 
+                                            dayModel.setStrDay(dateMeetUp.get(position));
+
+                                            udt.setDay(dayModel);
+
                                             timeStr.clear();
 
                                             String dayOfDate = "";
@@ -2319,7 +2400,6 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
                                             }
 
                                             if (dayOfWeek == Calendar.MONDAY) {
-                                                DayModel day = new DayModel();
                                                 for (int init = 0; init < daytime.size(); init++) {
                                                     Log.d("userTime", daytime.get(init).getTime().getStrTime());
                                                     if (daytime.get(init).getDay().getStrDay().equals("Monday")) {
@@ -2330,7 +2410,6 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
                                             }
 
                                             if (dayOfWeek == Calendar.TUESDAY) {
-                                                DayModel day = new DayModel();
                                                 for (int init = 0; init < daytime.size(); init++) {
                                                     if (daytime.get(init).getDay().getStrDay().equals("Tuesday")) {
                                                         Log.d("TimeAdded", daytime.get(init).getTime().getStrTime());
@@ -2340,7 +2419,6 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
                                             }
 
                                             if (dayOfWeek == Calendar.WEDNESDAY) {
-                                                DayModel day = new DayModel();
                                                 for (int init = 0; init < daytime.size(); init++) {
                                                     if (daytime.get(init).getDay().getStrDay().equals("Wednesday")) {
                                                         Log.d("TimeAdded", daytime.get(init).getTime().getStrTime());
@@ -2350,7 +2428,6 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
                                             }
 
                                             if (dayOfWeek == Calendar.THURSDAY) {
-                                                DayModel day = new DayModel();
                                                 for (int init = 0; init < daytime.size(); init++) {
                                                     if (daytime.get(init).getDay().getStrDay().equals("Thursday")) {
                                                         Log.d("TimeAdded", daytime.get(init).getTime().getStrTime());
@@ -2360,7 +2437,6 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
                                             }
 
                                             if (dayOfWeek == Calendar.FRIDAY) {
-                                                DayModel day = new DayModel();
                                                 for (int init = 0; init < daytime.size(); init++) {
                                                     if (daytime.get(init).getDay().getStrDay().equals("Friday")) {
                                                         Log.d("TimeAdded", daytime.get(init).getTime().getStrTime());
@@ -2370,7 +2446,6 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
                                             }
 
                                             if (dayOfWeek == Calendar.SATURDAY) {
-                                                DayModel day = new DayModel();
                                                 for (int init = 0; init < daytime.size(); init++) {
                                                     if (daytime.get(init).getDay().getStrDay().equals("Saturday")) {
                                                         Log.d("TimeAdded", daytime.get(init).getTime().getStrTime());
@@ -2380,7 +2455,6 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
                                             }
 
                                             if (dayOfWeek == Calendar.SUNDAY) {
-                                                DayModel day = new DayModel();
                                                 for (int init = 0; init < daytime.size(); init++) {
                                                     if (daytime.get(init).getDay().getStrDay().equals("Sunday")) {
                                                         Log.d("TimeAdded", daytime.get(init).getTime().getStrTime());
@@ -3192,7 +3266,7 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
         }
     }
 
-    public void addMeetUpRentalOnly(final RentalHeader rentalHeader) {
+    public void addMeetUpRentalOnly(final RentalHeader rentalHeader, final int position) {
         RequestQueue requestQueue = Volley.newRequestQueue(context);
         String URL = Constants.POST_MEET_UP;
 
@@ -3207,6 +3281,7 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
                 Log.i("MeetUpResponse", response);
                 MeetUp meetUp = gson.fromJson(response, MeetUp.class);
 
+                getProcessed(position);
                 Calendar c = Calendar.getInstance();
                 DateFormat format = new SimpleDateFormat("yyyy-MM-dd");
                 rentalHeader.setMeetUp(meetUp);
@@ -3596,13 +3671,19 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
         @SuppressLint({"NewApi", "LocalSuppress"})
         java.util.Calendar c = java.util.Calendar.getInstance();
         int diff = dayOfWeek - c.get(Calendar.DAY_OF_WEEK);
+        Log.d("dayOfWeek", dayOfWeek+"");
         if (diff <= 0) {
             diff += 7;
         }
-//        diff++;
-
         DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
         c.add(Calendar.DAY_OF_MONTH, diff);
+
+        if(c.get(Calendar.DAY_OF_WEEK)==dayOfWeek){
+            Log.d("dayOfWeek", "match");
+        }else{
+            Log.d("dayOfWeek", "not match");
+        }
+
         Calendar cal = Calendar.getInstance();
         cal.add(Calendar.DAY_OF_WEEK, diff);
         Log.d("nextDate month", df.format(c.getTime()));

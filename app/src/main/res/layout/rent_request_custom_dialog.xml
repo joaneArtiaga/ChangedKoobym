@@ -84,11 +84,13 @@
                 android:text="Reject"
                 android:background="@drawable/rounded_button_reject"
                 android:id="@+id/btnReject"
+                android:textColor="@color/colorWhite"
                 android:layout_marginRight="10dp"/>
 
             <Button
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:textColor="@color/colorWhite"
                 android:text="Accept"
                 android:background="@drawable/rounded_button_accept"
                 android:id="@+id/btnAccept"/>

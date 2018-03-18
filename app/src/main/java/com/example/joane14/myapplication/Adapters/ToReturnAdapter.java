@@ -148,7 +148,7 @@ public class ToReturnAdapter extends RecyclerView.Adapter<ToReturnAdapter.BookHo
         newDate = df.format(cal.getTime());
 
         Log.d("toReturn\t CurrentDate: "+currDAte, "ReturnDate: "+bookList.get(position).getRentalReturnDate());
-        if(dateToCompare.after(cal.getTime())|| newDate.equals(bookList.get(position).getDateDeliver())){
+        if(dateToCompare.before(cal.getTime())|| newDate.equals(bookList.get(position).getDateDeliver())){
             holder.mRate.setImageResource(R.drawable.checkbookact);
         }else{
             holder.mRate.setImageResource(R.drawable.notrate);
@@ -216,11 +216,11 @@ public class ToReturnAdapter extends RecyclerView.Adapter<ToReturnAdapter.BookHo
             public void onClick(View v) {
 
 
-                if(finalDateToCompare.after(cal.getTime())|| finalNewDate.equals(bookList.get(position).getDateDeliver())){
+                if(finalDateToCompare.before(cal.getTime())|| finalNewDate.equals(bookList.get(position).getDateDeliver())){
                     AlertDialog ad = new AlertDialog.Builder(context).create();
                     ad.setTitle("Confirmation");
-                    ad.setMessage("Did you receive the book?");
-                    ad.setButton(AlertDialog.BUTTON_POSITIVE, "Yes", new DialogInterface.OnClickListener() {
+                    ad.setMessage("Will notify the owner that you returned the book already.");
+                    ad.setButton(AlertDialog.BUTTON_POSITIVE, "Okay", new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
                             final Dialog dialogCustom = new Dialog(context);
@@ -303,12 +303,6 @@ public class ToReturnAdapter extends RecyclerView.Adapter<ToReturnAdapter.BookHo
                             });
 
                             dialogCustom.show();
-                        }
-                    });
-                    ad.setButton(AlertDialog.BUTTON_NEGATIVE, "Not Yet", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            dialog.dismiss();
                         }
                     });
                     ad.show();

@@ -24,6 +24,7 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.view.ContextThemeWrapper;
 import android.support.v7.widget.AlertDialogLayout;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
@@ -1251,8 +1252,8 @@ public class ViewBookAct extends AppCompatActivity implements
                 Log.i("validate", response);
                 if (response.equals("true")) {
                     checkIfExist(userId, rentalDetail.getRental_detailId());
-                } else {
-                    AlertDialog ad = new AlertDialog.Builder(getApplicationContext()).create();
+                }else {
+                    AlertDialog ad = new AlertDialog.Builder(ViewBookAct.this).create();
                     ad.setMessage("Maximum Rent Books is 3 only. You cannot request this book.");
                     ad.setButton(AlertDialog.BUTTON_POSITIVE, "Okay", new DialogInterface.OnClickListener() {
                         @Override
@@ -1260,6 +1261,7 @@ public class ViewBookAct extends AppCompatActivity implements
                             dialogInterface.dismiss();
                         }
                     });
+                    ad.show();
                 }
 
             }

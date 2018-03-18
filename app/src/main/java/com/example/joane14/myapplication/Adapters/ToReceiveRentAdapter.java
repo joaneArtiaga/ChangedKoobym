@@ -93,28 +93,31 @@ public class ToReceiveRentAdapter extends RecyclerView.Adapter<ToReceiveRentAdap
     @Override
     public void onBindViewHolder(ToReceiveRentAdapter.BookHolder holder, final int position) {
 
-        if(bookList.get(position).getRentalExtraMessage()=="Delivered"){
-            holder.mBtnRate.setImageResource(R.drawable.checkbookact);
-        }else{
+        if(bookList.get(position).getRentalExtraMessage()==null||bookList.get(position).getRentalExtraMessage().equals("Return")){
+            Log.d("sulodSa", "gray");
             holder.mBtnRate.setImageResource(R.drawable.notrate);
+        }else{
+            Log.d("sulodSa", "green");
+            holder.mBtnRate.setImageResource(R.drawable.checkbookact);
         }
         holder.mBtnMail.setVisibility(View.GONE);
 
-        if(bookList.get(position).getStatus().equals("Delivered")){
+        Log.d("mPrice", holder.mPrice.getText().toString()+"   "+String.valueOf(bookList.get(position).getRentalDetail().getCalculatedPrice()));
+
+        if(bookList.get(position).getStatus().equals("Confirm")||bookList.get(position).getStatus().equals("Delivered")){
+            Log.d("sulodSa","if");
             holder.mBookDate.setText(bookList.get(position).getRentalTimeStamp());
-            holder.mPrice.setText("₱  "+String.valueOf(bookList.get(position).getRentalDetail().getCalculatedPrice()));
+            holder.mPrice.setText(holder.mPrice.getText().toString()+"   "+String.valueOf(bookList.get(position).getRentalDetail().getCalculatedPrice()));
             holder.mDate.setText(bookList.get(position).getDateDeliver());
             holder.mTime.setText(bookList.get(position).getMeetUp().getUserDayTime().getTime().getStrTime());
             holder.mLocation.setText(bookList.get(position).getMeetUp().getLocation().getLocationName());
         }else{
-
+            Log.d("sulodSa","else");
             Calendar calendar = Calendar.getInstance();
             Date c = Calendar.getInstance().getTime();
             SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
             final String currDAte = sdf.format(c);
-
             Date dateReturn = null;
-
             try {
                 dateReturn = sdf.parse(bookList.get(position).getRentalReturnDate());
             } catch (ParseException e) {
@@ -173,9 +176,33 @@ public class ToReceiveRentAdapter extends RecyclerView.Adapter<ToReceiveRentAdap
         holder.mBtnRate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Log.d("currentStat", bookList.get(position).getRentalExtraMessage());
-                if(bookList.get(position).getRentalExtraMessage().equals("Delivered")){
+                if(bookList.get(position).getRentalExtraMessage()==null){
+                    if(bookList.get(position).getRentalExtraMessage()==null){
+                        AlertDialog alertDialog = new AlertDialog.Builder(context).create();
+                        alertDialog.setTitle("Alert!");
+                        alertDialog.setMessage("The owner has not yet confirmed the book delivery.");
+                        alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "Okay", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                dialog.dismiss();
+                            }
+                        });
+                        alertDialog.show();
+                    }else{
+                        AlertDialog alertDialog = new AlertDialog.Builder(context).create();
+                        alertDialog.setTitle("Alert!");
+                        alertDialog.setMessage("The renter has not yet confirmed the book returned.");
+                        alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "Okay", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                dialog.dismiss();
+                            }
+                        });
+                        alertDialog.show();
+                    }
+                }else if(bookList.get(position).getRentalExtraMessage().equals("Delivered")){
                     AlertDialog ad = new AlertDialog.Builder(context).create();
+                    ad.setTitle("Alert!");
                     ad.setMessage("Will notify the owner that you received the book.");
                     ad.setButton(AlertDialog.BUTTON_POSITIVE, "Okay", new DialogInterface.OnClickListener() {
                         @Override
@@ -186,9 +213,9 @@ public class ToReceiveRentAdapter extends RecyclerView.Adapter<ToReceiveRentAdap
                     ad.show();
                 }else if(bookList.get(position).getRentalExtraMessage().equals("Returned")){
                     AlertDialog ad = new AlertDialog.Builder(context).create();
-                    ad.setTitle("Confirmation");
-                    ad.setMessage("Did you receive the book?");
-                    ad.setButton(AlertDialog.BUTTON_POSITIVE, "Yes", new DialogInterface.OnClickListener() {
+                    ad.setTitle("Alert!");
+                    ad.setMessage("Will notify the renter that you received the book.");
+                    ad.setButton(AlertDialog.BUTTON_POSITIVE, "Okay", new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
                             final Dialog dialogCustom = new Dialog(context);
@@ -276,17 +303,6 @@ public class ToReceiveRentAdapter extends RecyclerView.Adapter<ToReceiveRentAdap
                         }
                     });
                     ad.show();
-                }else{
-                    AlertDialog alertDialog = new AlertDialog.Builder(context).create();
-                    alertDialog.setTitle("Alert!");
-                    alertDialog.setMessage("The owner has not yet confirmed the book delivery.");
-                    alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "Okay", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            dialog.dismiss();
-                        }
-                    });
-                    alertDialog.show();
                 }
             }
         });
