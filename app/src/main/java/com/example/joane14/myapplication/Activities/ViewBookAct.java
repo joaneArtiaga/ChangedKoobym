@@ -470,9 +470,18 @@ public class ViewBookAct extends AppCompatActivity implements
         StringRequest stringRequest = new StringRequest(Request.Method.GET, URL, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
-                Log.i("SwapDetailResponse", response);
+                Log.i("suggestedSwap", response);
+                final List<SwapDetail> swapDetailList = new ArrayList<SwapDetail>();
 
-                if (response.length() == 0) {
+                swapDetailList.addAll(Arrays.asList(gson.fromJson(response, SwapDetail[].class)));
+
+                if(swapDetailList.isEmpty()){
+                    Log.d("suggestedSwap", "empty");
+                }else{
+                    Log.d("suggestedSwap", "not");
+                }
+
+                if (swapDetailList.isEmpty()) {
                     AlertDialog ad = new AlertDialog.Builder(ViewBookAct.this).create();
                     ad.setTitle("Alert!");
                     ad.setMessage("You don't have any books that are available for swap.");
@@ -484,8 +493,6 @@ public class ViewBookAct extends AppCompatActivity implements
                     });
                     ad.show();
                 } else {
-                    final List<SwapDetail> swapDetailList = new ArrayList<SwapDetail>();
-                    swapDetailList.addAll(Arrays.asList(gson.fromJson(response, SwapDetail[].class)));
 
                     final Dialog dialog = new Dialog(ViewBookAct.this);
                     View view = getLayoutInflater().inflate(R.layout.swap_book_chooser, null);
@@ -1187,7 +1194,7 @@ public class ViewBookAct extends AppCompatActivity implements
                     checkExist();
                 } else {
                     AlertDialog ad = new AlertDialog.Builder(getApplicationContext()).create();
-                    ad.setMessage("Maximum Rent Books is 3 only. You cannot request this book.");
+                    ad.setMessage("Maximum Swap Books is 3 only. You cannot request this book.");
                     ad.setButton(AlertDialog.BUTTON_POSITIVE, "Okay", new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialogInterface, int i) {
