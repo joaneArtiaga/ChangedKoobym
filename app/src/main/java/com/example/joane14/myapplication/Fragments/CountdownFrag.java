@@ -9,6 +9,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.example.joane14.myapplication.Model.AuctionDetailModel;
@@ -21,6 +22,7 @@ import java.util.Date;
 public class CountdownFrag extends Fragment {
 
     TextView txtTimerDay, txtTimerHour, txtTimerMinute, txtTimerSec, tvEvent;
+    LinearLayout llDay, llHour, llMin, llSec, llCount;
     Handler handler;
     Runnable runnable;
     AuctionDetailModel auctionDetailModel;
@@ -54,6 +56,11 @@ public class CountdownFrag extends Fragment {
         }
 
         Log.d("Countdown", "inside");
+        llDay = (LinearLayout) view.findViewById(R.id.LinearLayout10);
+        llHour = (LinearLayout) view.findViewById(R.id.LinearLayout11);
+        llMin = (LinearLayout) view.findViewById(R.id.LinearLayout12);
+        llSec = (LinearLayout) view.findViewById(R.id.LinearLayout13);
+        llCount = (LinearLayout) view.findViewById(R.id.linearCount);
         txtTimerDay = (TextView) view.findViewById(R.id.txtTimerDay);
         txtTimerHour = (TextView) view.findViewById(R.id.txtTimerHour);
         txtTimerMinute = (TextView) view.findViewById(R.id.txtTimerMinute);
@@ -96,9 +103,8 @@ public class CountdownFrag extends Fragment {
                         txtTimerSec.setText(""
                                 + String.format("%02d", seconds));
                     } else {
-                        tvEvent.setVisibility(View.VISIBLE);
-                        tvEvent.setText("The event started!");
-                        textViewGone();
+                        llCount.setVisibility(View.GONE);
+//                        textViewGone();
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -113,8 +119,6 @@ public class CountdownFrag extends Fragment {
         getView().findViewById(R.id.LinearLayout11).setVisibility(View.GONE);
         getView().findViewById(R.id.LinearLayout12).setVisibility(View.GONE);
         getView().findViewById(R.id.LinearLayout13).setVisibility(View.GONE);
-        getView().findViewById(R.id.textView1).setVisibility(View.GONE);
-        getView().findViewById(R.id.textView2).setVisibility(View.GONE);
     }
 
     public void onButtonPressed(Uri uri) {

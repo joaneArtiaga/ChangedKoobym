@@ -2,8 +2,10 @@ package com.example.joane14.myapplication.Activities;
 
 import android.annotation.SuppressLint;
 import android.app.DatePickerDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.icu.text.RelativeDateTimeFormatter;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.Html;
@@ -307,14 +309,25 @@ public class AddBookOwner extends AppCompatActivity {
                         bookOwnerModel.setBookObj(bookModel);
                         bookOwnerModel.setUserObj(user);
                         bookOwnerModel.setNoRenters(0);
-                        addBook();
-                        Intent intent = new Intent(getApplicationContext(), ProfileActivity.class);
-                        Bundle bundlePass = new Bundle();
-                        User userModel = new User();
-                        userModel = (User) SPUtility.getSPUtil(getApplicationContext()).getObject("USER_OBJECT", User.class);
-                        bundlePass.putSerializable("userModelPass", userModel);
-                        intent.putExtras(bundlePass);
-                        startActivity(intent);
+                        if(bookDescList.size()==0){
+                            AlertDialog ad = new AlertDialog.Builder(getApplicationContext()).create();
+                            ad.setMessage("Must choose/write a condition.");
+                            ad.setButton(AlertDialog.BUTTON_POSITIVE, "Okay", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    dialog.dismiss();
+                                }
+                            });
+                        }else{
+                            addBook();
+                            Intent intent = new Intent(getApplicationContext(), ProfileActivity.class);
+                            Bundle bundlePass = new Bundle();
+                            User userModel = new User();
+                            userModel = (User) SPUtility.getSPUtil(getApplicationContext()).getObject("USER_OBJECT", User.class);
+                            bundlePass.putSerializable("userModelPass", userModel);
+                            intent.putExtras(bundlePass);
+                            startActivity(intent);
+                        }
                     }
                 }else if(mDate.getText().length()==0){
                     mDate.setError("Field must not be empty");

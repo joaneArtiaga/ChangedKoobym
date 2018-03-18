@@ -102,7 +102,7 @@ public class ToReceiveRentAdapter extends RecyclerView.Adapter<ToReceiveRentAdap
 
         if(bookList.get(position).getStatus().equals("Delivered")){
             holder.mBookDate.setText(bookList.get(position).getRentalTimeStamp());
-            holder.mPrice.setText(String.valueOf(bookList.get(position).getRentalDetail().getCalculatedPrice()));
+            holder.mPrice.setText("₱  "+String.valueOf(bookList.get(position).getRentalDetail().getCalculatedPrice()));
             holder.mDate.setText(bookList.get(position).getDateDeliver());
             holder.mTime.setText(bookList.get(position).getMeetUp().getUserDayTime().getTime().getStrTime());
             holder.mLocation.setText(bookList.get(position).getMeetUp().getLocation().getLocationName());

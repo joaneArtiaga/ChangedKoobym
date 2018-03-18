@@ -9,7 +9,16 @@ public class SwapHeaderDetail {
     int swapHeaderDetailId;
     SwapDetail swapDetail;
     SwapHeader swapHeader;
+    int swapHeaderId;
     String swapType;
+
+    public int getSwapHeaderId() {
+        return swapHeaderId;
+    }
+
+    public void setSwapHeaderId(int swapHeaderId) {
+        this.swapHeaderId = swapHeaderId;
+    }
 
     public int getSwapHeaderDetailId() {
         return swapHeaderDetailId;

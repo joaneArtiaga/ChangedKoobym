@@ -76,7 +76,7 @@ public class ToDeliverRentAdapter extends RecyclerView.Adapter<ToDeliverRentAdap
 
         holder.mBookTitle.setText(bookList.get(position).getRentalDetail().getBookOwner().getBookObj().getBookTitle());
         holder.mBookDate.setText(bookList.get(position).getRentalTimeStamp());
-        holder.mPrice.setText(holder.mPrice.getText().toString()+"   "+String.valueOf(bookList.get(position).getRentalDetail().getCalculatedPrice()));
+        holder.mPrice.setText("₱  "+holder.mPrice.getText().toString()+"   "+String.valueOf(bookList.get(position).getRentalDetail().getCalculatedPrice()));
         holder.mRenterName.setText(bookList.get(position).getUserId().getUserFname()+" "+bookList.get(position).getUserId().getUserLname());
         if(bookList.get(position).getDateDeliver()==null){
             Log.d("EndDateDeliverRent", "walay sulod");

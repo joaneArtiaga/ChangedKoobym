@@ -89,7 +89,7 @@ public class ToDeliverSwapAdapter extends RecyclerView.Adapter<ToDeliverSwapAdap
         if(bookList.get(position).getDateDelivered()==null){
             Log.d("EndDateDeliverSwap", "walay sulod");
         }else{
-            holder.mDate.setText(bookList.get(position).getDateDelivered());
+            holder.mDate.setText(bookList.get(position).getDateDelivered()+"  ");
         }
 
         if(bookList.get(position).getMeetUp()==null){
@@ -126,7 +126,7 @@ public class ToDeliverSwapAdapter extends RecyclerView.Adapter<ToDeliverSwapAdap
 
         final String newDate = df.format(calendar.getTime());
 
-        if(dateToCompare.after(calendar.getTime())|| newDate.equals(bookList.get(position).getDateDelivered())){
+        if(dateToCompare.before(calendar.getTime())|| newDate.equals(bookList.get(position).getDateDelivered())){
             holder.mRate.setImageResource(R.drawable.checkbookact);
         }else{
             holder.mRate.setImageResource(R.drawable.notrate);
@@ -136,7 +136,7 @@ public class ToDeliverSwapAdapter extends RecyclerView.Adapter<ToDeliverSwapAdap
         holder.mRate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(finalDateToCompare.after(calendar.getTime())|| newDate.equals(bookList.get(position).getDateDelivered())){
+                if(finalDateToCompare.before(calendar.getTime())|| newDate.equals(bookList.get(position).getDateDelivered())){
                     final AlertDialog ad = new AlertDialog.Builder(context).create();
                     ad.setTitle("Confirmation");
                     ad.setMessage("Will notify "+bookList.get(position).getRequestedSwapDetail().getBookOwner().getUserObj().getUserFname()+" "+bookList.get(position).getRequestedSwapDetail().getBookOwner().getUserObj().getUserFname()+" that the book has been delivered.");

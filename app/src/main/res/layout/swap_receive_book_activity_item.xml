@@ -20,8 +20,8 @@
             android:id="@+id/ivBookBA"
             android:layout_width="50dp"
             android:layout_height="70dp"
-            android:layout_marginTop="10dp"
-            android:layout_gravity="center_horizontal" />
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="50dp" />
 
         <LinearLayout
             android:layout_width="wrap_content"
@@ -36,7 +36,8 @@
                 android:layout_marginRight="10dp"
                 android:gravity="right"
                 android:text="Date Here"
-                android:textSize="15dp"
+                android:textSize="20dp"
+                android:textColor="@color/colorLightOrange"
                 android:textStyle="bold|italic" />
 
             <LinearLayout
@@ -56,7 +57,8 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Book Title"
-                        android:textSize="15dp"
+                        android:textSize="18dp"
+                        android:textColor="@color/colorLightOrange"
                         android:textStyle="bold" />
 
                     <TextView
@@ -64,7 +66,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Renter Name"
-                        android:textSize="13dp"
+                        android:textSize="15dp"
                         android:textStyle="bold" />
 
                     <TextView
@@ -72,7 +74,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Book Date"
-                        android:textSize="13dp"
+                        android:textSize="15dp"
                         android:textStyle="bold" />
 
                     <TextView
@@ -80,7 +82,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Location"
-                        android:textSize="13dp"
+                        android:textSize="15dp"
                         android:textStyle="bold" />
 
                     <TextView
@@ -88,7 +90,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Time"
-                        android:textSize="13dp"
+                        android:textSize="15dp"
                         android:textStyle="bold" />
                 </LinearLayout>
 

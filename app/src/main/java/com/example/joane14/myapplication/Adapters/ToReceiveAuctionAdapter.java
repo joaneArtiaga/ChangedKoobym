@@ -39,6 +39,9 @@ import com.example.joane14.myapplication.Activities.ProfileActivity;
 import com.example.joane14.myapplication.Activities.TransactionActivity;
 import com.example.joane14.myapplication.Activities.UserReviewActivity;
 import com.example.joane14.myapplication.Fragments.Constants;
+import com.example.joane14.myapplication.Model.AuctionComment;
+import com.example.joane14.myapplication.Model.AuctionCommentDetail;
+import com.example.joane14.myapplication.Model.AuctionDetailModel;
 import com.example.joane14.myapplication.Model.AuctionHeader;
 import com.example.joane14.myapplication.Model.BookOwnerModel;
 import com.example.joane14.myapplication.Model.Rate;
@@ -53,6 +56,8 @@ import com.google.gson.GsonBuilder;
 
 import java.io.UnsupportedEncodingException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
@@ -65,6 +70,7 @@ import static android.util.Log.d;
 public class ToReceiveAuctionAdapter extends RecyclerView.Adapter<ToReceiveAuctionAdapter.BookHolder> {
 
     public List<AuctionHeader> bookList;
+    public List<AuctionComment> auctionHeaderList;
     AuctionHeader auctionHeader;
     float rateNumber;
     public Activity context;
@@ -85,12 +91,14 @@ public class ToReceiveAuctionAdapter extends RecyclerView.Adapter<ToReceiveAucti
 
     public ToReceiveAuctionAdapter(List<AuctionHeader> myDataset) {
         bookList = myDataset;
+        auctionHeaderList = new ArrayList<AuctionComment>();
     }
 
     @SuppressLint("NewApi")
     @Override
     public void onBindViewHolder(ToReceiveAuctionAdapter.BookHolder holder, final int position) {
 
+        getMaximumBid(bookList.get(position).getAuctionDetail(), holder);
         if(bookList.get(position).getAuctionExtraMessage()!=null){
             holder.mBtnRate.setImageResource(R.drawable.checkbookact);
         }else{
@@ -102,7 +110,6 @@ public class ToReceiveAuctionAdapter extends RecyclerView.Adapter<ToReceiveAucti
 
         holder.mBookTitle.setText(bookList.get(position).getAuctionDetail().getBookOwner().getBookObj().getBookTitle());
         holder.mBookDate.setText(bookList.get(position).getAuctionHeaderDateStamp());
-        holder.mPrice.setText(String.valueOf(bookList.get(position).getAuctionDetail().getStartingPrice()));
         holder.mBookRenter.setText(bookList.get(position).getAuctionDetail().getBookOwner().getUserObj().getUserFname()+" "+bookList.get(position).getAuctionDetail().getBookOwner().getUserObj().getUserLname());
         if(bookList.get(position).getDateDelivered()==null){
             Log.d("EndDateReceiveAuction", "walay sulod");
@@ -237,6 +244,61 @@ public class ToReceiveAuctionAdapter extends RecyclerView.Adapter<ToReceiveAucti
             }
         });
 
+    }
+
+    public void getMaximumBid(final AuctionDetailModel auctionDetailModel, final ToReceiveAuctionAdapter.BookHolder holder) {
+        RequestQueue requestQueue = Volley.newRequestQueue(context);
+//        String URL = "http://192.168.1.6:8080/Koobym/swapHeader/add";
+        String URL = Constants.GET_MAXIMUM_BID + auctionDetailModel.getAuctionDetailId();
+
+        final Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd").registerTypeAdapter(Date.class, GsonDateDeserializer.getInstance()).create();
+        final String mRequestBody = gson.toJson(auctionDetailModel);
+
+        d("maximumBid_VOLLEY", mRequestBody);
+        int maxLogSize = 2000;
+        for (int i = 0; i <= mRequestBody.length() / maxLogSize; i++) {
+            int start = i * maxLogSize;
+            int end = (i + 1) * maxLogSize;
+            end = end > mRequestBody.length() ? mRequestBody.length() : end;
+            Log.d("maximumBid", mRequestBody.substring(start, end));
+        }
+        StringRequest stringRequest = new StringRequest(Request.Method.GET, URL, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                d("onResponse maxBid", "inside");
+                Log.i("MaximumBid", response);
+
+                auctionHeaderList.clear();
+                auctionHeaderList.addAll(Arrays.asList(gson.fromJson(response, AuctionComment[].class)));
+
+                holder.mPrice.setText("₱  "+auctionHeaderList.get(0).getAuctionComment()+".00");
+
+
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.e("LOG_VOLLEY", error.toString());
+                error.printStackTrace();
+            }
+        }) {
+            @Override
+            public String getBodyContentType() {
+                return "application/json; charset=utf-8";
+            }
+
+            @Override
+            public byte[] getBody() throws AuthFailureError {
+                try {
+                    return mRequestBody == null ? null : mRequestBody.getBytes("utf-8");
+                } catch (UnsupportedEncodingException uee) {
+                    VolleyLog.wtf("Unsupported Encoding while trying to get the bytes of %s using %s", mRequestBody, "utf-8");
+                    return null;
+                }
+            }
+        };
+
+        requestQueue.add(stringRequest);
     }
 
     public void completed(AuctionHeader auctionHeader, UserRating ur) {

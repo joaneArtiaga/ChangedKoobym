@@ -14,7 +14,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Success Swap"
-            android:textSize="20dp"
+            android:textSize="25dp"
+            android:textColor="@color/colorLightOrange"
             android:layout_marginTop="20dp"
             android:layout_marginLeft="20dp"
             android:textStyle="bold"/>
@@ -40,7 +41,7 @@
                     android:layout_height="wrap_content"
                     android:text="Book Title"
                     android:textColor="@color/colorLightOrange"
-                    android:textSize="15dp"
+                    android:textSize="20dp"
                     android:textStyle="bold"
                     android:id="@+id/successBookTitle"/>
                 <LinearLayout
@@ -50,13 +51,16 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Delivered by:"/>
+                        android:text="Delivered by:"
+                        android:textSize="15dp"
+                        android:layout_marginRight="10dp"/>
                     <TextView
-                        android:layout_width="match_parent"
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Anonymous"
-                        android:textSize="10dp"
+                        android:textSize="15dp"
                         android:textStyle="bold"
+                        android:textColor="@color/colorOrange"
                         android:id="@+id/successBookOwner"/>
                 </LinearLayout>
             </LinearLayout>
@@ -65,61 +69,72 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:layout_gravity="right"
-            android:gravity="right"
-            android:layout_marginRight="10dp">
-
-            <LinearLayout
+            android:layout_marginLeft="10dp"
+            android:orientation="horizontal">
+            <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:gravity="right"
-                android:layout_gravity="right"
-                android:padding="15dp">
-
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="Book Title"
-                    android:textColor="@color/colorLightOrange"
-                    android:textSize="15dp"
-                    android:textStyle="bold"
-                    android:id="@+id/successBookTitle2"/>
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal">
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Received by:"/>
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="Anonymous"
-                        android:textSize="10dp"
-                        android:textStyle="bold"
-                        android:id="@+id/successBookOwner2"/>
-                </LinearLayout>
-            </LinearLayout>
-            <ImageView
-                android:layout_width="50dp"
-                android:layout_height="80dp"
-                android:id="@+id/successBook2"/>
-
+                android:text="Received by:"
+                android:textSize="15dp"
+                android:layout_marginRight="10dp"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Anonymous"
+                android:textSize="15dp"
+                android:textStyle="bold"
+                android:textColor="@color/colorOrange"
+                android:id="@+id/requestor"/>
         </LinearLayout>
 
-        <Button
-            android:id="@+id/btnOkaySuccess"
-            android:layout_width="70dp"
-            android:layout_height="50dp"
-            android:layout_gravity="right"
-            android:layout_marginRight="20dp"
-            android:layout_marginTop="10dp"
-            android:background="@color/colorLightOrange"
-            android:text="Okay" />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Requestor's books:"
+            android:textSize="20dp"
+            android:textStyle="bold"
+            android:textColor="@color/colorLightOrange"
+            android:layout_marginLeft="10dp"
+            android:layout_marginTop="10dp"/>
 
+        <ListView
+            android:id="@+id/listSwap"
+            android:layout_width="match_parent"
+            android:layout_height="200dp"
+            android:focusable="false"
+            android:focusableInTouchMode="false"
+            android:clickable="false"
+            android:layout_marginTop="10dp" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_gravity="center"
+            android:gravity="center">
+
+            <Button
+                android:id="@+id/btnOkaySuccess"
+                android:layout_width="100dp"
+                android:layout_height="50dp"
+                android:layout_gravity="right"
+                android:layout_marginRight="20dp"
+                android:textColor="@color/colorWhite"
+                android:layout_marginBottom="10dp"
+                android:background="@drawable/rounded_button"
+                android:text="Okay" />
+
+            <Button
+                android:id="@+id/btnSeeRating"
+                android:text="See Rating"
+                android:layout_width="100dp"
+                android:layout_height="50dp"
+                android:layout_gravity="right"
+                android:textColor="@color/colorWhite"
+                android:layout_marginBottom="10dp"
+                android:background="@drawable/rounded_button"/>
+
+        </LinearLayout>
     </LinearLayout>
 
 </RelativeLayout>

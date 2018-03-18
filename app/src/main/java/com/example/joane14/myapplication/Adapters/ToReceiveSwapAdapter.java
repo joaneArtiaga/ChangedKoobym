@@ -35,6 +35,7 @@ import com.example.joane14.myapplication.Activities.GsonDateDeserializer;
 import com.example.joane14.myapplication.Activities.HistoryActivity;
 import com.example.joane14.myapplication.Activities.MyShelf;
 import com.example.joane14.myapplication.Activities.ProfileActivity;
+import com.example.joane14.myapplication.Activities.ViewBookAct;
 import com.example.joane14.myapplication.Fragments.Constants;
 import com.example.joane14.myapplication.Model.AuctionHeader;
 import com.example.joane14.myapplication.Model.Rate;
@@ -174,7 +175,6 @@ public class ToReceiveSwapAdapter extends RecyclerView.Adapter<ToReceiveSwapAdap
 
     public void completed(SwapHeader swapHeader) {
         RequestQueue requestQueue = Volley.newRequestQueue(context);
-//        String URL = "http://192.168.1.6:8080/Koobym/swapHeader/add";
         String URL = Constants.SWAP_COMPLETED + swapHeader.getSwapHeaderId();
 
         rateNumber=0f;
@@ -265,7 +265,7 @@ public class ToReceiveSwapAdapter extends RecyclerView.Adapter<ToReceiveSwapAdap
                             userRatingMod.setReview(reviewMod);
                             userRatingMod.setRate(rateMod);
 
-                            userRate(userRatingMod);
+                            userRate(userRatingMod, swapHeaderModel);
                         }
 
                     }
@@ -300,9 +300,8 @@ public class ToReceiveSwapAdapter extends RecyclerView.Adapter<ToReceiveSwapAdap
         requestQueue.add(stringRequest);
     }
 
-    public void userRate(final UserRating userRating) {
+    public void userRate(final UserRating userRating, final SwapHeader swapHeader) {
         RequestQueue requestQueue = Volley.newRequestQueue(context);
-//        String URL = "http://104.197.4.32:8080/Koobym/user/add";
         String URL = Constants.POST_USER_RATE;
 
 
@@ -326,12 +325,15 @@ public class ToReceiveSwapAdapter extends RecyclerView.Adapter<ToReceiveSwapAdap
                 UserRating ur = new UserRating();
                 ur = gson.fromJson(response, UserRating.class);
 
-                Intent intent = new Intent(context, BookActActivity.class);
-                context.startActivity(intent);
-//                    if (bool == false) {
-//                        Intent intent = new Intent(context, HistoryActivity.class);
-//                        context.startActivity(intent);
-//                    }
+                UserNotification un = new UserNotification();
+                un.setActionId(swapHeader.getSwapHeaderId());
+                un.setActionName("Completed");
+                un.setBookActionPerformedOn(swapHeader.getSwapDetail().getBookOwner());
+                un.setExtraMessage(String.valueOf(ur.getUserRatingId()));
+                un.setUser(swapHeader.getSwapDetail().getBookOwner().getUserObj());
+                un.setUserPerformer(swapHeader.getUser());
+
+                addUserNotif(un);
             }
         }, new Response.ErrorListener() {
             @Override
@@ -358,6 +360,52 @@ public class ToReceiveSwapAdapter extends RecyclerView.Adapter<ToReceiveSwapAdap
 
         requestQueue.add(stringRequest);
     }
+
+
+    public void addUserNotif(UserNotification userNotification) {
+        RequestQueue requestQueue = Volley.newRequestQueue(context);
+        User user = new User();
+        user = (User) SPUtility.getSPUtil(context).getObject("USER_OBJECT", User.class);
+        d("UserIdReceive", String.valueOf(user.getUserId()));
+        String URL = Constants.POST_USER_NOTIFICATION;
+
+
+        final Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd").registerTypeAdapter(Date.class, GsonDateDeserializer.getInstance()).create();
+        final String mRequestBody = gson.toJson(userNotification);
+
+
+        d("LOG_VOLLEY", mRequestBody);
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, URL, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                Intent intent = new Intent(context, BookActActivity.class);
+                context.startActivity(intent);
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.e("LOG_VOLLEY", error.toString());
+            }
+        }) {
+            @Override
+            public String getBodyContentType() {
+                return "application/json; charset=utf-8";
+            }
+
+            @Override
+            public byte[] getBody() throws AuthFailureError {
+                try {
+                    return mRequestBody == null ? null : mRequestBody.getBytes("utf-8");
+                } catch (UnsupportedEncodingException uee) {
+                    VolleyLog.wtf("Unsupported Encoding while trying to get the bytes of %s using %s", mRequestBody, "utf-8");
+                    return null;
+                }
+            }
+        };
+
+        requestQueue.add(stringRequest);
+    }
+
 
     @Override
     public int getItemCount() {

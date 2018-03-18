@@ -82,6 +82,7 @@ public class ToDeliverAuctionAdapter extends RecyclerView.Adapter<ToDeliverAucti
     @Override
     public void onBindViewHolder(ToDeliverAuctionAdapter.BookHolder holder, final int position) {
 
+        getMaximumBid(bookList.get(position).getAuctionDetail(), holder);
 
         Date c = Calendar.getInstance().getTime();
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
@@ -105,8 +106,7 @@ public class ToDeliverAuctionAdapter extends RecyclerView.Adapter<ToDeliverAucti
             holder.mDate.setText(bookList.get(position).getDateDelivered());
         }
 
-        getMaximumBid(bookList.get(position).getAuctionDetail());
-        holder.mPrice.setVisibility(View.GONE);
+
 
         Glide.with(context).load(bookList.get(position).getAuctionDetail().getBookOwner().getBookObj().getBookFilename()).centerCrop().into(holder.mIvBookImg);
 
@@ -136,7 +136,7 @@ public class ToDeliverAuctionAdapter extends RecyclerView.Adapter<ToDeliverAucti
         }
 
         final String newDate = df.format(calendar.getTime());
-        if(dateToCompare.after(calendar.getTime())|| newDate.equals(bookList.get(position).getDateDelivered())){
+        if(dateToCompare.before(calendar.getTime())|| newDate.equals(bookList.get(position).getDateDelivered())){
             holder.mRate.setImageResource(R.drawable.checkbookact);
         }else{
             holder.mRate.setImageResource(R.drawable.notrate);
@@ -146,7 +146,7 @@ public class ToDeliverAuctionAdapter extends RecyclerView.Adapter<ToDeliverAucti
         holder.mRate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(finalDateToCompare.after(calendar.getTime())|| newDate.equals(bookList.get(position).getDateDelivered())){
+                if(finalDateToCompare.before(calendar.getTime())|| newDate.equals(bookList.get(position).getDateDelivered())){
                     AlertDialog alertDialog = new AlertDialog.Builder(context).create();
                     alertDialog.setMessage("Will notify the bidder that the book has been delivered");
                     alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, "Okay", new DialogInterface.OnClickListener() {
@@ -221,7 +221,7 @@ public class ToDeliverAuctionAdapter extends RecyclerView.Adapter<ToDeliverAucti
         requestQueue.add(stringRequest);
     }
 
-    public void getMaximumBid(AuctionDetailModel auctionDetailModel) {
+    public void getMaximumBid(AuctionDetailModel auctionDetailModel, final ToDeliverAuctionAdapter.BookHolder holder) {
         RequestQueue requestQueue = Volley.newRequestQueue(context);
 //        String URL = "http://192.168.1.6:8080/Koobym/swapHeader/add";
         String URL = Constants.GET_MAXIMUM_BID + auctionDetailModel.getAuctionDetailId();
@@ -248,7 +248,8 @@ public class ToDeliverAuctionAdapter extends RecyclerView.Adapter<ToDeliverAucti
                 auctionHeaderModelMod.clear();
                 auctionHeaderModelMod.addAll(Arrays.asList(gson.fromJson(response, AuctionComment[].class)));
 
-                maxBid = auctionHeaderModelMod.get(0).getAuctionComment();
+                holder.mPrice.setText("₱  "+auctionHeaderModelMod.get(0).getAuctionComment()+".00");
+
 
             }
         }, new Response.ErrorListener() {

@@ -2,7 +2,6 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@android:color/white"
     tools:context="com.example.joane14.myapplication.Fragments.CountdownFrag">
 
     <RelativeLayout
@@ -17,6 +16,7 @@
             android:layout_alignParentStart="true">
 
             <LinearLayout
+                android:id="@+id/linearCount"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center"
@@ -26,10 +26,10 @@
                     android:id="@+id/LinearLayout10"
                     android:layout_width="70dp"
                     android:layout_height="100dp"
-                    android:background="@color/colorPrimaryDark"
-                    android:orientation="vertical"
+                    android:layout_marginRight="15dp"
                     android:layout_marginTop="10dp"
-                    android:layout_marginRight="15dp">
+                    android:background="@color/colorPrimaryDark"
+                    android:orientation="vertical">
 
                     <TextView
                         android:id="@+id/textView21"
@@ -45,9 +45,9 @@
                         android:id="@+id/txtTimerDay"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:gravity="center"
                         android:layout_gravity="center"
                         android:layout_marginTop="15dp"
+                        android:gravity="center"
                         android:textAppearance="?android:attr/textAppearanceLarge"
                         android:textColor="@color/colorOrange"
                         android:textSize="35dp"
@@ -59,8 +59,8 @@
                     android:id="@+id/LinearLayout11"
                     android:layout_width="70dp"
                     android:layout_height="100dp"
-                    android:layout_marginTop="10dp"
                     android:layout_marginRight="15dp"
+                    android:layout_marginTop="10dp"
                     android:background="@color/colorPrimaryDark"
                     android:orientation="vertical">
 
@@ -90,10 +90,10 @@
                     android:id="@+id/LinearLayout12"
                     android:layout_width="70dp"
                     android:layout_height="100dp"
+                    android:layout_marginRight="15dp"
                     android:layout_marginTop="10dp"
                     android:background="@color/colorPrimaryDark"
-                    android:orientation="vertical"
-                    android:layout_marginRight="15dp">
+                    android:orientation="vertical">
 
                     <TextView
                         android:id="@+id/textView23"
@@ -120,9 +120,9 @@
                     android:id="@+id/LinearLayout13"
                     android:layout_width="70dp"
                     android:layout_height="100dp"
-                    android:background="@color/colorPrimaryDark"
-                    android:layout_marginTop="10dp"
                     android:layout_marginRight="15dp"
+                    android:layout_marginTop="10dp"
+                    android:background="@color/colorPrimaryDark"
                     android:orientation="vertical">
 
                     <TextView

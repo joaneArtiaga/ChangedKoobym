@@ -39,6 +39,7 @@ import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.bumptech.glide.Glide;
 import com.example.joane14.myapplication.Activities.AuctionMeetUpChooser;
+import com.example.joane14.myapplication.Activities.BookActActivity;
 import com.example.joane14.myapplication.Activities.GsonDateDeserializer;
 import com.example.joane14.myapplication.Activities.LandingPage;
 import com.example.joane14.myapplication.Activities.MeetUpChooser;
@@ -47,6 +48,7 @@ import com.example.joane14.myapplication.Activities.ProfileActivity;
 import com.example.joane14.myapplication.Activities.RequestActivity;
 import com.example.joane14.myapplication.Activities.SwapMeetUpChooser;
 import com.example.joane14.myapplication.Activities.TimeDateChooser;
+import com.example.joane14.myapplication.Activities.TransactionActivity;
 import com.example.joane14.myapplication.Activities.ViewAuctionBook;
 import com.example.joane14.myapplication.Activities.ViewBookAct;
 import com.example.joane14.myapplication.Fragments.Constants;
@@ -148,25 +150,25 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
                 message = userNotification.getUserPerformer().getUserFname() + " " + userNotification.getUserPerformer().getUserLname() + " " + userNotification.getActionStatus() + " your request of the book " + userNotification.getBookActionPerformedOn().getBookObj().getBookTitle() + " to be rented.";
             } else if (userNotification.getActionStatus().equals("Confirm")) {
                 message = userNotification.getUserPerformer().getUserFname() + " " + userNotification.getUserPerformer().getUserLname() + " " + userNotification.getActionStatus() + "ed the meet up location and time with the book " + userNotification.getBookActionPerformedOn().getBookObj().getBookTitle() + " to be rented.";
-            }else if(userNotification.getActionStatus().equals("Due")){
-                message = "The book you rented "+userNotification.getBookActionPerformedOn().getBookObj().getBookTitle()+" is already due, " +
+            } else if (userNotification.getActionStatus().equals("Due")) {
+                message = "The book you rented " + userNotification.getBookActionPerformedOn().getBookObj().getBookTitle() + " is already due, " +
                         "your deposit will be deducted.";
-            }else if(userNotification.getActionStatus().equals("return")){
-                message = userNotification.getUserPerformer().getUserFname()+" "+userNotification.getUserPerformer().getUserLname()+" wants to return the book earlier.";
-            }else if(userNotification.getActionStatus().equalsIgnoreCase("rejected")){
-                message = userNotification.getUserPerformer().getUserFname()+" "+userNotification.getUserPerformer().getUserLname()+" rejected your request.";
-            }else if(userNotification.getActionStatus().equals("return-confirmed")){
-                message = userNotification.getUserPerformer().getUserFname()+" "+userNotification.getUserPerformer().getUserLname()+" accepted your request for the book, "+userNotification.getBookActionPerformedOn().getBookObj().getBookTitle()+", to be returned early.";
-            }else if(userNotification.getActionStatus().equals("return-rejected")){
-                message = userNotification.getUserPerformer().getUserFname()+" "+userNotification.getUserPerformer().getUserLname()+" rejected your request for the book, "+userNotification.getBookActionPerformedOn().getBookObj().getBookTitle()+", to be returned early.";
-            }else if(userNotification.getActionStatus().equals("Complete")){
-                message = userNotification.getUserPerformer().getUserFname()+" "+userNotification.getUserPerformer().getUserLname()+" received the book,"+userNotification.getBookActionPerformedOn().getBookObj().getBookTitle()+", and rated you.";
-            }else if(userNotification.getActionStatus().equals("delivered")){
-                message = userNotification.getUserPerformer().getUserFname()+" "+userNotification.getUserPerformer().getUserLname()+" delivered the book,"+userNotification.getBookActionPerformedOn().getBookObj().getBookTitle()+".";
-            }else if(userNotification.getActionStatus().equals("returned")){
-                message = userNotification.getUserPerformer().getUserFname()+" "+userNotification.getUserPerformer().getUserLname()+" returned the book,"+userNotification.getBookActionPerformedOn().getBookObj().getBookTitle()+" and rated the book.";
-            }else if(userNotification.getActionStatus().equals("Rejected")){
-                message = userNotification.getUserPerformer().getUserFname()+" "+userNotification.getUserPerformer().getUserLname()+" returned the book,"+userNotification.getBookActionPerformedOn().getBookObj().getBookTitle()+" and rejected your request to the book, "+userNotification.getBookActionPerformedOn().getBookObj().getBookTitle();
+            } else if (userNotification.getActionStatus().equals("return")) {
+                message = userNotification.getUserPerformer().getUserFname() + " " + userNotification.getUserPerformer().getUserLname() + " wants to return the book earlier.";
+            } else if (userNotification.getActionStatus().equalsIgnoreCase("rejected")) {
+                message = userNotification.getUserPerformer().getUserFname() + " " + userNotification.getUserPerformer().getUserLname() + " rejected your request.";
+            } else if (userNotification.getActionStatus().equals("return-confirmed")) {
+                message = userNotification.getUserPerformer().getUserFname() + " " + userNotification.getUserPerformer().getUserLname() + " accepted your request for the book, " + userNotification.getBookActionPerformedOn().getBookObj().getBookTitle() + ", to be returned early.";
+            } else if (userNotification.getActionStatus().equals("return-rejected")) {
+                message = userNotification.getUserPerformer().getUserFname() + " " + userNotification.getUserPerformer().getUserLname() + " rejected your request for the book, " + userNotification.getBookActionPerformedOn().getBookObj().getBookTitle() + ", to be returned early.";
+            } else if (userNotification.getActionStatus().equals("Complete")) {
+                message = userNotification.getUserPerformer().getUserFname() + " " + userNotification.getUserPerformer().getUserLname() + " received the book," + userNotification.getBookActionPerformedOn().getBookObj().getBookTitle() + ", and rated you.";
+            } else if (userNotification.getActionStatus().equals("delivered")) {
+                message = userNotification.getUserPerformer().getUserFname() + " " + userNotification.getUserPerformer().getUserLname() + " delivered the book," + userNotification.getBookActionPerformedOn().getBookObj().getBookTitle() + ".";
+            } else if (userNotification.getActionStatus().equals("returned")) {
+                message = userNotification.getUserPerformer().getUserFname() + " " + userNotification.getUserPerformer().getUserLname() + " returned the book," + userNotification.getBookActionPerformedOn().getBookObj().getBookTitle() + " and rated the book.";
+            } else if (userNotification.getActionStatus().equals("Rejected")) {
+                message = userNotification.getUserPerformer().getUserFname() + " " + userNotification.getUserPerformer().getUserLname() + " returned the book," + userNotification.getBookActionPerformedOn().getBookObj().getBookTitle() + " and rejected your request to the book, " + userNotification.getBookActionPerformedOn().getBookObj().getBookTitle();
             }
         } else if (userNotification.getActionName().equals("swap")) {
             Log.d("notifSwap", "inside");
@@ -185,25 +187,25 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
                 message = "The book " + userNotification.getBookActionPerformedOn().getBookObj().getBookTitle() + " was Rejected by " + userNotification.getUserPerformer().getUserFname() + " " + userNotification.getUserPerformer().getUserLname();
             } else if (userNotification.getActionStatus().equals("Completed")) {
                 message = "The transaction of the book that you want to " + userNotification.getActionName() + " is completed";
-            } else if(userNotification.getActionStatus().equals("delivered")){
-                message = userNotification.getUserPerformer().getUserFname()+" "+userNotification.getUserPerformer().getUserLname()+" delivered the book, "+userNotification.getBookActionPerformedOn().getBookObj().getBookTitle()+".";
+            } else if (userNotification.getActionStatus().equals("delivered")) {
+                message = userNotification.getUserPerformer().getUserFname() + " " + userNotification.getUserPerformer().getUserLname() + " delivered the book, " + userNotification.getBookActionPerformedOn().getBookObj().getBookTitle() + ".";
             }
-        } else if(userNotification.getActionName().equals("auction")){
+        } else if (userNotification.getActionName().equals("auction")) {
             User winner = new User();
             Log.d("notifAuc", "inside");
-            if(userNotificationList.get(position).getActionStatus().equals("win")){
+            if (userNotificationList.get(position).getActionStatus().equals("win")) {
                 Log.d("notifAuc", "win");
-                message = "The book, "+userNotification.getBookActionPerformedOn().getBookObj().getBookTitle()+", you tried bidding just ended. Your bid fortunately won which is "+userNotification.getExtraMessage();
-            }else if(userNotificationList.get(position).getActionStatus().equals("lose")){
+                message = "The book, " + userNotification.getBookActionPerformedOn().getBookObj().getBookTitle() + ", you tried bidding just ended. Your bid fortunately won which is " + userNotification.getExtraMessage();
+            } else if (userNotificationList.get(position).getActionStatus().equals("lose")) {
                 Log.d("notifAuc", "lose");
-                message = "The book, "+userNotification.getBookActionPerformedOn().getBookObj().getBookTitle()+", you tried bidding just ended. Your bid unfortunately lost.";
-            }else if(userNotificationList.get(position).getActionStatus().equals("own")){
-                message = "Your book, "+userNotification.getBookActionPerformedOn().getBookObj().getBookTitle()+", that is for auction just ended. The highest bid is "+userNotification.getExtraMessage()+" by "+userNotification.getUserPerformer().getUserFname()+" "+userNotification.getUserPerformer().getUserLname();
-            }else if(userNotification.getActionStatus().equals("delivered")){
-                message = userNotification.getUserPerformer().getUserFname()+" "+userNotification.getUserPerformer().getUserLname()+" delivered the book, "+userNotification.getBookActionPerformedOn().getBookObj().getBookTitle()+".";
-            }else if(userNotification.getActionStatus().equals("Complete")){
+                message = "The book, " + userNotification.getBookActionPerformedOn().getBookObj().getBookTitle() + ", you tried bidding just ended. Your bid unfortunately lost.";
+            } else if (userNotificationList.get(position).getActionStatus().equals("own")) {
+                message = "Your book, " + userNotification.getBookActionPerformedOn().getBookObj().getBookTitle() + ", that is for auction just ended. The highest bid is " + userNotification.getExtraMessage() + " by " + userNotification.getUserPerformer().getUserFname() + " " + userNotification.getUserPerformer().getUserLname();
+            } else if (userNotification.getActionStatus().equals("delivered")) {
+                message = userNotification.getUserPerformer().getUserFname() + " " + userNotification.getUserPerformer().getUserLname() + " delivered the book, " + userNotification.getBookActionPerformedOn().getBookObj().getBookTitle() + ".";
+            } else if (userNotification.getActionStatus().equals("Complete")) {
                 message = "The transaction of the book that you want to " + userNotification.getActionName() + " is completed";
-            }else if(userNotification.getActionStatus().equals("Confirm")){
+            } else if (userNotification.getActionStatus().equals("Confirm")) {
                 message = userNotification.getUserPerformer().getUserFname() + " " + userNotification.getUserPerformer().getUserLname() + " " + userNotification.getActionStatus() + "ed the meet up location and time with the book " + userNotification.getBookActionPerformedOn().getBookObj().getBookTitle() + " that was auctioned.";
             }
         }
@@ -221,6 +223,7 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
             Log.d("cardRead", "true");
         }
     }
+
     public void getSwapHeader(final int position, final UserNotification userNotification) {
         RequestQueue requestQueue = Volley.newRequestQueue(context);
 //        String URL = "http://104.197.4.32:8080/Koobym/user/add";
@@ -246,7 +249,7 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
                 Log.i("swapHeaderResponseId", response);
                 SwapHeader swapHeaderMod = gson.fromJson(response, SwapHeader.class);
                 swapHeaderModelOut = swapHeaderMod;
-                message = userNotification.getUserPerformer().getUserFname() + " " + userNotification.getUserPerformer().getUserLname() + " " + userNotification.getActionStatus() + "ed your book " + userNotification.getBookActionPerformedOn().getBookObj().getBookTitle() + " to be swapped with your book "+swapHeaderModelOut.getSwapDetail().getBookOwner().getBookObj().getBookTitle()+".";
+                message = userNotification.getUserPerformer().getUserFname() + " " + userNotification.getUserPerformer().getUserLname() + " " + userNotification.getActionStatus() + "ed your book " + userNotification.getBookActionPerformedOn().getBookObj().getBookTitle() + " to be swapped with your book " + swapHeaderModelOut.getSwapDetail().getBookOwner().getBookObj().getBookTitle() + ".";
             }
 
         }, new Response.ErrorListener() {
@@ -340,24 +343,25 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
                                 Log.d("Confirm", "Inside");
                                 getRentalHeader(position, "summary");
                                 getRead(position);
-                            }else if(userNotificationList.get(position).getActionStatus().equals("return")){
+                            } else if (userNotificationList.get(position).getActionStatus().equals("return")) {
                                 getRead(position);
                                 getRentalHeader(position, "return");
-                            }else if(userNotificationList.get(position).getActionStatus().equals("return-confirmed")){
+                            } else if (userNotificationList.get(position).getActionStatus().equals("return-confirmed")) {
                                 getRead(position);
                                 getRentalHeader(position, "return-confirmed");
-                            }else if(userNotificationList.get(position).getActionStatus().equals("return-rejected")){
+                            } else if (userNotificationList.get(position).getActionStatus().equals("return-rejected")) {
                                 getRead(position);
                                 getRentalHeader(position, "return-rejected");
-                            }else if(userNotificationList.get(position).getActionStatus().equals("returned")){
+                            } else if (userNotificationList.get(position).getActionStatus().equals("returned")) {
                                 getRead(position);
                                 getRentalHeader(position, "returned");
-                            }else if(userNotificationList.get(position).getActionStatus().equals("Complete")){
-                                getUserRating(position);
-                            }else if(userNotificationList.get(position).getActionStatus().equals("delivered")){
+                            } else if (userNotificationList.get(position).getActionStatus().equals("Complete")) {
+                                getRead(position);
+                                getRentalHeader(position, "returned");
+                            } else if (userNotificationList.get(position).getActionStatus().equals("delivered")) {
                                 getRead(position);
                                 getRentalHeader(position, "delivered");
-                            }else if(userNotificationList.get(position).getActionStatus().equals("Rejected")){
+                            } else if (userNotificationList.get(position).getActionStatus().equals("Rejected")) {
                                 getRead(position);
                                 getRentalHeader(position, "Rejected");
                             }
@@ -392,31 +396,31 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
                                     getRead(position);
                                     getSwapHeader(position, "Completed");
 //                                    getSwapHeader(position, "change");
-                                }else if(userNotificationList.get(position).getActionStatus().equals("delivered")){
+                                } else if (userNotificationList.get(position).getActionStatus().equals("delivered")) {
                                     getRead(position);
                                     getSwapHeader(position, "delivered");
-                                }else if(userNotificationList.get(position).getActionStatus().equals("Rejected")){
+                                } else if (userNotificationList.get(position).getActionStatus().equals("Rejected")) {
                                     getRead(position);
                                     getSwapHeader(position, "Rejected");
                                 }
                             }
-                        }else if(userNotificationList.get(position).getActionName().equals("auction")){
-                            if(userNotificationList.get(position).getActionStatus().equals("win")){
+                        } else if (userNotificationList.get(position).getActionName().equals("auction")) {
+                            if (userNotificationList.get(position).getActionStatus().equals("win")) {
                                 getRead(position);
                                 getAuctionHeader(position, userNotificationList.get(position).getActionStatus());
-                            }else if(userNotificationList.get(position).getActionStatus().equals("lose")){
+                            } else if (userNotificationList.get(position).getActionStatus().equals("lose")) {
                                 getRead(position);
                                 getAuctionHeader(position, userNotificationList.get(position).getActionStatus());
-                            }else if(userNotificationList.get(position).getActionStatus().equals("own")){
+                            } else if (userNotificationList.get(position).getActionStatus().equals("own")) {
                                 getRead(position);
                                 getAuctionHeader(position, userNotificationList.get(position).getActionStatus());
-                            }else if(userNotificationList.get(position).getActionStatus().equals("delivered")){
+                            } else if (userNotificationList.get(position).getActionStatus().equals("delivered")) {
                                 getRead(position);
                                 getAuctionHeader(position, "delivered");
-                            }else if(userNotificationList.get(position).getActionStatus().equals("Complete")){
+                            } else if (userNotificationList.get(position).getActionStatus().equals("Complete")) {
                                 getRead(position);
-                                getAuctionHeader(position, "Completed");
-                            }else if(userNotificationList.get(position).getActionStatus().equals("Confirm")){
+                                getAuctionHeader(position, "Complete");
+                            } else if (userNotificationList.get(position).getActionStatus().equals("Confirm")) {
                                 getRead(position);
                                 getAuctionHeader(position, "Confirm");
                             }
@@ -427,7 +431,7 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
                             getRentalHeader(position, "view");
                         } else if (userNotificationList.get(position).getActionName().equals("swap")) {
                             getSwapHeader(position, "view");
-                        }else if(userNotificationList.get(position).getActionName().equals("auction")){
+                        } else if (userNotificationList.get(position).getActionName().equals("auction")) {
                             getAuctionHeader(position, "view");
                         }
                     }
@@ -438,13 +442,7 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
 
         public void getUserRating(final int position) {
             RequestQueue requestQueue = Volley.newRequestQueue(context);
-//        String URL = "http://104.197.4.32:8080/Koobym/user/add";
-            String URL = Constants.GET_USER_RATING_BY_ID+userNotificationList.get(position).getExtraMessage();
-            String nextDateStr = "";
-
-            User user = new User();
-            user = (User) SPUtility.getSPUtil(context).getObject("USER_OBJECT", User.class);
-
+            String URL = Constants.GET_USER_RATING_BY_ID + userNotificationList.get(position).getExtraMessage();
             Log.d("getUserRatingURL", URL);
 
 
@@ -459,74 +457,69 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
                     Log.i("getUserRatingResponse", response);
                     final UserRating userRating = gson.fromJson(response, UserRating.class);
 
-                    AlertDialog ad = new AlertDialog.Builder(context).create();
-                    ad.setTitle("Complete Transaction");
-                    ad.setMessage("The book, "+userNotificationList.get(position).getBookActionPerformedOn().getBookObj().getBookTitle()+" was received and "+userNotificationList.get(position).getUserPerformer().getUserFname()+" "+userNotificationList.get(position).getUserPerformer().getUserLname()+" rated you.");
-                    ad.setButton(AlertDialog.BUTTON_POSITIVE, "See Rating", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            final Dialog dialogCustom = new Dialog(context);
-                            dialogCustom.setContentView(R.layout.review_custom_dialog);
-                            TextView mTitle = (TextView) dialogCustom.findViewById(R.id.bookTitleReview);
-                            TextView mAuthor = (TextView) dialogCustom.findViewById(R.id.bookAuthorReview);
-                            ImageView ivBook = (ImageView) dialogCustom.findViewById(R.id.ivBookReview);
-                            final EditText etReviewMessage = (EditText) dialogCustom.findViewById(R.id.etReviewReview);
-                            final RatingBar mRateBar = (RatingBar) dialogCustom.findViewById(R.id.ratingReview);
-                            Button mRateNow = (Button) dialogCustom.findViewById(R.id.btnRateReview);
+                    final Dialog dialogCustom = new Dialog(context);
+                    dialogCustom.setContentView(R.layout.review_custom_dialog);
+                    TextView mTitle = (TextView) dialogCustom.findViewById(R.id.bookTitleReview);
+                    TextView mAuthor = (TextView) dialogCustom.findViewById(R.id.bookAuthorReview);
+                    ImageView ivBook = (ImageView) dialogCustom.findViewById(R.id.ivBookReview);
+                    final EditText etReviewMessage = (EditText) dialogCustom.findViewById(R.id.etReviewReview);
+                    final RatingBar mRateBar = (RatingBar) dialogCustom.findViewById(R.id.ratingReview);
+                    Button mRateNow = (Button) dialogCustom.findViewById(R.id.btnRateReview);
 
-                            mRateNow.setText("Okay");
-                            etReviewMessage.setHint(userRating.getComment());
-                            etReviewMessage.setFocusable(false);
+                    mRateNow.setText("Okay");
+                    etReviewMessage.setHint(userRating.getComment());
+                    etReviewMessage.setFocusable(false);
 
-                            mTitle.setText(userNotificationList.get(position).getBookActionPerformedOn().getBookObj().getBookTitle());
+                    mTitle.setText(userNotificationList.get(position).getBookActionPerformedOn().getBookObj().getBookTitle());
 
-                            Glide.with(context).load(userNotificationList.get(position).getBookActionPerformedOn().getBookObj().getBookFilename()).centerCrop().into(ivBook);
+                    Glide.with(context).load(userNotificationList.get(position).getBookActionPerformedOn().getBookObj().getBookFilename()).centerCrop().into(ivBook);
 
-                            String author = "";
+                    String author = "";
 
-                            if(userNotificationList.get(position).getBookActionPerformedOn().getBookObj().getBookAuthor().size()!=0){
-                                for(int init=0; init<userNotificationList.get(position).getBookActionPerformedOn().getBookObj().getBookAuthor().size(); init++){
-                                    if(!(userNotificationList.get(position).getBookActionPerformedOn().getBookObj().getBookAuthor().get(init).getAuthorFName().equals(""))){
-                                        author+=userNotificationList.get(position).getBookActionPerformedOn().getBookObj().getBookAuthor().get(init).getAuthorFName()+" ";
-                                        if(!(userNotificationList.get(position).getBookActionPerformedOn().getBookObj().getBookAuthor().get(init).getAuthorLName().equals(""))){
-                                            author+=userNotificationList.get(position).getBookActionPerformedOn().getBookObj().getBookAuthor().get(init).getAuthorLName();
-                                            if(init+1<userNotificationList.get(position).getBookActionPerformedOn().getBookObj().getBookAuthor().size()){
-                                                author+=", ";
-                                            }
-                                        }
+                    if (userNotificationList.get(position).getBookActionPerformedOn().getBookObj().getBookAuthor().size() != 0) {
+                        for (int init = 0; init < userNotificationList.get(position).getBookActionPerformedOn().getBookObj().getBookAuthor().size(); init++) {
+                            if (!(userNotificationList.get(position).getBookActionPerformedOn().getBookObj().getBookAuthor().get(init).getAuthorFName().equals(""))) {
+                                author += userNotificationList.get(position).getBookActionPerformedOn().getBookObj().getBookAuthor().get(init).getAuthorFName() + " ";
+                                if (!(userNotificationList.get(position).getBookActionPerformedOn().getBookObj().getBookAuthor().get(init).getAuthorLName().equals(""))) {
+                                    author += userNotificationList.get(position).getBookActionPerformedOn().getBookObj().getBookAuthor().get(init).getAuthorLName();
+                                    if (init + 1 < userNotificationList.get(position).getBookActionPerformedOn().getBookObj().getBookAuthor().size()) {
+                                        author += ", ";
                                     }
                                 }
-                            }else{
-                                author="Unknown Author";
                             }
-                            mAuthor.setText(author);
+                        }
+                    } else {
+                        author = "Unknown Author";
+                    }
+                    mAuthor.setText(author);
 
-                            mRateBar.setRating(userRating.getRate().getRateNumber());
+                    mRateBar.setRating(userRating.getRate().getRateNumber());
 
-                            mRateNow.setOnClickListener(new View.OnClickListener() {
-                                @Override
-                                public void onClick(View v) {
-                                    Intent intent = new Intent(context, ProfileActivity.class);
-                                    Bundle bundle = new Bundle();
-                                    bundle.putSerializable("userModelPass", userRating.getUser());
-                                    intent.putExtras(bundle);
-                                    context.startActivity(intent);
-                                }
-                            });
-
-                            dialogCustom.show();
+                    mRateNow.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            Intent intent = new Intent(context, ProfileActivity.class);
+                            Bundle bundle = new Bundle();
+                            bundle.putSerializable("userModelPass", userRating.getUser());
+                            intent.putExtras(bundle);
+                            context.startActivity(intent);
                         }
                     });
-                    ad.show();
 
+                    dialogCustom.show();
                 }
-            }, new Response.ErrorListener() {
+
+            }, new Response.ErrorListener()
+
+            {
                 @Override
                 public void onErrorResponse(VolleyError error) {
                     Log.e("LOG_VOLLEY", error.toString());
                     error.printStackTrace();
                 }
-            }) {
+            })
+
+            {
                 @Override
                 public String getBodyContentType() {
                     return "application/json; charset=utf-8";
@@ -548,8 +541,7 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
 
         public void userRate(final UserRating userRating, final int position) {
             RequestQueue requestQueue = Volley.newRequestQueue(context);
-//        String URL = "http://104.197.4.32:8080/Koobym/user/add";
-        String URL = Constants.POST_USER_RATE;
+            String URL = Constants.POST_USER_RATE;
 
 
             User user = new User();
@@ -579,7 +571,7 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
                     bundle.putSerializable("userModelPass", userRating.getUser());
                     intent.putExtras(bundle);
                     context.startActivity(intent);
-                 }
+                }
             }, new Response.ErrorListener() {
                 @Override
                 public void onErrorResponse(VolleyError error) {
@@ -662,10 +654,10 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
         public void meetUpSumm(final int position, SwapHeader swapHeaderSumm) {
             android.support.v7.app.AlertDialog.Builder alertDialogBuilder = new android.support.v7.app.AlertDialog.Builder(context);
             alertDialogBuilder.setTitle("MeetUp Summary");
-            alertDialogBuilder.setMessage("Date:\t" +swapHeaderSumm.getDateDelivered()+
-                    "\n\nDay:\t"+swapHeaderSumm.getMeetUp().getUserDayTime().getDay().getStrDay()+
-                    "\n\nTime:\t"+swapHeaderSumm.getMeetUp().getUserDayTime().getTime().getStrTime()+
-                    "\n\nLocation:\t"+swapHeaderSumm.getMeetUp().getLocation().getLocationName());
+            alertDialogBuilder.setMessage("Date:\t" + swapHeaderSumm.getDateDelivered() +
+                    "\n\nDay:\t" + swapHeaderSumm.getMeetUp().getUserDayTime().getDay().getStrDay() +
+                    "\n\nTime:\t" + swapHeaderSumm.getMeetUp().getUserDayTime().getTime().getStrTime() +
+                    "\n\nLocation:\t" + swapHeaderSumm.getMeetUp().getLocation().getLocationName());
             alertDialogBuilder.setPositiveButton("Okay",
                     new DialogInterface.OnClickListener() {
                         @Override
@@ -675,7 +667,7 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
                                 updateReceive(position, "Approved");
                             } else if (userNotificationList.get(position).getActionName().equals("swap")) {
                                 updateSwap(position, "ToReceive");
-                            }else if(userNotificationList.get(position).getActionName().equals("auction")){
+                            } else if (userNotificationList.get(position).getActionName().equals("auction")) {
 
                             }
                             Intent intent = new Intent(context, NotificationAct.class);
@@ -689,10 +681,10 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
         public void meetUpAuctionSumm(final int position, AuctionHeader auctionHeader) {
             android.support.v7.app.AlertDialog.Builder alertDialogBuilder = new android.support.v7.app.AlertDialog.Builder(context);
             alertDialogBuilder.setTitle("MeetUp Summary");
-            alertDialogBuilder.setMessage("Date:\t" +auctionHeader.getDateDelivered()+
-                    "\n\nDay:\t"+auctionHeader.getMeetUp().getUserDayTime().getDay().getStrDay()+
-                    "\n\nTime:\t"+auctionHeader.getMeetUp().getUserDayTime().getTime().getStrTime()+
-                    "\n\nLocation:\t"+auctionHeader.getMeetUp().getLocation().getLocationName());
+            alertDialogBuilder.setMessage("Date:\t" + auctionHeader.getDateDelivered() +
+                    "\n\nDay:\t" + auctionHeader.getMeetUp().getUserDayTime().getDay().getStrDay() +
+                    "\n\nTime:\t" + auctionHeader.getMeetUp().getUserDayTime().getTime().getStrTime() +
+                    "\n\nLocation:\t" + auctionHeader.getMeetUp().getLocation().getLocationName());
             alertDialogBuilder.setPositiveButton("Okay",
                     new DialogInterface.OnClickListener() {
                         @Override
@@ -702,7 +694,7 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
                                 updateReceive(position, "Approved");
                             } else if (userNotificationList.get(position).getActionName().equals("swap")) {
                                 updateSwap(position, "ToReceive");
-                            }else if(userNotificationList.get(position).getActionName().equals("auction")){
+                            } else if (userNotificationList.get(position).getActionName().equals("auction")) {
 
                             }
                             Intent intent = new Intent(context, NotificationAct.class);
@@ -753,12 +745,12 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
                         public void onClick(DialogInterface arg0, int arg1) {
                             getRead(position);
                             if (userNotificationList.get(position).getActionName().equals("rental")) {
-                                Log.d("InsideGiveDialog","rental");
+                                Log.d("InsideGiveDialog", "rental");
                                 updateReceive(position, "Approved");
                             } else if (userNotificationList.get(position).getActionName().equals("swap")) {
                                 updateSwap(position, "Complete");
                                 getSwapHeader(position, "Complete");
-                                Log.d("InsideGiveDialog","swap");
+                                Log.d("InsideGiveDialog", "swap");
                             }
                         }
                     });
@@ -792,7 +784,7 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
                                 updateReceive(position, "Approved");
                                 AlertDialog ad = new AlertDialog.Builder(context).create();
                                 ad.setTitle("Approval");
-                                ad.setMessage("You just approved "+userNotificationList.get(position).getUserPerformer().getUserFname()+" "+userNotificationList.get(position).getUserPerformer().getUserLname() + "'s " + userNotificationList.get(position).getActionStatus());
+                                ad.setMessage("You just approved " + userNotificationList.get(position).getUserPerformer().getUserFname() + " " + userNotificationList.get(position).getUserPerformer().getUserLname() + "'s " + userNotificationList.get(position).getActionStatus());
                                 ad.setButton(AlertDialog.BUTTON_NEUTRAL, "Okay", new DialogInterface.OnClickListener() {
                                     @Override
                                     public void onClick(DialogInterface dialog, int which) {
@@ -861,7 +853,7 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
         public void swapOwners(SwapHeader swapHeaderModule) {
             RequestQueue requestQueue = Volley.newRequestQueue(context);
 //        String URL = "http://104.197.4.32:8080/Koobym/user/add";
-        String URL = Constants.SWAP_OWNER+swapHeaderModule.getSwapHeaderId();
+            String URL = Constants.SWAP_OWNER + swapHeaderModule.getSwapHeaderId();
             String nextDateStr = "";
 
             User user = new User();
@@ -1120,13 +1112,13 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
                             intent.putExtras(bundle);
                             context.startActivity(intent);
                         }
-                    }else if(status.equals("return")){
+                    } else if (status.equals("return")) {
 //                        rentalHeaderObj = rentalHeaderMod;
                         AlertDialog ad = new AlertDialog.Builder(context).create();
                         ad.setTitle("Confirmation");
-                        ad.setMessage("Location:\t"+rentalHeaderMod.getReturnMeetUp().getLocation().getLocationName()+
-                                "Date:\t" +rentalHeaderMod.getReturnMeetUp().getUserDayTime().getDay().getStrDay()+
-                                "\n\nTime:\t"+rentalHeaderMod.getReturnMeetUp().getUserDayTime().getTime().getStrTime());
+                        ad.setMessage("Location:\t" + rentalHeaderMod.getReturnMeetUp().getLocation().getLocationName() +
+                                "Date:\t" + rentalHeaderMod.getReturnMeetUp().getUserDayTime().getDay().getStrDay() +
+                                "\n\nTime:\t" + rentalHeaderMod.getReturnMeetUp().getUserDayTime().getTime().getStrTime());
                         ad.setButton(AlertDialog.BUTTON_POSITIVE, "Confirm", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
@@ -1146,9 +1138,9 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
                                 mSubmitReason.setOnClickListener(new View.OnClickListener() {
                                     @Override
                                     public void onClick(View v) {
-                                        if(etReason.getText().length()==0){
+                                        if (etReason.getText().length() == 0) {
                                             etReason.setError("Field should not be empty.");
-                                        }else{
+                                        } else {
                                             UserNotification un = new UserNotification();
                                             un.setUser(userNotificationList.get(position).getUserPerformer());
                                             un.setUserPerformer(userNotificationList.get(position).getUser());
@@ -1168,12 +1160,12 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
                             }
                         });
                         ad.show();
-                    }else if(status.equals("summary")){
+                    } else if (status.equals("summary")) {
                         AlertDialog ad = new AlertDialog.Builder(context).create();
                         ad.setTitle("Meet Up Summary");
-                        ad.setMessage("Date:\t" +rentalHeaderMod.getDateDeliver()+
-                                "\n\nDay:\t"+rentalHeaderMod.getMeetUp().getUserDayTime().getDay().getStrDay()+
-                                "\n\nTime:\t"+rentalHeaderMod.getMeetUp().getUserDayTime().getTime().getStrTime());
+                        ad.setMessage("Date:\t" + rentalHeaderMod.getDateDeliver() +
+                                "\n\nDay:\t" + rentalHeaderMod.getMeetUp().getUserDayTime().getDay().getStrDay() +
+                                "\n\nTime:\t" + rentalHeaderMod.getMeetUp().getUserDayTime().getTime().getStrTime());
                         ad.setButton(AlertDialog.BUTTON_POSITIVE, "Okay", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
@@ -1186,10 +1178,10 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
                         });
                         ad.show();
 
-                    }else if(status.equals("return-rejected")){
+                    } else if (status.equals("return-rejected")) {
                         AlertDialog ad = new AlertDialog.Builder(context).create();
                         ad.setTitle("Request Rejected");
-                        ad.setMessage(userNotificationList.get(position).getUser().getUserFname()+" "+userNotificationList.get(position).getUser().getUserLname()+" rejected your request because of her reason: '"+userNotificationList.get(position).getExtraMessage()+"'.");
+                        ad.setMessage(userNotificationList.get(position).getUser().getUserFname() + " " + userNotificationList.get(position).getUser().getUserLname() + " rejected your request because of her reason: '" + userNotificationList.get(position).getExtraMessage() + "'.");
                         ad.setButton(AlertDialog.BUTTON_NEUTRAL, "Okay", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
@@ -1198,12 +1190,12 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
                             }
                         });
                         ad.show();
-                    }else if(status.equals("return-confirmed")){
+                    } else if (status.equals("return-confirmed")) {
                         AlertDialog ad = new AlertDialog.Builder(context).create();
                         ad.setTitle("Meet Up Summary");
-                        ad.setMessage("Location:\t\t"+rentalHeaderMod.getReturnMeetUp().getLocation().getLocationName()+
-                                "\n\nDate:\t\t" +rentalHeaderMod.getReturnMeetUp().getUserDayTime().getDay().getStrDay()+
-                                "\n\nTime:\t\t"+rentalHeaderMod.getReturnMeetUp().getUserDayTime().getTime().getStrTime());
+                        ad.setMessage("Location:\t\t" + rentalHeaderMod.getReturnMeetUp().getLocation().getLocationName() +
+                                "\n\nDate:\t\t" + rentalHeaderMod.getReturnMeetUp().getUserDayTime().getDay().getStrDay() +
+                                "\n\nTime:\t\t" + rentalHeaderMod.getReturnMeetUp().getUserDayTime().getTime().getStrTime());
                         ad.setButton(AlertDialog.BUTTON_NEUTRAL, "Okay", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
@@ -1212,7 +1204,7 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
                             }
                         });
                         ad.show();
-                    }else if(status.equals("returned")){
+                    } else if (status.equals("returned")) {
                         final Dialog dialogCustom = new Dialog(context);
                         dialogCustom.setContentView(R.layout.rent_delivered_book_custom_dialog);
                         TextView mTitle = (TextView) dialogCustom.findViewById(R.id.bookTitleDelivery);
@@ -1228,7 +1220,7 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
                         Glide.with(context).load(rentalHeaderMod.getRentalDetail().getBookOwner().getBookObj().getBookFilename()).centerCrop().into(ivBook);
 
                         mTitle.setText(rentalHeaderMod.getRentalDetail().getBookOwner().getBookObj().getBookTitle());
-                        mOwner.setText(rentalHeaderMod.getRentalDetail().getBookOwner().getUserObj().getUserFname()+" "+rentalHeaderMod.getRentalDetail().getBookOwner().getUserObj().getUserLname());
+                        mOwner.setText(rentalHeaderMod.getRentalDetail().getBookOwner().getUserObj().getUserFname() + " " + rentalHeaderMod.getRentalDetail().getBookOwner().getUserObj().getUserLname());
                         mLocation.setText(rentalHeaderMod.getReturnMeetUp().getLocation().getLocationName());
                         mDate.setText(rentalHeaderMod.getRentalReturnDate().toString());
                         mTime.setText(rentalHeaderMod.getReturnMeetUp().getUserDayTime().getTime().getStrTime());
@@ -1249,7 +1241,7 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
                         });
 
                         dialogCustom.show();
-                    }else if(status.equals("delivered")){
+                    } else if (status.equals("delivered")) {
                         final Dialog dialogCustom = new Dialog(context);
                         dialogCustom.setContentView(R.layout.delivered_book_custom_dialog);
                         TextView mTitle = (TextView) dialogCustom.findViewById(R.id.bookTitleDelivery);
@@ -1263,7 +1255,7 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
                         Glide.with(context).load(rentalHeaderMod.getRentalDetail().getBookOwner().getBookObj().getBookFilename()).centerCrop().into(ivBook);
 
                         mTitle.setText(rentalHeaderMod.getRentalDetail().getBookOwner().getBookObj().getBookTitle());
-                        mOwner.setText(rentalHeaderMod.getRentalDetail().getBookOwner().getUserObj().getUserFname()+" "+rentalHeaderMod.getRentalDetail().getBookOwner().getUserObj().getUserLname());
+                        mOwner.setText(rentalHeaderMod.getRentalDetail().getBookOwner().getUserObj().getUserFname() + " " + rentalHeaderMod.getRentalDetail().getBookOwner().getUserObj().getUserLname());
                         mLocation.setText(rentalHeaderMod.getMeetUp().getLocation().getLocationName());
                         mDate.setText(rentalHeaderMod.getDateDeliver().toString());
                         mTime.setText(rentalHeaderMod.getMeetUp().getUserDayTime().getTime().getStrTime());
@@ -1277,7 +1269,7 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
                         });
 
                         dialogCustom.show();
-                    }else if(status.equals("Rejected")){
+                    } else if (status.equals("Rejected")) {
                         final Dialog dialogCustom = new Dialog(context);
                         dialogCustom.setContentView(R.layout.rent_history_rejected);
                         TextView mTitle = (TextView) dialogCustom.findViewById(R.id.bookTitleDelivery);
@@ -1299,7 +1291,7 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
                         });
 
                         dialogCustom.show();
-                    }else if(status.equals("Approved")){
+                    } else if (status.equals("Approved")) {
                         Date nextDate = new Date();
                         locbool = false;
                         datebool = false;
@@ -1328,8 +1320,8 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
                         final UserDayTime udt = new UserDayTime();
                         final UserDayTime udtReturn = new UserDayTime();
 
-                        for(int init=0; init<userLoc.size(); init++){
-                            if(userLoc.get(init).getStatus().equals("MeetUp")){
+                        for (int init = 0; init < userLoc.size(); init++) {
+                            if (userLoc.get(init).getStatus().equals("MeetUp")) {
                                 meetUpLoc.add(userLoc.get(init));
                                 meetUpStringLoc.add(userLoc.get(init).getLocationName());
                             }
@@ -1361,21 +1353,21 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
                         Set<String> removeDuplicate = new HashSet<>();
 
 
-                        for(int init=0; init<daytime.size(); init++){
-                            if(daytime.get(init).getDay().getStrDay().equals("Monday")){
-                                nextDate=getNextDate(java.util.Calendar.MONDAY);
-                            }else if(daytime.get(init).getDay().getStrDay().equals("Tuesday")){
-                                nextDate=getNextDate(Calendar.TUESDAY);
-                            }else if(daytime.get(init).getDay().getStrDay().equals("Wednesday")){
-                                nextDate=getNextDate(Calendar.WEDNESDAY);
-                            }else if(daytime.get(init).getDay().getStrDay().equals("Thursday")){
-                                nextDate=getNextDate(Calendar.THURSDAY);
-                            }else if(daytime.get(init).getDay().getStrDay().equals("Friday")){
-                                nextDate=getNextDate(Calendar.FRIDAY);
-                            }else if(daytime.get(init).getDay().getStrDay().equals("Saturday")){
-                                nextDate=getNextDate(Calendar.SATURDAY);
-                            }else if(daytime.get(init).getDay().getStrDay().equals("Sunday")){
-                                nextDate=getNextDate(Calendar.SUNDAY);
+                        for (int init = 0; init < daytime.size(); init++) {
+                            if (daytime.get(init).getDay().getStrDay().equals("Monday")) {
+                                nextDate = getNextDate(java.util.Calendar.MONDAY);
+                            } else if (daytime.get(init).getDay().getStrDay().equals("Tuesday")) {
+                                nextDate = getNextDate(Calendar.TUESDAY);
+                            } else if (daytime.get(init).getDay().getStrDay().equals("Wednesday")) {
+                                nextDate = getNextDate(Calendar.WEDNESDAY);
+                            } else if (daytime.get(init).getDay().getStrDay().equals("Thursday")) {
+                                nextDate = getNextDate(Calendar.THURSDAY);
+                            } else if (daytime.get(init).getDay().getStrDay().equals("Friday")) {
+                                nextDate = getNextDate(Calendar.FRIDAY);
+                            } else if (daytime.get(init).getDay().getStrDay().equals("Saturday")) {
+                                nextDate = getNextDate(Calendar.SATURDAY);
+                            } else if (daytime.get(init).getDay().getStrDay().equals("Sunday")) {
+                                nextDate = getNextDate(Calendar.SUNDAY);
                             }
                             dateMeetUp.add(format.format(nextDate));
                         }
@@ -1427,77 +1419,77 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
                                     calendar.setTime(selectedDate);
                                     int dayOfWeek = calendar.get(Calendar.DAY_OF_WEEK);
 
-                                    for(int init=0; init<daytime.size(); init++){
+                                    for (int init = 0; init < daytime.size(); init++) {
                                         Log.d("iterateUserTime", daytime.get(init).getTime().getStrTime());
                                     }
 
                                     Log.d("dayOfWeek", Integer.toString(dayOfWeek));
 
-                                    if(dayOfWeek==Calendar.MONDAY){
+                                    if (dayOfWeek == Calendar.MONDAY) {
                                         DayModel day = new DayModel();
-                                        for(int init=0; init<daytime.size(); init++){
+                                        for (int init = 0; init < daytime.size(); init++) {
                                             Log.d("userTime", daytime.get(init).getTime().getStrTime());
-                                            if(daytime.get(init).getDay().getStrDay().equals("Monday")){
+                                            if (daytime.get(init).getDay().getStrDay().equals("Monday")) {
                                                 Log.d("TimeAdded", daytime.get(init).getTime().getStrTime());
                                                 timeStr.add(daytime.get(init).getTime().getStrTime());
                                             }
                                         }
                                     }
 
-                                    if(dayOfWeek==Calendar.TUESDAY){
+                                    if (dayOfWeek == Calendar.TUESDAY) {
                                         DayModel day = new DayModel();
-                                        for(int init=0; init<daytime.size(); init++){
-                                            if(daytime.get(init).getDay().getStrDay().equals("Tuesday")){
+                                        for (int init = 0; init < daytime.size(); init++) {
+                                            if (daytime.get(init).getDay().getStrDay().equals("Tuesday")) {
                                                 Log.d("TimeAdded", daytime.get(init).getTime().getStrTime());
                                                 timeStr.add(daytime.get(init).getTime().getStrTime());
                                             }
                                         }
                                     }
 
-                                    if(dayOfWeek==Calendar.WEDNESDAY){
+                                    if (dayOfWeek == Calendar.WEDNESDAY) {
                                         DayModel day = new DayModel();
-                                        for(int init=0; init<daytime.size(); init++){
-                                            if(daytime.get(init).getDay().getStrDay().equals("Wednesday")){
+                                        for (int init = 0; init < daytime.size(); init++) {
+                                            if (daytime.get(init).getDay().getStrDay().equals("Wednesday")) {
                                                 Log.d("TimeAdded", daytime.get(init).getTime().getStrTime());
                                                 timeStr.add(daytime.get(init).getTime().getStrTime());
                                             }
                                         }
                                     }
 
-                                    if(dayOfWeek==Calendar.THURSDAY){
+                                    if (dayOfWeek == Calendar.THURSDAY) {
                                         DayModel day = new DayModel();
-                                        for(int init=0; init<daytime.size(); init++){
-                                            if(daytime.get(init).getDay().getStrDay().equals("Thursday")){
+                                        for (int init = 0; init < daytime.size(); init++) {
+                                            if (daytime.get(init).getDay().getStrDay().equals("Thursday")) {
                                                 Log.d("TimeAdded", daytime.get(init).getTime().getStrTime());
                                                 timeStr.add(daytime.get(init).getTime().getStrTime());
                                             }
                                         }
                                     }
 
-                                    if(dayOfWeek==Calendar.FRIDAY){
+                                    if (dayOfWeek == Calendar.FRIDAY) {
                                         DayModel day = new DayModel();
-                                        for(int init=0; init<daytime.size(); init++){
-                                            if(daytime.get(init).getDay().getStrDay().equals("Friday")){
+                                        for (int init = 0; init < daytime.size(); init++) {
+                                            if (daytime.get(init).getDay().getStrDay().equals("Friday")) {
                                                 Log.d("TimeAdded", daytime.get(init).getTime().getStrTime());
                                                 timeStr.add(daytime.get(init).getTime().getStrTime());
                                             }
                                         }
                                     }
 
-                                    if(dayOfWeek==Calendar.SATURDAY){
+                                    if (dayOfWeek == Calendar.SATURDAY) {
                                         DayModel day = new DayModel();
-                                        for(int init=0; init<daytime.size(); init++){
-                                            if(daytime.get(init).getDay().getStrDay().equals("Saturday")){
+                                        for (int init = 0; init < daytime.size(); init++) {
+                                            if (daytime.get(init).getDay().getStrDay().equals("Saturday")) {
                                                 Log.d("TimeAdded", daytime.get(init).getTime().getStrTime());
                                                 timeStr.add(daytime.get(init).getTime().getStrTime());
                                             }
                                         }
                                     }
 
-                                    if(dayOfWeek==Calendar.SUNDAY){
+                                    if (dayOfWeek == Calendar.SUNDAY) {
                                         DayModel day = new DayModel();
-                                        for(int init=0; init<daytime.size(); init++){
-                                            if(daytime.get(init).getDay().getStrDay().equals("Sunday")){
+                                        for (int init = 0; init < daytime.size(); init++) {
+                                            if (daytime.get(init).getDay().getStrDay().equals("Sunday")) {
                                                 Log.d("TimeAdded", daytime.get(init).getTime().getStrTime());
                                                 timeStr.add(daytime.get(init).getTime().getStrTime());
                                             }
@@ -1537,8 +1529,8 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
                         mSubmit.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
-                                if(datebool==true&&locbool==true&&timebool==true){
-                                    Log.d("himo ka ug ","joke pag add na bitaw");
+                                if (datebool == true && locbool == true && timebool == true) {
+                                    Log.d("himo ka ug ", "joke pag add na bitaw");
                                     muModel.setUserDayTime(udt);
                                     mureturn.setUserDayTime(udtReturn);
                                     rentalHeaderMod.setMeetUp(muModel);
@@ -1546,11 +1538,11 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
 
                                     AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(context);
                                     alertDialogBuilder.setTitle("Meet Up Summary");
-                                    alertDialogBuilder.setMessage("Delivery\tDate:\t" +rentalHeaderMod.getDateDeliver()+
-                                            "\n\nTime:\t"+muModel.getUserDayTime().getTime().getStrTime()+
-                                            "\n\nLocation:\t"+muModel.getLocation().getLocationName()+"\n\nReturn\tDate:\t"+rentalHeaderMod.getRentalReturnDate()+
-                                            "\n\nTime:\t"+mureturn.getUserDayTime().getTime().getStrTime()+
-                                            "\n\nLocation:\t"+mureturn.getLocation().getLocationName());
+                                    alertDialogBuilder.setMessage("Delivery\tDate:\t" + rentalHeaderMod.getDateDeliver() +
+                                            "\n\nTime:\t" + muModel.getUserDayTime().getTime().getStrTime() +
+                                            "\n\nLocation:\t" + muModel.getLocation().getLocationName() + "\n\nReturn\tDate:\t" + rentalHeaderMod.getRentalReturnDate() +
+                                            "\n\nTime:\t" + mureturn.getUserDayTime().getTime().getStrTime() +
+                                            "\n\nLocation:\t" + mureturn.getLocation().getLocationName());
                                     alertDialogBuilder.setPositiveButton("Okay",
                                             new DialogInterface.OnClickListener() {
                                                 @RequiresApi(api = Build.VERSION_CODES.N)
@@ -1562,7 +1554,7 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
 
                                     AlertDialog alertDialog = alertDialogBuilder.create();
                                     alertDialog.show();
-                                }else{
+                                } else {
                                     AlertDialog ad = new AlertDialog.Builder(context).create();
                                     ad.setTitle("Alert!");
                                     ad.setMessage("You should fill all data.");
@@ -1578,7 +1570,7 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
                         });
                         dialog.setContentView(view);
                         dialog.show();
-                    }else if(status.equals("Request")){
+                    } else if (status.equals("Request")) {
                         final Dialog dialogCustom = new Dialog(context);
                         dialogCustom.setContentView(R.layout.rent_request_custom_dialog);
                         TextView mTitle = (TextView) dialogCustom.findViewById(R.id.bookTitle);
@@ -1590,7 +1582,7 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
                         mTitle.setText(userNotificationList.get(position).getBookActionPerformedOn().getBookObj().getBookTitle());
 
                         Glide.with(context).load(userNotificationList.get(position).getBookActionPerformedOn().getBookObj().getBookFilename()).centerCrop().into(ivBook);
-                        mRequestor.setText(userNotificationList.get(position).getUserPerformer().getUserFname()+" "+userNotificationList.get(position).getUserPerformer().getUserLname());
+                        mRequestor.setText(userNotificationList.get(position).getUserPerformer().getUserFname() + " " + userNotificationList.get(position).getUserPerformer().getUserLname());
 
                         mReject.setOnClickListener(new View.OnClickListener() {
                             @Override
@@ -1603,9 +1595,9 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
                                 mSubmitReason.setOnClickListener(new View.OnClickListener() {
                                     @Override
                                     public void onClick(View v) {
-                                        if(etReason.getText().length()==0){
+                                        if (etReason.getText().length() == 0) {
                                             etReason.setError("Field should not be empty.");
-                                        }else{
+                                        } else {
                                             rentalHeaderMod.setStatus("Rejected");
                                             String message = etReason.getText().toString();
                                             rejectRequestRent(rentalHeaderMod, message);
@@ -1660,11 +1652,11 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
             requestQueue.add(stringRequest);
         }
 
-        public void rejectRequestRent(final RentalHeader rentalHeader, final String message){
+        public void rejectRequestRent(final RentalHeader rentalHeader, final String message) {
             RequestQueue requestQueue = Volley.newRequestQueue(getContext());
             User user = new User();
             user = (User) SPUtility.getSPUtil(getContext()).getObject("USER_OBJECT", User.class);
-            String URL = Constants.REJECT_REQUEST_RENT+rentalHeader.getRentalHeaderId();
+            String URL = Constants.REJECT_REQUEST_RENT + rentalHeader.getRentalHeaderId();
 
             Log.d("rejectRequestRentURL", URL);
             Log.d("rejectRequestRent", rentalHeader.toString());
@@ -1717,11 +1709,11 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
             requestQueue.add(stringRequest);
         }
 
-        public void acceptRequestRent(RentalHeader rentalHeader){
+        public void acceptRequestRent(RentalHeader rentalHeader) {
             RequestQueue requestQueue = Volley.newRequestQueue(getContext());
             User user = new User();
             user = (User) SPUtility.getSPUtil(getContext()).getObject("USER_OBJECT", User.class);
-            String URL = Constants.ACCEPT_REQUEST_RENT+rentalHeader.getRentalHeaderId();
+            String URL = Constants.ACCEPT_REQUEST_RENT + rentalHeader.getRentalHeaderId();
 
             Log.d("AcceptRequestRentURL", URL);
 
@@ -1763,6 +1755,7 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
             requestQueue.add(stringRequest);
         }
 
+
         public void getBookReview(final int position, final RentalHeader rentalHeader1) {
             Log.d("setToComplete", "inside");
             RequestQueue requestQueue = Volley.newRequestQueue(context);
@@ -1772,7 +1765,7 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
             List<String> rateStr = Arrays.asList(userNotificationList.get(position).getExtraMessage().split(","));
 
             d("UserIdReceive", String.valueOf(user.getUserId()));
-            String URL = Constants.GET_BOOK_REVIEW+rateStr.get(1).replaceAll("\\s+","");
+            String URL = Constants.GET_BOOK_REVIEW + rateStr.get(1).replaceAll("\\s+", "");
             Log.d("getBookReview", URL);
 
             final RentalHeader rentalHeader = new RentalHeader();
@@ -1789,7 +1782,7 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
 
                     BookOwnerReview bookOwnerReview = gson.fromJson(response, BookOwnerReview.class);
 
-                    getBookRating(position, bookOwnerReview, rentalHeader1);
+                    getBookRating(position, bookOwnerReview);
 
                 }
             }, new Response.ErrorListener() {
@@ -1817,7 +1810,7 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
             requestQueue.add(stringRequest);
         }
 
-        public void getBookRating(final int position, final BookOwnerReview bookOwnerReviewMod, RentalHeader rentalHeader1) {
+        public void getBookRating(final int position, final BookOwnerReview bookOwnerReviewMod) {
             Log.d("setToComplete", "inside");
             RequestQueue requestQueue = Volley.newRequestQueue(context);
             User user = new User();
@@ -1826,7 +1819,7 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
             List<String> rateStr = Arrays.asList(userNotificationList.get(position).getExtraMessage().split(","));
 
             d("UserIdReceive", String.valueOf(user.getUserId()));
-            String URL = Constants.GET_BOOK_RATINGS+rateStr.get(0).replaceAll("\\s+","");
+            String URL = Constants.GET_BOOK_RATINGS + rateStr.get(0).replaceAll("\\s+", "");
             Log.d("getBookRating", URL);
 
             final RentalHeader rentalHeader = new RentalHeader();
@@ -1862,20 +1855,20 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
 
                     String author = "";
 
-                    if(userNotificationList.get(position).getBookActionPerformedOn().getBookObj().getBookAuthor().size()!=0){
-                        for(int init=0; init<userNotificationList.get(position).getBookActionPerformedOn().getBookObj().getBookAuthor().size(); init++){
-                            if(!(userNotificationList.get(position).getBookActionPerformedOn().getBookObj().getBookAuthor().get(init).getAuthorFName().equals(""))){
-                                author+=userNotificationList.get(position).getBookActionPerformedOn().getBookObj().getBookAuthor().get(init).getAuthorFName()+" ";
-                                if(!(userNotificationList.get(position).getBookActionPerformedOn().getBookObj().getBookAuthor().get(init).getAuthorLName().equals(""))){
-                                    author+=userNotificationList.get(position).getBookActionPerformedOn().getBookObj().getBookAuthor().get(init).getAuthorLName();
-                                    if(init+1<userNotificationList.get(position).getBookActionPerformedOn().getBookObj().getBookAuthor().size()){
-                                        author+=", ";
+                    if (userNotificationList.get(position).getBookActionPerformedOn().getBookObj().getBookAuthor().size() != 0) {
+                        for (int init = 0; init < userNotificationList.get(position).getBookActionPerformedOn().getBookObj().getBookAuthor().size(); init++) {
+                            if (!(userNotificationList.get(position).getBookActionPerformedOn().getBookObj().getBookAuthor().get(init).getAuthorFName().equals(""))) {
+                                author += userNotificationList.get(position).getBookActionPerformedOn().getBookObj().getBookAuthor().get(init).getAuthorFName() + " ";
+                                if (!(userNotificationList.get(position).getBookActionPerformedOn().getBookObj().getBookAuthor().get(init).getAuthorLName().equals(""))) {
+                                    author += userNotificationList.get(position).getBookActionPerformedOn().getBookObj().getBookAuthor().get(init).getAuthorLName();
+                                    if (init + 1 < userNotificationList.get(position).getBookActionPerformedOn().getBookObj().getBookAuthor().size()) {
+                                        author += ", ";
                                     }
                                 }
                             }
                         }
-                    }else{
-                        author="Unknown Author";
+                    } else {
+                        author = "Unknown Author";
                     }
                     mAuthor.setText(author);
 
@@ -1927,7 +1920,7 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
             User user = new User();
             user = (User) SPUtility.getSPUtil(context).getObject("USER_OBJECT", User.class);
             d("UserIdReceive", String.valueOf(user.getUserId()));
-            String URL = Constants.SET_TO_COMPLETE+userNotificationList.get(position).getActionId()+"/"+userRatingId;
+            String URL = Constants.SET_TO_COMPLETE + userNotificationList.get(position).getActionId() + "/" + userRatingId;
             Log.d("setToComplete", URL);
 
             final RentalHeader rentalHeader = new RentalHeader();
@@ -1973,7 +1966,7 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
             User user = new User();
             user = (User) SPUtility.getSPUtil(context).getObject("USER_OBJECT", User.class);
             d("UserIdReceive", String.valueOf(user.getUserId()));
-            String URL = Constants.CONFIRM_RETURN+rentalHeaderMod.getRentalHeaderId();
+            String URL = Constants.CONFIRM_RETURN + rentalHeaderMod.getRentalHeaderId();
 
             final RentalHeader rentalHeader = new RentalHeader();
 
@@ -2024,7 +2017,7 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
             User user = new User();
             user = (User) SPUtility.getSPUtil(context).getObject("USER_OBJECT", User.class);
             d("UserIdReceive", String.valueOf(user.getUserId()));
-            String URL = Constants.DENY_RETURN+rentalHeaderMod.getRentalHeaderId();
+            String URL = Constants.DENY_RETURN + rentalHeaderMod.getRentalHeaderId();
 
             final RentalHeader rentalHeader = new RentalHeader();
 
@@ -2116,11 +2109,11 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
             requestQueue.add(stringRequest);
         }
 
-        public void updateRentalExtra(UserNotification un){
+        public void updateRentalExtra(UserNotification un) {
             RequestQueue requestQueue = Volley.newRequestQueue(getContext());
             User user = new User();
             user = (User) SPUtility.getSPUtil(getContext()).getObject("USER_OBJECT", User.class);
-            String URL = Constants.UPDATE_RENTAL_EXTRA+un.getUserNotificationId();
+            String URL = Constants.UPDATE_RENTAL_EXTRA + un.getUserNotificationId();
 
             final Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd").registerTypeAdapter(Date.class, GsonDateDeserializer.getInstance()).create();
             final String mRequestBody = gson.toJson(un);
@@ -2157,7 +2150,6 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
 
             requestQueue.add(stringRequest);
         }
-
 
 
         public void addUserNotif(UserNotification userNotification) {
@@ -2262,8 +2254,8 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
                             List<String> meetUpStringLoc = new ArrayList<String>();
                             final UserDayTime udt = new UserDayTime();
 
-                            for(int init=0; init<userLoc.size(); init++){
-                                if(userLoc.get(init).getStatus().equals("MeetUp")){
+                            for (int init = 0; init < userLoc.size(); init++) {
+                                if (userLoc.get(init).getStatus().equals("MeetUp")) {
                                     meetUpLoc.add(userLoc.get(init));
                                     meetUpStringLoc.add(userLoc.get(init).getLocationName());
                                 }
@@ -2293,21 +2285,21 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
                             Set<String> removeDuplicate = new HashSet<>();
 
 
-                            for(int init=0; init<daytime.size(); init++){
-                                if(daytime.get(init).getDay().getStrDay().equals("Monday")){
-                                    nextDate=getNextDate(java.util.Calendar.MONDAY);
-                                }else if(daytime.get(init).getDay().getStrDay().equals("Tuesday")){
-                                    nextDate=getNextDate(Calendar.TUESDAY);
-                                }else if(daytime.get(init).getDay().getStrDay().equals("Wednesday")){
-                                    nextDate=getNextDate(Calendar.WEDNESDAY);
-                                }else if(daytime.get(init).getDay().getStrDay().equals("Thursday")){
-                                    nextDate=getNextDate(Calendar.THURSDAY);
-                                }else if(daytime.get(init).getDay().getStrDay().equals("Friday")){
-                                    nextDate=getNextDate(Calendar.FRIDAY);
-                                }else if(daytime.get(init).getDay().getStrDay().equals("Saturday")){
-                                    nextDate=getNextDate(Calendar.SATURDAY);
-                                }else if(daytime.get(init).getDay().getStrDay().equals("Sunday")){
-                                    nextDate=getNextDate(Calendar.SUNDAY);
+                            for (int init = 0; init < daytime.size(); init++) {
+                                if (daytime.get(init).getDay().getStrDay().equals("Monday")) {
+                                    nextDate = getNextDate(java.util.Calendar.MONDAY);
+                                } else if (daytime.get(init).getDay().getStrDay().equals("Tuesday")) {
+                                    nextDate = getNextDate(Calendar.TUESDAY);
+                                } else if (daytime.get(init).getDay().getStrDay().equals("Wednesday")) {
+                                    nextDate = getNextDate(Calendar.WEDNESDAY);
+                                } else if (daytime.get(init).getDay().getStrDay().equals("Thursday")) {
+                                    nextDate = getNextDate(Calendar.THURSDAY);
+                                } else if (daytime.get(init).getDay().getStrDay().equals("Friday")) {
+                                    nextDate = getNextDate(Calendar.FRIDAY);
+                                } else if (daytime.get(init).getDay().getStrDay().equals("Saturday")) {
+                                    nextDate = getNextDate(Calendar.SATURDAY);
+                                } else if (daytime.get(init).getDay().getStrDay().equals("Sunday")) {
+                                    nextDate = getNextDate(Calendar.SUNDAY);
                                 }
                                 dateMeetUp.add(format.format(nextDate));
                             }
@@ -2342,75 +2334,75 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
                                         calendar.setTime(selectedDate);
                                         int dayOfWeek = calendar.get(Calendar.DAY_OF_WEEK);
 
-                                        for(int init=0; init<daytime.size(); init++){
+                                        for (int init = 0; init < daytime.size(); init++) {
                                             Log.d("iterateUserTime", daytime.get(init).getTime().getStrTime());
                                         }
 
-                                        if(dayOfWeek==Calendar.MONDAY){
+                                        if (dayOfWeek == Calendar.MONDAY) {
                                             DayModel day = new DayModel();
-                                            for(int init=0; init<daytime.size(); init++){
+                                            for (int init = 0; init < daytime.size(); init++) {
                                                 Log.d("userTime", daytime.get(init).getTime().getStrTime());
-                                                if(daytime.get(init).getDay().getStrDay().equals("Monday")){
+                                                if (daytime.get(init).getDay().getStrDay().equals("Monday")) {
                                                     Log.d("TimeAdded", daytime.get(init).getTime().getStrTime());
                                                     timeStr.add(daytime.get(init).getTime().getStrTime());
                                                 }
                                             }
                                         }
 
-                                        if(dayOfWeek==Calendar.TUESDAY){
+                                        if (dayOfWeek == Calendar.TUESDAY) {
                                             DayModel day = new DayModel();
-                                            for(int init=0; init<daytime.size(); init++){
-                                                if(daytime.get(init).getDay().getStrDay().equals("Tuesday")){
+                                            for (int init = 0; init < daytime.size(); init++) {
+                                                if (daytime.get(init).getDay().getStrDay().equals("Tuesday")) {
                                                     Log.d("TimeAdded", daytime.get(init).getTime().getStrTime());
                                                     timeStr.add(daytime.get(init).getTime().getStrTime());
                                                 }
                                             }
                                         }
 
-                                        if(dayOfWeek==Calendar.WEDNESDAY){
+                                        if (dayOfWeek == Calendar.WEDNESDAY) {
                                             DayModel day = new DayModel();
-                                            for(int init=0; init<daytime.size(); init++){
-                                                if(daytime.get(init).getDay().getStrDay().equals("Wednesday")){
+                                            for (int init = 0; init < daytime.size(); init++) {
+                                                if (daytime.get(init).getDay().getStrDay().equals("Wednesday")) {
                                                     Log.d("TimeAdded", daytime.get(init).getTime().getStrTime());
                                                     timeStr.add(daytime.get(init).getTime().getStrTime());
                                                 }
                                             }
                                         }
 
-                                        if(dayOfWeek==Calendar.THURSDAY){
+                                        if (dayOfWeek == Calendar.THURSDAY) {
                                             DayModel day = new DayModel();
-                                            for(int init=0; init<daytime.size(); init++){
-                                                if(daytime.get(init).getDay().getStrDay().equals("Thursday")){
+                                            for (int init = 0; init < daytime.size(); init++) {
+                                                if (daytime.get(init).getDay().getStrDay().equals("Thursday")) {
                                                     Log.d("TimeAdded", daytime.get(init).getTime().getStrTime());
                                                     timeStr.add(daytime.get(init).getTime().getStrTime());
                                                 }
                                             }
                                         }
 
-                                        if(dayOfWeek==Calendar.FRIDAY){
+                                        if (dayOfWeek == Calendar.FRIDAY) {
                                             DayModel day = new DayModel();
-                                            for(int init=0; init<daytime.size(); init++){
-                                                if(daytime.get(init).getDay().getStrDay().equals("Friday")){
+                                            for (int init = 0; init < daytime.size(); init++) {
+                                                if (daytime.get(init).getDay().getStrDay().equals("Friday")) {
                                                     Log.d("TimeAdded", daytime.get(init).getTime().getStrTime());
                                                     timeStr.add(daytime.get(init).getTime().getStrTime());
                                                 }
                                             }
                                         }
 
-                                        if(dayOfWeek==Calendar.SATURDAY){
+                                        if (dayOfWeek == Calendar.SATURDAY) {
                                             DayModel day = new DayModel();
-                                            for(int init=0; init<daytime.size(); init++){
-                                                if(daytime.get(init).getDay().getStrDay().equals("Saturday")){
+                                            for (int init = 0; init < daytime.size(); init++) {
+                                                if (daytime.get(init).getDay().getStrDay().equals("Saturday")) {
                                                     Log.d("TimeAdded", daytime.get(init).getTime().getStrTime());
                                                     timeStr.add(daytime.get(init).getTime().getStrTime());
                                                 }
                                             }
                                         }
 
-                                        if(dayOfWeek==Calendar.SUNDAY){
+                                        if (dayOfWeek == Calendar.SUNDAY) {
                                             DayModel day = new DayModel();
-                                            for(int init=0; init<daytime.size(); init++){
-                                                if(daytime.get(init).getDay().getStrDay().equals("Sunday")){
+                                            for (int init = 0; init < daytime.size(); init++) {
+                                                if (daytime.get(init).getDay().getStrDay().equals("Sunday")) {
                                                     Log.d("TimeAdded", daytime.get(init).getTime().getStrTime());
                                                     timeStr.add(daytime.get(init).getTime().getStrTime());
                                                 }
@@ -2449,16 +2441,16 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
                             mSubmit.setOnClickListener(new View.OnClickListener() {
                                 @Override
                                 public void onClick(View v) {
-                                    if(datebool==true&&locbool==true&&timebool==true){
-                                        Log.d("himo ka ug ","joke pag add na bitaw");
+                                    if (datebool == true && locbool == true && timebool == true) {
+                                        Log.d("himo ka ug ", "joke pag add na bitaw");
                                         muModel.setUserDayTime(udt);
                                         auctionHeaderMod.setMeetUp(muModel);
 
                                         AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(context);
                                         alertDialogBuilder.setTitle("Meet Up Summary");
-                                        alertDialogBuilder.setMessage("Date:\t" +auctionHeaderMod.getDateDelivered()+
-                                                "\n\nTime:\t"+muModel.getUserDayTime().getTime().getStrTime()+
-                                                "\n\nLocation:\t"+muModel.getLocation().getLocationName());
+                                        alertDialogBuilder.setMessage("Date:\t" + auctionHeaderMod.getDateDelivered() +
+                                                "\n\nTime:\t" + muModel.getUserDayTime().getTime().getStrTime() +
+                                                "\n\nLocation:\t" + muModel.getLocation().getLocationName());
                                         alertDialogBuilder.setPositiveButton("Okay",
                                                 new DialogInterface.OnClickListener() {
                                                     @RequiresApi(api = Build.VERSION_CODES.N)
@@ -2470,7 +2462,7 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
 
                                         AlertDialog alertDialog = alertDialogBuilder.create();
                                         alertDialog.show();
-                                    }else{
+                                    } else {
                                         AlertDialog ad = new AlertDialog.Builder(context).create();
                                         ad.setTitle("Alert!");
                                         ad.setMessage("You should fill all data.");
@@ -2493,20 +2485,20 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
                         bundle.putSerializable("userModelPass", userNotificationList.get(position).getUserPerformer());
                         intent.putExtras(bundle);
                         context.startActivity(intent);
-                    }else if(status.equals("lose")){
+                    } else if (status.equals("lose")) {
                         Intent intent = new Intent(context, ViewAuctionBook.class);
                         Bundle bundle = new Bundle();
-                        bundle.putSerializable("auctionBook",auctionHeaderMod.getAuctionDetail());
+                        bundle.putSerializable("auctionBook", auctionHeaderMod.getAuctionDetail());
                         bundle.putBoolean("notif", true);
                         intent.putExtras(bundle);
                         context.startActivity(intent);
-                    }else if (status.equals("view")) {
+                    } else if (status.equals("view")) {
                         Intent intent = new Intent(context, ViewBookAct.class);
                         Bundle bundle = new Bundle();
                         bundle.putSerializable("auctionBook", auctionHeader.getAuctionDetail());
                         intent.putExtras(bundle);
                         context.startActivity(intent);
-                    }else if(status.equals("delivered")){
+                    } else if (status.equals("delivered")) {
                         final Dialog dialogCustom = new Dialog(context);
                         dialogCustom.setContentView(R.layout.delivered_book_custom_dialog);
                         TextView mTitle = (TextView) dialogCustom.findViewById(R.id.bookTitleDelivery);
@@ -2520,7 +2512,7 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
                         Glide.with(context).load(auctionHeaderMod.getAuctionDetail().getBookOwner().getBookObj().getBookFilename()).centerCrop().into(ivBook);
 
                         mTitle.setText(auctionHeaderMod.getAuctionDetail().getBookOwner().getBookObj().getBookTitle());
-                        mOwner.setText(auctionHeaderMod.getAuctionDetail().getBookOwner().getUserObj().getUserFname()+" "+auctionHeaderMod.getAuctionDetail().getBookOwner().getUserObj().getUserLname());
+                        mOwner.setText(auctionHeaderMod.getAuctionDetail().getBookOwner().getUserObj().getUserFname() + " " + auctionHeaderMod.getAuctionDetail().getBookOwner().getUserObj().getUserLname());
                         mLocation.setText(auctionHeaderMod.getMeetUp().getLocation().getLocationName());
                         mDate.setText(auctionHeaderMod.getDateDelivered());
                         mTime.setText(auctionHeaderMod.getMeetUp().getUserDayTime().getTime().getStrTime());
@@ -2535,18 +2527,19 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
 
                         dialogCustom.show();
 
-                    }else if(status.equals("Completed")){
+                    } else if (status.equals("Complete")) {
                         final Dialog dialogCustom = new Dialog(context);
                         dialogCustom.setContentView(R.layout.auction_complete_book_custom_dialog);
                         TextView mTitle = (TextView) dialogCustom.findViewById(R.id.bookTitleDelivery);
                         TextView mOwner = (TextView) dialogCustom.findViewById(R.id.deliveredBy);
                         ImageView ivBook = (ImageView) dialogCustom.findViewById(R.id.ivBookDelivery);
                         Button btnOkay = (Button) dialogCustom.findViewById(R.id.btnDeliveryOkay);
+                        Button btnRating = (Button) dialogCustom.findViewById(R.id.btnSeeRating);
 
                         Glide.with(context).load(auctionHeaderMod.getAuctionDetail().getBookOwner().getBookObj().getBookFilename()).centerCrop().into(ivBook);
 
                         mTitle.setText(auctionHeaderMod.getAuctionDetail().getBookOwner().getBookObj().getBookTitle());
-                        mOwner.setText(auctionHeaderMod.getAuctionDetail().getBookOwner().getUserObj().getUserFname()+" "+auctionHeaderMod.getAuctionDetail().getBookOwner().getUserObj().getUserLname());
+                        mOwner.setText(auctionHeaderMod.getAuctionDetail().getBookOwner().getUserObj().getUserFname() + " " + auctionHeaderMod.getAuctionDetail().getBookOwner().getUserObj().getUserLname());
 
                         btnOkay.setOnClickListener(new View.OnClickListener() {
                             @Override
@@ -2556,13 +2549,21 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
                             }
                         });
 
+                        btnRating.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                Log.d("userRate padulong", "inside");
+                                getUserRating(position);
+                            }
+                        });
+
                         dialogCustom.show();
-                    }else if(status.equals("Confirm")){
+                    } else if (status.equals("Confirm")) {
                         AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(context);
                         alertDialogBuilder.setTitle("Meet Up Summary");
-                        alertDialogBuilder.setMessage("Date:\t" +auctionHeaderMod.getDateDelivered()+
-                                "\n\nTime:\t"+auctionHeaderMod.getMeetUp().getUserDayTime().getTime().getStrTime()+
-                                "\n\nLocation:\t"+auctionHeaderMod.getMeetUp().getLocation().getLocationName());
+                        alertDialogBuilder.setMessage("Date:\t" + auctionHeaderMod.getDateDelivered() +
+                                "\n\nTime:\t" + auctionHeaderMod.getMeetUp().getUserDayTime().getTime().getStrTime() +
+                                "\n\nLocation:\t" + auctionHeaderMod.getMeetUp().getLocation().getLocationName());
                         alertDialogBuilder.setPositiveButton("Okay", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
@@ -2622,6 +2623,13 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
                 @Override
                 public void onResponse(String response) {
                     Log.i("swapHeaderResponseId", response);
+                    int maxLogSize = 2000;
+                    for (int i = 0; i <= response.length() / maxLogSize; i++) {
+                        int start = i * maxLogSize;
+                        int end = (i + 1) * maxLogSize;
+                        end = end > response.length() ? response.length() : end;
+                        Log.d("swapHeaderResponseId", response.substring(start, end));
+                    }
                     final SwapHeader swapHeaderMod = gson.fromJson(response, SwapHeader.class);
 
                     if (status.equals("view")) {
@@ -2640,9 +2648,9 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
                         }
                     } else if (status.equals("change")) {
                         swapOwners(swapHeaderMod);
-                    }else if(status.equals("summ")){
+                    } else if (status.equals("summ")) {
                         meetUpSumm(position, swapHeaderMod);
-                    }else if(status.equals("delivered")){
+                    } else if (status.equals("delivered")) {
                         final Dialog dialogCustom = new Dialog(context);
                         dialogCustom.setContentView(R.layout.delivered_book_custom_dialog);
                         TextView mTitle = (TextView) dialogCustom.findViewById(R.id.bookTitleDelivery);
@@ -2656,7 +2664,7 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
                         Glide.with(context).load(swapHeaderMod.getSwapDetail().getBookOwner().getBookObj().getBookFilename()).centerCrop().into(ivBook);
 
                         mTitle.setText(swapHeaderMod.getSwapDetail().getBookOwner().getBookObj().getBookTitle());
-                        mOwner.setText(swapHeaderMod.getSwapDetail().getBookOwner().getUserObj().getUserFname()+" "+swapHeaderMod.getSwapDetail().getBookOwner().getUserObj().getUserLname());
+                        mOwner.setText(swapHeaderMod.getSwapDetail().getBookOwner().getUserObj().getUserFname() + " " + swapHeaderMod.getSwapDetail().getBookOwner().getUserObj().getUserLname());
                         mLocation.setText(swapHeaderMod.getMeetUp().getLocation().getLocationName());
                         mDate.setText(swapHeaderMod.getDateDelivered());
                         mTime.setText(swapHeaderMod.getMeetUp().getUserDayTime().getTime().getStrTime());
@@ -2664,39 +2672,58 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
                         btnOkay.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
-                                dialogCustom.dismiss();
+                                Intent intent = new Intent(context, NotificationAct.class);
+                                context.startActivity(intent);
                             }
                         });
 
                         dialogCustom.show();
-                    }else if(status.equals("Completed")){
+                    } else if (status.equals("Completed")) {
+                        List<SwapHeaderDetail> swapDetailList = new ArrayList<SwapHeaderDetail>();
+                        swapDetailList = swapHeaderMod.getSwapHeaderDetail();
                         final Dialog dialogCustom = new Dialog(context);
                         dialogCustom.setContentView(R.layout.success_swap_custom_dialog);
                         TextView mTitle = (TextView) dialogCustom.findViewById(R.id.successBookTitle);
-                        TextView mTitle2 = (TextView) dialogCustom.findViewById(R.id.successBookTitle2);
                         TextView mOwner = (TextView) dialogCustom.findViewById(R.id.successBookOwner);
-                        TextView mOwner2 = (TextView) dialogCustom.findViewById(R.id.successBookOwner2);
                         ImageView ivBook = (ImageView) dialogCustom.findViewById(R.id.successBook);
-                        ImageView ivBook2 = (ImageView) dialogCustom.findViewById(R.id.successBook2);
                         Button btnOkay = (Button) dialogCustom.findViewById(R.id.btnOkaySuccess);
+                        Button btnRating = (Button) dialogCustom.findViewById(R.id.btnSeeRating);
+                        TextView mRequestor = (TextView) dialogCustom.findViewById(R.id.requestor);
+                        ListView ly = (ListView) dialogCustom.findViewById(R.id.listSwap);
 
                         Glide.with(context).load(swapHeaderMod.getSwapDetail().getBookOwner().getBookObj().getBookFilename()).centerCrop().into(ivBook);
-                        Glide.with(context).load(swapHeaderMod.getRequestedSwapDetail().getBookOwner().getBookObj().getBookFilename()).centerCrop().into(ivBook2);
 
                         mTitle.setText(swapHeaderMod.getSwapDetail().getBookOwner().getBookObj().getBookTitle());
-                        mOwner.setText(swapHeaderMod.getRequestedSwapDetail().getBookOwner().getUserObj().getUserFname()+" "+swapHeaderMod.getRequestedSwapDetail().getBookOwner().getUserObj().getUserLname());
-                        mTitle2.setText(swapHeaderMod.getRequestedSwapDetail().getBookOwner().getBookObj().getBookTitle());
-                        mOwner2.setText(swapHeaderMod.getSwapDetail().getBookOwner().getUserObj().getUserFname()+" "+swapHeaderMod.getSwapDetail().getBookOwner().getUserObj().getUserLname());
+                        mOwner.setText(swapHeaderMod.getSwapDetail().getBookOwner().getUserObj().getUserFname() + " " + swapHeaderMod.getSwapDetail().getBookOwner().getUserObj().getUserLname());
+                        mRequestor.setText(swapHeaderMod.getRequestedSwapDetail().getBookOwner().getUserObj().getUserFname() + " " + swapHeaderMod.getRequestedSwapDetail().getBookOwner().getUserObj().getUserLname());
+
+                        for (int init = 0; init < swapDetailList.size(); init++) {
+                            if (swapDetailList.get(init).getSwapType().equals("Requestee")) {
+                                swapDetailList.remove(init);
+                                break;
+                            }
+                        }
+
+                        final SwapRequestAdapter adapter = new SwapRequestAdapter(act, swapDetailList);
+                        ly.setAdapter(adapter);
 
                         btnOkay.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
-                                dialogCustom.dismiss();
+                                Intent intent = new Intent(context, NotificationAct.class);
+                                context.startActivity(intent);
+                            }
+                        });
+
+                        btnRating.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                getUserRating(position);
                             }
                         });
 
                         dialogCustom.show();
-                    }else if(status.equals("Rejected")){
+                    } else if (status.equals("Rejected")) {
                         List<SwapHeaderDetail> swapDetailList = new ArrayList<SwapHeaderDetail>();
                         swapDetailList = swapHeaderMod.getSwapHeaderDetail();
 
@@ -2718,8 +2745,8 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
                         List<SwapHeaderDetail> newSHD = new ArrayList<SwapHeaderDetail>();
 
 
-                        for(int init=0; init<swapDetailList.size(); init++){
-                            if(swapDetailList.get(init).getSwapType().equals("Requestor")){
+                        for (int init = 0; init < swapDetailList.size(); init++) {
+                            if (swapDetailList.get(init).getSwapType().equals("Requestor")) {
                                 newSHD.add(swapDetailList.get(init));
                             }
                         }
@@ -2739,7 +2766,7 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
                             }
                         });
                         dialogCustom.show();
-                    }else if(status.equals("Request")){
+                    } else if (status.equals("Request")) {
                         List<SwapHeaderDetail> swapDetailList = new ArrayList<SwapHeaderDetail>();
                         swapDetailList = swapHeaderMod.getSwapHeaderDetail();
 
@@ -2751,11 +2778,11 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
                         TextView tvOwner = (TextView) view.findViewById(R.id.bookOwnerSwap);
                         ListView ly = (ListView) view.findViewById(R.id.listSwap);
 
-                        tvmessage.setText(swapHeaderMod.getRequestedSwapDetail().getBookOwner().getUserObj().getUserFname()+" "+swapHeaderMod.getRequestedSwapDetail().getBookOwner().getUserObj().getUserLname()+" requested your book "+swapHeaderMod.getSwapDetail().getBookOwner().getBookObj().getBookTitle()+" to be swapped.");
+                        tvmessage.setText(swapHeaderMod.getRequestedSwapDetail().getBookOwner().getUserObj().getUserFname() + " " + swapHeaderMod.getRequestedSwapDetail().getBookOwner().getUserObj().getUserLname() + " requested your book " + swapHeaderMod.getSwapDetail().getBookOwner().getBookObj().getBookTitle() + " to be swapped.");
                         List<SwapHeaderDetail> newSHD = new ArrayList<SwapHeaderDetail>();
 
-                        for(int init=0; init<swapDetailList.size(); init++){
-                            if(swapDetailList.get(init).getSwapType().equals("Requestor")){
+                        for (int init = 0; init < swapDetailList.size(); init++) {
+                            if (swapDetailList.get(init).getSwapType().equals("Requestor")) {
                                 newSHD.add(swapDetailList.get(init));
                             }
                         }
@@ -2764,7 +2791,7 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
 
                         Log.d("Message: ", message);
 //                        tvmessage.setText(message);
-                        tvOwner.setText(userNotificationList.get(position).getUserPerformer().getUserFname()+" "+userNotificationList.get(position).getUserPerformer().getUserLname()+"'s book request/s:");
+                        tvOwner.setText(userNotificationList.get(position).getUserPerformer().getUserFname() + " " + userNotificationList.get(position).getUserPerformer().getUserLname() + "'s book request/s:");
                         ly.setAdapter(adapter);
 
 
@@ -2790,9 +2817,9 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
                                 mSubmitReason.setOnClickListener(new View.OnClickListener() {
                                     @Override
                                     public void onClick(View v) {
-                                        if(etReason.getText().length()==0){
+                                        if (etReason.getText().length() == 0) {
                                             etReason.setError("Field should not be empty.");
-                                        }else{
+                                        } else {
                                             swapHeaderMod.setStatus("Rejected");
                                             String message = etReason.getText().toString();
                                             rejectRequest(swapHeaderMod, message);
@@ -2804,7 +2831,7 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
                         });
                         dialog.setContentView(view);
                         dialog.show();
-                    }else if(status.equals("Approved")){
+                    } else if (status.equals("Approved")) {
                         Date nextDate = new Date();
                         locbool = false;
                         datebool = false;
@@ -2827,8 +2854,8 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
                         List<String> meetUpStringLoc = new ArrayList<String>();
                         final UserDayTime udt = new UserDayTime();
 
-                        for(int init=0; init<userLoc.size(); init++){
-                            if(userLoc.get(init).getStatus().equals("MeetUp")){
+                        for (int init = 0; init < userLoc.size(); init++) {
+                            if (userLoc.get(init).getStatus().equals("MeetUp")) {
                                 meetUpLoc.add(userLoc.get(init));
                                 meetUpStringLoc.add(userLoc.get(init).getLocationName());
                             }
@@ -2858,21 +2885,21 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
                         Set<String> removeDuplicate = new HashSet<>();
 
 
-                        for(int init=0; init<daytime.size(); init++){
-                            if(daytime.get(init).getDay().getStrDay().equals("Monday")){
-                                nextDate=getNextDate(java.util.Calendar.MONDAY);
-                            }else if(daytime.get(init).getDay().getStrDay().equals("Tuesday")){
-                                nextDate=getNextDate(Calendar.TUESDAY);
-                            }else if(daytime.get(init).getDay().getStrDay().equals("Wednesday")){
-                                nextDate=getNextDate(Calendar.WEDNESDAY);
-                            }else if(daytime.get(init).getDay().getStrDay().equals("Thursday")){
-                                nextDate=getNextDate(Calendar.THURSDAY);
-                            }else if(daytime.get(init).getDay().getStrDay().equals("Friday")){
-                                nextDate=getNextDate(Calendar.FRIDAY);
-                            }else if(daytime.get(init).getDay().getStrDay().equals("Saturday")){
-                                nextDate=getNextDate(Calendar.SATURDAY);
-                            }else if(daytime.get(init).getDay().getStrDay().equals("Sunday")){
-                                nextDate=getNextDate(Calendar.SUNDAY);
+                        for (int init = 0; init < daytime.size(); init++) {
+                            if (daytime.get(init).getDay().getStrDay().equals("Monday")) {
+                                nextDate = getNextDate(java.util.Calendar.MONDAY);
+                            } else if (daytime.get(init).getDay().getStrDay().equals("Tuesday")) {
+                                nextDate = getNextDate(Calendar.TUESDAY);
+                            } else if (daytime.get(init).getDay().getStrDay().equals("Wednesday")) {
+                                nextDate = getNextDate(Calendar.WEDNESDAY);
+                            } else if (daytime.get(init).getDay().getStrDay().equals("Thursday")) {
+                                nextDate = getNextDate(Calendar.THURSDAY);
+                            } else if (daytime.get(init).getDay().getStrDay().equals("Friday")) {
+                                nextDate = getNextDate(Calendar.FRIDAY);
+                            } else if (daytime.get(init).getDay().getStrDay().equals("Saturday")) {
+                                nextDate = getNextDate(Calendar.SATURDAY);
+                            } else if (daytime.get(init).getDay().getStrDay().equals("Sunday")) {
+                                nextDate = getNextDate(Calendar.SUNDAY);
                             }
                             dateMeetUp.add(format.format(nextDate));
                         }
@@ -2907,75 +2934,75 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
                                     calendar.setTime(selectedDate);
                                     int dayOfWeek = calendar.get(Calendar.DAY_OF_WEEK);
 
-                                    for(int init=0; init<daytime.size(); init++){
+                                    for (int init = 0; init < daytime.size(); init++) {
                                         Log.d("iterateUserTime", daytime.get(init).getTime().getStrTime());
                                     }
 
-                                    if(dayOfWeek==Calendar.MONDAY){
+                                    if (dayOfWeek == Calendar.MONDAY) {
                                         DayModel day = new DayModel();
-                                        for(int init=0; init<daytime.size(); init++){
+                                        for (int init = 0; init < daytime.size(); init++) {
                                             Log.d("userTime", daytime.get(init).getTime().getStrTime());
-                                            if(daytime.get(init).getDay().getStrDay().equals("Monday")){
+                                            if (daytime.get(init).getDay().getStrDay().equals("Monday")) {
                                                 Log.d("TimeAdded", daytime.get(init).getTime().getStrTime());
                                                 timeStr.add(daytime.get(init).getTime().getStrTime());
                                             }
                                         }
                                     }
 
-                                    if(dayOfWeek==Calendar.TUESDAY){
+                                    if (dayOfWeek == Calendar.TUESDAY) {
                                         DayModel day = new DayModel();
-                                        for(int init=0; init<daytime.size(); init++){
-                                            if(daytime.get(init).getDay().getStrDay().equals("Tuesday")){
+                                        for (int init = 0; init < daytime.size(); init++) {
+                                            if (daytime.get(init).getDay().getStrDay().equals("Tuesday")) {
                                                 Log.d("TimeAdded", daytime.get(init).getTime().getStrTime());
                                                 timeStr.add(daytime.get(init).getTime().getStrTime());
                                             }
                                         }
                                     }
 
-                                    if(dayOfWeek==Calendar.WEDNESDAY){
+                                    if (dayOfWeek == Calendar.WEDNESDAY) {
                                         DayModel day = new DayModel();
-                                        for(int init=0; init<daytime.size(); init++){
-                                            if(daytime.get(init).getDay().getStrDay().equals("Wednesday")){
+                                        for (int init = 0; init < daytime.size(); init++) {
+                                            if (daytime.get(init).getDay().getStrDay().equals("Wednesday")) {
                                                 Log.d("TimeAdded", daytime.get(init).getTime().getStrTime());
                                                 timeStr.add(daytime.get(init).getTime().getStrTime());
                                             }
                                         }
                                     }
 
-                                    if(dayOfWeek==Calendar.THURSDAY){
+                                    if (dayOfWeek == Calendar.THURSDAY) {
                                         DayModel day = new DayModel();
-                                        for(int init=0; init<daytime.size(); init++){
-                                            if(daytime.get(init).getDay().getStrDay().equals("Thursday")){
+                                        for (int init = 0; init < daytime.size(); init++) {
+                                            if (daytime.get(init).getDay().getStrDay().equals("Thursday")) {
                                                 Log.d("TimeAdded", daytime.get(init).getTime().getStrTime());
                                                 timeStr.add(daytime.get(init).getTime().getStrTime());
                                             }
                                         }
                                     }
 
-                                    if(dayOfWeek==Calendar.FRIDAY){
+                                    if (dayOfWeek == Calendar.FRIDAY) {
                                         DayModel day = new DayModel();
-                                        for(int init=0; init<daytime.size(); init++){
-                                            if(daytime.get(init).getDay().getStrDay().equals("Friday")){
+                                        for (int init = 0; init < daytime.size(); init++) {
+                                            if (daytime.get(init).getDay().getStrDay().equals("Friday")) {
                                                 Log.d("TimeAdded", daytime.get(init).getTime().getStrTime());
                                                 timeStr.add(daytime.get(init).getTime().getStrTime());
                                             }
                                         }
                                     }
 
-                                    if(dayOfWeek==Calendar.SATURDAY){
+                                    if (dayOfWeek == Calendar.SATURDAY) {
                                         DayModel day = new DayModel();
-                                        for(int init=0; init<daytime.size(); init++){
-                                            if(daytime.get(init).getDay().getStrDay().equals("Saturday")){
+                                        for (int init = 0; init < daytime.size(); init++) {
+                                            if (daytime.get(init).getDay().getStrDay().equals("Saturday")) {
                                                 Log.d("TimeAdded", daytime.get(init).getTime().getStrTime());
                                                 timeStr.add(daytime.get(init).getTime().getStrTime());
                                             }
                                         }
                                     }
 
-                                    if(dayOfWeek==Calendar.SUNDAY){
+                                    if (dayOfWeek == Calendar.SUNDAY) {
                                         DayModel day = new DayModel();
-                                        for(int init=0; init<daytime.size(); init++){
-                                            if(daytime.get(init).getDay().getStrDay().equals("Sunday")){
+                                        for (int init = 0; init < daytime.size(); init++) {
+                                            if (daytime.get(init).getDay().getStrDay().equals("Sunday")) {
                                                 Log.d("TimeAdded", daytime.get(init).getTime().getStrTime());
                                                 timeStr.add(daytime.get(init).getTime().getStrTime());
                                             }
@@ -3013,16 +3040,16 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
                         mSubmit.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
-                                if(datebool==true&&locbool==true&&timebool==true){
-                                    Log.d("himo ka ug ","joke pag add na bitaw");
+                                if (datebool == true && locbool == true && timebool == true) {
+                                    Log.d("himo ka ug ", "joke pag add na bitaw");
                                     muModel.setUserDayTime(udt);
                                     swapHeaderMod.setMeetUp(muModel);
 
                                     AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(context);
                                     alertDialogBuilder.setTitle("Meet Up Summary");
-                                    alertDialogBuilder.setMessage("Date:\t" +swapHeaderMod.getDateDelivered()+
-                                            "\n\nTime:\t"+muModel.getUserDayTime().getTime().getStrTime()+
-                                            "\n\nLocation:\t"+muModel.getLocation().getLocationName());
+                                    alertDialogBuilder.setMessage("Date:\t" + swapHeaderMod.getDateDelivered() +
+                                            "\n\nTime:\t" + muModel.getUserDayTime().getTime().getStrTime() +
+                                            "\n\nLocation:\t" + muModel.getLocation().getLocationName());
                                     alertDialogBuilder.setPositiveButton("Okay",
                                             new DialogInterface.OnClickListener() {
                                                 @RequiresApi(api = Build.VERSION_CODES.N)
@@ -3034,7 +3061,7 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
 
                                     AlertDialog alertDialog = alertDialogBuilder.create();
                                     alertDialog.show();
-                                }else{
+                                } else {
                                     AlertDialog ad = new AlertDialog.Builder(context).create();
                                     ad.setTitle("Alert!");
                                     ad.setMessage("You should fill all data.");
@@ -3050,12 +3077,12 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
                         });
                         dialog.setContentView(view);
                         dialog.show();
-                    }else if(status.equals("Confirm")){
+                    } else if (status.equals("Confirm")) {
                         AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(context);
                         alertDialogBuilder.setTitle("Meet Up Summary");
-                        alertDialogBuilder.setMessage("Date:\t" +swapHeaderMod.getDateDelivered()+
-                                "\n\nTime:\t"+swapHeaderMod.getMeetUp().getUserDayTime().getTime().getStrTime()+
-                                "\n\nLocation:\t"+swapHeaderMod.getMeetUp().getLocation().getLocationName());
+                        alertDialogBuilder.setMessage("Date:\t" + swapHeaderMod.getDateDelivered() +
+                                "\n\nTime:\t" + swapHeaderMod.getMeetUp().getUserDayTime().getTime().getStrTime() +
+                                "\n\nLocation:\t" + swapHeaderMod.getMeetUp().getLocation().getLocationName());
                         alertDialogBuilder.setPositiveButton("View Books", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
@@ -3073,25 +3100,26 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
 
                                 mTitleSwap.setText(swapHeaderMod.getSwapDetail().getBookOwner().getBookObj().getBookTitle());
 
-                                List<SwapHeaderDetail> newSHD = new ArrayList<SwapHeaderDetail>();
-
-                                newSHD = swapHeaderMod.getSwapHeaderDetail();
-
-
-                                for(int init=0; init<swapDetailList.size(); init++){
-                                    if(swapDetailList.get(init).getSwapType().equals("Requestee")){
-                                        newSHD.remove(init);
+                                if (swapDetailList.size() == 0) {
+                                    Log.d("ViewBooks", "empty");
+                                } else {
+                                    Log.d("ViewBooks", "not empty");
+                                }
+                                for (int init = 0; init < swapDetailList.size(); init++) {
+                                    if (swapDetailList.get(init).getSwapType().equals("Requestee")) {
+                                        swapDetailList.remove(init);
                                         break;
                                     }
                                 }
 
-                                final SwapRequestAdapter adapter = new SwapRequestAdapter(act, newSHD);
+                                final SwapRequestAdapter adapter = new SwapRequestAdapter(act, swapDetailList);
 
                                 ly.setAdapter(adapter);
                                 btnClose.setOnClickListener(new View.OnClickListener() {
                                     @Override
                                     public void onClick(View v) {
-                                        dialogCustom.dismiss();
+                                        Intent intent = new Intent(context, NotificationAct.class);
+                                        context.startActivity(intent);
                                     }
                                 });
                                 dialogCustom.show();
@@ -3136,7 +3164,7 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
         }
     }
 
-    public void addMeetUpRentalOnly(final RentalHeader rentalHeader){
+    public void addMeetUpRentalOnly(final RentalHeader rentalHeader) {
         RequestQueue requestQueue = Volley.newRequestQueue(context);
         String URL = Constants.POST_MEET_UP;
 
@@ -3183,7 +3211,7 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
         requestQueue.add(stringRequest);
     }
 
-    public void addMeetUpRental(final RentalHeader rentalHeader, final MeetUp deliver){
+    public void addMeetUpRental(final RentalHeader rentalHeader, final MeetUp deliver) {
         RequestQueue requestQueue = Volley.newRequestQueue(context);
         String URL = Constants.POST_MEET_UP;
 
@@ -3230,7 +3258,7 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
         requestQueue.add(stringRequest);
     }
 
-    public void addMeetUpAuction(final AuctionHeader auctionHeader, MeetUp meetUp, final int position){
+    public void addMeetUpAuction(final AuctionHeader auctionHeader, MeetUp meetUp, final int position) {
         RequestQueue requestQueue = Volley.newRequestQueue(context);
 //        String URL = "http://104.197.4.32:8080/Koobym/user/add";
         String URL = Constants.POST_MEET_UP;
@@ -3279,16 +3307,12 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
         requestQueue.add(stringRequest);
     }
 
-    public void addMeetUp(final SwapHeader swapHeader, MeetUp meetUp){
+    public void addMeetUp(final SwapHeader swapHeader, MeetUp meetUp) {
         RequestQueue requestQueue = Volley.newRequestQueue(context);
-//        String URL = "http://104.197.4.32:8080/Koobym/user/add";
         String URL = Constants.POST_MEET_UP;
 
         final Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd").registerTypeAdapter(Date.class, GsonDateDeserializer.getInstance()).create();
         final String mRequestBody = gson.toJson(meetUp);
-
-//        Log.d("RentalHeaderAdd", rentalHeader.toString());
-
 
         StringRequest stringRequest = new StringRequest(Request.Method.POST, URL, new Response.Listener<String>() {
             @SuppressLint("NewApi")
@@ -3300,9 +3324,9 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
 
                 Calendar c = Calendar.getInstance();
                 DateFormat format = new SimpleDateFormat("yyyy-MM-dd");
-                    swapHeader.setMeetUp(meetUp);
+                swapHeader.setMeetUp(meetUp);
                 swapHeader.setDateConfirmed(format.format(c.getTime()));
-                    updateSwap(swapHeader);
+                updateSwap(swapHeader);
 
             }
         }, new Response.ErrorListener() {
@@ -3331,7 +3355,7 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
         requestQueue.add(stringRequest);
     }
 
-    public void updateRental(RentalHeader rentHeader, MeetUp deliver, MeetUp returnMU){
+    public void updateRental(RentalHeader rentHeader, MeetUp deliver, MeetUp returnMU) {
         RequestQueue requestQueue = Volley.newRequestQueue(context);
         String nextDateStr = "";
 
@@ -3339,7 +3363,7 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
 
         User user = new User();
         user = (User) SPUtility.getSPUtil(context).getObject("USER_OBJECT", User.class);
-        String URL = Constants.UPDATE_RENTAL_HEADER_1+rentHeader.getRentalHeaderId()+"/"+deliver.getMeetUpId()+"/"+returnMU.getMeetUpId();
+        String URL = Constants.UPDATE_RENTAL_HEADER_1 + rentHeader.getRentalHeaderId() + "/" + deliver.getMeetUpId() + "/" + returnMU.getMeetUpId();
         Log.d("UpdateSwapHeaderURL", URL);
         final Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd").registerTypeAdapter(Date.class, GsonDateDeserializer.getInstance()).create();
         final String mRequestBody = gson.toJson(rentHeader);
@@ -3359,7 +3383,7 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
                 d("UpdateSwapHeader", response);
                 RentalHeader rentalHeaderMod = gson.fromJson(response, RentalHeader.class);
 
-                UserNotification un =new UserNotification();
+                UserNotification un = new UserNotification();
                 un.setActionName("rental");
                 un.setActionId(Math.round(rentalHeaderMod.getRentalHeaderId()));
                 un.setBookActionPerformedOn(rentalHeaderMod.getRentalDetail().getBookOwner());
@@ -3398,7 +3422,7 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
         requestQueue.add(stringRequest);
     }
 
-    public void updateAuction(final AuctionHeader auctionHeader, final int position){
+    public void updateAuction(final AuctionHeader auctionHeader, final int position) {
         RequestQueue requestQueue = Volley.newRequestQueue(context);
         String nextDateStr = "";
 
@@ -3426,7 +3450,7 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
                 d("UpdateSwapHeader", response);
                 AuctionHeader auctionHeaderMod = gson.fromJson(response, AuctionHeader.class);
 
-                UserNotification un =new UserNotification();
+                UserNotification un = new UserNotification();
                 un.setActionName("auction");
                 un.setActionId(auctionHeader.getAuctionHeaderId());
                 un.setBookActionPerformedOn(auctionHeaderMod.getAuctionDetail().getBookOwner());
@@ -3466,7 +3490,7 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
         requestQueue.add(stringRequest);
     }
 
-    public void updateSwap(SwapHeader swapHeader){
+    public void updateSwap(SwapHeader swapHeader) {
         RequestQueue requestQueue = Volley.newRequestQueue(context);
         String nextDateStr = "";
 
@@ -3478,7 +3502,6 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
         Log.d("UpdateSwapHeaderURL", URL);
         final Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd").registerTypeAdapter(Date.class, GsonDateDeserializer.getInstance()).create();
         final String mRequestBody = gson.toJson(swapHeader);
-
 
         int maxLogSize = 2000;
         for (int i = 0; i <= mRequestBody.length() / maxLogSize; i++) {
@@ -3494,7 +3517,7 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
                 d("UpdateSwapHeader", response);
                 SwapHeader swapHeaderMod = gson.fromJson(response, SwapHeader.class);
 
-                UserNotification un =new UserNotification();
+                UserNotification un = new UserNotification();
                 un.setActionName("swap");
                 un.setActionId(swapHeaderMod.getSwapHeaderId());
                 un.setBookActionPerformedOn(swapHeaderMod.getSwapDetail().getBookOwner());
@@ -3538,8 +3561,8 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
         @SuppressLint({"NewApi", "LocalSuppress"})
         java.util.Calendar c = java.util.Calendar.getInstance();
         int diff = dayOfWeek - c.get(Calendar.DAY_OF_WEEK);
-        if(diff<=0){
-            diff+=7;
+        if (diff <= 0) {
+            diff += 7;
         }
 //        diff++;
 
@@ -3547,16 +3570,16 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
         c.add(Calendar.DAY_OF_MONTH, diff);
         Calendar cal = Calendar.getInstance();
         cal.add(Calendar.DAY_OF_WEEK, diff);
-        Log.d("nextDate month",df.format(c.getTime()));
-        Log.d("nextDate week",df.format(c.getTime()));
+        Log.d("nextDate month", df.format(c.getTime()));
+        Log.d("nextDate week", df.format(c.getTime()));
         return c.getTime();
     }
 
-    public void rejectRequest(final SwapHeader swapHeader, final String message){
+    public void rejectRequest(final SwapHeader swapHeader, final String message) {
         RequestQueue requestQueue = Volley.newRequestQueue(getContext());
         User user = new User();
         user = (User) SPUtility.getSPUtil(getContext()).getObject("USER_OBJECT", User.class);
-        String URL = Constants.REJECT_REQUEST_SWAP+swapHeader.getSwapHeaderId();
+        String URL = Constants.REJECT_REQUEST_SWAP + swapHeader.getSwapHeaderId();
 
         Log.d("rejectRequestRentURL", URL);
         Log.d("rejectRequestRent", swapHeader.toString());
@@ -3584,8 +3607,8 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
 
                 addUserNotif(un);
 
-                for(int init=0; init<swapHeaderModel.getSwapHeaderDetail().size(); init++){
-                    if(swapHeaderModel.getSwapHeaderDetail().get(init).getSwapType().equals("Requestor")){
+                for (int init = 0; init < swapHeaderModel.getSwapHeaderDetail().size(); init++) {
+                    if (swapHeaderModel.getSwapHeaderDetail().get(init).getSwapType().equals("Requestor")) {
                         SwapDetail sd = new SwapDetail();
                         BookOwnerModel bo = new BookOwnerModel();
                         sd = swapHeader.getSwapHeaderDetail().get(init).getSwapDetail();
@@ -3623,11 +3646,11 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
         requestQueue.add(stringRequest);
     }
 
-    public void acceptRequest(SwapHeader swapHeader){
+    public void acceptRequest(SwapHeader swapHeader) {
         RequestQueue requestQueue = Volley.newRequestQueue(getContext());
         User user = new User();
         user = (User) SPUtility.getSPUtil(getContext()).getObject("USER_OBJECT", User.class);
-        String URL = Constants.ACCEPT_REQUEST_SWAP+swapHeader.getSwapHeaderId();
+        String URL = Constants.ACCEPT_REQUEST_SWAP + swapHeader.getSwapHeaderId();
 
         Log.d("AcceptRequestRentURL", URL);
 
@@ -3864,11 +3887,11 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
         requestQueue.add(stringRequest);
     }
 
-    public void updateSwapExtra(UserNotification un){
+    public void updateSwapExtra(UserNotification un) {
         RequestQueue requestQueue = Volley.newRequestQueue(getContext());
         User user = new User();
         user = (User) SPUtility.getSPUtil(getContext()).getObject("USER_OBJECT", User.class);
-        String URL = Constants.UPDATE_SWAP_EXTRA+un.getUserNotificationId();
+        String URL = Constants.UPDATE_SWAP_EXTRA + un.getUserNotificationId();
 
         final Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd").registerTypeAdapter(Date.class, GsonDateDeserializer.getInstance()).create();
         final String mRequestBody = gson.toJson(un);

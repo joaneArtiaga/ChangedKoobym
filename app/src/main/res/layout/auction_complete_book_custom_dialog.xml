@@ -62,17 +62,34 @@
             android:textStyle="bold" />
     </LinearLayout>
 
-    <Button
-        android:id="@+id/btnDeliveryOkay"
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/textView11"
-        android:layout_centerHorizontal="true"
         android:layout_marginTop="18dp"
         android:layout_marginBottom="10dp"
-        android:background="@drawable/rounded_button"
-        android:textColor="@color/colorWhite"
-        android:text="Okay" />
+        android:layout_below="@+id/textView11"
+        android:orientation="horizontal"
+        android:gravity="center">
+
+        <Button
+            android:id="@+id/btnSeeRating"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:layout_marginRight="10dp"
+            android:background="@drawable/rounded_button"
+            android:textColor="@color/colorWhite"
+            android:text="See Rating" />
+
+        <Button
+            android:id="@+id/btnDeliveryOkay"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/rounded_button"
+            android:textColor="@color/colorWhite"
+            android:text="Okay" />
+    </LinearLayout>
 
     <TextView
         android:id="@+id/textView11"

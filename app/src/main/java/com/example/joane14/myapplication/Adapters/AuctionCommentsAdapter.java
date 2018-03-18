@@ -65,7 +65,7 @@ public class AuctionCommentsAdapter extends RecyclerView.Adapter<AuctionComments
     @Override
     public void onBindViewHolder(AuctionCommentsAdapter.BookHolder holder, final int position) {
 
-        holder.mAuctionCommenterComment.setText(bookList.get(position).getAuctionComment().getAuctionComment()+" ");
+        holder.mAuctionCommenterComment.setText("₱  "+bookList.get(position).getAuctionComment().getAuctionComment());
         holder.mAuctionCommenterName.setText(bookList.get(position).getAuctionComment().getUser().getUserFname()+" "+bookList.get(position).getAuctionComment().getUser().getUserLname());
 
         Picasso.with(context).load(bookList.get(position).getAuctionComment().getUser().getImageFilename()).fit().into(holder.mAuctionCommenterImg);

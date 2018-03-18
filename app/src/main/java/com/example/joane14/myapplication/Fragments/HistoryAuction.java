@@ -28,6 +28,8 @@ import com.android.volley.toolbox.Volley;
 import com.bumptech.glide.Glide;
 import com.example.joane14.myapplication.Activities.GsonDateDeserializer;
 import com.example.joane14.myapplication.Adapters.HistoryAuctionAdapter;
+import com.example.joane14.myapplication.Model.AuctionComment;
+import com.example.joane14.myapplication.Model.AuctionDetailModel;
 import com.example.joane14.myapplication.Model.AuctionHeader;
 import com.example.joane14.myapplication.Model.RentalHeader;
 import com.example.joane14.myapplication.Model.User;
@@ -41,6 +43,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
+
+import static android.util.Log.d;
 
 public class HistoryAuction extends Fragment {
     private OnHistoryAuctionInteractionListener mListener;
@@ -80,6 +84,40 @@ public class HistoryAuction extends Fragment {
         mGridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                getMaximumBid(auctionHeaderList.get(position));
+            }
+        });
+        return view;
+
+    }
+
+    public void getMaximumBid(final AuctionHeader ah) {
+        RequestQueue requestQueue = Volley.newRequestQueue(getContext());
+//        String URL = "http://192.168.1.6:8080/Koobym/swapHeader/add";
+        String URL = Constants.GET_MAXIMUM_BID + ah.getAuctionDetail().getAuctionDetailId();
+
+        final Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd").registerTypeAdapter(Date.class, GsonDateDeserializer.getInstance()).create();
+        final String mRequestBody = gson.toJson(ah.getAuctionDetail());
+
+        d("maximumBid_VOLLEY", mRequestBody);
+        int maxLogSize = 2000;
+        for (int i = 0; i <= mRequestBody.length() / maxLogSize; i++) {
+            int start = i * maxLogSize;
+            int end = (i + 1) * maxLogSize;
+            end = end > mRequestBody.length() ? mRequestBody.length() : end;
+            Log.d("maximumBid", mRequestBody.substring(start, end));
+        }
+        StringRequest stringRequest = new StringRequest(Request.Method.GET, URL, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                d("onResponse maxBid", "inside");
+                Log.i("MaximumBid", response);
+
+                List<AuctionComment> auctionHeaderModelMod = new ArrayList<AuctionComment>();
+                auctionHeaderModelMod.clear();
+                auctionHeaderModelMod.addAll(Arrays.asList(gson.fromJson(response, AuctionComment[].class)));
+
+
                 final Dialog dialogCustom = new Dialog(getContext());
                 dialogCustom.setContentView(R.layout.auction_history_complete);
                 TextView mTitle = (TextView) dialogCustom.findViewById(R.id.bookTitleDelivery);
@@ -88,13 +126,12 @@ public class HistoryAuction extends Fragment {
                 ImageView ivBook = (ImageView) dialogCustom.findViewById(R.id.ivBookDelivery);
                 Button btnOkay = (Button) dialogCustom.findViewById(R.id.btnDeliveryOkay);
 
-                AuctionHeader ah = auctionHeaderList.get(position);
 
+                mPrice.setText("₱  "+auctionHeaderModelMod.get(0).getAuctionComment()+".00");
                 Glide.with(getContext()).load(ah.getAuctionDetail().getBookOwner().getBookObj().getBookFilename()).centerCrop().into(ivBook);
 
                 mTitle.setText(ah.getAuctionDetail().getBookOwner().getBookObj().getBookTitle());
                 mDateDelivered.setText(ah.getDateDelivered());
-                mPrice.setText(ah.getAuctionExtraMessage());
 
                 btnOkay.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -104,9 +141,30 @@ public class HistoryAuction extends Fragment {
                 });
                 dialogCustom.show();
             }
-        });
-        return view;
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.e("LOG_VOLLEY", error.toString());
+                error.printStackTrace();
+            }
+        }) {
+            @Override
+            public String getBodyContentType() {
+                return "application/json; charset=utf-8";
+            }
 
+            @Override
+            public byte[] getBody() throws AuthFailureError {
+                try {
+                    return mRequestBody == null ? null : mRequestBody.getBytes("utf-8");
+                } catch (UnsupportedEncodingException uee) {
+                    VolleyLog.wtf("Unsupported Encoding while trying to get the bytes of %s using %s", mRequestBody, "utf-8");
+                    return null;
+                }
+            }
+        };
+
+        requestQueue.add(stringRequest);
     }
 
     public void getHistory(){
