@@ -181,7 +181,6 @@ public class ViewOwnBookAct extends AppCompatActivity
         LinearLayout priceLinear = (LinearLayout) findViewById(R.id.llprice);
         Spinner mSpinnerDay = (Spinner) findViewById(R.id.spinnerStatus);
 
-
         getNotificationCount();
         mSpinnerDay.setVisibility(View.GONE);
         mRating = (RatingBar) findViewById(R.id.vbRating);
@@ -199,6 +198,10 @@ public class ViewOwnBookAct extends AppCompatActivity
             containerForCounter.setVisibility(View.GONE);
 
             rentalDetailModel = (RentalDetail) getIntent().getExtras().getSerializable("viewBook");
+
+            if(rentalDetailModel.getBookOwner().getBookStat().equals("Not Available")){
+                buttonLinear.setVisibility(View.GONE);
+            }
 
             mTitle.setText(rentalDetailModel.getBookOwner().getBookObj().getBookTitle());
 
@@ -304,6 +307,10 @@ public class ViewOwnBookAct extends AppCompatActivity
             swapDetail = new SwapDetail();
             swapDetail = (SwapDetail) getIntent().getExtras().getSerializable("swapBook");
 
+            if(swapDetail.getBookOwner().getBookStat().equals("Not Available")){
+                buttonLinear.setVisibility(View.GONE);
+            }
+
             priceLinear.setVisibility(View.GONE);
 
             getRatings(swapDetail.getBookOwner().getBookOwnerId());
@@ -402,6 +409,9 @@ public class ViewOwnBookAct extends AppCompatActivity
             auctionDetail = new AuctionDetailModel();
             auctionDetail = (AuctionDetailModel) getIntent().getExtras().getSerializable("auctionBook");
 
+            if(auctionDetail.getBookOwner().getBookStat().equals("Not Available")){
+                buttonLinear.setVisibility(View.GONE);
+            }
             mHeaderLPrice.setText("Starting Price:");
             mHeaderRPrice.setVisibility(View.GONE);
             mRPrice.setVisibility(View.GONE);
