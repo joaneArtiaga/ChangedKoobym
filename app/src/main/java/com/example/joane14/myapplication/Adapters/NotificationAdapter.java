@@ -185,7 +185,7 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
                 message = "The book " + userNotification.getBookActionPerformedOn().getBookObj().getBookTitle() + " was delivered  by " + userNotification.getUserPerformer().getUserFname() + " " + userNotification.getUserPerformer().getUserLname();
             } else if (userNotification.getActionStatus().equals("Rejected")) {
                 message = "The book " + userNotification.getBookActionPerformedOn().getBookObj().getBookTitle() + " was Rejected by " + userNotification.getUserPerformer().getUserFname() + " " + userNotification.getUserPerformer().getUserLname();
-            } else if (userNotification.getActionStatus().equals("Completed")) {
+            } else if (userNotification.getActionStatus().equals("Complete")) {
                 message = "The transaction of the book that you want to " + userNotification.getActionName() + " is completed";
             } else if (userNotification.getActionStatus().equals("delivered")) {
                 message = userNotification.getUserPerformer().getUserFname() + " " + userNotification.getUserPerformer().getUserLname() + " delivered the book, " + userNotification.getBookActionPerformedOn().getBookObj().getBookTitle() + ".";
@@ -391,7 +391,7 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
                                     toGiveDialog(position);
                                     getRead(position);
                                     getSwapHeader(position, "change");
-                                } else if (userNotificationList.get(position).getActionStatus().equals("Completed")) {
+                                } else if (userNotificationList.get(position).getActionStatus().equals("Complete")) {
                                     Log.d("CompletedNotif", "Inside");
                                     getRead(position);
                                     getSwapHeader(position, "Completed");

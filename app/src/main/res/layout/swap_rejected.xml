@@ -84,6 +84,8 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:gravity="center"
+            android:textColor="@color/colorWhite"
+            android:background="@drawable/rounded_button"
             android:text="Okay" />
 
     </LinearLayout>

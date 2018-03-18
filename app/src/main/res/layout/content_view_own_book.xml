@@ -196,7 +196,7 @@
                         android:textStyle="bold" />
 
                     <TextView
-                        android:id="@+id/vbRentalP"
+                        android:id="@+id/vbLockInP"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:textColor="@color/colorOrange"
@@ -220,7 +220,7 @@
                         android:textStyle="bold" />
 
                     <TextView
-                        android:id="@+id/vbLockInP"
+                        android:id="@+id/vbRentalP"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:textColor="@color/colorOrange"

@@ -25,13 +25,13 @@
 
             <ImageButton
                 android:id="@+id/rentRequest"
+                android:layout_width="70dp"
+                android:layout_height="80dp"
                 android:layout_gravity="center_horizontal"
-                android:layout_width="60dp"
-                android:layout_height="70dp"
-                android:background="@null"
                 android:adjustViewBounds="true"
+                android:background="@null"
                 android:scaleType="fitXY"
-                android:src="@drawable/frent"/>
+                android:src="@drawable/frent" />
 
             <TextView
                 android:id="@+id/tvRentRequest"

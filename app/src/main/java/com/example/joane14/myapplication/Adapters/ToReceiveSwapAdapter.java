@@ -138,7 +138,83 @@ public class ToReceiveSwapAdapter extends RecyclerView.Adapter<ToReceiveSwapAdap
                     alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, "Okay", new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
-                            completed(bookList.get(position));
+
+                            final Dialog dialogCustom = new Dialog(context);
+                            dialogCustom.setContentView(R.layout.review_custom_dialog);
+                            TextView mTitle = (TextView) dialogCustom.findViewById(R.id.bookTitleReview);
+                            TextView mAuthor = (TextView) dialogCustom.findViewById(R.id.bookAuthorReview);
+                            ImageView ivBook = (ImageView) dialogCustom.findViewById(R.id.ivBookReview);
+                            final EditText etReviewMessage = (EditText) dialogCustom.findViewById(R.id.etReviewReview);
+                            final RatingBar mRateBar = (RatingBar) dialogCustom.findViewById(R.id.ratingReview);
+                            Button mRateNow = (Button) dialogCustom.findViewById(R.id.btnRateReview);
+
+                            etReviewMessage.setHint("Review owner");
+                            mTitle.setText(bookList.get(position).getSwapDetail().getBookOwner().getBookObj().getBookTitle());
+
+                            Glide.with(context).load(bookList.get(position).getSwapDetail().getBookOwner().getBookObj().getBookFilename()).centerCrop().into(ivBook);
+
+                            String author = "";
+
+                            if(bookList.get(position).getSwapDetail().getBookOwner().getBookObj().getBookAuthor().size()!=0){
+                                for(int init=0; init<bookList.get(position).getSwapDetail().getBookOwner().getBookObj().getBookAuthor().size(); init++){
+                                    if(!(bookList.get(position).getSwapDetail().getBookOwner().getBookObj().getBookAuthor().get(init).getAuthorFName().equals(""))){
+                                        author+=bookList.get(position).getSwapDetail().getBookOwner().getBookObj().getBookAuthor().get(init).getAuthorFName()+" ";
+                                        if(!(bookList.get(position).getSwapDetail().getBookOwner().getBookObj().getBookAuthor().get(init).getAuthorLName().equals(""))){
+                                            author+=bookList.get(position).getSwapDetail().getBookOwner().getBookObj().getBookAuthor().get(init).getAuthorLName();
+                                            if(init+1<bookList.get(position).getSwapDetail().getBookOwner().getBookObj().getBookAuthor().size()){
+                                                author+=", ";
+                                            }
+                                        }
+                                    }
+                                }
+                            }else{
+                                author="Unknown Author";
+                            }
+                            mAuthor.setText(author);
+
+                            mRateBar.setOnRatingBarChangeListener(new RatingBar.OnRatingBarChangeListener() {
+                                @Override
+                                public void onRatingChanged(RatingBar ratingBar, float rating, boolean fromUser) {
+                                    rateNumber = rating;
+                                }
+                            });
+
+                            mRateNow.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    if(etReviewMessage.getText().length()==0){
+                                        etReviewMessage.setError("Fill necessary fields.");
+                                    }
+                                    if(rateNumber==0){
+                                        Toast.makeText(context, "Should rate.", Toast.LENGTH_LONG);
+                                    }
+
+                                    if(etReviewMessage.getText().length()>0&&rateNumber>0){
+                                        java.util.Calendar c = java.util.Calendar.getInstance();
+                                        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+
+                                        Rate rateMod = new Rate();
+                                        rateMod.setRateNumber(rateNumber);
+                                        rateMod.setRateTimeStamp(sdf.format(c.getTime()));
+
+                                        Review reviewMod = new Review();
+                                        reviewMod.setReviewTimeStamp(sdf.format(c.getTime()));
+
+                                        UserRating userRatingMod = new UserRating();
+
+                                        userRatingMod.setComment(etReviewMessage.getText().toString());
+                                        userRatingMod.setUserRater(bookList.get(position).getUser());
+                                        userRatingMod.setUser(bookList.get(position).getRequestedSwapDetail().getBookOwner().getUserObj());
+                                        userRatingMod.setReview(reviewMod);
+                                        userRatingMod.setRate(rateMod);
+
+                                        userRate(userRatingMod, bookList.get(position));
+                                    }
+
+                                }
+                            });
+
+                            dialogCustom.show();
                         }
                     });
                     alertDialog.show();
@@ -173,9 +249,9 @@ public class ToReceiveSwapAdapter extends RecyclerView.Adapter<ToReceiveSwapAdap
 
     }
 
-    public void completed(SwapHeader swapHeader) {
+    public void completed(SwapHeader swapHeader, int userRatingId) {
         RequestQueue requestQueue = Volley.newRequestQueue(context);
-        String URL = Constants.SWAP_COMPLETED + swapHeader.getSwapHeaderId();
+        String URL = Constants.SWAP_COMPLETED + swapHeader.getSwapHeaderId()+"/"+userRatingId;
 
         rateNumber=0f;
         Log.d("swapCompletedURL", URL);
@@ -196,82 +272,6 @@ public class ToReceiveSwapAdapter extends RecyclerView.Adapter<ToReceiveSwapAdap
                 d("swapCompletedRes", response);
                 final SwapHeader swapHeaderModel = gson.fromJson(response, SwapHeader.class);
 
-                final Dialog dialogCustom = new Dialog(context);
-                dialogCustom.setContentView(R.layout.review_custom_dialog);
-                TextView mTitle = (TextView) dialogCustom.findViewById(R.id.bookTitleReview);
-                TextView mAuthor = (TextView) dialogCustom.findViewById(R.id.bookAuthorReview);
-                ImageView ivBook = (ImageView) dialogCustom.findViewById(R.id.ivBookReview);
-                final EditText etReviewMessage = (EditText) dialogCustom.findViewById(R.id.etReviewReview);
-                final RatingBar mRateBar = (RatingBar) dialogCustom.findViewById(R.id.ratingReview);
-                Button mRateNow = (Button) dialogCustom.findViewById(R.id.btnRateReview);
-
-                etReviewMessage.setHint("Review user");
-                mTitle.setText(swapHeaderModel.getSwapDetail().getBookOwner().getBookObj().getBookTitle());
-
-                Glide.with(context).load(swapHeaderModel.getSwapDetail().getBookOwner().getBookObj().getBookFilename()).centerCrop().into(ivBook);
-
-                String author = "";
-
-                if(swapHeaderModel.getSwapDetail().getBookOwner().getBookObj().getBookAuthor().size()!=0){
-                    for(int init=0; init<swapHeaderModel.getSwapDetail().getBookOwner().getBookObj().getBookAuthor().size(); init++){
-                        if(!(swapHeaderModel.getSwapDetail().getBookOwner().getBookObj().getBookAuthor().get(init).getAuthorFName().equals(""))){
-                            author+=swapHeaderModel.getSwapDetail().getBookOwner().getBookObj().getBookAuthor().get(init).getAuthorFName()+" ";
-                            if(!(swapHeaderModel.getSwapDetail().getBookOwner().getBookObj().getBookAuthor().get(init).getAuthorLName().equals(""))){
-                                author+=swapHeaderModel.getSwapDetail().getBookOwner().getBookObj().getBookAuthor().get(init).getAuthorLName();
-                                if(init+1<swapHeaderModel.getSwapDetail().getBookOwner().getBookObj().getBookAuthor().size()){
-                                    author+=", ";
-                                }
-                            }
-                        }
-                    }
-                }else{
-                    author="Unknown Author";
-                }
-                mAuthor.setText(author);
-
-                mRateBar.setOnRatingBarChangeListener(new RatingBar.OnRatingBarChangeListener() {
-                    @Override
-                    public void onRatingChanged(RatingBar ratingBar, float rating, boolean fromUser) {
-                        rateNumber = rating;
-                    }
-                });
-
-                mRateNow.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        if(etReviewMessage.getText().length()==0){
-                            etReviewMessage.setError("Fill necessary fields.");
-                        }
-                        if(rateNumber==0){
-                            Toast.makeText(context, "Should rate.", Toast.LENGTH_LONG);
-                        }
-
-                        if(etReviewMessage.getText().length()>0&&rateNumber>0){
-                            java.util.Calendar c = java.util.Calendar.getInstance();
-                            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-
-                            Rate rateMod = new Rate();
-                            rateMod.setRateNumber(rateNumber);
-                            rateMod.setRateTimeStamp(sdf.format(c.getTime()));
-
-                            Review reviewMod = new Review();
-                            reviewMod.setReviewTimeStamp(sdf.format(c.getTime()));
-
-                            UserRating userRatingMod = new UserRating();
-
-                            userRatingMod.setComment(etReviewMessage.getText().toString());
-                            userRatingMod.setUserRater(swapHeaderModel.getUser());
-                            userRatingMod.setUser(swapHeaderModel.getRequestedSwapDetail().getBookOwner().getUserObj());
-                            userRatingMod.setReview(reviewMod);
-                            userRatingMod.setRate(rateMod);
-
-                            userRate(userRatingMod, swapHeaderModel);
-                        }
-
-                    }
-                });
-
-                dialogCustom.show();
 
             }
         }, new Response.ErrorListener() {
@@ -327,13 +327,17 @@ public class ToReceiveSwapAdapter extends RecyclerView.Adapter<ToReceiveSwapAdap
 
                 UserNotification un = new UserNotification();
                 un.setActionId(swapHeader.getSwapHeaderId());
-                un.setActionName("Completed");
+                un.setActionName("swap");
+                un.setActionStatus("Complete");
                 un.setBookActionPerformedOn(swapHeader.getSwapDetail().getBookOwner());
                 un.setExtraMessage(String.valueOf(ur.getUserRatingId()));
                 un.setUser(swapHeader.getSwapDetail().getBookOwner().getUserObj());
                 un.setUserPerformer(swapHeader.getUser());
 
                 addUserNotif(un);
+
+                completed(swapHeader, ur.getUserRatingId());
+
             }
         }, new Response.ErrorListener() {
             @Override
