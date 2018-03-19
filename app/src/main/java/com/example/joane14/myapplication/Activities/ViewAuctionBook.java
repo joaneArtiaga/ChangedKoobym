@@ -38,7 +38,6 @@ import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.ProgressBar;
 import android.widget.RatingBar;
 import android.widget.SeekBar;
 import android.widget.TextView;
@@ -263,84 +262,98 @@ ViewAuctionBook extends AppCompatActivity
                     Log.d("BidTriggered", auctionDetailModel.getAuctionStatus());
 
                     if (auctionDetailModel.getAuctionStatus().equals("start")) {
+                        if(auctionDetailModel.getBookOwner().getUserObj().getUserId()==user.getUserId()){
+                            AlertDialog ad = new AlertDialog.Builder(ViewAuctionBook.this).create();
+                            ad.setTitle("Alert!");
+                            ad.setMessage("You cannot bid your own book.");
+                            ad.setButton(AlertDialog.BUTTON_POSITIVE, "Okay", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    dialog.dismiss();
+                                }
+                            });
+                            ad.show();
+                        }else{
 
-                        final Dialog dialogCustom = new Dialog(ViewAuctionBook.this);
-                        LayoutInflater inflater = (LayoutInflater) ViewAuctionBook.this.getSystemService(LAYOUT_INFLATER_SERVICE);
-                        View layout = inflater.inflate(R.layout.seekbar_custom_dialog, (ViewGroup) findViewById(R.id.seekbar_layout));
-                        dialogCustom.setContentView(layout);
+                            final Dialog dialogCustom = new Dialog(ViewAuctionBook.this);
+                            LayoutInflater inflater = (LayoutInflater) ViewAuctionBook.this.getSystemService(LAYOUT_INFLATER_SERVICE);
+                            View layout = inflater.inflate(R.layout.seekbar_custom_dialog, (ViewGroup) findViewById(R.id.seekbar_layout));
+                            dialogCustom.setContentView(layout);
 
-                        Button mBtnOkay = (Button) layout.findViewById(R.id.btnOkay);
-                        Button mBtnCancel = (Button) layout.findViewById(R.id.btnCancel);
+                            Button mBtnOkay = (Button) layout.findViewById(R.id.btnOkay);
+                            Button mBtnCancel = (Button) layout.findViewById(R.id.btnCancel);
 
-                        mPriceBar = (TextView) layout.findViewById(R.id.tvPriceBar);
-                        final SeekBar mSeekBar = (SeekBar) layout.findViewById(R.id.seekbarPrice);
-                        getMaximumBid(auctionDetailModel);
+                            mPriceBar = (TextView) layout.findViewById(R.id.tvPriceBar);
+                            final SeekBar mSeekBar = (SeekBar) layout.findViewById(R.id.seekbarPrice);
+                            getMaximumBid(auctionDetailModel);
 
-                        mSeekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
-                            @Override
-                            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                            mSeekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+                                @Override
+                                public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
 
-                                Log.d("startProgress", progress+"");
+                                    Log.d("startProgress", progress+"");
 
-                                progress = progress+1;
-                                if (flag==false) {
-                                    Log.d("startProgress If", progress+Math.round(auctionDetailModel.getStartingPrice())+"");
-                                    progress = progress + Math.round(auctionDetailModel.getStartingPrice());
-                                } else {
-                                    progress = progress + auctionHeaderModelMod.get(0).getAuctionComment();
-                                    Log.d("startProgress Else", progress+auctionHeaderModelMod.get(0).getAuctionComment()+"");
+                                    progress = progress+1;
+                                    if (flag==false) {
+                                        Log.d("startProgress If", progress+Math.round(auctionDetailModel.getStartingPrice())+"");
+                                        progress = progress + Math.round(auctionDetailModel.getStartingPrice());
+                                    } else {
+                                        progress = progress + auctionHeaderModelMod.get(0).getAuctionComment();
+                                        Log.d("startProgress Else", progress+auctionHeaderModelMod.get(0).getAuctionComment()+"");
+                                    }
+
+                                    priceNiya = progress;
+
+                                    mPriceBar.setText("" + progress);
                                 }
 
-                                priceNiya = progress;
+                                @Override
+                                public void onStartTrackingTouch(SeekBar seekBar) {
 
-                                mPriceBar.setText("" + progress);
-                            }
+                                }
 
-                            @Override
-                            public void onStartTrackingTouch(SeekBar seekBar) {
+                                @Override
+                                public void onStopTrackingTouch(SeekBar seekBar) {
 
-                            }
-
-                            @Override
-                            public void onStopTrackingTouch(SeekBar seekBar) {
-
-                            }
-                        });
-                        mBtnOkay.setOnClickListener(new View.OnClickListener() {
-                            @RequiresApi(api = Build.VERSION_CODES.N)
-                            @Override
-                            public void onClick(View v) {
-                                Calendar calendar = Calendar.getInstance();
-                                SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-                                String currDate = sdf.format(calendar.getTime());
+                                }
+                            });
+                            mBtnOkay.setOnClickListener(new View.OnClickListener() {
+                                @RequiresApi(api = Build.VERSION_CODES.N)
+                                @Override
+                                public void onClick(View v) {
+                                    Calendar calendar = Calendar.getInstance();
+                                    SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+                                    String currDate = sdf.format(calendar.getTime());
 
 
-                                Log.d("SeekBarPrice", priceNiya+"");
+                                    Log.d("SeekBarPrice", priceNiya+"");
 
-                                AuctionComment auctionComment = new AuctionComment();
-                                auctionComment.setUser(user);
-                                auctionComment.setAuctionComment(priceNiya);
+                                    AuctionComment auctionComment = new AuctionComment();
+                                    auctionComment.setUser(user);
+                                    auctionComment.setAuctionComment(priceNiya);
 
-                                AuctionCommentDetail auctionCommentDetail = new AuctionCommentDetail();
-                                auctionCommentDetail.setAuctionDetail(auctionDetailModel);
-                                auctionCommentDetail.setAuctionComment(auctionComment);
+                                    AuctionCommentDetail auctionCommentDetail = new AuctionCommentDetail();
+                                    auctionCommentDetail.setAuctionDetail(auctionDetailModel);
+                                    auctionCommentDetail.setAuctionComment(auctionComment);
 
-                                AuctionHeader auctionHeaderPost = new AuctionHeader();
-                                auctionHeaderPost.setAuctionDetail(auctionDetailModel);
-                                auctionHeaderPost.setUser(user);
-                                auctionHeaderPost.setAuctionHeaderDateStamp(currDate);
-                                addAuctionHeader(auctionHeaderPost, auctionComment, auctionCommentDetail);
-                            }
-                        });
+                                    AuctionHeader auctionHeaderPost = new AuctionHeader();
+                                    auctionHeaderPost.setAuctionDetail(auctionDetailModel);
+                                    auctionHeaderPost.setUser(user);
+                                    auctionHeaderPost.setAuctionHeaderDateStamp(currDate);
+                                    addAuctionHeader(auctionHeaderPost, auctionComment, auctionCommentDetail);
+                                }
+                            });
 
-                        mBtnCancel.setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View v) {
-                                dialogCustom.dismiss();
-                            }
-                        });
+                            mBtnCancel.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    dialogCustom.dismiss();
+                                }
+                            });
 
-                        dialogCustom.show();
+                            dialogCustom.show();
+
+                        }
 
                     }else if(auctionDetailModel.getAuctionStatus().equals("stop")){
                         AlertDialog ad = new AlertDialog.Builder(ViewAuctionBook.this).create();
