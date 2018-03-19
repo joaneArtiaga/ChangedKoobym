@@ -88,7 +88,7 @@ public class ToReceiveRentFragment extends Fragment {
         User user = new User();
         user = (User) SPUtility.getSPUtil(getContext()).getObject("USER_OBJECT", User.class);
         Log.d("UserIdReceive", String.valueOf(user.getUserId()));
-        String URL = Constants.GET_TRANSACTION_TO_RECEIVE_RENTER+user.getUserId();
+        String URL = Constants.GET_TRANSACTION_TO_RECEIVE+user.getUserId();
 //        String URL = Constants.WEB_SERVICE_URL+"user/add";
         Log.d("ToReceiveURL", URL);
 

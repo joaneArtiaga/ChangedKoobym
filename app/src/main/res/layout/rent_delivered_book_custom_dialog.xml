@@ -136,12 +136,14 @@
             android:layout_height="wrap_content"
             android:textColor="@color/colorWhite"
             android:layout_marginRight="10dp"
+            android:layout_marginBottom="10dp"
             android:background="@drawable/rounded_button"
             android:text="See Rating" />
 
         <Button
             android:id="@+id/btnDeliveryOkay"
             android:layout_width="wrap_content"
+            android:layout_marginBottom="10dp"
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
             android:textColor="@color/colorWhite"

@@ -323,7 +323,7 @@ public class ViewBookAct extends AppCompatActivity implements
             mRentBtn.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    validateSwap(user.getUserId());
+                    checkExist();
                 }
             });
         } else if (getIntent().getExtras().getSerializable("auctionBook") != null) {

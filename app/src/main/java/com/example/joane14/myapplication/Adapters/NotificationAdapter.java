@@ -1161,7 +1161,8 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
                     } else if (status.equals("summary")) {
                         AlertDialog ad = new AlertDialog.Builder(context).create();
                         ad.setTitle("Meet Up Summary");
-                        ad.setMessage("Date:\t" + rentalHeaderMod.getDateDeliver() +
+                        ad.setMessage("Location:\t"+rentalHeaderMod.getMeetUp().getLocation().getLocationName()+
+                                "Date:\t" + rentalHeaderMod.getDateDeliver() +
                                 "\n\nTime:\t" + rentalHeaderMod.getMeetUp().getUserDayTime().getTime().getStrTime());
                         ad.setButton(AlertDialog.BUTTON_POSITIVE, "Okay", new DialogInterface.OnClickListener() {
                             @Override
@@ -1238,7 +1239,11 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
                             @Override
                             public void onClick(View v) {
                                 getProcessed(position);
-                                getBookReview(position, rentalHeaderMod);
+                                if(userNotificationList.get(position).getActionStatus().equals("Complete")){
+                                    getUserRating(position);
+                                }else{
+                                    getBookReview(position, rentalHeaderMod);
+                                }
                             }
                         });
 

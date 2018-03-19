@@ -188,7 +188,7 @@ public class ToReceiveRentAdapter extends RecyclerView.Adapter<ToReceiveRentAdap
                             }
                         });
                         alertDialog.show();
-                    }else{
+                    }else if(bookList.get(position).getRentalExtraMessage().equals("Return")){
                         AlertDialog alertDialog = new AlertDialog.Builder(context).create();
                         alertDialog.setTitle("Alert!");
                         alertDialog.setMessage("The renter has not yet confirmed the book returned.");
@@ -296,12 +296,6 @@ public class ToReceiveRentAdapter extends RecyclerView.Adapter<ToReceiveRentAdap
                             dialogCustom.show();
                         }
                     });
-                    ad.setButton(AlertDialog.BUTTON_NEGATIVE, "Not Yet", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            dialog.dismiss();
-                        }
-                    });
                     ad.show();
                 }
             }
@@ -376,6 +370,13 @@ public class ToReceiveRentAdapter extends RecyclerView.Adapter<ToReceiveRentAdap
 
 
         Log.d("LOG_VOLLEYuserRating", mRequestBody);
+        int maxLogSize = 2000;
+        for (int i = 0; i <= mRequestBody.length() / maxLogSize; i++) {
+            int start = i * maxLogSize;
+            int end = (i + 1) * maxLogSize;
+            end = end > mRequestBody.length() ? mRequestBody.length() : end;
+            Log.d("addUserRating", mRequestBody.substring(start, end));
+        }
         StringRequest stringRequest = new StringRequest(Request.Method.POST, URL, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
