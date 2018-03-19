@@ -209,9 +209,15 @@ public class Constants {
 
     public static final String GET_BOOK_OWNER_SWAP_DETAIL = WEB_SERVICE_URL + "swapDetail/getSwapDetail/";
 
+    public static final String GET_LATEST_RENTER = WEB_SERVICE_URL + "rentalHeader/latestRenter/";
+
     public static final String GET_BOOK_OWNER_AUCTION_DETAIL = WEB_SERVICE_URL + "auctionDetail/getAuctionDetail/";
 
     public static final String GET_RECOMMENDATION = WEB_SERVICE_URL + "bookOwner/suggestedBooks/";
+
+    public static final String GET_RECOMMENDATION_BY_SIMILARITY = WEB_SERVICE_URL + "bookOwner/suggestedBooksByUserSimilarity/";
+
+    public static final String GET_RECOMMENDATION_MERGED = WEB_SERVICE_URL + "bookOwner/suggestedBooksMerged/";
 
     public static final String GET_SEARCH_RESULT = WEB_SERVICE_URL + "bookOwner/searchBooks/";
 

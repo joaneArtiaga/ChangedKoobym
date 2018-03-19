@@ -66,6 +66,7 @@ import com.example.joane14.myapplication.Fragments.CountdownFrag;
 import com.example.joane14.myapplication.Fragments.DisplayBookReview;
 import com.example.joane14.myapplication.Fragments.DisplaySwapComments;
 import com.example.joane14.myapplication.Fragments.MapLandingPage;
+import com.example.joane14.myapplication.Fragments.VolleyUtil;
 import com.example.joane14.myapplication.Model.AuctionDetailModel;
 import com.example.joane14.myapplication.Model.Book;
 import com.example.joane14.myapplication.Model.BookOwnerModel;
@@ -252,7 +253,7 @@ public class ViewOwnBookAct extends AppCompatActivity
 
             mRating.setRating(Float.parseFloat(String.valueOf(rentalDetailModel.getBookOwner().getRate())));
 
-            getCount();
+            getLatestRenter(rentalDetailModel.getRental_detailId());
 
             Bundle bundle = new Bundle();
             bundle.putSerializable("rentalDetail", rentalDetailModel);
@@ -613,6 +614,30 @@ public class ViewOwnBookAct extends AppCompatActivity
 
         }
     }
+
+    private void getLatestRenter(int rentalDetailId) {
+        String URL = Constants.GET_LATEST_RENTER + rentalDetailId;
+        Log.d("LatestRenterURL", URL);
+        StringRequest stringRequest = new StringRequest(Request.Method.GET, URL, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                Log.d("LatestRenterResponse", response);
+                Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd").registerTypeAdapter(Date.class, GsonDateDeserializer.getInstance()).create();
+                RentalHeader rh= gson.fromJson(response, RentalHeader.class);
+
+                String message = "This book is rented by "+rh.getUserId().getUserFname()+" "+rh.getUserId().getUserLname()+" on "+rh.getDateDeliver();
+                mRenters.setText(message);
+
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.e("LOG_VOLLEY", error.toString());
+            }
+        });
+        VolleyUtil.volleyRQInstance(ViewOwnBookAct.this).add(stringRequest);
+    }
+
 
     public static void makeTextViewResizable(final TextView textView, final int maxLine, final String expandText, final boolean viewMore) {
         Log.d("makeTextViewResizable", "inside");

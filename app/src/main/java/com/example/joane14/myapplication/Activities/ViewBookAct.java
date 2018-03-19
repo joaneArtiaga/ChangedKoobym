@@ -169,6 +169,8 @@ public class ViewBookAct extends AppCompatActivity implements
 
             rentalDetailModel = (RentalDetail) getIntent().getExtras().getSerializable("viewBook");
 
+//            getLatestRenter(rentalDetailModel.getRental_detailId());
+            mRenters.setVisibility(View.GONE);
             mTitle.setText(rentalDetailModel.getBookOwner().getBookObj().getBookTitle());
 
             mLPrice.setText("₱ " + String.format("%.2f", rentalDetailModel.getCalculatedPrice()));
@@ -219,7 +221,6 @@ public class ViewBookAct extends AppCompatActivity implements
 
             mRating.setRating(Float.parseFloat(String.valueOf(rentalDetailModel.getBookOwner().getRate())));
 
-            getCount();
             getRatings(rentalDetailModel.getBookOwner().getBookOwnerId());
 
             Bundle bundle = new Bundle();
@@ -616,6 +617,29 @@ public class ViewBookAct extends AppCompatActivity implements
             Toast.makeText(getApplicationContext(), "balalallala", Toast.LENGTH_SHORT).show();
         }
     };
+
+//    private void getLatestRenter(int rentalDetailId) {
+//        String URL = Constants.GET_LATEST_RENTER + rentalDetailId;
+//        Log.d("LatestRenterURL", URL);
+//        StringRequest stringRequest = new StringRequest(Request.Method.GET, URL, new Response.Listener<String>() {
+//            @Override
+//            public void onResponse(String response) {
+//                Log.d("LatestRenterResponse", response);
+//                Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd").registerTypeAdapter(Date.class, GsonDateDeserializer.getInstance()).create();
+//                RentalHeader rh= gson.fromJson(response, RentalHeader.class);
+//
+//                String message = rh.getUserId().getUserFname()+" "+rh.getUserId().getUserLname()+" rented on "+rh.getDateDeliver();
+//                mRenters.setText(message);
+//
+//            }
+//        }, new Response.ErrorListener() {
+//            @Override
+//            public void onErrorResponse(VolleyError error) {
+//                Log.e("LOG_VOLLEY", error.toString());
+//            }
+//        });
+//        VolleyUtil.volleyRQInstance(ViewBookAct.this).add(stringRequest);
+//    }
 
     private void getSwapDetail(int bookOwnerId) {
         String URL = Constants.GET_BOOK_OWNER_SWAP_DETAIL + bookOwnerId;

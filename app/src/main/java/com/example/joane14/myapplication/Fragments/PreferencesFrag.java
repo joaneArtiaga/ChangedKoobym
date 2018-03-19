@@ -79,7 +79,11 @@ public class PreferencesFrag extends Fragment {
         mAdapter = new PrefferedAdapter(getContext(), bookOwnerModelList);
         mGridView.setAdapter(mAdapter);
         Log.d("userId$#23", String.valueOf(userObj.getUserId()));
-        getSuggested(userObj.getUserId());
+//        getSuggested(userObj.getUserId());
+
+//        getSuggestedMerged(userObj.getUserId());
+
+        getSuggestedByUserSimilarity(userObj.getUserId());
 
         mGridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -199,6 +203,50 @@ public class PreferencesFrag extends Fragment {
 //        String URL = "http://104.198.152.85/Koobym/rentalDetail/suggested/%d";
 //        String URL = Constants.WEB_SERVICE_URL+"rentalDetail/suggested/%d";
         String URL = Constants.GET_RECOMMENDATION+userId;
+        URL = String.format(URL, userId);
+        Log.d("PreferenceURL", URL);
+        StringRequest stringRequest = new StringRequest(Request.Method.GET, URL, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                Log.d("Inside get suggested", response);
+                Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd").registerTypeAdapter(Date.class, GsonDateDeserializer.getInstance()).create();
+                BookOwnerModel[] bookOwnerModels = gson.fromJson(response, BookOwnerModel[].class);
+                bookOwnerModelList.addAll(Arrays.asList(bookOwnerModels));
+                mAdapter.notifyDataSetChanged();
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.e("LOG_VOLLEY", error.toString());
+            }
+        }) ;
+        VolleyUtil.volleyRQInstance(getContext()).add(stringRequest);
+    }
+
+    private void getSuggestedByUserSimilarity(int userId){
+        String URL = Constants.GET_RECOMMENDATION_BY_SIMILARITY+userId;
+        URL = String.format(URL, userId);
+        Log.d("PreferenceURL", URL);
+        StringRequest stringRequest = new StringRequest(Request.Method.GET, URL, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                Log.d("Inside get suggested", response);
+                Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd").registerTypeAdapter(Date.class, GsonDateDeserializer.getInstance()).create();
+                BookOwnerModel[] bookOwnerModels = gson.fromJson(response, BookOwnerModel[].class);
+                bookOwnerModelList.addAll(Arrays.asList(bookOwnerModels));
+                mAdapter.notifyDataSetChanged();
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.e("LOG_VOLLEY", error.toString());
+            }
+        }) ;
+        VolleyUtil.volleyRQInstance(getContext()).add(stringRequest);
+    }
+
+    private void getSuggestedMerged(int userId){
+        String URL = Constants.GET_RECOMMENDATION_MERGED+userId;
         URL = String.format(URL, userId);
         Log.d("PreferenceURL", URL);
         StringRequest stringRequest = new StringRequest(Request.Method.GET, URL, new Response.Listener<String>() {
