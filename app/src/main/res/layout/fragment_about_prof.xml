@@ -257,14 +257,12 @@
                 android:id="@+id/fragment_container_userDayTime"
                 android:layout_width="330dp"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
-                android:layout_marginTop="5dp" />
+                android:layout_gravity="center_horizontal" />
             <FrameLayout
                 android:id="@+id/fragment_container_userReview"
                 android:layout_width="330dp"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
-                android:layout_marginTop="5dp" />
+                android:layout_gravity="center_horizontal" />
         </LinearLayout>
     </ScrollView>
 

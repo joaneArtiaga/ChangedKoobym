@@ -112,6 +112,7 @@ public class AboutProfFrag extends Fragment {
         DisplayUserReview mrbf = DisplayUserReview.newInstance(bundle);
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
         fragmentTransaction.replace(R.id.fragment_container_userReview, mrbf);
+        fragmentTransaction.replace(R.id.fragment_container_userDayTime, DisplayUserDayTime.newInstance(user));
         fragmentTransaction.commit();
 
         return view;

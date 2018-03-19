@@ -53,6 +53,7 @@ import com.example.joane14.myapplication.Fragments.AboutProfFrag;
 import com.example.joane14.myapplication.Fragments.Constants;
 import com.example.joane14.myapplication.Fragments.DisplayBookReview;
 import com.example.joane14.myapplication.Fragments.DisplayMyBooks;
+import com.example.joane14.myapplication.Fragments.DisplayUserDayTime;
 import com.example.joane14.myapplication.Fragments.DisplayUserReview;
 import com.example.joane14.myapplication.Fragments.Genre;
 import com.example.joane14.myapplication.Fragments.MapLandingPage;
@@ -84,7 +85,8 @@ public class ProfileActivity extends AppCompatActivity implements
         ProfileFragment.OnFragmentInteractionListener, ProfileFrag.OnProfileFragInteractionListener,
         AboutProfFrag.OnAboutProfInteractionListener,
         DisplayUserReview.OnUserReviewInteractionListener,
-        DisplayMyBooks.OnDisplayMyBooksInteractionListener {
+        DisplayMyBooks.OnDisplayMyBooksInteractionListener,
+        DisplayUserDayTime.OnUserDayTimeInteractionListener{
 
     FloatingActionButton mBtnAdd;
     Book book;
@@ -596,6 +598,11 @@ public class ProfileActivity extends AppCompatActivity implements
 
     @Override
     public void onUserReviewOnClick(Uri uri) {
+
+    }
+
+    @Override
+    public void onUserDayTimeInteraction(Uri uri) {
 
     }
 }
