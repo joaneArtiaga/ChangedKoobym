@@ -107,6 +107,7 @@ public class ToReceiveAuctionAdapter extends RecyclerView.Adapter<ToReceiveAucti
 
 
         holder.mBtnMail.setVisibility(View.GONE);
+        holder.mDeliveredDate.setText("Delivered on "+bookList.get(position).getDateDelivered());
 
         holder.mBookTitle.setText(bookList.get(position).getAuctionDetail().getBookOwner().getBookObj().getBookTitle());
         holder.mBookDate.setText(bookList.get(position).getAuctionHeaderDateStamp());
@@ -412,7 +413,7 @@ public class ToReceiveAuctionAdapter extends RecyclerView.Adapter<ToReceiveAucti
     }
 
     public class BookHolder extends RecyclerView.ViewHolder {
-        TextView mBookTitle, mBookRenter, mBookDate, mPrice, mLocation, mTime, mDate;
+        TextView mBookTitle, mBookRenter, mBookDate, mPrice, mLocation, mTime, mDate, mDeliveredDate;
         ImageView mIvBook;
         ImageButton mBtnProfile, mBtnMail, mBtnRate;
         AuctionHeader auctionHeaderObj;
@@ -430,6 +431,7 @@ public class ToReceiveAuctionAdapter extends RecyclerView.Adapter<ToReceiveAucti
             mLocation = (TextView) itemView.findViewById(R.id.locationBA);
             mPrice = (TextView) itemView.findViewById(R.id.bookPriceBA);
             mTime = (TextView) itemView.findViewById(R.id.timeBA);
+            mDeliveredDate = (TextView) itemView.findViewById(R.id.deliveredTime);
             mIvBook = (ImageView) itemView.findViewById(R.id.ivBookBA);
             mBtnProfile = (ImageButton) itemView.findViewById(R.id.profileBA);
             mBtnMail = (ImageButton) itemView.findViewById(R.id.notifyBA);

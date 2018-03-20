@@ -99,6 +99,7 @@ public class ToReceiveSwapAdapter extends RecyclerView.Adapter<ToReceiveSwapAdap
 
         holder.mNotify.setVisibility(View.GONE);
 
+        holder.mDeliveredDate.setText("Delivered on "+bookList.get(position).getDateDelivered());
         holder.mBookTitle.setText(bookList.get(position).getSwapDetail().getBookOwner().getBookObj().getBookTitle());
         holder.mRenter.setText(bookList.get(position).getSwapDetail().getBookOwner().getUserObj().getUserFname()+" "+bookList.get(position).getSwapDetail().getBookOwner().getUserObj().getUserLname());
         holder.mBookDate.setText(bookList.get(position).getDateTimeStamp());
@@ -418,7 +419,7 @@ public class ToReceiveSwapAdapter extends RecyclerView.Adapter<ToReceiveSwapAdap
     }
 
     public class BookHolder extends RecyclerView.ViewHolder {
-        TextView mBookTitle, mRenter, mBookDate, mLocation, mTime, mDate;
+        TextView mBookTitle, mRenter, mBookDate, mLocation, mTime, mDate, mDeliveredDate;
         ImageView mIvBookImg;
         ImageButton mProfile, mNotify, mRate;
         ListView ly;
@@ -436,6 +437,7 @@ public class ToReceiveSwapAdapter extends RecyclerView.Adapter<ToReceiveSwapAdap
             mBookDate = (TextView) itemView.findViewById(R.id.bookDateBA);
             mLocation = (TextView) itemView.findViewById(R.id.locationBA);
             mTime = (TextView) itemView.findViewById(R.id.timeBA);
+            mDeliveredDate = (TextView) itemView.findViewById(R.id.deliveredTime);
             mIvBookImg = (ImageView) itemView.findViewById(R.id.ivBookBA);
             mProfile = (ImageButton) itemView.findViewById(R.id.profileBA);
             mNotify = (ImageButton) itemView.findViewById(R.id.notifyBA);
