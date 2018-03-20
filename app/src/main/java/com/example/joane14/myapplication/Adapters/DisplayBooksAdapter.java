@@ -110,7 +110,6 @@ public class DisplayBooksAdapter extends BaseAdapter {
 
         statusBook.setText(bookOwnerModel.getStatus());
         if(bookOwnerModel.getStatus().equals("Rent")){
-//            getRentalDetail(bookOwnerModel.getBookOwnerId());
 
             if(bookOwnerModel.getBookStat().equals("Available")){
                 statusLinear.setBackgroundColor(ContextCompat.getColor(context, R.color.colorRent));

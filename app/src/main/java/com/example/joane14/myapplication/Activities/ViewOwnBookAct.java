@@ -61,6 +61,7 @@ import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.bumptech.glide.Glide;
 import com.example.joane14.myapplication.Class.BadgeDrawable;
+import com.example.joane14.myapplication.Fragments.AuctionBidFragment;
 import com.example.joane14.myapplication.Fragments.Constants;
 import com.example.joane14.myapplication.Fragments.CountdownFrag;
 import com.example.joane14.myapplication.Fragments.DisplayBookReview;
@@ -98,7 +99,8 @@ public class ViewOwnBookAct extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener,
         DisplaySwapComments.OnSwapCommentInteractionListener,
         DisplayBookReview.OnDisplayBookReviewInteractionListener,
-        CountdownFrag.OnCountdownInteractionListener {
+        CountdownFrag.OnCountdownInteractionListener,
+        AuctionBidFragment.OnAuctionBidInteractionListener{
 
     static final int MSG_DISMISS_DIALOG = 0;
     RentalDetail rentalDetailModel, rentToPost;
@@ -419,13 +421,144 @@ public class ViewOwnBookAct extends AppCompatActivity
             mLPrice.setText("₱ " + String.format("%.2f", auctionDetail.getStartingPrice()));
 
 
+            FragmentTransaction fragt = getSupportFragmentManager().beginTransaction();
+            bundle.putSerializable("auctionComment", auctionDetail);
+            AuctionBidFragment abf = AuctionBidFragment.newInstance(bundle);
+            fragt.replace(R.id.fragment_review_container, abf);
+            fragt.commit();
+
             if (auctionDetail.getAuctionStatus().equals("start")) {
                 CountdownFrag cdf = CountdownFrag.newInstance(bundle);
                 FragmentTransaction ft = fragmentManager.beginTransaction();
                 ft.replace(R.id.countdown_container, cdf);
                 ft.commit();
+                mUpdateBtn.setText("Edit");
+                mUpdateBtn.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        final Dialog dialog = new Dialog(ViewOwnBookAct.this);
+                        dialog.setContentView(R.layout.auction_edit_custom_dialog);
+                        final DayModel day;
+                        final TimeModel time;
+                        final DatePickerDialog.OnDateSetListener mDatePicker;
+
+                        aucDate = Calendar.getInstance();
+
+                        mEndDate = new ArrayList<String>();
+                        Log.d("mEndDate", "labay lang");
+                        final List<String> dateEnd = new ArrayList<String>();
+                        auctionToPost = new AuctionDetailModel();
+
+
+                        Button mBtnOkay = (Button) dialog.findViewById(R.id.btnOkay);
+                        Button mBtnCancel = (Button) dialog.findViewById(R.id.btnCancel);
+
+                        mEndTime = (TextView) dialog.findViewById(R.id.tvAucEndTime);
+
+                        final TextView mEnd = (TextView) dialog.findViewById(R.id.endDate);
+
+                        mEndTime.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                boolEndTime = true;
+                                CreateTimePicker(mEndTime, "end");
+                            }
+                        });
+
+                        mEnd.setText(auctionDetail.getEndDate());
+                        mDatePicker = new DatePickerDialog.OnDateSetListener() {
+
+                            @Override
+                            public void onDateSet(android.widget.DatePicker view, int year, int monthOfYear,
+                                                  int dayOfMonth) {
+                                // TODO Auto-generated method stub
+                                aucDate.set(java.util.Calendar.YEAR, year);
+                                aucDate.set(java.util.Calendar.MONTH, monthOfYear);
+                                aucDate.set(java.util.Calendar.DAY_OF_MONTH, dayOfMonth);
+
+                                String myFormat = "yyyy-MM-dd";
+                                java.text.SimpleDateFormat sdf = new java.text.SimpleDateFormat(myFormat, Locale.US);
+                                mEnd.setText(sdf.format(aucDate.getTime()));
+                                Log.d("startDate", sdf.format(aucDate.getTime()));
+                            }
+                        };
+
+                        mEnd.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                new DatePickerDialog(ViewOwnBookAct.this, mDatePicker, aucDate.get(java.util.Calendar.YEAR),
+                                        aucDate.get(java.util.Calendar.MONTH), aucDate.get(Calendar.DAY_OF_MONTH)).show();
+                            }
+                        });
+
+                        mBtnOkay.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                auctionDetail.setEndDate(mEnd.getText().toString());
+                                auctionDetail.setEndTime(mEndTime.getText().toString());
+
+                                if (mEnd.getText().length()==0||boolEndTime==false) {
+                                    AlertDialog ad = new AlertDialog.Builder(ViewOwnBookAct.this).create();
+                                    ad.setTitle("Alert!");
+                                    ad.setMessage("Fill up all data.");
+                                    ad.setButton(AlertDialog.BUTTON_NEUTRAL, "Okay", new DialogInterface.OnClickListener() {
+                                        @Override
+                                        public void onClick(DialogInterface dialog, int which) {
+                                            dialog.dismiss();
+                                        }
+                                    });
+                                    ad.show();
+                                } else {
+                                    updateAuctionDetail(auctionDetail);
+                                }
+
+
+                            }
+                        });
+
+                        mBtnCancel.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                dialog.cancel();
+                            }
+                        });
+                        dialog.show();
+                    }
+                });
+                mDeleteBtn.setVisibility(View.GONE);
             } else {
                 containerForCounter.setVisibility(View.GONE);
+                mUpdateBtn.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Intent intent = new Intent(ViewOwnBookAct.this, UpdateBookActivity.class);
+                        Bundle bundle = new Bundle();
+                        bundle.putSerializable("auctionBook", auctionDetail);
+                        intent.putExtras(bundle);
+                        startActivity(intent);
+                    }
+                });
+                mDeleteBtn.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        AlertDialog ad = new AlertDialog.Builder(ViewOwnBookAct.this).create();
+                        ad.setTitle("Delete");
+                        ad.setMessage("Are you sure you want to delete this book?");
+                        ad.setButton(AlertDialog.BUTTON_POSITIVE, "Yes", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                updateBook(auctionDetail.getBookOwner().getBookObj());
+                            }
+                        });
+                        ad.setButton(AlertDialog.BUTTON_NEGATIVE, "No", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+
+                            }
+                        });
+                        ad.show();
+                    }
+                });
             }
             getRatings(auctionDetail.getBookOwner().getBookOwnerId());
 
@@ -478,39 +611,6 @@ public class ViewOwnBookAct extends AppCompatActivity
             }else{
                 Log.d("updateDelete", "equals ang user");
             }
-
-            mUpdateBtn.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Intent intent = new Intent(ViewOwnBookAct.this, UpdateBookActivity.class);
-                    Bundle bundle = new Bundle();
-                    bundle.putSerializable("auctionBook", auctionDetail);
-                    intent.putExtras(bundle);
-                    startActivity(intent);
-                }
-            });
-
-            mDeleteBtn.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    AlertDialog ad = new AlertDialog.Builder(ViewOwnBookAct.this).create();
-                    ad.setTitle("Delete");
-                    ad.setMessage("Are you sure you want to delete this book?");
-                    ad.setButton(AlertDialog.BUTTON_POSITIVE, "Yes", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            updateBook(auctionDetail.getBookOwner().getBookObj());
-                        }
-                    });
-                    ad.setButton(AlertDialog.BUTTON_NEGATIVE, "No", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-
-                        }
-                    });
-                    ad.show();
-                }
-            });
 
         } else if (getIntent().getExtras().getSerializable("notAdBook") != null) {
 
@@ -613,6 +713,37 @@ public class ViewOwnBookAct extends AppCompatActivity
             });
 
         }
+    }
+
+    private void updateAuctionDetail(AuctionDetailModel auctionDetailModel) {
+        String URL = Constants.PUT_AUCTION_DETAIL;
+        Log.d("LatestRenterURL", URL);
+
+        final Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd").registerTypeAdapter(Date.class, GsonDateDeserializer.getInstance()).create();
+        final String mRequestBody = gson.toJson(auctionDetailModel);
+
+        int maxLogSize = 2000;
+        for (int i = 0; i <= mRequestBody.length() / maxLogSize; i++) {
+            int start = i * maxLogSize;
+            int end = (i + 1) * maxLogSize;
+            end = end > mRequestBody.length() ? mRequestBody.length() : end;
+            Log.d("updateAuction", mRequestBody.substring(start, end));
+        }
+        StringRequest stringRequest = new StringRequest(Request.Method.PUT, URL, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                Log.d("updateAucDetRes", response);
+                Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd").registerTypeAdapter(Date.class, GsonDateDeserializer.getInstance()).create();
+                AuctionDetailModel rh= gson.fromJson(response, AuctionDetailModel.class);
+
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.e("LOG_VOLLEY", error.toString());
+            }
+        });
+        VolleyUtil.volleyRQInstance(ViewOwnBookAct.this).add(stringRequest);
     }
 
     private void getLatestRenter(int rentalDetailId) {
@@ -1878,6 +2009,11 @@ public class ViewOwnBookAct extends AppCompatActivity
 
     @Override
     public void onCountdownOnClick(Uri uri) {
+
+    }
+
+    @Override
+    public void onAuctionBidClick(Uri uri) {
 
     }
 }

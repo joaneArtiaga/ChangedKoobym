@@ -1,24 +1,34 @@
 package com.example.joane14.myapplication.Activities;
 
 import android.app.DatePickerDialog;
+import android.app.Dialog;
+import android.app.TimePickerDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.DefaultItemAnimator;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ListPopupWindow;
+import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.TimePicker;
 
 import com.android.volley.AuthFailureError;
 import com.android.volley.NetworkResponse;
@@ -33,12 +43,18 @@ import com.bumptech.glide.Glide;
 import com.esafirm.imagepicker.features.ImagePicker;
 import com.esafirm.imagepicker.model.Image;
 import com.example.joane14.myapplication.Adapters.PlaceAutoCompleteAdapter;
+import com.example.joane14.myapplication.Adapters.TimeDayAdapter;
+import com.example.joane14.myapplication.Adapters.UserDayTimeUpdateAdapter;
 import com.example.joane14.myapplication.Fragments.Constants;
+import com.example.joane14.myapplication.Fragments.DisplayUserDayTimeUpdate;
 import com.example.joane14.myapplication.Fragments.VolleyMultipartRequest;
 import com.example.joane14.myapplication.Model.Book;
+import com.example.joane14.myapplication.Model.DayModel;
 import com.example.joane14.myapplication.Model.LocationModel;
 import com.example.joane14.myapplication.Model.Place;
+import com.example.joane14.myapplication.Model.TimeModel;
 import com.example.joane14.myapplication.Model.User;
+import com.example.joane14.myapplication.Model.UserDayTime;
 import com.example.joane14.myapplication.R;
 import com.example.joane14.myapplication.Utilities.PlacesUtility;
 import com.example.joane14.myapplication.Utilities.SPUtility;
@@ -70,7 +86,7 @@ import static android.util.Log.d;
  * Created by Kimberly Cañedo on 06/10/2017.
  */
 
-public class UpdateProfileActivity extends AppCompatActivity implements AdapterView.OnItemClickListener{
+public class UpdateProfileActivity extends AppCompatActivity implements AdapterView.OnItemClickListener, DisplayUserDayTimeUpdate.OnUserDayTimeInteractionListener{
 
     DatePickerDialog.OnDateSetListener date;
     private Calendar calendar;
@@ -86,6 +102,14 @@ public class UpdateProfileActivity extends AppCompatActivity implements AdapterV
     User userToPut;
     User user;
     ImageView ivProfile;
+    List<String> selectedDays;
+    List<UserDayTime> userDayTimeList;
+    EditText etTimeFrom, etTimeTo;
+    UserDayTime userDayTime;
+    private static RecyclerView.Adapter mAdapter;
+    private RecyclerView.LayoutManager layoutManager;
+    private static RecyclerView recyclerView;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -103,6 +127,8 @@ public class UpdateProfileActivity extends AppCompatActivity implements AdapterV
         mSecondBool = false;
         mThirdBool = false;
         mAddressBool = false;
+        selectedDays = new ArrayList<String>();
+        userDayTimeList = new ArrayList<UserDayTime>();
 
         locPos = new ArrayList<Integer>();
 
@@ -117,6 +143,7 @@ public class UpdateProfileActivity extends AppCompatActivity implements AdapterV
         final EditText mContact = (EditText) findViewById(R.id.etContactUP);
         Button mBtnUpdate = (Button) findViewById(R.id.btnUpdateProfile);
         ivProfile = (ImageView) findViewById(R.id.ivProfileUP);
+        Button mBtnAddTime = (Button) findViewById(R.id.addTime);
 
         mFirst = (AutoCompleteTextView) findViewById(R.id.location1UP);
         mSecond = (AutoCompleteTextView) findViewById(R.id.location2UP);
@@ -327,13 +354,182 @@ public class UpdateProfileActivity extends AppCompatActivity implements AdapterV
                 userToPut.setPhoneNumber(mContact.getText().toString());
                 userToPut.setLocationArray(location);
 
-                userToPut.setDayTimeModel(finalUser1.getDayTimeModel());
+                userToPut.setDayTimeModel(userDayTimeList);
                 userToPut.setGenreArray(finalUser1.getGenreArray());
                 userToPut.setImageFilename(finalUser1.getImageFilename());
                 updateUser(userToPut);
             }
         });
 
+        mBtnAddTime.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                    customDialog();
+            }
+        });
+
+        for(int init=0; init<user.getDayTimeModel().size(); init++){
+            if(user.getDayTimeModel().get(init).getDay().getStrDay().equals("Monday")
+                    ||user.getDayTimeModel().get(init).getDay().getStrDay().equals("Tuesday")
+                    ||user.getDayTimeModel().get(init).getDay().getStrDay().equals("Wednesday")
+                    ||user.getDayTimeModel().get(init).getDay().getStrDay().equals("Thursday")
+                    ||user.getDayTimeModel().get(init).getDay().getStrDay().equals("Friday")
+                    ||user.getDayTimeModel().get(init).getDay().getStrDay().equals("Saturday")
+                    ||user.getDayTimeModel().get(init).getDay().getStrDay().equals("Sunday")){
+                userDayTimeList.add(user.getDayTimeModel().get(init));
+            }
+        }
+
+        recyclerView = (RecyclerView) findViewById(R.id.recycler_view_timeDay);
+        recyclerView.setHasFixedSize(true);
+
+        layoutManager = new LinearLayoutManager(UpdateProfileActivity.this);
+        recyclerView.setLayoutManager(layoutManager);
+        recyclerView.setItemAnimator(new DefaultItemAnimator());
+
+        mAdapter = new UserDayTimeUpdateAdapter(this, userDayTimeList);
+        recyclerView.setAdapter(mAdapter);
+
+    }
+
+    public void customDialog() {
+        final Dialog dialog = new Dialog(UpdateProfileActivity.this);
+        dialog.setContentView(R.layout.time_date_dialog);
+        dialog.setTitle("Choose Time and Day");
+        final DayModel day;
+        final TimeModel time;
+
+
+        day = new DayModel();
+        time = new TimeModel();
+
+        etTimeFrom = (EditText) dialog.findViewById(R.id.tcFrom);
+        etTimeTo = (EditText) dialog.findViewById(R.id.tcTo);
+        Button mBtnOkay = (Button) dialog.findViewById(R.id.btnOkay);
+        Button mBtnCancel = (Button) dialog.findViewById(R.id.btnCancel);
+        Spinner mSpinnerDay = (Spinner) dialog.findViewById(R.id.spinnerDay);
+
+        if (selectedDays.isEmpty()) {
+            Log.d("selectedDays", "empty");
+        } else {
+            Log.d("selectedDays", "not empty");
+        }
+
+        selectedDays.add("Monday");
+        selectedDays.add("Tuesday");
+        selectedDays.add("Wednesday");
+        selectedDays.add("Thursdday");
+        selectedDays.add("Friday");
+        selectedDays.add("Saturday");
+        selectedDays.add("Sunday");
+
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(UpdateProfileActivity.this, android.R.layout.simple_dropdown_item_1line, selectedDays);
+        adapter.setDropDownViewResource(R.layout.support_simple_spinner_dropdown_item);
+        if (adapter == null) {
+            Log.d("apater", "is null");
+        } else {
+            Log.d("apater", "is not null");
+        }
+        mSpinnerDay.setAdapter(adapter);
+
+        mSpinnerDay.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                day.setStrDay(selectedDays.get(position));
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
+        etTimeFrom.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                CreateTimePicker(0);
+            }
+        });
+        etTimeTo.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                CreateTimePicker(1);
+            }
+        });
+
+        mBtnOkay.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                userDayTime = new UserDayTime();
+                time.setStrTime(etTimeFrom.getText().toString() + " - " + etTimeTo.getText().toString());
+                userDayTime.setDay(day);
+                userDayTime.setTime(time);
+                userDayTimeList.add(userDayTime);
+                mAdapter.notifyDataSetChanged();
+                dialog.cancel();
+            }
+        });
+
+        mBtnCancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.cancel();
+            }
+        });
+        dialog.show();
+    }
+
+    public void CreateTimePicker(final int pos) {
+
+        final java.util.Calendar c = java.util.Calendar.getInstance();
+        int mHour = c.get(java.util.Calendar.HOUR_OF_DAY);
+        int mMinute = c.get(java.util.Calendar.MINUTE);
+
+
+        TimePickerDialog timePickerDialog = new TimePickerDialog(UpdateProfileActivity.this,
+                new TimePickerDialog.OnTimeSetListener() {
+
+                    @Override
+                    public void onTimeSet(TimePicker view, int hourOfDay,
+                                          int minute) {
+                        int hour = hourOfDay;
+                        int minutes = minute;
+                        String timeSet = "";
+                        if (hour > 12) {
+                            hour -= 12;
+                            timeSet = "PM";
+                        } else if (hour == 0) {
+                            hour += 12;
+                            timeSet = "AM";
+                        } else if (hour == 12) {
+                            timeSet = "PM";
+                        } else {
+                            timeSet = "AM";
+                        }
+
+                        String min = "";
+                        if (minutes < 10)
+                            min = "0" + minutes;
+                        else
+                            min = String.valueOf(minutes);
+
+                        // Append in a StringBuilder
+                        String aTime = new StringBuilder().append(hour).append(':')
+                                .append(min).append(" ").append(timeSet).toString();
+
+                        String timeGiven = "";
+                        timeGiven = hourOfDay + ":" + minute;
+                        Log.d("time selected", timeGiven);
+
+                        if (pos == 0) {
+                            etTimeFrom.setText(aTime);
+                        } else {
+                            etTimeTo.setText(aTime);
+                        }
+
+                    }
+                }, mHour, mMinute, false);
+        timePickerDialog.show();
     }
 
     Response.Listener<String> autocompleteplaceListener = new Response.Listener<String>() {
@@ -545,4 +741,8 @@ public class UpdateProfileActivity extends AppCompatActivity implements AdapterV
         }
     };
 
+    @Override
+    public void onUserDayTimeInteraction(Uri uri) {
+
+    }
 }

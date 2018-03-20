@@ -81,9 +81,9 @@ public class PreferencesFrag extends Fragment {
         Log.d("userId$#23", String.valueOf(userObj.getUserId()));
 //        getSuggested(userObj.getUserId());
 
-//        getSuggestedMerged(userObj.getUserId());
+        getSuggestedMerged(userObj.getUserId());
 
-        getSuggestedByUserSimilarity(userObj.getUserId());
+//        getSuggestedByUserSimilarity(userObj.getUserId());
 
         mGridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override

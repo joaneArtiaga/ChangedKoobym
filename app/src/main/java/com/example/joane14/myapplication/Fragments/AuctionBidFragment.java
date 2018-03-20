@@ -40,6 +40,9 @@ import com.google.gson.GsonBuilder;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 
@@ -123,6 +126,18 @@ public class AuctionBidFragment extends Fragment {
 //                RentalHeader rentalHeaderModel = gson.fromJson(response, RentalHeader.class);
                 suggested.clear();
                 suggested.addAll(Arrays.asList(gson.fromJson(response, AuctionCommentDetail[].class)));
+                Collections.sort(suggested, new Comparator<AuctionCommentDetail>() {
+                    @Override
+                    public int compare(AuctionCommentDetail o1, AuctionCommentDetail o2) {
+                        if(o1.getAuctionComment().getAuctionComment()>o2.getAuctionComment().getAuctionComment()){
+                            return 1;
+                        }
+                        if(o1.getAuctionComment().getAuctionComment()<o2.getAuctionComment().getAuctionComment()){
+                            return -1;
+                        }
+                        return 0;
+                    }
+                });
                 mAdapter.notifyDataSetChanged();
             }
         }, new Response.ErrorListener() {

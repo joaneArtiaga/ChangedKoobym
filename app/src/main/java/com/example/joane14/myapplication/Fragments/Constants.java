@@ -249,6 +249,8 @@ public class Constants {
 
     public static final String PUT_AUCTION_HEADER = WEB_SERVICE_URL + "auctionHeader/update";
 
+    public static final String PUT_AUCTION_DETAIL = WEB_SERVICE_URL + "auctionDetail/update";
+
     public static final String UPDATE_AUCTION_HEADER = WEB_SERVICE_URL + "auctionHeader/updateStatus";
 
     public static final String TO_DELIVER_AUCTION = WEB_SERVICE_URL + "auctionHeader/toDeliverById/";

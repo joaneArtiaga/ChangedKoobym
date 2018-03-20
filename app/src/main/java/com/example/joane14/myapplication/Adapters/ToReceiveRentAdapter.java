@@ -52,13 +52,10 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
 import java.io.UnsupportedEncodingException;
-import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
-
-import static android.util.Log.d;
 
 /**
  * Created by Joane14 on 05/10/2017.
@@ -93,6 +90,7 @@ public class ToReceiveRentAdapter extends RecyclerView.Adapter<ToReceiveRentAdap
     @Override
     public void onBindViewHolder(ToReceiveRentAdapter.BookHolder holder, final int position) {
 
+        Log.d("rentalHeaderLog",bookList.get(position).getRentalHeaderId()+"");
         if(bookList.get(position).getRentalExtraMessage()==null||bookList.get(position).getRentalExtraMessage().equals("Return")){
             Log.d("sulodSa", "gray");
             holder.mBtnRate.setImageResource(R.drawable.notrate);
@@ -118,35 +116,37 @@ public class ToReceiveRentAdapter extends RecyclerView.Adapter<ToReceiveRentAdap
             SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
             final String currDAte = sdf.format(c);
             Date dateReturn = null;
-            try {
-                dateReturn = sdf.parse(bookList.get(position).getRentalReturnDate());
-            } catch (ParseException e) {
-                e.printStackTrace();
-            }
-            Calendar thatDay = Calendar.getInstance();
-            thatDay.setTime(dateReturn);
-            long diff = calendar.getTimeInMillis() - thatDay.getTimeInMillis();
-            long daysDiff = diff / (24*60*60*1000);
+            if(bookList.get(position).getRentalReturnDate()!=null){
+                try {
+                    dateReturn = sdf.parse(bookList.get(position).getRentalReturnDate());
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                }
+                Calendar thatDay = Calendar.getInstance();
+                thatDay.setTime(dateReturn);
+                long diff = calendar.getTimeInMillis() - thatDay.getTimeInMillis();
+                long daysDiff = diff / (24*60*60*1000);
 
-            float lockin = 0f;
+                float lockin = 0f;
 
-            Log.d("diffDays", daysDiff+"");
+                Log.d("diffDays", daysDiff+"");
 
 
-            lockin = daysDiff*50;
+                lockin = daysDiff*50;
 
-            float lockinPrice=0f;
+                float lockinPrice=0f;
 
-            lockinPrice = bookList.get(position).getTotalPrice()/2;
+                lockinPrice = bookList.get(position).getTotalPrice()/2;
 
-            float diffLp = 0f;
+                float diffLp = 0f;
 
-            diffLp = lockinPrice - lockin;
+                diffLp = lockinPrice - lockin;
 
-            if(diffLp<0){
-                holder.mPrice.setText("(- ₱ "+String.format("%.2f", Math.abs(diffLp))+")");
-            }else{
-                holder.mPrice.setText("₱  "+String.format("%.2f", diffLp));
+                if(diffLp<0){
+                    holder.mPrice.setText("(- ? "+String.format("%.2f", Math.abs(diffLp))+")");
+                }else{
+                    holder.mPrice.setText("?  "+String.format("%.2f", diffLp));
+                }
             }
 
 
@@ -154,6 +154,7 @@ public class ToReceiveRentAdapter extends RecyclerView.Adapter<ToReceiveRentAdap
             holder.mDate.setText(bookList.get(position).getRentalReturnDate());
             holder.mTime.setText(bookList.get(position).getReturnMeetUp().getUserDayTime().getTime().getStrTime());
             holder.mLocation.setText(bookList.get(position).getReturnMeetUp().getLocation().getLocationName());
+            holder.mDeliveredDate.setText("Delivered on "+bookList.get(position).getDateDeliver());
         }
 
         holder.mBookTitle.setText(bookList.get(position).getRentalDetail().getBookOwner().getBookObj().getBookTitle());
@@ -420,7 +421,7 @@ public class ToReceiveRentAdapter extends RecyclerView.Adapter<ToReceiveRentAdap
     }
 
     public class BookHolder extends RecyclerView.ViewHolder {
-        TextView mBookTitle, mBookRenter, mBookDate, mPrice, mLocation, mTime, mDate;
+        TextView mBookTitle, mBookRenter, mBookDate, mPrice, mLocation, mTime, mDate, mDeliveredDate;
         ImageView mIvBook;
         ImageButton mBtnProfile, mBtnMail, mBtnRate;
         RentalHeader rentalHeaderObj;
@@ -434,7 +435,7 @@ public class ToReceiveRentAdapter extends RecyclerView.Adapter<ToReceiveRentAdap
             mBookTitle = (TextView) itemView.findViewById(R.id.bookTitleBA);
             mDate = (TextView) itemView.findViewById(R.id.dateBA);
             mBookRenter = (TextView) itemView.findViewById(R.id.renterNameBA);
-//            mRenter = (TextView) itemView.findViewById(R.id.toReceiveRenter);
+            mDeliveredDate = (TextView) itemView.findViewById(R.id.deliveredTime);
             mBookDate = (TextView) itemView.findViewById(R.id.bookDateBA);
             mLocation = (TextView) itemView.findViewById(R.id.locationBA);
             mPrice = (TextView) itemView.findViewById(R.id.bookPriceBA);

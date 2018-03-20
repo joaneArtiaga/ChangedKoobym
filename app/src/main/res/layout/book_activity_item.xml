@@ -105,6 +105,16 @@
                         android:textStyle="bold"
                         android:textSize="13dp"
                         android:id="@+id/timeBA"/>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="5dp"
+                        android:text="Time"
+                        android:textStyle="bold|italic"
+                        android:textSize="13dp"
+                        android:id="@+id/deliveredTime"/>
+
                 </LinearLayout>
 
                 <LinearLayout
