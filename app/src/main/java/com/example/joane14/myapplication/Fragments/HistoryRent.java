@@ -92,10 +92,17 @@ public class HistoryRent extends Fragment {
                     TextView mOwner = (TextView) dialogCustom.findViewById(R.id.deliveredBy);
                     TextView mDateDelivered = (TextView) dialogCustom.findViewById(R.id.dateDelivery);
                     TextView mDateReturned = (TextView) dialogCustom.findViewById(R.id.dateReturned);
-                    TextView mPrice = (TextView) dialogCustom.findViewById(R.id.rentalPrice);
+                    TextView mDateReq = (TextView) dialogCustom.findViewById(R.id.dateRequested);
+                    TextView mDateApproved = (TextView) dialogCustom.findViewById(R.id.dateApproved);
+                    TextView mDateReceived = (TextView) dialogCustom.findViewById(R.id.dateReceived);
+                    TextView mDateComplete = (TextView) dialogCustom.findViewById(R.id.dateComplete);
                     ImageView ivBook = (ImageView) dialogCustom.findViewById(R.id.ivBookDelivery);
                     Button btnOkay = (Button) dialogCustom.findViewById(R.id.btnDeliveryOkay);
 
+                    mDateReq.setText(rentHead.getRentalTimeStamp());
+                    mDateApproved.setText(rentHead.getDateApproved());
+                    mDateReceived.setText(rentHead.getDateReceived());
+                    mDateComplete.setText(rentHead.getDateComplete());
 
                     Glide.with(getContext()).load(rentHead.getRentalDetail().getBookOwner().getBookObj().getBookFilename()).centerCrop().into(ivBook);
 
@@ -103,7 +110,6 @@ public class HistoryRent extends Fragment {
                     mOwner.setText(rentHead.getRentalDetail().getBookOwner().getUserObj().getUserFname()+" "+rentHead.getRentalDetail().getBookOwner().getUserObj().getUserLname());
                     mDateDelivered.setText(rentHead.getDateDeliver());
                     mDateReturned.setText(rentHead.getRentalReturnDate().toString());
-                    mPrice.setText(rentHead.getReturnMeetUp().getUserDayTime().getTime().getStrTime());
 
                     btnOkay.setOnClickListener(new View.OnClickListener() {
                         @Override
