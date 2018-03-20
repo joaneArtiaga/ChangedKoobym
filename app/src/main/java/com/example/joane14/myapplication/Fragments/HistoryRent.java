@@ -118,6 +118,9 @@ public class HistoryRent extends Fragment {
 
                     TextView mTitle = (TextView) dialogCustom.findViewById(R.id.bookTitleDelivery);
                     TextView mRejected = (TextView) dialogCustom.findViewById(R.id.rejectReason);
+                    TextView mBookOwner = (TextView) dialogCustom.findViewById(R.id.bookOwner);
+                    TextView mReqDate = (TextView) dialogCustom.findViewById(R.id.reqDate);
+                    TextView mRejectDate = (TextView) dialogCustom.findViewById(R.id.rejectDate);
                     ImageView ivBook = (ImageView) dialogCustom.findViewById(R.id.ivBookDelivery);
                     Button btnOkay = (Button) dialogCustom.findViewById(R.id.btnDeliveryOkay);
 
@@ -125,6 +128,9 @@ public class HistoryRent extends Fragment {
 
                     mTitle.setText(rentHead.getRentalDetail().getBookOwner().getBookObj().getBookTitle());
                     mRejected.setText(rentHead.getRentalExtraMessage());
+                    mBookOwner.setText(rentHead.getRentalDetail().getBookOwner().getUserObj().getUserFname()+" "+rentHead.getRentalDetail().getBookOwner().getUserObj().getUserLname());
+                    mRejectDate.setText(rentHead.getDateRejected());
+                    mReqDate.setText(rentHead.getRentalTimeStamp());
 
                     btnOkay.setOnClickListener(new View.OnClickListener() {
                         @Override

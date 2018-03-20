@@ -33,11 +33,22 @@ public class RentalHeader implements Serializable {
     @SerializedName("rentalDetail")
     RentalDetail rentalDetail;
 
+    @SerializedName("dateRejected")
+    String dateRejected;
+
     UserDayTime userDayTime;
 
     String dateApproved, dateConfirmed, rentalEndDate, dateDeliver, rentalReturnDate, rentalExtraMessage;
 
     MeetUp meetUp, returnMeetUp;
+
+    public String getDateRejected() {
+        return dateRejected;
+    }
+
+    public void setDateRejected(String dateRejected) {
+        this.dateRejected = dateRejected;
+    }
 
     public String getRentalExtraMessage() {
         return rentalExtraMessage;
