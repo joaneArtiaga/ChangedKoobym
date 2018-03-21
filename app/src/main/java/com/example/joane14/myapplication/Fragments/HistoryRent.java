@@ -90,32 +90,14 @@ public class HistoryRent extends Fragment {
                     dialogCustom.setContentView(R.layout.rent_history_complete);
                     TextView mTitle = (TextView) dialogCustom.findViewById(R.id.bookTitleDelivery);
                     TextView mOwner = (TextView) dialogCustom.findViewById(R.id.deliveredBy);
-                    TextView mDateDelivered = (TextView) dialogCustom.findViewById(R.id.dateDelivery);
-                    TextView mDateReturned = (TextView) dialogCustom.findViewById(R.id.dateReturned);
-                    TextView mDateReq = (TextView) dialogCustom.findViewById(R.id.dateRequested);
-                    TextView mDateApproved = (TextView) dialogCustom.findViewById(R.id.dateApproved);
-                    TextView mDateReceived = (TextView) dialogCustom.findViewById(R.id.dateReceived);
-                    TextView mDateComplete = (TextView) dialogCustom.findViewById(R.id.dateComplete);
                     ImageView ivBook = (ImageView) dialogCustom.findViewById(R.id.ivBookDelivery);
                     Button btnOkay = (Button) dialogCustom.findViewById(R.id.btnDeliveryOkay);
-
-
-                    mDateReq.setText(rentHead.getRentalTimeStamp());
-                    mDateApproved.setText(rentHead.getDateApproved());
-                    mDateReceived.setText(rentHead.getDateReceived());
-                    mDateComplete.setText(rentHead.getDateComplete());
 
                     Glide.with(getContext()).load(rentHead.getRentalDetail().getBookOwner().getBookObj().getBookFilename()).centerCrop().into(ivBook);
 
                     String message = "Rented by "+rentHead.getUserId().getUserFname()+" "+rentHead.getUserId().getUserLname()+" on "+rentHead.getDateDeliver()+" and returned on "+rentHead.getRentalReturnDate();
                     mTitle.setText(rentHead.getRentalDetail().getBookOwner().getBookObj().getBookTitle());
                     mOwner.setText(message);
-                    mDateApproved.setVisibility(View.GONE);
-                    mDateDelivered.setVisibility(View.GONE);
-                    mDateReturned.setVisibility(View.GONE);
-                    mDateApproved.setVisibility(View.GONE);
-                    mDateReceived.setVisibility(View.GONE);
-                    mDateComplete.setVisibility(View.GONE);
 //                    mDateDelivered.setText(rentHead.getDateDeliver());
 //                    mDateReturned.setText(rentHead.getRentalReturnDate().toString());
 
