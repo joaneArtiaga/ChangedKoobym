@@ -99,6 +99,7 @@ public class HistoryRent extends Fragment {
                     ImageView ivBook = (ImageView) dialogCustom.findViewById(R.id.ivBookDelivery);
                     Button btnOkay = (Button) dialogCustom.findViewById(R.id.btnDeliveryOkay);
 
+
                     mDateReq.setText(rentHead.getRentalTimeStamp());
                     mDateApproved.setText(rentHead.getDateApproved());
                     mDateReceived.setText(rentHead.getDateReceived());
@@ -106,10 +107,17 @@ public class HistoryRent extends Fragment {
 
                     Glide.with(getContext()).load(rentHead.getRentalDetail().getBookOwner().getBookObj().getBookFilename()).centerCrop().into(ivBook);
 
+                    String message = "Rented by "+rentHead.getUserId().getUserFname()+" "+rentHead.getUserId().getUserLname()+" on "+rentHead.getDateDeliver()+" and returned on "+rentHead.getRentalReturnDate();
                     mTitle.setText(rentHead.getRentalDetail().getBookOwner().getBookObj().getBookTitle());
-                    mOwner.setText(rentHead.getRentalDetail().getBookOwner().getUserObj().getUserFname()+" "+rentHead.getRentalDetail().getBookOwner().getUserObj().getUserLname());
-                    mDateDelivered.setText(rentHead.getDateDeliver());
-                    mDateReturned.setText(rentHead.getRentalReturnDate().toString());
+                    mOwner.setText(message);
+                    mDateApproved.setVisibility(View.GONE);
+                    mDateDelivered.setVisibility(View.GONE);
+                    mDateReturned.setVisibility(View.GONE);
+                    mDateApproved.setVisibility(View.GONE);
+                    mDateReceived.setVisibility(View.GONE);
+                    mDateComplete.setVisibility(View.GONE);
+//                    mDateDelivered.setText(rentHead.getDateDeliver());
+//                    mDateReturned.setText(rentHead.getRentalReturnDate().toString());
 
                     btnOkay.setOnClickListener(new View.OnClickListener() {
                         @Override
