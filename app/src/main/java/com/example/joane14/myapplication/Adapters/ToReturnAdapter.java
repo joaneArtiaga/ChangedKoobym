@@ -7,7 +7,9 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.icu.util.Calendar;
+import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.RequiresApi;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -395,6 +397,7 @@ public class ToReturnAdapter extends RecyclerView.Adapter<ToReturnAdapter.BookHo
 
         Log.d("addBookRating", mRequestBody);
         StringRequest stringRequest = new StringRequest(Request.Method.POST, URL, new Response.Listener<String>() {
+            @RequiresApi(api = Build.VERSION_CODES.N)
             @Override
             public void onResponse(String response) {
                 Log.i("addBookRatingResponse", response);
@@ -430,8 +433,12 @@ public class ToReturnAdapter extends RecyclerView.Adapter<ToReturnAdapter.BookHo
         requestQueue.add(stringRequest);
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.N)
     private void returnToReceive(final RentalHeader rentalHeader, BookOwnerRating bookRating, BookOwnerReview bookReview){
-        String URL = Constants.RETURN_TO_RECEIVE+rentalHeader.getRentalHeaderId()+"/"+bookRating.getBookOwnerRatingId()+"/"+bookReview.getBookOwnerReviewId();
+        Calendar cal = Calendar.getInstance();
+        DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
+
+        String URL = Constants.RETURN_TO_RECEIVE+rentalHeader.getRentalHeaderId()+"/"+bookRating.getBookOwnerRatingId()+"/"+bookReview.getBookOwnerReviewId()+"/"+df.format(cal.getTime());
         Log.d("returnToReceiveURL", URL);
         Log.d("returnToReceive", rentalHeader.toString());
 

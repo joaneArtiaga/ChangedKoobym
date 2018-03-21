@@ -7,7 +7,9 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.icu.util.Calendar;
+import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.RequiresApi;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -52,6 +54,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
 import java.io.UnsupportedEncodingException;
+import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -304,8 +307,12 @@ public class ToReceiveRentAdapter extends RecyclerView.Adapter<ToReceiveRentAdap
 
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.N)
     private void received(final RentalHeader rentalHeader){
-        String URL = Constants.RENT_RECEIVE+rentalHeader.getRentalHeaderId();
+        Calendar cal = Calendar.getInstance();
+        DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
+
+        String URL = Constants.RENT_RECEIVE+rentalHeader.getRentalHeaderId()+"/"+df.format(cal.getTime());
         Log.d("receiveToReceiveURL", URL);
         Log.d("receiveToReceive", rentalHeader.toString());
 
@@ -329,8 +336,12 @@ public class ToReceiveRentAdapter extends RecyclerView.Adapter<ToReceiveRentAdap
         VolleyUtil.volleyRQInstance(context).add(stringRequest);
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.N)
     private void complete(final RentalHeader rentalHeader, int userRateId){
-        String URL = Constants.RENT_COMPLETE+rentalHeader.getRentalHeaderId()+"/"+userRateId;
+        Calendar cal = Calendar.getInstance();
+        DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
+
+        String URL = Constants.RENT_COMPLETE+rentalHeader.getRentalHeaderId()+"/"+userRateId+"/"+df.format(cal.getTime());
         Log.d("completeToReceiveURL", URL);
         Log.d("completeToReceive", rentalHeader.toString());
 

@@ -54,6 +54,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
 import java.io.UnsupportedEncodingException;
+import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -335,6 +336,7 @@ public class MeetUpChooser extends FragmentActivity implements OnMapReadyCallbac
         d("addMeetUp", mRequestBody);
         final User finalUser = user;
         StringRequest stringRequest = new StringRequest(Request.Method.POST, URL, new Response.Listener<String>() {
+            @RequiresApi(api = Build.VERSION_CODES.N)
             @Override
             public void onResponse(String response) {
                 d("meetUpAdded", response);
@@ -367,13 +369,17 @@ public class MeetUpChooser extends FragmentActivity implements OnMapReadyCallbac
         requestQueue.add(stringRequest);
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.N)
     public void updateRentalHeaderReturn(RentalHeader rentToPut, MeetUp meetUpToPut){
         RequestQueue requestQueue = Volley.newRequestQueue(this);
 //        String URL = "http://104.197.4.32:8080/Koobym/user/add";
         User user = new User();
         user = (User) SPUtility.getSPUtil(this).getObject("USER_OBJECT", User.class);
 
-        String URL = Constants.SET_RETURN+rentToPut.getRentalHeaderId()+"/"+meetUpToPut.getMeetUpId();
+        Calendar cal = Calendar.getInstance();
+        DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
+
+        String URL = Constants.SET_RETURN+rentToPut.getRentalHeaderId()+"/"+meetUpToPut.getMeetUpId()+"/"+df.format(cal.getTime());
 
         d("putRentalHeaderReturn", URL);
         d("insideRentHeader", rentToPut.toString());

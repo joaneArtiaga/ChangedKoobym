@@ -4,8 +4,12 @@ import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.icu.text.DateFormat;
+import android.icu.text.SimpleDateFormat;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.RequiresApi;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
@@ -46,6 +50,7 @@ import com.google.gson.GsonBuilder;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -140,6 +145,7 @@ public class RequestRentFrag extends Fragment {
                         Button mSubmitReason = (Button) dialogCustom.findViewById(R.id.submitReject);
 
                         mSubmitReason.setOnClickListener(new View.OnClickListener() {
+                            @RequiresApi(api = Build.VERSION_CODES.N)
                             @Override
                             public void onClick(View v) {
                                 if(etReason.getText().length()==0){
@@ -203,11 +209,16 @@ public class RequestRentFrag extends Fragment {
         requestQueue.add(stringRequest);
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.N)
     public void rejectRequest(final RentalHeader rentalHeader, final String message){
         RequestQueue requestQueue = Volley.newRequestQueue(getContext());
         User user = new User();
         user = (User) SPUtility.getSPUtil(getContext()).getObject("USER_OBJECT", User.class);
-        String URL = Constants.REJECT_REQUEST_RENT+rentalHeader.getRentalHeaderId();
+
+        Calendar cal = Calendar.getInstance();
+        DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
+
+        String URL = Constants.REJECT_REQUEST_RENT+rentalHeader.getRentalHeaderId()+"/"+df.format(cal.getTime());
 
         Log.d("rejectRequestRentURL", URL);
         Log.d("rejectRequestRent", rentalHeader.toString());
@@ -308,11 +319,15 @@ public class RequestRentFrag extends Fragment {
         requestQueue.add(stringRequest);
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.N)
     public void acceptRequest(RentalHeader rentalHeader){
         RequestQueue requestQueue = Volley.newRequestQueue(getContext());
         User user = new User();
         user = (User) SPUtility.getSPUtil(getContext()).getObject("USER_OBJECT", User.class);
-        String URL = Constants.ACCEPT_REQUEST_RENT+rentalHeader.getRentalHeaderId();
+        android.icu.util.Calendar cal = android.icu.util.Calendar.getInstance();
+        java.text.DateFormat df = new java.text.SimpleDateFormat("yyyy-MM-dd");
+
+        String URL = Constants.ACCEPT_REQUEST_RENT+rentalHeader.getRentalHeaderId()+"/"+df.format(cal.getTime());
 
         Log.d("AcceptRequestRentURL", URL);
 

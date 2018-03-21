@@ -1,6 +1,7 @@
 package com.example.joane14.myapplication.Adapters;
 
 import android.annotation.SuppressLint;
+import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
@@ -1720,11 +1721,15 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
             requestQueue.add(stringRequest);
         }
 
+        @TargetApi(Build.VERSION_CODES.N)
+        @RequiresApi(api = Build.VERSION_CODES.N)
         public void rejectRequestRent(final RentalHeader rentalHeader, final String message, final int position) {
             RequestQueue requestQueue = Volley.newRequestQueue(getContext());
             User user = new User();
             user = (User) SPUtility.getSPUtil(getContext()).getObject("USER_OBJECT", User.class);
-            String URL = Constants.REJECT_REQUEST_RENT + rentalHeader.getRentalHeaderId();
+            Calendar cal = Calendar.getInstance();
+            DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
+            String URL = Constants.REJECT_REQUEST_RENT + rentalHeader.getRentalHeaderId()+"/"+df.format(cal.getTime());
 
             Log.d("rejectRequestRentURL", URL);
             Log.d("rejectRequestRent", rentalHeader.toString());
@@ -1772,7 +1777,11 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
             RequestQueue requestQueue = Volley.newRequestQueue(getContext());
             User user = new User();
             user = (User) SPUtility.getSPUtil(getContext()).getObject("USER_OBJECT", User.class);
-            String URL = Constants.ACCEPT_REQUEST_RENT + rentalHeader.getRentalHeaderId();
+
+            android.icu.util.Calendar cal = android.icu.util.Calendar.getInstance();
+            java.text.DateFormat df = new java.text.SimpleDateFormat("yyyy-MM-dd");
+
+            String URL = Constants.ACCEPT_REQUEST_RENT + rentalHeader.getRentalHeaderId()+"/"+df.format(cal.getTime());
 
             Log.d("AcceptRequestRentURL", URL);
 
@@ -1974,13 +1983,19 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
             requestQueue.add(stringRequest);
         }
 
+        @TargetApi(Build.VERSION_CODES.N)
+        @RequiresApi(api = Build.VERSION_CODES.N)
         public void setToComplete(int position, int userRatingId) {
             Log.d("setToComplete", "inside");
             RequestQueue requestQueue = Volley.newRequestQueue(context);
             User user = new User();
             user = (User) SPUtility.getSPUtil(context).getObject("USER_OBJECT", User.class);
             d("UserIdReceive", String.valueOf(user.getUserId()));
-            String URL = Constants.SET_TO_COMPLETE + userNotificationList.get(position).getActionId() + "/" + userRatingId;
+
+            android.icu.util.Calendar cal = android.icu.util.Calendar.getInstance();
+            java.text.DateFormat df = new java.text.SimpleDateFormat("yyyy-MM-dd");
+
+            String URL = Constants.SET_TO_COMPLETE + userNotificationList.get(position).getActionId() + "/" + userRatingId+"/"+df.format(cal.getTime());
             Log.d("setToComplete", URL);
 
             final RentalHeader rentalHeader = new RentalHeader();
@@ -3467,6 +3482,7 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
         requestQueue.add(stringRequest);
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.N)
     public void updateRental(RentalHeader rentHeader, MeetUp deliver, MeetUp returnMU) {
         RequestQueue requestQueue = Volley.newRequestQueue(context);
         String nextDateStr = "";
@@ -3475,7 +3491,9 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
 
         User user = new User();
         user = (User) SPUtility.getSPUtil(context).getObject("USER_OBJECT", User.class);
-        String URL = Constants.UPDATE_RENTAL_HEADER_1 + rentHeader.getRentalHeaderId() + "/" + deliver.getMeetUpId() + "/" + returnMU.getMeetUpId();
+        Calendar cal = Calendar.getInstance();
+        DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
+        String URL = Constants.UPDATE_RENTAL_HEADER_1 + rentHeader.getRentalHeaderId() + "/" + deliver.getMeetUpId() + "/" + returnMU.getMeetUpId()+"/"+df.format(cal.getTime());
         Log.d("UpdateSwapHeaderURL", URL);
         final Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd").registerTypeAdapter(Date.class, GsonDateDeserializer.getInstance()).create();
         final String mRequestBody = gson.toJson(rentHeader);
