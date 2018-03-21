@@ -122,12 +122,10 @@ public class HistoryAuction extends Fragment {
                 dialogCustom.setContentView(R.layout.auction_history_complete);
                 TextView mTitle = (TextView) dialogCustom.findViewById(R.id.bookTitleDelivery);
                 TextView mDateDelivered = (TextView) dialogCustom.findViewById(R.id.dateDelivery);
-                TextView mPrice = (TextView) dialogCustom.findViewById(R.id.auctionPrice);
                 ImageView ivBook = (ImageView) dialogCustom.findViewById(R.id.ivBookDelivery);
                 Button btnOkay = (Button) dialogCustom.findViewById(R.id.btnDeliveryOkay);
 
-
-                mPrice.setText("₱  "+auctionHeaderModelMod.get(0).getAuctionComment()+".00");
+                String message = "Put to auction on "+ah.getAuctionDetail().getStartDate()+", "+ah.getAuctionDetail().getStartTime()+" and has transferred to "+ah.getUser().getUserFname()+" "+ah.getUser().getUserLname();
                 Glide.with(getContext()).load(ah.getAuctionDetail().getBookOwner().getBookObj().getBookFilename()).centerCrop().into(ivBook);
 
                 mTitle.setText(ah.getAuctionDetail().getBookOwner().getBookObj().getBookTitle());
