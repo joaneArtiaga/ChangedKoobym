@@ -92,7 +92,6 @@ public class HistorySwap extends Fragment {
 
                     TextView mTitleSwap = (TextView) dialogCustom.findViewById(R.id.bookTitleSwap);
                     TextView mSwappedWith = (TextView) dialogCustom.findViewById(R.id.swappedWith);
-                    TextView mSwappedOn = (TextView) dialogCustom.findViewById(R.id.swappedOn);
                     ImageView ivBookSwap = (ImageView) dialogCustom.findViewById(R.id.ivSwap);
                     Button btnOkay = (Button) dialogCustom.findViewById(R.id.btnDeliveryOkay);
                     ListView ly = (ListView) dialogCustom.findViewById(R.id.listSwap);
@@ -108,6 +107,7 @@ public class HistorySwap extends Fragment {
                         }
                     }
 
+
                     final SwapRequestAdapter adapter = new SwapRequestAdapter(getActivity(), shdList);
 
                     ly.setAdapter(adapter);
@@ -117,13 +117,16 @@ public class HistorySwap extends Fragment {
 
                     User user = (User) SPUtility.getSPUtil(getContext()).getObject("USER_OBJECT", User.class);
 
+                    String message ="";
                     if(swapHeader.getRequestedSwapDetail().getBookOwner().getUserObj().getUserId()!=user.getUserId()){
-                        mSwappedWith.setText(swapHeader.getRequestedSwapDetail().getBookOwner().getUserObj().getUserFname()+" "+swapHeader.getRequestedSwapDetail().getBookOwner().getUserObj().getUserLname());
+//                        mSwappedWith.setText(swapHeader.getRequestedSwapDetail().getBookOwner().getUserObj().getUserFname()+" "+swapHeader.getRequestedSwapDetail().getBookOwner().getUserObj().getUserLname());
+                        message = "Swapped by "+swapHeader.getRequestedSwapDetail().getBookOwner().getUserObj().getUserFname()+" "+swapHeader.getRequestedSwapDetail().getBookOwner().getUserObj().getUserLname()+" on "+swapHeader.getDateReceived();
                     }else{
-                        mSwappedWith.setText(swapHeader.getSwapDetail().getBookOwner().getUserObj().getUserFname()+" "+swapHeader.getSwapDetail().getBookOwner().getUserObj().getUserLname());
+//                        mSwappedWith.setText(swapHeader.getSwapDetail().getBookOwner().getUserObj().getUserFname()+" "+swapHeader.getSwapDetail().getBookOwner().getUserObj().getUserLname());
+                        message = "Swapped by "+swapHeader.getSwapDetail().getBookOwner().getUserObj().getUserFname()+" "+swapHeader.getSwapDetail().getBookOwner().getUserObj().getUserLname()+" on "+swapHeader.getDateReceived();
                     }
 
-                    mSwappedOn.setText(swapHeader.getDateDelivered());
+                    mSwappedWith.setText(message);
 
                     btnOkay.setOnClickListener(new View.OnClickListener() {
                         @Override
