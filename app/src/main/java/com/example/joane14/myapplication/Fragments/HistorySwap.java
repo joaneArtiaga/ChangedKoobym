@@ -49,6 +49,7 @@ public class HistorySwap extends Fragment {
     private OnHistorySwapInteractionListener mListener;
 
     List<SwapHeader> swapHeaderList;
+    List<SwapHeader> swapHeaderListComplete;
     private GridView mGridView;
     private HistorySwapAdapter mAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
@@ -74,9 +75,11 @@ public class HistorySwap extends Fragment {
         View view = inflater.inflate(R.layout.fragment_history_swap, container, false);
 
         swapHeaderList = new ArrayList<SwapHeader>();
+        swapHeaderListComplete = new ArrayList<SwapHeader>();
+
         mGridView = (GridView) view.findViewById(R.id.hSwap_gridview);
         mLayoutManager = new LinearLayoutManager(getContext());
-        mAdapter = new HistorySwapAdapter(getContext(), swapHeaderList);
+        mAdapter = new HistorySwapAdapter(getContext(), swapHeaderListComplete);
         mGridView.setAdapter(mAdapter);
 
         getHistory();
@@ -84,7 +87,7 @@ public class HistorySwap extends Fragment {
         mGridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                SwapHeader swapHeader = swapHeaderList.get(position);
+                SwapHeader swapHeader = swapHeaderListComplete.get(position);
 
                 if(swapHeader.getStatus().equals("Complete")){
                     final Dialog dialogCustom = new Dialog(getContext());
@@ -203,6 +206,15 @@ public class HistorySwap extends Fragment {
 //                RentalHeader rentalHeaderModel = gson.fromJson(response, RentalHeader.class);
                 swapHeaderList.clear();
                 swapHeaderList.addAll(Arrays.asList(gson.fromJson(response, SwapHeader[].class)));
+
+                swapHeaderListComplete.clear();
+
+                for(int init=0; init<swapHeaderList.size(); init++){
+                    if(swapHeaderList.get(init).getStatus().equals("Complete")){
+                        swapHeaderListComplete.add(swapHeaderList.get(init));
+                    }
+                }
+
                 mAdapter.notifyDataSetChanged();
             }
         }, new Response.ErrorListener() {

@@ -46,6 +46,7 @@ public class HistoryRent extends Fragment {
     private OnHistoryRentInteractionListener mListener;
 
     List<RentalHeader> rentalHeaderList;
+    List<RentalHeader> rentalHeaderListComplete;
     private GridView mGridView;
     private HistoryRentAdapter mAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
@@ -72,10 +73,11 @@ public class HistoryRent extends Fragment {
         View view = inflater.inflate(R.layout.fragment_history_rent, container, false);
 
         rentalHeaderList = new ArrayList<RentalHeader>();
+        rentalHeaderListComplete = new ArrayList<RentalHeader>();
         mGridView = (GridView) view.findViewById(R.id.hRent_gridview);
 
         mLayoutManager = new LinearLayoutManager(getContext());
-        mAdapter = new HistoryRentAdapter(getContext(), rentalHeaderList);
+        mAdapter = new HistoryRentAdapter(getContext(), rentalHeaderListComplete);
         mGridView.setAdapter(mAdapter);
 
         getHistory();
@@ -165,6 +167,13 @@ public class HistoryRent extends Fragment {
 //                RentalHeader rentalHeaderModel = gson.fromJson(response, RentalHeader.class);
                 rentalHeaderList.clear();
                 rentalHeaderList.addAll(Arrays.asList(gson.fromJson(response, RentalHeader[].class)));
+
+                rentalHeaderListComplete.clear();
+                for(int init=0; init<rentalHeaderList.size(); init++){
+                    if(rentalHeaderList.get(init).getStatus().equals("Complete")){
+                        rentalHeaderListComplete.add(rentalHeaderList.get(init));
+                    }
+                }
                 mAdapter.notifyDataSetChanged();
             }
         }, new Response.ErrorListener() {
